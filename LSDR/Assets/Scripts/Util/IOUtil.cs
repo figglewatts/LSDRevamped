@@ -84,9 +84,6 @@ namespace Util
 		/// <summary>
 		/// Combines A and B to form a full path.
 		/// </summary>
-		/// <param name="a"></param>
-		/// <param name="b"></param>
-		/// <returns></returns>
 		public static string PathCombine(string a, string b)
 		{
 			if (b.StartsWith("\\") || b.StartsWith("/"))
@@ -98,8 +95,6 @@ namespace Util
 		/// <summary>
 		/// Combines any number of elements to form a full path.
 		/// </summary>
-		/// <param name="componentStrings"></param>
-		/// <returns></returns>
 		public static string PathCombine(params string[] componentStrings)
 		{
 			string path = componentStrings[0];
