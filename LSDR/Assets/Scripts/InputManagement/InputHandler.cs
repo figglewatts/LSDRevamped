@@ -19,7 +19,6 @@ namespace InputManagement
 
 		private static void RebindInput(string buttonName, KeyCode key)
 		{
-			Debug.Log("Rebinding button " + buttonName + " to keycode " + key.ToString());
 			_inputs[_inputNames.IndexOf(buttonName)] = key;
 		}
 
@@ -55,7 +54,6 @@ namespace InputManagement
 			{
 				if (Input.anyKey)
 				{
-					Debug.Log("Checking keycodes");
 					foreach (KeyCode k in Enum.GetValues(typeof(KeyCode)))
 					{
 						if (Input.GetKeyDown(k))
