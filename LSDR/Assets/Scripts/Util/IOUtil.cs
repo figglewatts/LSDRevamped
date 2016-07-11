@@ -69,7 +69,7 @@ namespace Util
 			if (File.Exists(fullFilePath))
 			{
 				byte[] fileData = File.ReadAllBytes(fullFilePath);
-				tex = new Texture2D(2, 2, TextureFormat.ARGB32, false); // 2, 2 temporary power of 2 size; next line will resize automatically
+				tex = new Texture2D(2, 2, TextureFormat.ARGB32, false); // (2, 2) is temporary power of 2 size; next line will resize automatically
 				tex.LoadImage(fileData);
 				tex.filterMode = FilterMode.Point;
 				tex.mipMapBias = 0F;
