@@ -14,7 +14,9 @@ public class GameScript : MonoBehaviour
 		InputHandler.AddInput("Backward", KeyCode.S);
 		InputHandler.AddInput("Left", KeyCode.A);
 		InputHandler.AddInput("Right", KeyCode.D);
-
+		InputHandler.AddInput("LookUp", KeyCode.Q);
+		InputHandler.AddInput("LookDown", KeyCode.E);
+		InputHandler.AddInput("Sprint", KeyCode.Space);
 
 		InputHandler.Initialize();
 	}
@@ -22,6 +24,7 @@ public class GameScript : MonoBehaviour
 	void Update()
 	{
 		// Do game update stuff here
+
 		InputHandler.HandleInput();
 	}
 }
