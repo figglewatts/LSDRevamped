@@ -8,8 +8,6 @@ public class GameScript : MonoBehaviour
 	{
 		// do game startup stuff here
 
-		// TODO: load current input scheme from game settings
-		// TODO: if no settings are found load a default input scheme
 		InputHandler.AddInput("Forward", KeyCode.W);
 		InputHandler.AddInput("Backward", KeyCode.S);
 		InputHandler.AddInput("Left", KeyCode.A);
@@ -19,6 +17,10 @@ public class GameScript : MonoBehaviour
 		InputHandler.AddInput("Sprint", KeyCode.Space);
 
 		InputHandler.Initialize();
+
+		ControlSchemeManager.Initialize();
+
+		ControlSchemeManager.SwitchToScheme("Classic");
 	}
 
 	void Update()

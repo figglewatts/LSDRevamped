@@ -10,9 +10,11 @@ namespace Game
 
 		// modifiable settings
 		public static bool HeadBobEnabled = true;
-		public static bool FPSMovementEnabled = true;
+		public static bool FPSMovementEnabled;
 		public static float MouseSensitivityX = 1F;
 		public static float MouseSensitivityY = 1F;
+
+		public static int CurrentControlScheme = 0;
 
 		// hidden settings
 		public static bool CanControlPlayer = true; // used to disable character motion, i.e. when linking

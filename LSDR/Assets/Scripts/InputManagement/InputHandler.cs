@@ -17,7 +17,7 @@ namespace InputManagement
 			_inputs.Add(key);
 		}
 
-		private static void RebindInput(string buttonName, KeyCode key)
+		public static void RebindInput(string buttonName, KeyCode key)
 		{
 			_inputs[_inputNames.IndexOf(buttonName)] = key;
 		}
