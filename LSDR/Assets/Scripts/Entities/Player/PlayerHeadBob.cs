@@ -1,21 +1,22 @@
 ﻿using UnityEngine;
-using System.Collections;
 using Game;
 using InputManagement;
 
 namespace Entities.Player
 {
+	/// <summary>
+	/// Handles player head bobbing and footstep sounds.
+	/// </summary>
 	public class PlayerHeadBob : MonoBehaviour
 	{
 		// TODO: footstep sounds
 	
-		public float bobbingSpeed = 0.18F;
-		public float bobbingAmount = 0.2F;
-		public float midpoint = 1F;
-		public float stepInterval = 0.6F;
+		public float BobbingSpeed = 0.18F;
+		public float BobbingAmount = 0.2F;
+		public float Midpoint = 1F;
 		public Camera TargetCamera;
 
-		private float timer = 0F;
+		private float _timer;
 
 		void Start() {}
 
@@ -38,28 +39,28 @@ namespace Entities.Player
 				vertical = -1;
 			}
 
-			if (Mathf.Abs(vertical) == 0)
+			if (Mathf.Abs(vertical) < float.Epsilon)
 			{
-				timer = 0;
+				_timer = 0;
 			}
 			else
 			{
-				waveslice = Mathf.Sin(timer);
-				timer = timer + (bobbingSpeed*Time.deltaTime);
-				if (timer > Mathf.PI*2)
+				waveslice = Mathf.Sin(_timer);
+				_timer = _timer + (BobbingSpeed*Time.deltaTime);
+				if (_timer > Mathf.PI*2)
 				{
-					timer = timer - (Mathf.PI*2);
+					_timer = _timer - (Mathf.PI*2);
 				}
 			}
 
-			if (waveslice != 0)
+			if (Mathf.Abs(waveslice) > float.Epsilon)
 			{
-				float translateChange = waveslice*bobbingAmount;
+				float translateChange = waveslice*BobbingAmount;
 				float totalAxes = Mathf.Abs(vertical);
 				totalAxes = Mathf.Clamp(totalAxes, 0F, 1F);
 				translateChange = totalAxes*translateChange;
 				Vector3 pos = TargetCamera.transform.localPosition;
-				pos.y = midpoint + translateChange;
+				pos.y = Midpoint + translateChange;
 				if (GameSettings.HeadBobEnabled)
 				{
 					TargetCamera.transform.localPosition = pos;
@@ -68,7 +69,7 @@ namespace Entities.Player
 			else
 			{
 				Vector3 pos = TargetCamera.transform.localPosition;
-				pos.y = midpoint;
+				pos.y = Midpoint;
 				if (GameSettings.HeadBobEnabled)
 				{
 					TargetCamera.transform.localPosition = pos;

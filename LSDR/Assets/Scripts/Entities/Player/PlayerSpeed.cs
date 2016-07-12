@@ -1,80 +1,84 @@
 ﻿using UnityEngine;
-using System.Collections;
-using Entities.Player;
 using InputManagement;
 
-public class PlayerSpeed : MonoBehaviour
+namespace Entities.Player
 {
-	public float defaultMoveSpeed = 4F;
-	public float SprintMoveSpeed = 6F;
-	public float SprintFastMoveSpeed = 8F;
-
-	public float defaultBobSpeed = 20F;
-	public float defaultBobAmount = 0.06F;
-	public float SprintBobSpeed = 40F;
-	public float SprintBobAmount = 0.05F;
-	public float SprintFastBobSpeed = 48F;
-	public float SprintFastBobAmount = 0.04F;
-
-	private float spaceHeldTimer = 0F;
-
-	private PlayerHeadBob headBob;
-	private PlayerMovement _playerMovement;
-
-	private bool isSprinting = false;
-	private bool isSprintingFast = false;
-
-	// Use this for initialization
-	void Start()
+	/// <summary>
+	/// Handles player walk speed and headbob speed and amplitude. 
+	/// This is responsible for changing speed when sprinting.
+	/// </summary>
+	public class PlayerSpeed : MonoBehaviour
 	{
-		headBob = GetComponent<PlayerHeadBob>();
-		_playerMovement = GetComponent<PlayerMovement>();
-	}
+		public float DefaultMoveSpeed = 4F;
+		public float SprintMoveSpeed = 6F;
+		public float SprintFastMoveSpeed = 8F;
 
-	// Update is called once per frame
-	void Update()
-	{
-		if (InputHandler.CheckButtonState("Sprint", ButtonState.HELD))
+		public float DefaultBobSpeed = 20F;
+		public float DefaultBobAmount = 0.06F;
+		public float SprintBobSpeed = 40F;
+		public float SprintBobAmount = 0.05F;
+		public float SprintFastBobSpeed = 48F;
+		public float SprintFastBobAmount = 0.04F;
+
+		private float _spaceHeldTimer;
+
+		private PlayerHeadBob _headBob;
+		private PlayerMovement _playerMovement;
+
+		private bool _isSprinting;
+		private bool _isSprintingFast;
+
+		// Use this for initialization
+		void Start()
 		{
-			isSprinting = true;
-			spaceHeldTimer += Time.deltaTime;
-		}
-		else
-		{
-			spaceHeldTimer = 0F;
+			_headBob = GetComponent<PlayerHeadBob>();
+			_playerMovement = GetComponent<PlayerMovement>();
 		}
 
-		if (isSprinting)
+		// Update is called once per frame
+		void Update()
 		{
-			if (spaceHeldTimer > 10)
+			if (InputHandler.CheckButtonState("Sprint", ButtonState.HELD))
 			{
-				isSprintingFast = true;
-				_playerMovement.MovementSpeed = SprintFastMoveSpeed;
-				headBob.bobbingSpeed = SprintFastBobSpeed;
-				headBob.bobbingAmount = SprintFastBobAmount;
+				_isSprinting = true;
+				_spaceHeldTimer += Time.deltaTime;
 			}
-			else if (!isSprintingFast)
+			else
 			{
-				_playerMovement.MovementSpeed = SprintMoveSpeed;
-				headBob.bobbingSpeed = SprintBobSpeed;
-				headBob.bobbingAmount = SprintBobAmount;
+				_spaceHeldTimer = 0F;
 			}
-		}
-		if (!isSprinting && !isSprintingFast)
-		{
-			_playerMovement.MovementSpeed = defaultMoveSpeed;
-			headBob.bobbingSpeed = defaultBobSpeed;
-			headBob.bobbingAmount = defaultBobAmount;
-		}
 
-		// if space is not pressed and no movement keys are pressed
-		if (!InputHandler.CheckButtonState("Sprint", ButtonState.HELD)
-			&& !InputHandler.CheckButtonState("Forward", ButtonState.HELD)
-			&& !InputHandler.CheckButtonState("Backward", ButtonState.HELD))
-		{
-			isSprinting = false;
-			isSprintingFast = false;
+			if (_isSprinting)
+			{
+				if (_spaceHeldTimer > 10)
+				{
+					_isSprintingFast = true;
+					_playerMovement.MovementSpeed = SprintFastMoveSpeed;
+					_headBob.BobbingSpeed = SprintFastBobSpeed;
+					_headBob.BobbingAmount = SprintFastBobAmount;
+				}
+				else if (!_isSprintingFast)
+				{
+					_playerMovement.MovementSpeed = SprintMoveSpeed;
+					_headBob.BobbingSpeed = SprintBobSpeed;
+					_headBob.BobbingAmount = SprintBobAmount;
+				}
+			}
+			if (!_isSprinting && !_isSprintingFast)
+			{
+				_playerMovement.MovementSpeed = DefaultMoveSpeed;
+				_headBob.BobbingSpeed = DefaultBobSpeed;
+				_headBob.BobbingAmount = DefaultBobAmount;
+			}
+
+			// if space is not pressed and no movement keys are pressed
+			if (!InputHandler.CheckButtonState("Sprint", ButtonState.HELD)
+			    && !InputHandler.CheckButtonState("Forward", ButtonState.HELD)
+			    && !InputHandler.CheckButtonState("Backward", ButtonState.HELD))
+			{
+				_isSprinting = false;
+				_isSprintingFast = false;
+			}
 		}
 	}
-
 }

@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
-using System.Collections;
 using Game;
 using InputManagement;
 
 namespace Entities.Player
 {
+	/// <summary>
+	/// Controls player camera motion.
+	/// Rotates the camera up and down on inputs, and handles mouse look when FPS movement mode is enabled.
+	/// </summary>
 	public class PlayerCameraRotation : MonoBehaviour
 	{
 		public float RotationSpeed = 0.7F;
@@ -13,15 +16,15 @@ namespace Entities.Player
 		public bool CanRotate = true;
 		public Camera TargetCamera;
 		public float MouseLookRotationMultiplier = 50; // used because deltaTime makes things real slow
-		public float maxY = 70F;
-		public float minY = -70F;
+		public float MaxY = 70F;
+		public float MinY = -70F;
 
 		private Quaternion _maxPos;
 		private Quaternion _maxNeg;
 		private Quaternion _originalRotation;
 
 		private Transform _temp;
-		private float _rotationX = 0;
+		private float _rotationX;
 
 		void Start()
 		{
@@ -42,16 +45,16 @@ namespace Entities.Player
 					0, Space.Self);
 
 				_temp = Camera.main.transform;
-				_rotationX += -Input.GetAxis("Mouse Y") * GameSettings.MouseSensitivityY * Time.smoothDeltaTime * 50;
-				_rotationX = ClampAngle(_rotationX, minY, maxY);
+				_rotationX += -Input.GetAxis("Mouse Y") * GameSettings.MouseSensitivityY * Time.smoothDeltaTime * MouseLookRotationMultiplier;
+				_rotationX = ClampAngle(_rotationX, MinY, MaxY);
 				_temp.transform.localEulerAngles = new Vector3(_rotationX, TargetCamera.transform.localEulerAngles.y, 0);
 				Quaternion.Slerp(TargetCamera.transform.rotation, _temp.transform.rotation, Time.deltaTime);
 			}
 			else
 			{
-				_maxNeg = Quaternion.Euler(320, TargetCamera.transform.rotation.eulerAngles.y,
+				_maxNeg = Quaternion.Euler(MaxNegativeRotation, TargetCamera.transform.rotation.eulerAngles.y,
 					TargetCamera.transform.rotation.eulerAngles.z);
-				_maxPos = Quaternion.Euler(40, TargetCamera.transform.rotation.eulerAngles.y,
+				_maxPos = Quaternion.Euler(MaxPositiveRotation, TargetCamera.transform.rotation.eulerAngles.y,
 					TargetCamera.transform.rotation.eulerAngles.z);
 				_originalRotation = Quaternion.Euler(0, TargetCamera.transform.rotation.eulerAngles.y,
 					TargetCamera.transform.rotation.eulerAngles.z);

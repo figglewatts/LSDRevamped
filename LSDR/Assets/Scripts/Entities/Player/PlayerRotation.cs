@@ -1,13 +1,15 @@
 ﻿using UnityEngine;
-using System.Collections;
 using Game;
 using InputManagement;
 
 namespace Entities.Player
 {
+	/// <summary>
+	/// Handles player left and right rotation. This is for classic control mode.
+	/// </summary>
 	public class PlayerRotation : MonoBehaviour
 	{
-		public float rotationSpeed = 1.4F;
+		public float RotationSpeed = 1.4F;
 
 		void Update()
 		{
@@ -15,15 +17,15 @@ namespace Entities.Player
 			{
 				if (InputHandler.CheckButtonState("Left", ButtonState.HELD))
 				{
-					Vector3 transformRotation = this.transform.rotation.eulerAngles;
-					transformRotation.y -= rotationSpeed * Time.deltaTime;
-					this.transform.rotation = Quaternion.Euler(transformRotation);
+					Vector3 transformRotation = transform.rotation.eulerAngles;
+					transformRotation.y -= RotationSpeed * Time.deltaTime;
+					transform.rotation = Quaternion.Euler(transformRotation);
 				}
 				else if (InputHandler.CheckButtonState("Right", ButtonState.HELD))
 				{
-					Vector3 transformRotation = this.transform.rotation.eulerAngles;
-					transformRotation.y += rotationSpeed * Time.deltaTime;
-					this.transform.rotation = Quaternion.Euler(transformRotation);
+					Vector3 transformRotation = transform.rotation.eulerAngles;
+					transformRotation.y += RotationSpeed * Time.deltaTime;
+					transform.rotation = Quaternion.Euler(transformRotation);
 				}
 			}
 		}

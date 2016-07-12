@@ -4,38 +4,36 @@ using InputManagement;
 
 namespace Entities.Player
 {
-    [RequireComponent(typeof (CharacterController))]
+    /// <summary>
+	/// Handles player motion. Moving forwards and backwards, and left to right if FPS movement is enabled.
+	/// </summary>
+	[RequireComponent(typeof (CharacterController))]
     public class PlayerMovement : MonoBehaviour
     {
 		public float MovementSpeed;
+        public float GravityMultiplier;
 
-		public bool m_IsWalking;
-        public float m_GravityMultiplier;
-
-        private Camera m_Camera;
-        private float m_YRotation;
-        private Vector2 m_Input;
-        private Vector3 m_MoveDir = Vector3.zero;
-        private CharacterController m_CharacterController;
-        private CollisionFlags m_CollisionFlags;
-        private bool m_PreviouslyGrounded;
+        private Vector2 _inputVector;
+        private Vector3 _moveDir = Vector3.zero;
+        private CharacterController _characterController;
+        private CollisionFlags _collisionFlags;
+        private bool _previouslyGrounded;
 
         // Use this for initialization
         private void Start()
         {
-            m_CharacterController = GetComponent<CharacterController>();
-            m_Camera = Camera.main;
+            _characterController = GetComponent<CharacterController>();
         }
 
         // Update is called once per frame
         private void Update()
         {
-            if (!m_CharacterController.isGrounded && m_PreviouslyGrounded)
+            if (!_characterController.isGrounded && _previouslyGrounded)
             {
-                m_MoveDir.y = 0f;
+                _moveDir.y = 0f;
             }
 
-            m_PreviouslyGrounded = m_CharacterController.isGrounded;
+            _previouslyGrounded = _characterController.isGrounded;
         }
 
         private void FixedUpdate()
@@ -43,23 +41,23 @@ namespace Entities.Player
             float speed;
             GetInput(out speed);
             // always move along the camera forward as it is the direction that it being aimed at
-            Vector3 desiredMove = transform.forward*m_Input.y + transform.right*m_Input.x;
+            Vector3 desiredMove = transform.forward*_inputVector.y + transform.right*_inputVector.x;
 
             // get a normal for the surface that is being touched to move along it
             RaycastHit hitInfo;
-            Physics.SphereCast(transform.position, m_CharacterController.radius, Vector3.down, out hitInfo,
-                               m_CharacterController.height/2f, ~0, QueryTriggerInteraction.Ignore);
+            Physics.SphereCast(transform.position, _characterController.radius, Vector3.down, out hitInfo,
+                               _characterController.height/2f, ~0, QueryTriggerInteraction.Ignore);
             desiredMove = Vector3.ProjectOnPlane(desiredMove, hitInfo.normal).normalized;
 
-            m_MoveDir.x = desiredMove.x*speed;
-            m_MoveDir.z = desiredMove.z*speed;
+            _moveDir.x = desiredMove.x*speed;
+            _moveDir.z = desiredMove.z*speed;
 
 
-            if (!m_CharacterController.isGrounded)
+            if (!_characterController.isGrounded)
             {
-				m_MoveDir += Physics.gravity * m_GravityMultiplier * Time.fixedDeltaTime;
+				_moveDir += Physics.gravity * GravityMultiplier * Time.fixedDeltaTime;
 			}
-            m_CollisionFlags = m_CharacterController.Move(m_MoveDir*Time.fixedDeltaTime);
+            _collisionFlags = _characterController.Move(_moveDir*Time.fixedDeltaTime);
         }
 
         private void GetInput(out float speed)
@@ -89,12 +87,12 @@ namespace Entities.Player
 		
 			// set the desired speed to be walking or running
             speed = MovementSpeed;
-            m_Input = new Vector2(moveDirLeftRight, moveDirFrontBack);
+            _inputVector = new Vector2(moveDirLeftRight, moveDirFrontBack);
 
             // normalize input if it exceeds 1 in combined length:
-            if (m_Input.sqrMagnitude > 1)
+            if (_inputVector.sqrMagnitude > 1)
             {
-                m_Input.Normalize();
+                _inputVector.Normalize();
             }
         }
 
@@ -102,7 +100,7 @@ namespace Entities.Player
         {
             Rigidbody body = hit.collider.attachedRigidbody;
             //dont move the rigidbody if the character is on top of it
-            if (m_CollisionFlags == CollisionFlags.Below)
+            if (_collisionFlags == CollisionFlags.Below)
             {
                 return;
             }
@@ -111,7 +109,7 @@ namespace Entities.Player
             {
                 return;
             }
-            body.AddForceAtPosition(m_CharacterController.velocity*0.1f, hit.point, ForceMode.Impulse);
+            body.AddForceAtPosition(_characterController.velocity*0.1f, hit.point, ForceMode.Impulse);
         }
     }
 }
