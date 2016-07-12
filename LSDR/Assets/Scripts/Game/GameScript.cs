@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using InputManagement;
+using Util;
 
 public class GameScript : MonoBehaviour
 {
@@ -28,5 +29,13 @@ public class GameScript : MonoBehaviour
 		// Do game update stuff here
 
 		InputHandler.HandleInput();
+	}
+
+	public void SetTextureSet(int set)
+	{
+		Material testA = Resources.Load<Material>("Materials/psx_vertexlit_test");
+		Material testB = Resources.Load<Material>("Materials/psx_vertexlit_transparent_test");
+		testA.SetInt("_TextureSet", set);
+		testB.SetInt("_TextureSet", set);
 	}
 }

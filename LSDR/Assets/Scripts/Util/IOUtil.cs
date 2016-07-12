@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
+using System;
+using System.Collections;
 using System.IO;
+using System.Net;
 using SimpleJSON;
 
 namespace Util
@@ -79,6 +82,20 @@ namespace Util
 				Debug.LogError("ERROR: Could not find texture at: " + fullFilePath);
 			}
 			return tex;
+		}
+
+		public static IEnumerator LoadOGGIntoSource(string filePath, AudioSource source)
+		{
+			Debug.Log("Starting download");
+			WWW www = new WWW("file:///" + filePath);
+			while (!www.isDone)
+			{
+				Debug.Log("not done...");
+				yield return null;
+			}
+			Debug.Log(www.GetAudioClip(true).name);
+			source.clip = www.GetAudioClip(true);
+			source.Play();
 		}
 
 		/// <summary>

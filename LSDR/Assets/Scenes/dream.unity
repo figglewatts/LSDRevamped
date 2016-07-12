@@ -438,8 +438,8 @@ MonoBehaviour:
   CanRotate: 1
   TargetCamera: {fileID: 1639242883}
   MouseLookRotationMultiplier: 70
-  maxY: 70
-  minY: -70
+  MaxY: 70
+  MinY: -70
 --- !u!54 &1610015709
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -466,9 +466,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7de4d85a36878e4987d207c7da50a56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MovementSpeed: 0
-  m_IsWalking: 0
-  m_GravityMultiplier: 1
+  MovementSpeed: 3
+  GravityMultiplier: 2
 --- !u!114 &1610015711
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -480,10 +479,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ee4c07b573708a488d04b703cf37ac7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bobbingSpeed: 0.18
-  bobbingAmount: 0.2
-  midpoint: 1
-  stepInterval: 0.6
+  BobbingSpeed: 0.18
+  BobbingAmount: 0.2
+  Midpoint: 1
   TargetCamera: {fileID: 1639242883}
 --- !u!114 &1610015712
 MonoBehaviour:
@@ -496,11 +494,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c08da1ce86f748d4cac67c26e76306a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultMoveSpeed: 4
+  DefaultMoveSpeed: 4
   SprintMoveSpeed: 6
   SprintFastMoveSpeed: 8
-  defaultBobSpeed: 20
-  defaultBobAmount: 0.06
+  DefaultBobSpeed: 20
+  DefaultBobAmount: 0.06
   SprintBobSpeed: 40
   SprintBobAmount: 0.05
   SprintFastBobSpeed: 48
@@ -516,7 +514,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01703651aa41baa49ad7a62793f960f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 60
+  RotationSpeed: 60
 --- !u!1 &1639242878
 GameObject:
   m_ObjectHideFlags: 0

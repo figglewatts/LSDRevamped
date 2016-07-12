@@ -28,7 +28,7 @@ namespace Entities.Player
 
 		void Start()
 		{
-			GameSettings.SetCursorViewState(false);
+			GameSettings.SetCursorViewState(true);
 
 			_originalRotation = Quaternion.Euler(0, TargetCamera.transform.rotation.eulerAngles.y, TargetCamera.transform.rotation.eulerAngles.z);
 
