@@ -16,24 +16,44 @@ namespace IO
 
 		public static GameObject ReadOBJString(string obj)
 		{
-			GameObject gameObject = new GameObject();
-			gameObject.AddComponent<MeshRenderer>();
-			gameObject.AddComponent<MeshFilter>();
+			GameObject baseGameObject = new GameObject("importedObj");
 
-			Mesh m = gameObject.GetComponent<MeshFilter>().mesh;
+			// a handle to the current object, used when processing multiple objects
+			int objectHandle = 0;
+
+			bool firstObject = true;
+
+			// get ready to see the word "List" like 20 times
+			List<GameObject> objObjects = new List<GameObject>();
+			List<Mesh> meshes = new List<Mesh>();
 			List<Vector3> vertices = new List<Vector3>();
 			List<Vector2> UVs = new List<Vector2>();
 			List<Vector3> normals = new List<Vector3>();
-			List<int> triangles = new List<int>();
-			List<int?> uvIndices = new List<int?>();
-			List<int?> normalIndices = new List<int?>();
+			List<List<int>> triangles = new List<List<int>>();
+			List<List<int?>> uvIndices = new List<List<int?>>();
+			List<List<int?>> normalIndices = new List<List<int?>>();
+			// all that was so we can support multiple objects within an OBJ file
 
 			StringReader sr = new StringReader(obj);
 			string line;
 			while ((line = sr.ReadLine()) != null)
 			{
 				string[] words = line.Split(' ');
-				
+
+				if (words[0].Equals("o")) // object
+				{
+					// initialize the object
+					if (!firstObject) { objectHandle++; }
+					objObjects.Add(new GameObject(words[1]));
+					objObjects[objectHandle].transform.SetParent(baseGameObject.transform);
+					objObjects[objectHandle].AddComponent<MeshRenderer>();
+					objObjects[objectHandle].AddComponent<MeshFilter>();
+					meshes.Add(objObjects[objectHandle].GetComponent<MeshFilter>().mesh);
+					triangles.Add(new List<int>());
+					uvIndices.Add(new List<int?>());
+					normalIndices.Add(new List<int?>());
+					firstObject = false;
+				}
 				if (words[0].Equals("v")) // vertex
 				{
 					Vector3 vertex = new Vector3(StringToFloat(words[1]), StringToFloat(words[2]), StringToFloat(words[3]));
@@ -98,41 +118,54 @@ namespace IO
 						// convert everything into tris
 						for (int i = 1; i <= numVertices - 2; i++) // watch the less-than-or-equal-to here
 						{
-							triangles.Add(verts[0] - 1);
-							triangles.Add(verts[i] - 1);
-							triangles.Add(verts[i + 1] - 1);
-							uvIndices.Add(uvs[0] - 1);
-							uvIndices.Add(uvs[i] - 1);
-							uvIndices.Add(uvs[i + 1] - 1);
-							normalIndices.Add(norms[0] - 1);
-							normalIndices.Add(norms[i] - 1);
-							normalIndices.Add(norms[i + 1] - 1);
+							triangles[objectHandle].Add(verts[0] - 1);
+							triangles[objectHandle].Add(verts[i] - 1);
+							triangles[objectHandle].Add(verts[i + 1] - 1);
+							uvIndices[objectHandle].Add(uvs[0] - 1);
+							uvIndices[objectHandle].Add(uvs[i] - 1);
+							uvIndices[objectHandle].Add(uvs[i + 1] - 1);
+							normalIndices[objectHandle].Add(norms[0] - 1);
+							normalIndices[objectHandle].Add(norms[i] - 1);
+							normalIndices[objectHandle].Add(norms[i + 1] - 1);
 						}
 					}
 					else
 					{
 						for (int i = 0; i < numVertices; i++)
 						{
-							triangles.Add(verts[i] - 1);
-							uvIndices.Add(uvs[i] - 1);
-							normalIndices.Add(norms[i] - 1);
+							triangles[objectHandle].Add(verts[i] - 1);
+							uvIndices[objectHandle].Add(uvs[i] - 1);
+							normalIndices[objectHandle].Add(norms[i] - 1);
 						}
 					}
 				}
 			}
 
-			Vector2[] actualUVs = new Vector2[triangles.Count];
-			Vector3[] actualVertices = new Vector3[triangles.Count];
-			Vector3[] actualNormals = new Vector3[triangles.Count];
-			int[] actualTriangles = new int[triangles.Count];
-			for (int i = 0; i < triangles.Count; i++)
+			for (int i = 0; i < objObjects.Count; i++)
+			{
+				Mesh mesh = meshes[i];
+				BuildMesh(vertices.ToArray(), triangles[i].ToArray(), UVs.ToArray(), uvIndices[i].ToArray(), normals.ToArray(), normalIndices[i].ToArray(), ref mesh);
+				objObjects[i].transform.localScale = new Vector3(-1, 1, 1);
+			}
+
+			return baseGameObject;
+		}
+
+		private static void BuildMesh(Vector3[] vertices, int[] triangles, Vector2[] uvs, int?[] uvIndices, Vector3[] normals,
+			int?[] normalIndices, ref Mesh m)
+		{
+			Vector2[] actualUVs = new Vector2[triangles.Length];
+			Vector3[] actualVertices = new Vector3[triangles.Length];
+			Vector3[] actualNormals = new Vector3[triangles.Length];
+			int[] actualTriangles = new int[triangles.Length];
+			for (int i = 0; i < triangles.Length; i++)
 			{
 				actualVertices[i] = vertices[triangles[i]];
-				if (UVs.Count > 0)
+				if (uvs.Length > 0)
 				{
-					actualUVs[i] = uvIndices[i] == null ? Vector2.zero : UVs[uvIndices[i] ?? default(int)];
+					actualUVs[i] = uvIndices[i] == null ? Vector2.zero : uvs[uvIndices[i] ?? default(int)];
 				}
-				if (normals.Count > 0)
+				if (normals.Length > 0)
 				{
 					actualNormals[i] = normalIndices[i] == null || normalIndices[i] == -1 ? Vector3.zero : normals[normalIndices[i] ?? default(int)];
 				}
@@ -145,10 +178,6 @@ namespace IO
 			m.triangles = actualTriangles;
 			m.RecalculateNormals();
 			m.RecalculateBounds();
-
-			gameObject.transform.localScale = new Vector3(-1, 1, 1);
-
-			return gameObject;
 		}
 
 		private static float StringToFloat(string s)

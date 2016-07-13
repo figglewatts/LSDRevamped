@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
 using InputManagement;
-using Util;
 
 public class GameScript : MonoBehaviour
 {
@@ -22,8 +20,6 @@ public class GameScript : MonoBehaviour
 		ControlSchemeManager.Initialize();
 
 		ControlSchemeManager.SwitchToScheme("Classic");
-
-		IOUtil.LoadObject(IOUtil.PathCombine(Application.dataPath, "models", "levels", "stg13mp", "M000.tobj"));
 	}
 
 	void Update()
