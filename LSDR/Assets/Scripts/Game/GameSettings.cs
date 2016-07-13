@@ -21,6 +21,13 @@ namespace Game
 
 		#endregion
 
+		#region Graphical Settings
+
+		// modifiable settings
+		public static bool UseClassicShaders = true;
+
+		#endregion
+
 		public static void SetCursorViewState(bool state)
 		{
 			Cursor.visible = state;

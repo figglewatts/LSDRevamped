@@ -1,10 +1,9 @@
-﻿Shader "LSD/Transparent" {
+﻿Shader "LSD/TransparentSet" {
 	Properties {
 		_MainTexA ("Albedo A (RGB)", 2D) = "white" {}
 		_MainTexB ("Albedo B (RGB)", 2D) = "white" {}
 		_MainTexC ("Albedo C (RGB)", 2D) = "white" {}
 		_MainTexD ("Albedo D (RGB)", 2D) = "white" {}
-		_Cutoff ("Alpha cutoff", Range(0,1)) = 0.5
 	}
 	SubShader {
 		Tags {"Queue"="Transparent-1" "IgnoreProjector"="True" "RenderType"="Transparent"}

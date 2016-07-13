@@ -22,6 +22,8 @@ public class GameScript : MonoBehaviour
 		ControlSchemeManager.Initialize();
 
 		ControlSchemeManager.SwitchToScheme("Classic");
+
+		IOUtil.LoadObject(IOUtil.PathCombine(Application.dataPath, "models", "levels", "stg13mp", "M000.tobj"));
 	}
 
 	void Update()
@@ -29,13 +31,5 @@ public class GameScript : MonoBehaviour
 		// Do game update stuff here
 
 		InputHandler.HandleInput();
-	}
-
-	public void SetTextureSet(int set)
-	{
-		Material testA = Resources.Load<Material>("Materials/psx_vertexlit_test");
-		Material testB = Resources.Load<Material>("Materials/psx_vertexlit_transparent_test");
-		testA.SetInt("_TextureSet", set);
-		testB.SetInt("_TextureSet", set);
 	}
 }

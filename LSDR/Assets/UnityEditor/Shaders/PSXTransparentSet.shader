@@ -1,4 +1,4 @@
-﻿Shader "psx/transparent/vertexlit" {
+﻿Shader "LSD/PSX/TransparentSet" {
 	Properties{
 		_MainTexA("Albedo A (RGB)", 2D) = "white" {}
 		_MainTexB("Albedo B (RGB)", 2D) = "white" {}

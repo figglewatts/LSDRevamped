@@ -3,7 +3,10 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Net;
+using Game;
+using IO;
 using SimpleJSON;
+using Types;
 
 namespace Util
 {
@@ -96,6 +99,38 @@ namespace Util
 			Debug.Log(www.GetAudioClip(true).name);
 			source.clip = www.GetAudioClip(true);
 			source.Play();
+		}
+
+		public static GameObject LoadObject(string filePath)
+		{
+			TOBJ t = new TOBJ();
+			ToriiObjectReader.Read(filePath, ref t);
+
+			GameObject g = OBJReader.ReadOBJString(t.ObjectFile);
+			Material m = g.GetComponent<Renderer>().material;
+
+			if (Path.GetFileNameWithoutExtension(t.ObjectTexture).Contains("["))
+			{
+				// part of a texture set
+				m.shader = Shader.Find(GameSettings.UseClassicShaders ? "LSD/PSX/TransparentSet" : "LSD/TransparentSet");
+
+				string texNameWithoutExtension = Path.GetFileNameWithoutExtension(t.ObjectTexture);
+				string baseTexName = texNameWithoutExtension.Substring(1);
+
+				string pathToTextureDir = Path.GetDirectoryName(t.ObjectTexture);
+
+				m.SetTexture("_MainTexA", LoadPNG(PathCombine(Application.dataPath, pathToTextureDir, "A" + baseTexName) + ".png"));
+				m.SetTexture("_MainTexB", LoadPNG(PathCombine(Application.dataPath, pathToTextureDir, "B" + baseTexName) + ".png"));
+				m.SetTexture("_MainTexC", LoadPNG(PathCombine(Application.dataPath, pathToTextureDir, "C" + baseTexName) + ".png"));
+				m.SetTexture("_MainTexD", LoadPNG(PathCombine(Application.dataPath, pathToTextureDir, "D" + baseTexName) + ".png"));
+			}
+			else
+			{
+				m.shader = Shader.Find(GameSettings.UseClassicShaders ? "LSD/PSX/Transparent" : "Transparent/Diffuse");
+				m.SetTexture("_MainTex", LoadPNG(PathCombine(Application.dataPath, t.ObjectTexture)));
+			}
+
+			return g;
 		}
 
 		/// <summary>
