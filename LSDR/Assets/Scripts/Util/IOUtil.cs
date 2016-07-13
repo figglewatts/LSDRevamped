@@ -104,11 +104,12 @@ namespace Util
 		public static GameObject LoadObject(string filePath)
 		{
 			TOBJ t = new TOBJ();
-			ToriiObjectReader.Read(filePath, ref t);
+			ToriiObjectReader.Read(filePath, ref t); // load model
 
-			GameObject g = OBJReader.ReadOBJString(t.ObjectFile);
+			GameObject g = OBJReader.ReadOBJString(t.ObjectFile); // create mesh
 			Material m = g.GetComponent<Renderer>().material;
 
+			// load texture
 			if (Path.GetFileNameWithoutExtension(t.ObjectTexture).Contains("["))
 			{
 				// part of a texture set
@@ -128,6 +129,17 @@ namespace Util
 			{
 				m.shader = Shader.Find(GameSettings.UseClassicShaders ? "LSD/PSX/Transparent" : "Transparent/Diffuse");
 				m.SetTexture("_MainTex", LoadPNG(PathCombine(Application.dataPath, t.ObjectTexture)));
+			}
+
+			// load animations
+			if (t.NumberOfAnimations > 0)
+			{
+				ToriiObjectAnimator animator = g.AddComponent<ToriiObjectAnimator>();
+				foreach (Transform child in g.transform)
+				{
+					animator.Objects.Add(child.gameObject);
+				}
+				animator.ToriiObject = t;
 			}
 
 			return g;
