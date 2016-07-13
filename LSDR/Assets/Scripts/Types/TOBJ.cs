@@ -39,9 +39,4 @@ namespace Types
 		public Quaternion Rotation;
 		public Vector3 Scale;
 	}
-
-	public class ObjState
-	{
-		public Vector3[] Positions;
-	}
 }
