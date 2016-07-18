@@ -107,28 +107,35 @@ namespace Util
 			ToriiObjectReader.Read(filePath, ref t); // load model
 
 			GameObject g = OBJReader.ReadOBJString(t.ObjectFile); // create mesh
-			Material m = g.GetComponent<Renderer>().material;
-
-			// load texture
-			if (Path.GetFileNameWithoutExtension(t.ObjectTexture).Contains("["))
+			Renderer[] renderers = g.GetComponentsInChildren<Renderer>();
+			foreach (Renderer r in renderers)
 			{
-				// part of a texture set
-				m.shader = Shader.Find(GameSettings.UseClassicShaders ? "LSD/PSX/TransparentSet" : "LSD/TransparentSet");
+				Material m = r.material;
 
-				string texNameWithoutExtension = Path.GetFileNameWithoutExtension(t.ObjectTexture);
-				string baseTexName = texNameWithoutExtension.Substring(1);
+				// load texture
+				if (!string.IsNullOrEmpty(t.ObjectTexture))
+				{
+					if (Path.GetFileNameWithoutExtension(t.ObjectTexture).Contains("["))
+					{
+						// part of a texture set
+						m.shader = Shader.Find(GameSettings.UseClassicShaders ? "LSD/PSX/TransparentSet" : "LSD/TransparentSet");
 
-				string pathToTextureDir = Path.GetDirectoryName(t.ObjectTexture);
+						string texNameWithoutExtension = Path.GetFileNameWithoutExtension(t.ObjectTexture);
+						string baseTexName = texNameWithoutExtension.Substring(1);
 
-				m.SetTexture("_MainTexA", LoadPNG(PathCombine(Application.dataPath, pathToTextureDir, "A" + baseTexName) + ".png"));
-				m.SetTexture("_MainTexB", LoadPNG(PathCombine(Application.dataPath, pathToTextureDir, "B" + baseTexName) + ".png"));
-				m.SetTexture("_MainTexC", LoadPNG(PathCombine(Application.dataPath, pathToTextureDir, "C" + baseTexName) + ".png"));
-				m.SetTexture("_MainTexD", LoadPNG(PathCombine(Application.dataPath, pathToTextureDir, "D" + baseTexName) + ".png"));
-			}
-			else
-			{
-				m.shader = Shader.Find(GameSettings.UseClassicShaders ? "LSD/PSX/Transparent" : "Transparent/Diffuse");
-				m.SetTexture("_MainTex", LoadPNG(PathCombine(Application.dataPath, t.ObjectTexture)));
+						string pathToTextureDir = Path.GetDirectoryName(t.ObjectTexture);
+
+						m.SetTexture("_MainTexA", LoadPNG(PathCombine(Application.dataPath, pathToTextureDir, "A" + baseTexName) + ".png"));
+						m.SetTexture("_MainTexB", LoadPNG(PathCombine(Application.dataPath, pathToTextureDir, "B" + baseTexName) + ".png"));
+						m.SetTexture("_MainTexC", LoadPNG(PathCombine(Application.dataPath, pathToTextureDir, "C" + baseTexName) + ".png"));
+						m.SetTexture("_MainTexD", LoadPNG(PathCombine(Application.dataPath, pathToTextureDir, "D" + baseTexName) + ".png"));
+					}
+					else
+					{
+						m.shader = Shader.Find(GameSettings.UseClassicShaders ? "LSD/PSX/Transparent" : "Transparent/Diffuse");
+						m.SetTexture("_MainTex", LoadPNG(PathCombine(Application.dataPath, t.ObjectTexture)));
+					}
+				}
 			}
 
 			// load animations

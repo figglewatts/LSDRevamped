@@ -34,6 +34,15 @@ namespace IO
 			List<List<int?>> normalIndices = new List<List<int?>>();
 			// all that was so we can support multiple objects within an OBJ file
 
+			objObjects.Add(new GameObject());
+			objObjects[objectHandle].transform.SetParent(baseGameObject.transform);
+			objObjects[objectHandle].AddComponent<MeshRenderer>();
+			objObjects[objectHandle].AddComponent<MeshFilter>();
+			meshes.Add(objObjects[objectHandle].GetComponent<MeshFilter>().mesh);
+			triangles.Add(new List<int>());
+			uvIndices.Add(new List<int?>());
+			normalIndices.Add(new List<int?>());
+
 			StringReader sr = new StringReader(obj);
 			string line;
 			while ((line = sr.ReadLine()) != null)
@@ -43,16 +52,24 @@ namespace IO
 				if (words[0].Equals("o")) // object
 				{
 					// initialize the object
-					if (!firstObject) { objectHandle++; }
-					objObjects.Add(new GameObject(words[1]));
-					objObjects[objectHandle].transform.SetParent(baseGameObject.transform);
-					objObjects[objectHandle].AddComponent<MeshRenderer>();
-					objObjects[objectHandle].AddComponent<MeshFilter>();
-					meshes.Add(objObjects[objectHandle].GetComponent<MeshFilter>().mesh);
-					triangles.Add(new List<int>());
-					uvIndices.Add(new List<int?>());
-					normalIndices.Add(new List<int?>());
-					firstObject = false;
+					if (!firstObject)
+					{
+						objectHandle++;
+						objObjects.Add(new GameObject(words[1]));
+						objObjects[objectHandle].transform.SetParent(baseGameObject.transform);
+						objObjects[objectHandle].AddComponent<MeshRenderer>();
+						objObjects[objectHandle].AddComponent<MeshFilter>();
+						meshes.Add(objObjects[objectHandle].GetComponent<MeshFilter>().mesh);
+						triangles.Add(new List<int>());
+						uvIndices.Add(new List<int?>());
+						normalIndices.Add(new List<int?>());
+					}
+					else
+					{
+						objObjects[objectHandle].name = words[1];
+						firstObject = false;
+					}
+					
 				}
 				if (words[0].Equals("v")) // vertex
 				{

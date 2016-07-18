@@ -7,9 +7,9 @@ public class ToriiObjectAnimator : MonoBehaviour
 	public TOBJ ToriiObject;
 	public List<GameObject> Objects = new List<GameObject>();
 
-	public int CurrentAnimationHandle;
-	public bool IsAnimating;
-	public bool LoopAnimations;
+	private int CurrentAnimationHandle;
+	public bool IsAnimating = true;
+	public bool LoopAnimations = true;
 
 	public TANIM CurrentAnimation
 	{
@@ -65,7 +65,7 @@ public class ToriiObjectAnimator : MonoBehaviour
 	{
 		if (IsAnimating)
 		{
-			_animationTimer += Time.deltaTime;
+			_animationTimer += Time.deltaTime * 10f;
 			if (_animationTimer >= CurrentAnimation.MaxValue)
 			{
 				if (LoopAnimations)
@@ -77,9 +77,27 @@ public class ToriiObjectAnimator : MonoBehaviour
 					IsAnimating = false;
 				}
 			}
-
-			LerpObjects(CurrentKeyframe, NextKeyframe);
+			else
+			{
+				LerpObjects(CurrentKeyframe, NextKeyframe);
+			}
 		}
+	}
+
+	public void ResetToDefaultStates()
+	{
+		for (int i = 0; i < Objects.Count; i++)
+		{
+			GameObject g = Objects[i];
+			SetObjectToState(ref g, _originalObjStates[i]);
+		}
+	}
+
+	private void SetObjectToState(ref GameObject g, OBJSTATE s)
+	{
+		g.transform.position = s.Position;
+		g.transform.rotation = s.Rotation;
+		g.transform.localScale = s.Scale;
 	}
 
 	private void LerpObjects(TKEYFRAME current, TKEYFRAME next)
@@ -97,5 +115,37 @@ public class ToriiObjectAnimator : MonoBehaviour
 			Objects[i].transform.rotation = Quaternion.Lerp(current.ObjStates[i].Rotation, next.ObjStates[i].Rotation, t);
 			Objects[i].transform.localScale = Vector3.Lerp(current.ObjStates[i].Scale, next.ObjStates[i].Scale, t);
 		}
+	}
+
+	public void ChangeAnimation(int animationIndex)
+	{
+		_animationTimer = 0;
+		CurrentAnimationHandle = animationIndex;
+	}
+
+	public void ChangeAnimation(string animationName)
+	{
+		int i = 0;
+		foreach (TANIM a in ToriiObject.Animations)
+		{
+			if (a.Name.Equals(animationName))
+			{
+				ChangeAnimation(i);
+				return;
+			}
+			i++;
+		}
+
+		Debug.LogWarning("Could not find animation with name " + animationName);
+	}
+
+	public void Play() { IsAnimating = true; }
+
+	public void Pause() { IsAnimating = false; }
+
+	public void Stop()
+	{
+		IsAnimating = false;
+		_animationTimer = 0;
 	}
 }
