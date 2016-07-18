@@ -22,6 +22,8 @@ public class GameScript : MonoBehaviour
 		ControlSchemeManager.Initialize();
 
 		ControlSchemeManager.SwitchToScheme("Classic");
+
+		IOUtil.LoadMap("maps/test.map", true);
 	}
 
 	void Update()

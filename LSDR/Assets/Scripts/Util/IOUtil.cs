@@ -101,10 +101,10 @@ namespace Util
 			source.Play();
 		}
 
-		public static GameObject LoadObject(string filePath)
+		public static GameObject LoadObject(string filePath, bool collisionMesh)
 		{
 			TOBJ t = new TOBJ();
-			ToriiObjectReader.Read(filePath, ref t); // load model
+			ToriiObjectReader.Read(PathCombine(Application.dataPath, filePath), ref t); // load model
 
 			GameObject g = OBJReader.ReadOBJString(t.ObjectFile); // create mesh
 			Renderer[] renderers = g.GetComponentsInChildren<Renderer>();
@@ -148,6 +148,16 @@ namespace Util
 				}
 				animator.ToriiObject = t;
 			}
+
+			return g;
+		}
+
+		public static GameObject LoadMap(string filePath, bool collisionMesh)
+		{
+			GameObject g = MapReader.LoadMap(PathCombine(Application.dataPath, filePath),
+				PathCombine(Application.dataPath, "textures", "wad"),
+				Shader.Find(GameSettings.UseClassicShaders ? "LSD/PSX/DiffuseSet" : "LSD/DiffuseSet"),
+				Shader.Find(GameSettings.UseClassicShaders ? "LSD/PSX/TransparentSet" : "LSD/TransparentSet"), collisionMesh);
 
 			return g;
 		}
