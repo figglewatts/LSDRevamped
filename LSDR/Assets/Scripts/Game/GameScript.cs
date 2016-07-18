@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using InputManagement;
 using IO;
+using Types;
 using Util;
 
 public class GameScript : MonoBehaviour
@@ -23,7 +24,8 @@ public class GameScript : MonoBehaviour
 
 		ControlSchemeManager.SwitchToScheme("Classic");
 
-		IOUtil.LoadMap("maps/test.map", true);
+		TMAP t;
+		IOUtil.LoadToriiMap(@"D:\Documents\git-repos\LSDRevamped\LSDR\Assets\levels\test.tmap", out t);
 	}
 
 	void Update()

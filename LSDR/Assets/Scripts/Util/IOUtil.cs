@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Net;
+using Entities;
 using Game;
 using IO;
 using SimpleJSON;
@@ -87,6 +88,9 @@ namespace Util
 			return tex;
 		}
 
+		/// <summary>
+		/// Loads an OGG file into the specified AudioSource
+		/// </summary>
 		public static IEnumerator LoadOGGIntoSource(string filePath, AudioSource source)
 		{
 			Debug.Log("Starting download");
@@ -101,6 +105,9 @@ namespace Util
 			source.Play();
 		}
 
+		/// <summary>
+		/// Loads a Torii object (3D model with animations) and returns a gameobject
+		/// </summary>
 		public static GameObject LoadObject(string filePath, bool collisionMesh)
 		{
 			TOBJ t = new TOBJ();
@@ -149,9 +156,14 @@ namespace Util
 				animator.ToriiObject = t;
 			}
 
+			// TODO: collision mesh
+
 			return g;
 		}
 
+		/// <summary>
+		/// Loads MAP file geometry into a mesh and returns a gameobject
+		/// </summary>
 		public static GameObject LoadMap(string filePath, bool collisionMesh)
 		{
 			GameObject g = MapReader.LoadMap(PathCombine(Application.dataPath, filePath),
@@ -160,6 +172,24 @@ namespace Util
 				Shader.Find(GameSettings.UseClassicShaders ? "LSD/PSX/TransparentSet" : "LSD/TransparentSet"), collisionMesh);
 
 			return g;
+		}
+
+		/// <summary>
+		/// Loads a Torii map and returns a gameobject with entities in the torii map as child elements
+		/// </summary>
+		public static GameObject LoadToriiMap(string filePath, out TMAP tmap)
+		{
+			tmap = ToriiMapReader.ReadFromFile(filePath);
+
+			GameObject tmapObject = new GameObject(tmap.Header.Name);
+
+			foreach (ENTITY e in tmap.Content.Entities)
+			{
+				GameObject entityObject = EntityInstantiator.Instantiate(e);
+				entityObject.transform.SetParent(tmapObject.transform);
+			}
+
+			return tmapObject;
 		}
 
 		/// <summary>

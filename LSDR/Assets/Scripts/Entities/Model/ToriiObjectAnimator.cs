@@ -8,7 +8,7 @@ public class ToriiObjectAnimator : MonoBehaviour
 	public List<GameObject> Objects = new List<GameObject>();
 
 	private int CurrentAnimationHandle;
-	public bool IsAnimating = true;
+	public bool IsAnimating;
 	public bool LoopAnimations = true;
 
 	public TANIM CurrentAnimation
