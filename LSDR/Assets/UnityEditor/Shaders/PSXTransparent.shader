@@ -1,6 +1,7 @@
 ﻿Shader "LSD/PSX/Transparent" {
 	Properties{
 		_MainTex("Base (RGB)", 2D) = "white" {}
+		_Cutoff("Alpha Cutoff", Range(0, 1)) = 0.5
 	}
 		SubShader{
 		Tags{ "Queue" = "Transparent" "RenderType" = "Transparent" }
@@ -24,6 +25,7 @@
 	};
 
 	float4 _MainTex_ST;
+	uniform float _Cutoff;
 	uniform half4 unity_FogStart;
 	uniform half4 unity_FogEnd;
 
@@ -82,6 +84,10 @@
 		half4 c = tex2D(_MainTex, IN.uv_MainTex / IN.normal.r)*IN.color;
 		half4 color = c*(IN.colorFog.a);
 		color.rgb += IN.colorFog.rgb*(1 - IN.colorFog.a);
+		if (c.a < _Cutoff)
+		{
+			discard;
+		}
 		color.a = c.a;
 		return color;
 	}

@@ -4,11 +4,12 @@
 		_MainTexB("Albedo B (RGB)", 2D) = "white" {}
 		_MainTexC("Albedo C (RGB)", 2D) = "white" {}
 		_MainTexD("Albedo D (RGB)", 2D) = "white" {}
+		_Cutoff("Alpha Cutoff", Range(0, 1)) = 0.5
 	}
 	SubShader{
 		Tags{ "Queue" = "Transparent-1" "IgnoreProjector" = "True" "RenderType" = "Transparent" }
 		LOD 200
-		Blend SrcAlpha OneMinusSrcAlpha
+		Blend SrcAlpha OneMinusSrcAlpha 
 		Pass{
 			Lighting On
 			CGPROGRAM
@@ -27,6 +28,7 @@
 			};
 
 			float4 _MainTexA_ST;
+			uniform float _Cutoff;
 			uniform half4 unity_FogStart;
 			uniform half4 unity_FogEnd;
 
@@ -110,6 +112,10 @@
 				}
 				half4 color = c*(IN.colorFog.a);
 				color.rgb += IN.colorFog.rgb*(1 - IN.colorFog.a);
+				if (c.a < _Cutoff)
+				{
+					discard;
+				}
 				color.a = c.a;
 				return color;
 			}

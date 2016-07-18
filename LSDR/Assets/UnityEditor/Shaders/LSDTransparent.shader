@@ -1,57 +1,111 @@
 ﻿Shader "LSD/TransparentSet" {
-	Properties {
-		_MainTexA ("Albedo A (RGB)", 2D) = "white" {}
-		_MainTexB ("Albedo B (RGB)", 2D) = "white" {}
-		_MainTexC ("Albedo C (RGB)", 2D) = "white" {}
-		_MainTexD ("Albedo D (RGB)", 2D) = "white" {}
+	Properties{
+		_MainTexA("Albedo A (RGB)", 2D) = "white" {}
+		_MainTexB("Albedo B (RGB)", 2D) = "white" {}
+		_MainTexC("Albedo C (RGB)", 2D) = "white" {}
+		_MainTexD("Albedo D (RGB)", 2D) = "white" {}
+		_Cutoff("Alpha Cutoff", Range(0, 1)) = 0.5
 	}
-	SubShader {
-		Tags {"Queue"="Transparent-1" "IgnoreProjector"="True" "RenderType"="Transparent"}
-		
-		CGPROGRAM
-		// Physically based Standard lighting model, and enable shadows on all light types
-		#pragma surface surf Standard fullforwardshadows alphatest:_Cutoff
+	SubShader{
+		Tags{ "Queue" = "Transparent-1" "IgnoreProjector" = "True" "RenderType" = "Transparent" }
+		LOD 200
+		Blend SrcAlpha OneMinusSrcAlpha
+		Pass{
+			Lighting On
+			CGPROGRAM
 
-		// Use shader model 3.0 target, to get nicer looking lighting
-		#pragma target 3.0
+			#pragma vertex vert
+			#pragma fragment frag
+			#include "UnityCG.cginc" 
 
-		struct Input {
-			float2 uv_MainTexA;
-			float2 uv_MainTexB;
-			float2 uv_MainTexC;
-			float2 uv_MainTexD;
-		};
-
-		sampler2D _MainTexA;
-		sampler2D _MainTexB;
-		sampler2D _MainTexC;
-		sampler2D _MainTexD;
-
-		uniform int _TextureSet;
-
-		void surf (Input IN, inout SurfaceOutputStandard o) {
-			fixed4 c;
-			if (_TextureSet == 1)
+			struct v2f
 			{
-				c = tex2D (_MainTexB, IN.uv_MainTexB);
-			}
-			else if (_TextureSet == 2)
+				fixed4 pos : SV_POSITION;
+				half4 color : COLOR0;
+				half4 colorFog : COLOR1;
+				float2 uv_MainTex : TEXCOORD0;
+			};
+
+			float4 _MainTexA_ST;
+			uniform float _Cutoff;
+			uniform half4 unity_FogStart;
+			uniform half4 unity_FogEnd;
+
+			v2f vert(appdata_full v)
 			{
-				c = tex2D (_MainTexC, IN.uv_MainTexC);
+				v2f o;
+
+				o.pos = mul(UNITY_MATRIX_MVP,v.vertex);
+
+				o.color = float4(ShadeVertexLightsFull(v.vertex, v.normal, 4, true), 1.0);
+				o.color *= v.color;
+
+				float distance = length(mul(UNITY_MATRIX_MV,v.vertex));
+				
+				o.uv_MainTex = TRANSFORM_TEX(v.texcoord, _MainTexA);
+
+				//Fog
+				float4 fogColor = unity_FogColor;
+
+				float fogDensity = (unity_FogEnd - distance) / (unity_FogEnd - unity_FogStart);
+				//o.normal.g = fogDensity;
+				//o.normal.b = 1;
+
+				o.colorFog = fogColor;
+				o.colorFog.a = clamp(fogDensity,0,1);
+
+				//Cut out polygons
+				if (distance > unity_FogStart.z + unity_FogColor.a * 255)
+				{
+					o.pos.w = 0;
+				}
+
+
+				return o;
 			}
-			else if (_TextureSet == 3)
+
+			sampler2D _MainTexA;
+			sampler2D _MainTexB;
+			sampler2D _MainTexC;
+			sampler2D _MainTexD;
+
+			uniform int _TextureSet;
+
+			float4 frag(v2f IN) : COLOR
 			{
-				c = tex2D (_MainTexD, IN.uv_MainTexD);
+				half4 c;
+				if (_TextureSet == 1)
+				{
+					c = tex2D(_MainTexA, IN.uv_MainTex)*IN.color;
+				}
+				else if (_TextureSet == 2)
+				{
+					c = tex2D(_MainTexB, IN.uv_MainTex)*IN.color;
+				}
+				else if (_TextureSet == 3)
+				{
+					c = tex2D(_MainTexC, IN.uv_MainTex)*IN.color;
+				}
+				else if (_TextureSet == 4)
+				{
+					c = tex2D(_MainTexD, IN.uv_MainTex)*IN.color;
+				}
+				else // default to A
+				{
+					c = tex2D(_MainTexA, IN.uv_MainTex)*IN.color;
+				}
+				half4 color = c*(IN.colorFog.a);
+				color.rgb += IN.colorFog.rgb*(1 - IN.colorFog.a);
+
+				if (c.a < _Cutoff)
+				{
+					discard;
+				}
+
+				color.a = c.a;
+				return color;
 			}
-			else
-			{
-				// default to texture set A
-				c = tex2D (_MainTexA, IN.uv_MainTexA);
-			}
-			o.Albedo = c.rgb;
-			o.Alpha = c.a;
+			ENDCG
 		}
-		ENDCG
-	} 
-	FallBack "Transparent/Cutout/Diffuse"
+	}
 }
