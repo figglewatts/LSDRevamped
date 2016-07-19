@@ -4,10 +4,12 @@ using System.Collections;
 using System.IO;
 using System.Net;
 using Entities;
+using Entities.WorldObject;
 using Game;
 using IO;
 using SimpleJSON;
 using Types;
+using UnityEditor.Animations;
 
 namespace Util
 {
@@ -93,8 +95,10 @@ namespace Util
 		/// </summary>
 		public static IEnumerator LoadOGGIntoSource(string filePath, AudioSource source)
 		{
+			// TODO: handle missing files
+		
 			Debug.Log("Starting download");
-			WWW www = new WWW("file:///" + filePath);
+			WWW www = new WWW("file:///" + PathCombine(Application.dataPath, filePath));
 			while (!www.isDone)
 			{
 				Debug.Log("not done...");
@@ -110,6 +114,8 @@ namespace Util
 		/// </summary>
 		public static GameObject LoadObject(string filePath, bool collisionMesh)
 		{
+			// TODO: handle missing files
+		
 			TOBJ t = new TOBJ();
 			ToriiObjectReader.Read(PathCombine(Application.dataPath, filePath), ref t); // load model
 
@@ -156,7 +162,15 @@ namespace Util
 				animator.ToriiObject = t;
 			}
 
-			// TODO: collision mesh
+			if (collisionMesh)
+			{
+				foreach (Transform child in g.transform)
+				{
+					child.gameObject.AddComponent<MeshCollider>();
+				}
+			}
+
+			g.transform.localScale = new Vector3(-g.transform.localScale.x, g.transform.localScale.y, g.transform.localScale.z);
 
 			return g;
 		}
@@ -166,10 +180,14 @@ namespace Util
 		/// </summary>
 		public static GameObject LoadMap(string filePath, bool collisionMesh)
 		{
+			// TODO: handle missing files
+
+			MapReader.MapScaleFactor = 1F;
+			
 			GameObject g = MapReader.LoadMap(PathCombine(Application.dataPath, filePath),
 				PathCombine(Application.dataPath, "textures", "wad"),
-				Shader.Find(GameSettings.UseClassicShaders ? "LSD/PSX/DiffuseSet" : "LSD/DiffuseSet"),
-				Shader.Find(GameSettings.UseClassicShaders ? "LSD/PSX/TransparentSet" : "LSD/TransparentSet"), collisionMesh);
+				Shader.Find("LSD/DiffuseSet"),
+				Shader.Find("LSD/TransparentSet"), collisionMesh);
 
 			return g;
 		}
@@ -179,6 +197,8 @@ namespace Util
 		/// </summary>
 		public static GameObject LoadToriiMap(string filePath, out TMAP tmap)
 		{
+			// TODO: handle missing files
+			
 			tmap = ToriiMapReader.ReadFromFile(filePath);
 
 			GameObject tmapObject = new GameObject(tmap.Header.Name);

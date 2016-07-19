@@ -46,6 +46,23 @@ namespace Types
 			}
 			return null;
 		}
+
+		public bool[] GetSpawnflagValues(int numberOfSpawnflags)
+		{
+			uint tempSpawnflags = Spawnflags;
+			bool[] values = new bool[numberOfSpawnflags];
+			for (int i = 0; i < values.Length; i++)
+			{
+				values[i] = (tempSpawnflags & 1) == 1;
+				tempSpawnflags >>= 1;
+			}
+			return values;
+		}
+
+		public bool GetSpawnflagValue(int index, int numberOfSpawnflags)
+		{
+			return GetSpawnflagValues(numberOfSpawnflags)[index];
+		}
 	}
 
 	public struct PROPERTY

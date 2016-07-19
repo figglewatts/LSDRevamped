@@ -25,7 +25,7 @@ public class GameScript : MonoBehaviour
 		ControlSchemeManager.SwitchToScheme("Classic");
 
 		TMAP t;
-		IOUtil.LoadToriiMap(@"D:\Documents\git-repos\LSDRevamped\LSDR\Assets\levels\test.tmap", out t);
+		IOUtil.LoadToriiMap(@"D:\Documents\git-repos\LSDRevamped\LSDR\Assets\levels\testEngine.tmap", out t);
 	}
 
 	void Update()

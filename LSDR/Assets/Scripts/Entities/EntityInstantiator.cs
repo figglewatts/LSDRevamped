@@ -1,4 +1,9 @@
 ﻿using System;
+using Entities.Action;
+using Entities.Dream;
+using Entities.Player;
+using Entities.Trigger;
+using Entities.WorldObject;
 using Types;
 using UnityEngine;
 using Util;
@@ -9,19 +14,92 @@ namespace Entities
 	{
 		public static GameObject Instantiate(ENTITY e)
 		{
-			// TODO: more complete implementation
-
 			GameObject entityObject;
 			switch (e.Classname)
 			{
+				case "action_animate":
+				{
+					entityObject = AnimateAction.Instantiate(e);
+					break;
+				}
+				case "action_move":
+				{
+					entityObject = MoveAction.Instantiate(e);
+					break;
+				}
+				case "action_rotate":
+				{
+					entityObject = RotateAction.Instantiate(e);
+					break;
+				}
+				case "action_sequence":
+				{
+					entityObject = ActionSequence.Instantiate(e);
+					break;
+				}
+				case "action_sound":
+				{
+					entityObject = SoundAction.Instantiate(e);
+					break;
+				}
+				case "action_wait":
+				{
+					entityObject = WaitAction.Instantiate(e);
+					break;
+				}
+				case "audio_source":
+				{
+					entityObject = AudioSourceObject.Instantiate(e);
+					break;
+				}
+				case "dream_environment":
+				{
+					entityObject = DreamEnvironment.Instantiate(e);
+					break;
+				}
 				case "!map":
 				{
-					entityObject = IOUtil.LoadMap(e.GetPropertyValue("Map src"), true);
+					entityObject = MapObject.Instantiate(e);
 					break;
 				}
 				case "!model":
 				{
-					entityObject = IOUtil.LoadObject(e.GetPropertyValue("Model src"), true);
+					entityObject = ModelObject.Instantiate(e);
+					break;
+				}
+				case "music_controller":
+				{
+					entityObject = MusicController.Instantiate(e);
+					break;
+				}
+				case "player_spawn":
+				{
+					entityObject = PlayerSpawn.Instantiate(e);
+					break;
+				}
+				case "target":
+				{
+					entityObject = Target.Instantiate(e);
+					break;
+				}
+				case "trigger_link":
+				{
+					entityObject = TriggerLink.Instantiate(e);
+					break;
+				}
+				case "trigger_sequence":
+				{
+					entityObject = TriggerSequence.Instantiate(e);
+					break;
+				}
+				case "trigger_sound":
+				{
+					entityObject = TriggerSound.Instantiate(e);
+					break;
+				}
+				case "trigger_teleport":
+				{
+					entityObject = TriggerTeleport.Instantiate(e);
 					break;
 				}
 				default:
