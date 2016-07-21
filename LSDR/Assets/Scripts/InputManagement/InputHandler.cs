@@ -5,11 +5,20 @@ using System.Collections.Generic;
 
 namespace InputManagement
 {
+	public delegate void ControlRebindEventHandler(string inputName, string newControl);
+
 	public static class InputHandler
 	{
+		public static event ControlRebindEventHandler OnControlRebind;
+	
 		private static readonly List<string> _inputNames = new List<string>();
 		private static readonly List<KeyCode> _inputs = new List<KeyCode>();
 		private static ButtonState[] _buttonStates;
+
+		public static List<string> Inputs { get { return _inputNames;} }
+		public static List<KeyCode> Controls { get { return _inputs;} }
+
+		public static int NumberOfInputs { get { return _inputs.Count; } }
 
 		public static void AddInput(string buttonName, KeyCode key)
 		{
@@ -59,6 +68,12 @@ namespace InputManagement
 						if (Input.GetKeyDown(k))
 						{
 							RebindInput(buttonName, k);
+
+							if (OnControlRebind != null)
+							{
+								// tell subscribers that we've rebound
+								OnControlRebind.Invoke(buttonName, k.ToString());
+							}
 							rebound = true;
 						}
 					}

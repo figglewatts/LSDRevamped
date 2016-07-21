@@ -11,6 +11,7 @@ namespace Entities.Player
 	public class PlayerSpawn : MonoBehaviour
 	{
 		public string Name;
+		public bool ExcludeFromRandomSpawns;
 
 		public static GameObject Instantiate(ENTITY e)
 		{
@@ -18,6 +19,8 @@ namespace Entities.Player
 			PlayerSpawn script = instantiated.AddComponent<PlayerSpawn>();
 
 			script.Name = e.GetPropertyValue("Name");
+
+			script.ExcludeFromRandomSpawns = e.GetSpawnflagValue(0, 1);
 
 			EntityUtil.SetInstantiatedObjectTransform(e, ref instantiated);
 
