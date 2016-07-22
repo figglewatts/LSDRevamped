@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -30,7 +31,7 @@ namespace Entities.Dream
 			payload.TextureSetIndex = textureSet;
 
 			// load dream scene
-			SceneManager.LoadScene("dream");
+			Fader.FadeIn(Color.black, 1.5F, () => {SceneManager.LoadScene("dream");});
 		}
 	}
 }
