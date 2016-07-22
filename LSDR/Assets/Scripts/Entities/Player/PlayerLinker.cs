@@ -21,6 +21,8 @@ namespace Entities.Player
 		private AudioSource _source;
 		private AudioClip _linkSound;
 
+		private bool _touchingFloor;
+
 		// Use this for initialization
 		void Start()
 		{
@@ -29,11 +31,20 @@ namespace Entities.Player
 		}
 
 		// Update is called once per frame
-		void Update() { }
+		void Update()
+		{
+			
+		}
 
 		public void OnControllerColliderHit(ControllerColliderHit hit)
 		{
 			if (!hit.gameObject.tag.Equals("Linkable")) return;
+			
+			// if we're not touching a wall, reset the link delay timer
+			// (this works because when you touch a wall and the floor, the collisions alternate)
+			if (_touchingFloor && hit.moveDirection == Vector3.down) _linkTimer = 0;
+			_touchingFloor = hit.moveDirection == Vector3.down;
+
 			if (Vector3.Dot(transform.forward, hit.moveDirection) <= 0.75F) return;
 			if (!_canLink) return;
 			_linkTimer += Time.deltaTime;
@@ -51,6 +62,7 @@ namespace Entities.Player
 				_linkTimer = 0;
 				Link(linkLevel, linkCol);
 			}
+			
 		}
 
 		public void Link(string dreamFilePath, Color color, string spawnName = "")
