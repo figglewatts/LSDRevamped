@@ -1,8 +1,13 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
-public class DreamPayload : MonoBehaviour
+namespace Entities.Dream
 {
-	public string LevelToLoad;
-	public int TextureSetIndex;
+	public class DreamPayload : MonoBehaviour
+	{
+		public string InitialLevelToLoad;
+		public int InitialTextureSetIndex;
+		public List<string> LevelsVisited;
+		public List<Texture2D> LevelsVisitedPreviews;
+	}
 }

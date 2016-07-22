@@ -1,22 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Types;
+﻿using Types;
 using UnityEngine;
 using Util;
 
 namespace Entities.WorldObject
 {
-	public class MapObject : MonoBehaviour
+	public class MapObject : LinkableObject
 	{
 		public string MapSrc;
-		public string LinkedLevel;
-		public Color FadeColor;
-		public bool ForceFadeColor;
-		public bool LinkToSpecificLevel;
-		public bool DisableLinking;
-		public bool IsSolid;
 
 		public static GameObject Instantiate(ENTITY e)
 		{
@@ -29,12 +19,22 @@ namespace Entities.WorldObject
 			script.ForceFadeColor = e.GetSpawnflagValue(0, 4);
 			script.LinkToSpecificLevel = e.GetSpawnflagValue(1, 4);
 			script.DisableLinking = e.GetSpawnflagValue(2, 4);
+
 			script.IsSolid = e.GetSpawnflagValue(3, 4);
 
 			if (script.ForceFadeColor) script.FadeColor = EntityUtil.TryParseColor("Fade color", e);
 
 			GameObject meshObject = IOUtil.LoadMap(script.MapSrc, script.IsSolid);
 			meshObject.transform.SetParent(instantiated.transform);
+
+			if (!script.DisableLinking)
+			{
+				MeshCollider[] colliders = instantiated.GetComponentsInChildren<MeshCollider>();
+				foreach (MeshCollider c in colliders)
+				{
+					c.gameObject.tag = "Linkable";
+				}
+			}
 
 			EntityUtil.SetInstantiatedObjectTransform(e, ref instantiated);
 

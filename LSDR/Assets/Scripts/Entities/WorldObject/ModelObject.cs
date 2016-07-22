@@ -1,25 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Types;
+﻿using Types;
 using UnityEngine;
 using Util;
 
 namespace Entities.WorldObject
 {
-	public class ModelObject : MonoBehaviour
+	public class ModelObject : LinkableObject
 	{
 		public string ModelSrc;
-		public string LinkedLevel;
-		public Color FadeColor;
 		public string AudioClip;
 		public float LoopDelay;
 
-		public bool ForceFadeColor;
-		public bool LinkToSpecificLevel;
-		public bool DisableLinking;
-		public bool IsSolid;
 		public bool PlayAudio;
 
 		public AudioSource Source;
@@ -42,6 +32,15 @@ namespace Entities.WorldObject
 
 			GameObject meshObject = IOUtil.LoadObject(script.ModelSrc, script.IsSolid);
 			meshObject.transform.SetParent(instantiated.transform);
+
+			if (!script.DisableLinking)
+			{
+				MeshCollider[] colliders = instantiated.GetComponentsInChildren<MeshCollider>();
+				foreach (MeshCollider c in colliders)
+				{
+					c.gameObject.tag = "Linkable";
+				}
+			}
 
 			if (script.ForceFadeColor) script.FadeColor = EntityUtil.TryParseColor("Fade color", e);
 			if (script.PlayAudio)

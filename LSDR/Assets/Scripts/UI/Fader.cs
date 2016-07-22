@@ -62,10 +62,12 @@ namespace UI
 
 		public static void InvokeOnFadeComplete() { if (_onFadeComplete != null) _onFadeComplete.Invoke(); }
 
+		public static void ClearHandler() { _onFadeComplete = null; }
+
 		private static void AddHandler(FadeCompleteHandler h)
 		{
 			_onFadeComplete += h;
-			_onFadeComplete += () => { _onFadeComplete = null; }; // remove it after first execution
+			_onFadeComplete += () => { _onFadeComplete -= h; }; // remove it after first execution
 		}
 	}
 }

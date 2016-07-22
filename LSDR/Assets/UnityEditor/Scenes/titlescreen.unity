@@ -9016,6 +9016,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 814297137}
   - 114: {fileID: 814297136}
+  - 114: {fileID: 814297138}
   m_Layer: 0
   m_Name: DreamPayload
   m_TagString: DreamPayload
@@ -9034,8 +9035,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b845f72b5607604f841504aaac8c8c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LevelToLoad: 
-  TextureSetIndex: 0
+  InitialLevelToLoad: 
+  InitialTextureSetIndex: 0
+  LevelsVisited: []
+  LevelsVisitedPreviews: []
 --- !u!4 &814297137
 Transform:
   m_ObjectHideFlags: 0
@@ -9048,6 +9051,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 6
+--- !u!114 &814297138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 814297135}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 384300ab1d3cd484b89b93500c82245e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &818307760
 GameObject:
   m_ObjectHideFlags: 0
@@ -21717,7 +21731,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.2509804}
+  m_Color: {r: 0.4705882, g: 0.4705882, b: 0.4705882, a: 0.445}
   m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:

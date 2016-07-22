@@ -90,6 +90,15 @@ namespace Util
 			return tex;
 		}
 
+		public static Texture2D LoadPNGByteArray(byte[] array)
+		{
+			Texture2D tex = new Texture2D(2, 2, TextureFormat.ARGB32, false); // (2, 2) temporary POT size, next line resizes automatically
+			tex.LoadImage(array);
+			tex.filterMode = FilterMode.Point;
+			tex.mipMapBias = 0F;
+			return tex;
+		}
+
 		/// <summary>
 		/// Loads an OGG file into the specified AudioSource
 		/// </summary>
@@ -199,7 +208,7 @@ namespace Util
 		{
 			// TODO: handle missing files
 			
-			tmap = ToriiMapReader.ReadFromFile(filePath);
+			tmap = ToriiMapReader.ReadFromFile(PathCombine(Application.dataPath, filePath));
 
 			GameObject tmapObject = new GameObject(tmap.Header.Name);
 

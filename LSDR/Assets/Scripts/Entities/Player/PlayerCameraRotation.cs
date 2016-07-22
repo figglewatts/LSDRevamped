@@ -39,6 +39,8 @@ namespace Entities.Player
 		// Update is called once per frame
 		void Update()
 		{
+			if (!GameSettings.CanControlPlayer) return;
+		
 			if (GameSettings.FPSMovementEnabled)
 			{
 				transform.Rotate(0, Input.GetAxis("Mouse X") * GameSettings.MouseSensitivityX * Time.smoothDeltaTime * MouseLookRotationMultiplier,

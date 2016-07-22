@@ -62,7 +62,10 @@ namespace Entities.Player
 
         private void GetInput(out float speed)
         {
-	        float moveDirFrontBack = 0;
+	        speed = 0;
+			if (!GameSettings.CanControlPlayer) return;
+			
+			float moveDirFrontBack = 0;
 	        if (InputHandler.CheckButtonState("Forward", ButtonState.HELD))
 	        {
 		        moveDirFrontBack = 1;

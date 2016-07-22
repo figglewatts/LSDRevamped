@@ -23,6 +23,8 @@ namespace Entities.Player
 		// Update is called once per frame
 		void Update()
 		{
+			if (!GameSettings.CanControlPlayer) return;
+			
 			float waveslice = 0F;
 			float vertical = 0;
 			if (InputHandler.CheckButtonState("Forward", ButtonState.HELD))

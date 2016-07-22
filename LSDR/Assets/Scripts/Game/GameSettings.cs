@@ -28,6 +28,12 @@ namespace Game
 
 		#endregion
 
+		#region Journal Settings
+
+		public static string CurrentJournalDir = "/";
+
+		#endregion
+
 		public static void SetCursorViewState(bool state)
 		{
 			Cursor.visible = state;
