@@ -30,10 +30,9 @@ namespace Entities.Player
 			_linkSound = Resources.Load<AudioClip>("Sound/Dream/linkSound");
 		}
 
-		// Update is called once per frame
 		void Update()
 		{
-			
+			//Debug.Log(_touchingFloor);
 		}
 
 		public void OnControllerColliderHit(ControllerColliderHit hit)
@@ -42,10 +41,16 @@ namespace Entities.Player
 			
 			// if we're not touching a wall, reset the link delay timer
 			// (this works because when you touch a wall and the floor, the collisions alternate)
-			if (_touchingFloor && hit.moveDirection == Vector3.down) _linkTimer = 0;
-			_touchingFloor = hit.moveDirection == Vector3.down;
+			// basically, if we are touching the floor for 2 collisions in a row, we can reasonably
+			// assume we are not also touching a wall
+			if (_touchingFloor && hit.normal == Vector3.up) _linkTimer = 0;
 
+			// remember if we were touching the floor on the last collision
+			_touchingFloor = hit.normal == Vector3.up;
+
+			// make sure we are facing the collision
 			if (Vector3.Dot(transform.forward, hit.moveDirection) <= 0.75F) return;
+
 			if (!_canLink) return;
 			_linkTimer += Time.deltaTime;
 			if (_linkTimer > LinkDelay)
@@ -62,7 +67,6 @@ namespace Entities.Player
 				_linkTimer = 0;
 				Link(linkLevel, linkCol);
 			}
-			
 		}
 
 		public void Link(string dreamFilePath, Color color, string spawnName = "")
