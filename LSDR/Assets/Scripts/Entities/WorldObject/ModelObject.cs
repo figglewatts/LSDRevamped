@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using Entities.Action;
 using Entities.Dream;
+using Game;
 
 namespace Entities.WorldObject
 {
@@ -46,7 +47,7 @@ namespace Entities.WorldObject
 			script.PlayAudio = e.GetSpawnflagValue(4, 6);
 			script.HasActionSequence = e.GetSpawnflagValue(5, 6);
 
-			GameObject meshObject = IOUtil.LoadObject(script.ModelSrc, script.IsSolid);
+			GameObject meshObject = IOUtil.LoadObject(script.ModelSrc, script.IsSolid, ResourceLifespan.LEVEL);
 			meshObject.transform.SetParent(instantiated.transform);
 
 			script.Source = instantiated.AddComponent<AudioSource>();

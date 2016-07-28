@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Game;
 using MapParse;
 using MapParse.Types;
 using UnityEngine;
@@ -264,9 +265,7 @@ namespace IO
 
 				string nameOfTextureToLoad = (isInTextureSet ? tsi.ToString() : string.Empty) + tempTextureName;
 
-				textures[i] =
-					IOUtil.LoadPNG(IOUtil.PathCombine(mapTexturesPath, wadName,
-						nameOfTextureToLoad));
+				textures[i] = ResourceManager.Load<Texture2D>(IOUtil.PathCombine(mapTexturesPath, wadName, nameOfTextureToLoad), ResourceLifespan.LEVEL);
 			}
 
 			return textures;

@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace Types
 {
+	[Serializable]
 	public struct TOBJ
 	{
 		public string ObjectFile;
@@ -16,6 +17,7 @@ namespace Types
 		public TANIM[] Animations;
 	}
 
+	[Serializable]
 	public struct TANIM
 	{
 		public string Name;
@@ -26,6 +28,7 @@ namespace Types
 		public TKEYFRAME[] Keyframes;
 	}
 
+	[Serializable]
 	public struct TKEYFRAME
 	{
 		public int ID;
@@ -33,6 +36,7 @@ namespace Types
 		public OBJSTATE[] ObjStates;
 	}
 
+	[Serializable]
 	public struct OBJSTATE
 	{
 		public Vector3 Position;

@@ -1,4 +1,5 @@
-﻿using Types;
+﻿using Game;
+using Types;
 using UnityEngine;
 using Util;
 
@@ -24,7 +25,7 @@ namespace Entities.WorldObject
 
 			if (script.ForceFadeColor) script.FadeColor = EntityUtil.TryParseColor("Fade color", e);
 
-			GameObject meshObject = IOUtil.LoadMap(script.MapSrc, script.IsSolid);
+			GameObject meshObject = IOUtil.LoadMap(script.MapSrc, ResourceLifespan.LEVEL);
 			meshObject.transform.SetParent(instantiated.transform);
 
 			if (!script.DisableLinking)

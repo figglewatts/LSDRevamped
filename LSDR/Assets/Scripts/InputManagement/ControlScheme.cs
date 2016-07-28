@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Game;
 using SimpleJSON;
 using UnityEngine;
 using Util;
@@ -35,7 +36,7 @@ namespace InputManagement
 		/// <param name="jsonFile">Path to the file</param>
 		public ControlScheme(string jsonFile)
 		{
-			JSONClass json = IOUtil.ReadJSONFromDisk(jsonFile);
+			JSONClass json = ResourceManager.Load<JSONClass>(jsonFile, ResourceLifespan.GLOBAL, true);
 			foreach (JSONNode n in json["controls"].AsArray)
 			{
 				Controls.Add(n["name"], (KeyCode) n["keyCode"].AsInt);

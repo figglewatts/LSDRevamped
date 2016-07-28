@@ -3,12 +3,14 @@ using IO;
 
 namespace Types
 {
+	[Serializable]
 	public struct TMAP
 	{
 		public TMAPHEADER Header;
 		public TMAPCONTENT Content;
 	}
 
+	[Serializable]
 	public struct TMAPHEADER
 	{
 		public char[] Signature;
@@ -19,12 +21,14 @@ namespace Types
 		public byte[] Preview;
 	}
 
+	[Serializable]
 	public struct TMAPCONTENT
 	{
 		public int NumberOfEntities;
 		public ENTITY[] Entities;
 	}
 
+	[Serializable]
 	public struct ENTITY
 	{
 		public string Classname;
@@ -65,18 +69,21 @@ namespace Types
 		}
 	}
 
+	[Serializable]
 	public struct PROPERTY
 	{
 		public string Name;
 		public string Value;
 	}
 
+	[Serializable]
 	public struct AXISANGLE
 	{
 		public VEC3 Axis;
 		public float Angle;
 	}
 
+	[Serializable]
 	public struct VEC3
 	{
 		public float X;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using UnityEngine;
 
 namespace IO
@@ -43,116 +44,121 @@ namespace IO
 			uvIndices.Add(new List<int?>());
 			normalIndices.Add(new List<int?>());
 
-			StringReader sr = new StringReader(obj);
-			string line;
-			while ((line = sr.ReadLine()) != null)
+			byte[] byteArray = Encoding.ASCII.GetBytes(obj);
+			using (MemoryStream ms = new MemoryStream(byteArray))
+			using (BufferedStream bs = new BufferedStream(ms))
+			using (StreamReader sr = new StreamReader(bs))
 			{
-				string[] words = line.Split(' ');
-
-				if (words[0].Equals("o")) // object
+				string line;
+				while ((line = sr.ReadLine()) != null)
 				{
-					// initialize the object
-					if (!firstObject)
+					string[] words = line.Split(' ');
+
+					if (words[0].Equals("o")) // object
 					{
-						objectHandle++;
-						objObjects.Add(new GameObject(words[1]));
-						objObjects[objectHandle].transform.SetParent(baseGameObject.transform);
-						objObjects[objectHandle].AddComponent<MeshRenderer>();
-						objObjects[objectHandle].AddComponent<MeshFilter>();
-						meshes.Add(objObjects[objectHandle].GetComponent<MeshFilter>().mesh);
-						triangles.Add(new List<int>());
-						uvIndices.Add(new List<int?>());
-						normalIndices.Add(new List<int?>());
+						// initialize the object
+						if (!firstObject)
+						{
+							objectHandle++;
+							objObjects.Add(new GameObject(words[1]));
+							objObjects[objectHandle].transform.SetParent(baseGameObject.transform);
+							objObjects[objectHandle].AddComponent<MeshRenderer>();
+							objObjects[objectHandle].AddComponent<MeshFilter>();
+							meshes.Add(objObjects[objectHandle].GetComponent<MeshFilter>().mesh);
+							triangles.Add(new List<int>());
+							uvIndices.Add(new List<int?>());
+							normalIndices.Add(new List<int?>());
+						}
+						else
+						{
+							objObjects[objectHandle].name = words[1];
+							firstObject = false;
+						}
+
 					}
-					else
+					if (words[0].Equals("v")) // vertex
 					{
-						objObjects[objectHandle].name = words[1];
-						firstObject = false;
+						Vector3 vertex = new Vector3(StringToFloat(words[1]), StringToFloat(words[2]), StringToFloat(words[3]));
+						vertices.Add(vertex);
 					}
-					
-				}
-				if (words[0].Equals("v")) // vertex
-				{
-					Vector3 vertex = new Vector3(StringToFloat(words[1]), StringToFloat(words[2]), StringToFloat(words[3]));
-					vertices.Add(vertex);
-				}
-				else if (words[0].Equals("vn")) // normal
-				{
-					Vector3 normal = new Vector3(StringToFloat(words[1]), StringToFloat(words[2]), StringToFloat(words[3]));
-					normals.Add(normal);
-				}
-				else if (words[0].Equals("vt")) // UV
-				{
-					Vector2 uv = new Vector2(StringToFloat(words[1]), StringToFloat(words[2]));
-					UVs.Add(uv);
-				}
-				else if (words[0].Equals("f"))
-				{
-					int numVertices = words.Length - 1;
-					bool isQuad = (numVertices % 4) == 0;
-
-					int[] verts = new int[numVertices];
-					int[] uvs = new int[numVertices];
-					int[] norms = new int[numVertices];
-
-					// for each set of indices
-					for (int i = 1; i < words.Length; i++) // starts at 1 to account for leading 'f'
+					else if (words[0].Equals("vn")) // normal
 					{
-						string[] indices = words[i].Split(new [] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-
-						if (words[i].Contains("//") && indices.Length == 2)
-						{
-							// vertex & vertex normal, no UV data
-							// v//vn
-							verts[i - 1] = int.Parse(indices[0]);
-							norms[i - 1] = int.Parse(indices[1]);
-						}
-						else if (indices.Length == 2)
-						{
-							// vertex & UV data, no normals
-							// v/vt
-							verts[i - 1] = int.Parse(indices[0]);
-							uvs[i - 1] = int.Parse(indices[1]);
-						}
-						else if (indices.Length == 3)
-						{
-							// all 3 present
-							// v/vt/vn
-							verts[i - 1] = int.Parse(indices[0]);
-							uvs[i - 1] = int.Parse(indices[1]);
-							norms[i - 1] = int.Parse(indices[2]);
-						}
-						else if (indices.Length == 1)
-						{
-							// it's probably just vertex data
-							// v
-							verts[i - 1] = (int.Parse(indices[0]));
-						}
+						Vector3 normal = new Vector3(StringToFloat(words[1]), StringToFloat(words[2]), StringToFloat(words[3]));
+						normals.Add(normal);
 					}
-
-					if (isQuad)
+					else if (words[0].Equals("vt")) // UV
 					{
-						// convert everything into tris
-						for (int i = 1; i <= numVertices - 2; i++) // watch the less-than-or-equal-to here
-						{
-							triangles[objectHandle].Add(verts[0] - 1);
-							triangles[objectHandle].Add(verts[i] - 1);
-							triangles[objectHandle].Add(verts[i + 1] - 1);
-							uvIndices[objectHandle].Add(uvs[0] - 1);
-							uvIndices[objectHandle].Add(uvs[i] - 1);
-							uvIndices[objectHandle].Add(uvs[i + 1] - 1);
-							normalIndices[objectHandle].Add(norms[0] - 1);
-							normalIndices[objectHandle].Add(norms[i] - 1);
-							normalIndices[objectHandle].Add(norms[i + 1] - 1);
-						}
+						Vector2 uv = new Vector2(StringToFloat(words[1]), StringToFloat(words[2]));
+						UVs.Add(uv);
 					}
-					else
+					else if (words[0].Equals("f"))
 					{
-						for (int i = 0; i < numVertices; i++)
+						int numVertices = words.Length - 1;
+						bool isQuad = (numVertices%4) == 0;
+
+						int[] verts = new int[numVertices];
+						int[] uvs = new int[numVertices];
+						int[] norms = new int[numVertices];
+
+						// for each set of indices
+						for (int i = 1; i < words.Length; i++) // starts at 1 to account for leading 'f'
 						{
-							triangles[objectHandle].Add(verts[i] - 1);
-							uvIndices[objectHandle].Add(uvs[i] - 1);
-							normalIndices[objectHandle].Add(norms[i] - 1);
+							string[] indices = words[i].Split(new[] {'/'}, StringSplitOptions.RemoveEmptyEntries);
+
+							if (words[i].Contains("//") && indices.Length == 2)
+							{
+								// vertex & vertex normal, no UV data
+								// v//vn
+								verts[i - 1] = int.Parse(indices[0]);
+								norms[i - 1] = int.Parse(indices[1]);
+							}
+							else if (indices.Length == 2)
+							{
+								// vertex & UV data, no normals
+								// v/vt
+								verts[i - 1] = int.Parse(indices[0]);
+								uvs[i - 1] = int.Parse(indices[1]);
+							}
+							else if (indices.Length == 3)
+							{
+								// all 3 present
+								// v/vt/vn
+								verts[i - 1] = int.Parse(indices[0]);
+								uvs[i - 1] = int.Parse(indices[1]);
+								norms[i - 1] = int.Parse(indices[2]);
+							}
+							else if (indices.Length == 1)
+							{
+								// it's probably just vertex data
+								// v
+								verts[i - 1] = (int.Parse(indices[0]));
+							}
+						}
+
+						if (isQuad)
+						{
+							// convert everything into tris
+							for (int i = 1; i <= numVertices - 2; i++) // watch the less-than-or-equal-to here
+							{
+								triangles[objectHandle].Add(verts[0] - 1);
+								triangles[objectHandle].Add(verts[i] - 1);
+								triangles[objectHandle].Add(verts[i + 1] - 1);
+								uvIndices[objectHandle].Add(uvs[0] - 1);
+								uvIndices[objectHandle].Add(uvs[i] - 1);
+								uvIndices[objectHandle].Add(uvs[i + 1] - 1);
+								normalIndices[objectHandle].Add(norms[0] - 1);
+								normalIndices[objectHandle].Add(norms[i] - 1);
+								normalIndices[objectHandle].Add(norms[i + 1] - 1);
+							}
+						}
+						else
+						{
+							for (int i = 0; i < numVertices; i++)
+							{
+								triangles[objectHandle].Add(verts[i] - 1);
+								uvIndices[objectHandle].Add(uvs[i] - 1);
+								normalIndices[objectHandle].Add(norms[i] - 1);
+							}
 						}
 					}
 				}

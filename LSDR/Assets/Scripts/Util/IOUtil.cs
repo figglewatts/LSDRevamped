@@ -48,6 +48,8 @@ namespace Util
 		/// <returns>Null if error reading.</returns>
 		public static JSONClass ReadJSONFromDisk(string path)
 		{
+			// TODO: find usages and replace with resourcemanager
+
 			try
 			{
 				JSONClass json = JSON.Parse(File.ReadAllText(path)).AsObject;
@@ -120,14 +122,11 @@ namespace Util
 		/// <summary>
 		/// Loads a Torii object (3D model with animations) and returns a gameobject
 		/// </summary>
-		public static GameObject LoadObject(string filePath, bool collisionMesh)
+		public static GameObject LoadObject(string filePath, bool collisionMesh, ResourceLifespan lifespan)
 		{
-			// TODO: handle missing files
-		
-			TOBJ t = new TOBJ();
-			ToriiObjectReader.Read(PathCombine(Application.dataPath, filePath), ref t); // load model
+			GameObject g = UnityEngine.Object.Instantiate(ResourceManager.Load<GameObject>(filePath, lifespan));
+			TOBJ t = g.GetComponent<ToriiObject>().ToriiObj;
 
-			GameObject g = OBJReader.ReadOBJString(t.ObjectFile); // create mesh
 			Renderer[] renderers = g.GetComponentsInChildren<Renderer>();
 			foreach (Renderer r in renderers)
 			{
@@ -146,15 +145,15 @@ namespace Util
 
 						string pathToTextureDir = Path.GetDirectoryName(t.ObjectTexture);
 
-						m.SetTexture("_MainTexA", LoadPNG(PathCombine(Application.dataPath, pathToTextureDir, "A" + baseTexName) + ".png"));
-						m.SetTexture("_MainTexB", LoadPNG(PathCombine(Application.dataPath, pathToTextureDir, "B" + baseTexName) + ".png"));
-						m.SetTexture("_MainTexC", LoadPNG(PathCombine(Application.dataPath, pathToTextureDir, "C" + baseTexName) + ".png"));
-						m.SetTexture("_MainTexD", LoadPNG(PathCombine(Application.dataPath, pathToTextureDir, "D" + baseTexName) + ".png"));
+						m.SetTexture("_MainTexA", ResourceManager.Load<Texture2D>(PathCombine(pathToTextureDir, "A" + baseTexName) + ".png", lifespan));
+						m.SetTexture("_MainTexB", ResourceManager.Load<Texture2D>(PathCombine(pathToTextureDir, "B" + baseTexName) + ".png", lifespan));
+						m.SetTexture("_MainTexC", ResourceManager.Load<Texture2D>(PathCombine(pathToTextureDir, "C" + baseTexName) + ".png", lifespan));
+						m.SetTexture("_MainTexD", ResourceManager.Load<Texture2D>(PathCombine(pathToTextureDir, "D" + baseTexName) + ".png", lifespan));
 					}
 					else
 					{
 						m.shader = Shader.Find(GameSettings.UseClassicShaders ? "LSD/PSX/Transparent" : "Transparent/Diffuse");
-						m.SetTexture("_MainTex", LoadPNG(PathCombine(Application.dataPath, t.ObjectTexture)));
+						m.SetTexture("_MainTex", ResourceManager.Load<Texture2D>(t.ObjectTexture, lifespan));
 					}
 				}
 			}
@@ -179,6 +178,7 @@ namespace Util
 			}
 
 			g.transform.localScale = new Vector3(-g.transform.localScale.x, g.transform.localScale.y, g.transform.localScale.z);
+			g.SetActive(true);
 
 			return g;
 		}
@@ -186,28 +186,21 @@ namespace Util
 		/// <summary>
 		/// Loads MAP file geometry into a mesh and returns a gameobject
 		/// </summary>
-		public static GameObject LoadMap(string filePath, bool collisionMesh)
+		public static GameObject LoadMap(string filePath, ResourceLifespan lifespan)
 		{
-			// TODO: handle missing files
-
-			MapReader.MapScaleFactor = 1F;
-			
-			GameObject g = MapReader.LoadMap(PathCombine(Application.dataPath, filePath),
-				PathCombine(Application.dataPath, "textures", "wad"),
-				Shader.Find(GameSettings.UseClassicShaders ? "LSD/PSX/DiffuseSetNoAffine" : "LSD/DiffuseSet"),
-				Shader.Find(GameSettings.UseClassicShaders ? "LSD/PSX/TransparentSetNoAffine" : "LSD/TransparentSet"), collisionMesh);
-
-			return g;
+			GameObject map = UnityEngine.Object.Instantiate(ResourceManager.Load<GameObject>(filePath, lifespan));
+			map.SetActive(true);
+            return map;
 		}
 
 		/// <summary>
 		/// Loads a Torii map and returns a gameobject with entities in the torii map as child elements
 		/// </summary>
-		public static GameObject LoadToriiMap(string filePath, out TMAP tmap)
+		public static GameObject LoadToriiMap(string filePath, ResourceLifespan lifespan, out TMAP tmap)
 		{
 			// TODO: handle missing files
-			
-			tmap = ToriiMapReader.ReadFromFile(PathCombine(Application.dataPath, filePath));
+
+			tmap = ResourceManager.Load<TMAP>(filePath, lifespan);
 
 			GameObject tmapObject = new GameObject(tmap.Header.Name);
 
@@ -242,6 +235,13 @@ namespace Util
 				path = PathCombine(path, componentStrings[i]);
 			}
 			return path;
+		}
+
+		public static string NormalizePath(string path)
+		{
+			return Path.GetFullPath(new Uri(path).LocalPath)
+				.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+				.ToLowerInvariant();
 		}
 	}
 }

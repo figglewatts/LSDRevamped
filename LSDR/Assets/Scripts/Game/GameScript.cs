@@ -24,6 +24,8 @@ public class GameScript : MonoBehaviour
 		ControlSchemeManager.Initialize();
 
 		ControlSchemeManager.SwitchToScheme("Classic");
+
+		MapReader.MapScaleFactor = 1F;
 	}
 
 	void Update()

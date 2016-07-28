@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Entities.Action;
 using Entities.Player;
 using Entities.WorldObject;
+using Game;
 using Types;
 using UI;
 using UnityEngine;
@@ -71,6 +73,9 @@ namespace Entities.Dream
 			Fader.ClearHandler(); // clear all the junk from the post-fade event handler
 			PlayerSpawns.Clear();
 			Target.Targets.Clear();
+
+			ResourceManager.ClearLifespan(ResourceLifespan.LEVEL);
+			ResourceManager.ClearLifespan(ResourceLifespan.DREAM);
 		
 			// TODO: end dream stuff
 
@@ -83,16 +88,18 @@ namespace Entities.Dream
 			
 			if (_loadedDreamObject)
 			{
-				GameObject.Destroy(_loadedDreamObject);
+				UnityEngine.Object.Destroy(_loadedDreamObject);
+				ResourceManager.ClearLifespan(ResourceLifespan.LEVEL);
 			}
 
 			PlayerSpawns.Clear();
 			PlayerSpawnForced = false;
 
 			Target.Targets.Clear();
+			ActionSequence.Sequences.Clear();
 		
 			TMAP t;
-			_loadedDreamObject = IOUtil.LoadToriiMap(levelPath, out t);
+			_loadedDreamObject = IOUtil.LoadToriiMap(levelPath, ResourceLifespan.DREAM, out t);
 			Payload.LevelsVisited.Add(t.Header.Name);
 			Payload.LevelsVisitedPreviews.Add(IOUtil.LoadPNGByteArray(t.Header.Preview));
 
