@@ -1,4 +1,6 @@
-﻿using Types;
+﻿using Entities.WorldObject;
+using Types;
+using UI;
 using UnityEngine;
 using Util;
 
@@ -9,7 +11,6 @@ namespace Entities.Trigger
 		public string TargetName;
 		public Color FadeColor;
 		public float FadeInTime;
-		public float FadeHoldTime;
 		public float FadeOutTime;
 
 		public bool FadeOnTeleport;
@@ -20,6 +21,10 @@ namespace Entities.Trigger
 			TriggerTeleport script = instantiated.AddComponent<TriggerTeleport>();
 
 			script.TargetName = e.GetPropertyValue("Target name");
+			if (script.TargetName.Equals(string.Empty))
+			{
+				Debug.LogWarning("Trigger_teleport has no target, please fix in Torii!");
+			}
 
 			script.FadeOnTeleport = e.GetSpawnflagValue(0, 1);
 
@@ -27,7 +32,6 @@ namespace Entities.Trigger
 			{
 				script.FadeColor = EntityUtil.TryParseColor("Fade color", e);
 				script.FadeInTime = EntityUtil.TryParseFloat("Fade in time", e);
-				script.FadeHoldTime = EntityUtil.TryParseFloat("Fade hold time", e);
 				script.FadeOutTime = EntityUtil.TryParseFloat("Fade out time", e);
 			}
 
@@ -36,6 +40,31 @@ namespace Entities.Trigger
 			instantiated.AddComponent<BoxCollider>().isTrigger = true;
 
 			return instantiated;
+		}
+
+		public void OnTriggerEnter(Collider other)
+		{
+			if (TargetName.Equals(string.Empty)) return;
+			if (other.CompareTag("Player"))
+			{
+				Transform teleportTarget = Target.GetTargetTransform(TargetName);
+				if (FadeOnTeleport)
+				{
+					Fader.FadeIn(FadeColor, FadeInTime, () =>
+					{
+						other.transform.position = teleportTarget.position;
+						other.transform.rotation = Quaternion.Euler(other.transform.rotation.eulerAngles.x,
+							teleportTarget.transform.rotation.eulerAngles.y, other.transform.rotation.eulerAngles.z);
+						Fader.FadeOut(FadeOutTime);
+					});
+				}
+				else
+				{
+					other.transform.position = teleportTarget.position;
+					other.transform.rotation = Quaternion.Euler(other.transform.rotation.eulerAngles.x,
+						teleportTarget.transform.rotation.eulerAngles.y, other.transform.rotation.eulerAngles.z);
+				}
+			}
 		}
 	}
 }

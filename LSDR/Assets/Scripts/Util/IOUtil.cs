@@ -102,20 +102,19 @@ namespace Util
 		/// <summary>
 		/// Loads an OGG file into the specified AudioSource
 		/// </summary>
-		public static IEnumerator LoadOGGIntoSource(string filePath, AudioSource source)
+		public static IEnumerator LoadOGGIntoSource(string filePath, AudioSource source, bool playOnLoad = false, bool absolutePath = false)
 		{
 			// TODO: handle missing files
 		
-			Debug.Log("Starting download");
-			WWW www = new WWW("file:///" + PathCombine(Application.dataPath, filePath));
+			WWW www = new WWW("file:///" +  (absolutePath ? filePath : PathCombine(Application.dataPath, filePath)));
 			while (!www.isDone)
 			{
-				Debug.Log("not done...");
 				yield return null;
 			}
 			Debug.Log(www.GetAudioClip(true).name);
 			source.clip = www.GetAudioClip(true);
-			source.Play();
+
+			if (playOnLoad) source.Play();
 		}
 
 		/// <summary>
@@ -195,8 +194,8 @@ namespace Util
 			
 			GameObject g = MapReader.LoadMap(PathCombine(Application.dataPath, filePath),
 				PathCombine(Application.dataPath, "textures", "wad"),
-				Shader.Find("LSD/DiffuseSet"),
-				Shader.Find("LSD/TransparentSet"), collisionMesh);
+				Shader.Find(GameSettings.UseClassicShaders ? "LSD/PSX/DiffuseSetNoAffine" : "LSD/DiffuseSet"),
+				Shader.Find(GameSettings.UseClassicShaders ? "LSD/PSX/TransparentSetNoAffine" : "LSD/TransparentSet"), collisionMesh);
 
 			return g;
 		}

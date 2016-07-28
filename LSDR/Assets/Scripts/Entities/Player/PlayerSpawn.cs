@@ -21,6 +21,10 @@ namespace Entities.Player
 			PlayerSpawn script = instantiated.AddComponent<PlayerSpawn>();
 
 			script.Name = e.GetPropertyValue("Name");
+			if (script.Name.Equals(string.Empty))
+			{
+				Debug.LogWarning("Found player_spawn without name! Please set name in Torii.");
+			}
 
 			script.ExcludeFromRandomSpawns = e.GetSpawnflagValue(0, 2);
 			script.ForceSpawnOnDayOne = e.GetSpawnflagValue(1, 2);

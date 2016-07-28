@@ -2,6 +2,8 @@
 using System.Collections;
 using Types;
 using Util;
+using System;
+using Entities.Dream;
 
 namespace Entities.Action
 {
@@ -18,9 +20,23 @@ namespace Entities.Action
 
 			actionScript.WaitTime = EntityUtil.TryParseFloat("Wait time", e);
 
+			DreamDirector.OnLevelFinishChange += actionScript.PostLoad;
+
 			EntityUtil.SetInstantiatedObjectTransform(e, ref instantiated);
 
 			return instantiated;
+		}
+
+		private void PostLoad()
+		{
+			ReferencedSequence = ActionSequence.FindSequence(Name);
+			AddSelf();
+		}
+
+		public override IEnumerator DoAction()
+		{
+			yield return new WaitForSeconds(WaitTime);
+			ReferencedSequence.DoNextAction();
 		}
 	}
 }

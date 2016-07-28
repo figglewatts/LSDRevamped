@@ -88,7 +88,7 @@ namespace Entities.WorldObject
 
 		private void SetObjectToState(ref GameObject g, OBJSTATE s)
 		{
-			g.transform.position = s.Position;
+			g.transform.localPosition = s.Position;
 			g.transform.rotation = s.Rotation;
 			g.transform.localScale = s.Scale;
 		}
@@ -104,7 +104,7 @@ namespace Entities.WorldObject
 			// interpolate between position, scale, and rotation
 			for (int i = 0; i < Objects.Count; i++)
 			{
-				Objects[i].transform.position = Vector3.Lerp(current.ObjStates[i].Position, next.ObjStates[i].Position, t);
+				Objects[i].transform.localPosition = Vector3.Lerp(current.ObjStates[i].Position, next.ObjStates[i].Position, t);
 				Objects[i].transform.rotation = Quaternion.Lerp(current.ObjStates[i].Rotation, next.ObjStates[i].Rotation, t);
 				Objects[i].transform.localScale = Vector3.Lerp(current.ObjStates[i].Scale, next.ObjStates[i].Scale, t);
 			}

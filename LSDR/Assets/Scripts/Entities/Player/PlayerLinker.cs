@@ -30,10 +30,7 @@ namespace Entities.Player
 			_linkSound = Resources.Load<AudioClip>("Sound/Dream/linkSound");
 		}
 
-		void Update()
-		{
-			//Debug.Log(_touchingFloor);
-		}
+		void Update() { }
 
 		public void OnControllerColliderHit(ControllerColliderHit hit)
 		{
@@ -55,10 +52,6 @@ namespace Entities.Player
 			_linkTimer += Time.deltaTime;
 			if (_linkTimer > LinkDelay)
 			{
-				_source.PlayOneShot(_linkSound);
-				// TODO: link to specific level
-				// TODO: link with forced color
-
 				LinkableObject o = hit.gameObject.transform.parent.transform.parent.GetComponent<LinkableObject>();
 
 				Color linkCol = o.ForceFadeColor ? o.FadeColor : RandUtil.RandColor();
@@ -69,10 +62,11 @@ namespace Entities.Player
 			}
 		}
 
-		public void Link(string dreamFilePath, Color color, string spawnName = "")
+		public void Link(string dreamFilePath, Color color, bool playSound = true, string spawnName = "")
 		{
 			GameSettings.CanControlPlayer = false;
 			_canLink = false;
+			if (playSound) _source.PlayOneShot(_linkSound);
 			Fader.FadeIn(color, 1F, () =>
 			{
 				DreamDirector.SwitchDreamLevel(dreamFilePath, spawnName);
@@ -87,10 +81,9 @@ namespace Entities.Player
 
 		public void Link(string dreamFilePath) { Link(dreamFilePath, RandUtil.RandColor()); }
 
-		public void Link()
+		public void Link(bool playSound = true)
 		{
-			// TODO: random dream selection from current journal
-			throw new NotImplementedException();
+			Link(RandUtil.RandomLevelFromDir(GameSettings.CurrentJournalDir), RandUtil.RandColor(), playSound);
 		}
 	}
 }

@@ -1,4 +1,6 @@
-﻿using Types;
+﻿using System.Collections;
+using Entities.Dream;
+using Types;
 using UnityEngine;
 using Util;
 
@@ -9,6 +11,11 @@ namespace Entities.Action
 		public float Rotation;
 		public float RotationSpeed;
 		public bool RotateInstantly;
+
+		private Quaternion _originalRotation;
+		private Quaternion _targetRotation;
+		private bool _canRotate;
+		private float _rotationProgress;
 
 		public static GameObject Instantiate(ENTITY e)
 		{
@@ -23,9 +30,47 @@ namespace Entities.Action
 
 			actionScript.RotateInstantly = e.GetSpawnflagValue(0, 1);
 
+			DreamDirector.OnLevelFinishChange += actionScript.PostLoad;
+
 			EntityUtil.SetInstantiatedObjectTransform(e, ref instantiated);
 
 			return instantiated;
+		}
+
+		private void PostLoad()
+		{
+			ReferencedSequence = ActionSequence.FindSequence(Name);
+			AddSelf();
+		}
+
+		public override IEnumerator DoAction()
+		{
+			_rotationProgress = 0;
+			_originalRotation = ReferencedSequence.ReferencedGameObject.transform.rotation;
+			_targetRotation = Quaternion.Euler(_originalRotation.eulerAngles.x, Rotation, _originalRotation.eulerAngles.z);
+
+			if (RotateInstantly)
+			{
+				ReferencedSequence.ReferencedGameObject.transform.rotation = _targetRotation;
+				ReferencedSequence.DoNextAction();
+				yield break;
+			}
+
+			_canRotate = true;
+
+			while (_canRotate)
+			{
+				_rotationProgress += Time.deltaTime*RotationSpeed;
+
+				if (_rotationProgress >= 1) _canRotate = false;
+
+				ReferencedSequence.ReferencedGameObject.transform.rotation = Quaternion.Lerp(_originalRotation, _targetRotation,
+					_rotationProgress);
+
+				yield return null;
+			}
+
+			ReferencedSequence.DoNextAction();
 		}
 	}
 }

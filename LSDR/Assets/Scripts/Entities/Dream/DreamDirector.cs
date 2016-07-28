@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Entities.Player;
+using Entities.WorldObject;
 using Types;
 using UI;
 using UnityEngine;
@@ -11,6 +12,8 @@ using Util;
 
 namespace Entities.Dream
 {
+	public delegate void OnLevelFinishChangeHandler();
+
 	public static class DreamDirector
 	{
 		public static int StaticityAccumulator = 0;
@@ -27,6 +30,8 @@ namespace Entities.Dream
 		public static string[] LevelPaths;
 
 		public static DreamPayload Payload;
+
+		public static event OnLevelFinishChangeHandler OnLevelFinishChange;
 
 		private static GameObject _loadedDreamObject;
 
@@ -64,6 +69,8 @@ namespace Entities.Dream
 		public static void EndDream()
 		{
 			Fader.ClearHandler(); // clear all the junk from the post-fade event handler
+			PlayerSpawns.Clear();
+			Target.Targets.Clear();
 		
 			// TODO: end dream stuff
 
@@ -72,6 +79,8 @@ namespace Entities.Dream
 
 		public static void SwitchDreamLevel(string levelPath, string spawnPoint = "")
 		{
+			OnLevelFinishChange = null; // clear prior events
+			
 			if (_loadedDreamObject)
 			{
 				GameObject.Destroy(_loadedDreamObject);
@@ -79,6 +88,8 @@ namespace Entities.Dream
 
 			PlayerSpawns.Clear();
 			PlayerSpawnForced = false;
+
+			Target.Targets.Clear();
 		
 			TMAP t;
 			_loadedDreamObject = IOUtil.LoadToriiMap(levelPath, out t);
@@ -111,6 +122,8 @@ namespace Entities.Dream
 				Player.transform.rotation = Quaternion.Euler(0, PlayerSpawns[spawnPointHandle].transform.rotation.eulerAngles.y, 0);
 			}
 			else Debug.LogError("There are no player_spawn entities in the level, cannot spawn player!");
+
+			if (OnLevelFinishChange != null) OnLevelFinishChange.Invoke();
 		}
 
 		private static Vector3 SetPlayerSpawn(Transform t)

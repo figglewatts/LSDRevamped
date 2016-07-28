@@ -124,7 +124,7 @@ namespace IO
 			Texture2D[] faceTextures = TextureLoad(f.Texture);
 
 			// check to see if we loaded multiple textures
-			bool inTextureSet = faceTextures.Length > 4;
+			bool inTextureSet = faceTextures.Length >= 4;
 
 			// cache the path for debug logging
 			string pathToTex = IOUtil.PathCombine(_pathToMapTextures, f.Texture);
@@ -261,9 +261,12 @@ namespace IO
 			for (int i = 0; i < textures.Length; i++)
 			{
 				TextureSetIndex tsi = (TextureSetIndex)i;
+
+				string nameOfTextureToLoad = (isInTextureSet ? tsi.ToString() : string.Empty) + tempTextureName;
+
 				textures[i] =
 					IOUtil.LoadPNG(IOUtil.PathCombine(mapTexturesPath, wadName,
-						(isInTextureSet ? tsi.ToString() : string.Empty) + tempTextureName));
+						nameOfTextureToLoad));
 			}
 
 			return textures;

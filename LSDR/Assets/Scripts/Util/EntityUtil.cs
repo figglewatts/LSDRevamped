@@ -12,7 +12,7 @@ namespace Util
 		public static float TryParseFloat(string propertyName, ENTITY e)
 		{
 			float result;
-			if (!float.TryParse(e.GetPropertyValue("Happiness"), out result))
+			if (!float.TryParse(e.GetPropertyValue(propertyName), out result))
 			{
 				Debug.LogWarning("Unable to parse property \"" + propertyName + "in " + e.Classname + ": " +
 				                 e.GetPropertyValue(propertyName));
@@ -24,7 +24,7 @@ namespace Util
 		public static int TryParseInt(string propertyName, ENTITY e)
 		{
 			int result;
-			if (!int.TryParse(e.GetPropertyValue("Happiness"), out result))
+			if (!int.TryParse(e.GetPropertyValue(propertyName), out result))
 			{
 				Debug.LogWarning("Unable to parse property \"" + propertyName + "in " + e.Classname + ": " +
 								 e.GetPropertyValue(propertyName));

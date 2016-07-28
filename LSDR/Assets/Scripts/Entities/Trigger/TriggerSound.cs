@@ -8,6 +8,8 @@ using Util;
 
 namespace Entities.Trigger
 {
+	// TODO: hook into sfx volume
+
 	public class TriggerSound : MonoBehaviour
 	{
 		public string SoundSrc;
@@ -15,6 +17,8 @@ namespace Entities.Trigger
 		public bool OnceOnly;
 
 		public AudioSource Source;
+
+		private bool _playedYet = false;
 
 		public static GameObject Instantiate(ENTITY e)
 		{
@@ -26,14 +30,28 @@ namespace Entities.Trigger
 			script.OnceOnly = e.GetSpawnflagValue(0, 1);
 
 			script.Source = instantiated.AddComponent<AudioSource>();
+			script.Source.loop = false;
+			script.Source.spatialBlend = 0; // 2D audio
+			script.Source.playOnAwake = false;
 
-			script.StartCoroutine(IOUtil.LoadOGGIntoSource(script.SoundSrc, script.Source));
+			script.StartCoroutine(IOUtil.LoadOGGIntoSource(IOUtil.PathCombine("sfx", script.SoundSrc), script.Source));
 
 			EntityUtil.SetInstantiatedObjectTransform(e, ref instantiated);
 
 			instantiated.AddComponent<BoxCollider>().isTrigger = true;
 
 			return instantiated;
+		}
+
+		public void OnTriggerEnter(Collider other)
+		{
+			if (OnceOnly && _playedYet) return;
+
+			if (other.CompareTag("Player"))
+			{
+				Source.Play();
+				_playedYet = true;
+			}
 		}
 	}
 }

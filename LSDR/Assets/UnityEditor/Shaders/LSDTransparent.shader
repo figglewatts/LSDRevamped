@@ -74,11 +74,7 @@
 			float4 frag(v2f IN) : COLOR
 			{
 				half4 c;
-				if (_TextureSet == 1)
-				{
-					c = tex2D(_MainTexA, IN.uv_MainTex)*IN.color;
-				}
-				else if (_TextureSet == 2)
+				if (_TextureSet == 2)
 				{
 					c = tex2D(_MainTexB, IN.uv_MainTex)*IN.color;
 				}

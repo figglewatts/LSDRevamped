@@ -50,5 +50,7 @@ namespace Util
 			string[] filesInDir = Directory.GetFiles(IOUtil.PathCombine(Application.dataPath, "levels", levelDir), "*.tmap");
 			return IOUtil.PathCombine("levels", levelDir, filesInDir[Int(filesInDir.Length)]);
 		}
+
+		public static T RandomArrayElement<T>(T[] array) { return array[Int(array.Length)]; }
 	}
 }
