@@ -205,7 +205,9 @@ namespace IO
 
 		private static float StringToFloat(string s)
 		{
-			return float.Parse(s);
+			float returnVal;
+			float.TryParse(s, out returnVal);
+			return returnVal;
 		}
 
 	}
