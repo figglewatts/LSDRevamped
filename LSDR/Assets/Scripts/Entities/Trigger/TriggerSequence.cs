@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Entities.Action;
+using Entities.Dream;
 using Types;
 using UnityEngine;
 using Util;
@@ -12,6 +14,8 @@ namespace Entities.Trigger
 	{
 		public string SequenceName;
 
+		private ActionSequence _referencedSequence;
+
 		public static GameObject Instantiate(ENTITY e)
 		{
 			GameObject instantiated = new GameObject(e.Classname);
@@ -19,11 +23,26 @@ namespace Entities.Trigger
 
 			script.SequenceName = e.GetPropertyValue("Sequence name");
 
+			DreamDirector.OnLevelFinishChange += script.PostLoad;
+
 			EntityUtil.SetInstantiatedObjectTransform(e, ref instantiated);
 
 			instantiated.AddComponent<BoxCollider>().isTrigger = true;
 
 			return instantiated;
+		}
+
+		private void PostLoad()
+		{
+			_referencedSequence = ActionSequence.FindSequence(SequenceName);
+		}
+
+		public void OnTriggerEnter(Collider other)
+		{
+			if (other.CompareTag("Player"))
+			{
+				if (_referencedSequence) _referencedSequence.BeginSequence();
+			}
 		}
 	}
 }
