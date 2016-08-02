@@ -24,7 +24,7 @@ namespace Game
 		#region Graphical Settings
 
 		// modifiable settings
-		public static bool UseClassicShaders = false;
+		public static bool UseClassicShaders = true;
 
 		#endregion
 

@@ -73,7 +73,6 @@ namespace Entities.Player
 				GameSettings.CanControlPlayer = true;
 				Fader.FadeOut(color, 1F, () =>
 				{
-					Debug.Log("Finished linking");
 					_canLink = true;
 				});
 			});

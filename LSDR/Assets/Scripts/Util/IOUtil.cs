@@ -113,7 +113,6 @@ namespace Util
 			{
 				yield return null;
 			}
-			Debug.Log(www.GetAudioClip(true).name);
 			source.clip = www.GetAudioClip(true);
 
 			if (playOnLoad) source.Play();

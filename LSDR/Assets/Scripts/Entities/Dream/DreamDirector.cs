@@ -54,7 +54,6 @@ namespace Entities.Dream
 
 			// TODO: temporary
 			string levelToLoad = RandUtil.RandomLevelFromDir("/");
-			Debug.Log(levelToLoad);
 			int textureSet = 2;
 
 			// populate payload with textureset info and level to load

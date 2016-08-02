@@ -2,12 +2,22 @@
 using System.Collections;
 using UnityEngine.SceneManagement;
 
-public class UIPersistentCameraCanvas : MonoBehaviour
+namespace UI
 {
-	private Canvas _canvas;
-
-	public void Start()
+	/// <summary>
+	/// Used to make a camera canvas that persists between scene loads.
+	/// Finds the main camera whenever a new scene is loaded.
+	/// </summary>
+	public class UIPersistentCameraCanvas : MonoBehaviour
 	{
-		//SceneManager.
+		private Canvas _canvas;
+
+		public void Start()
+		{
+			_canvas = GetComponent<Canvas>();
+			SceneManager.sceneLoaded += OnSceneChange;
+		}
+
+		private void OnSceneChange(Scene scene, LoadSceneMode loadSceneMode) { _canvas.worldCamera = Camera.main; }
 	}
 }
