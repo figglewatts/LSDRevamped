@@ -10,7 +10,7 @@ namespace Game
 
 		// modifiable settings
 		public static bool HeadBobEnabled = true;
-		public static bool FPSMovementEnabled;
+		public static bool FPSMovementEnabled = true;
 		public static float MouseSensitivityX = 1F;
 		public static float MouseSensitivityY = 1F;
 
@@ -24,7 +24,7 @@ namespace Game
 		#region Graphical Settings
 
 		// modifiable settings
-		public static bool UseClassicShaders = true;
+		public static bool UseClassicShaders = false;
 
 		#endregion
 

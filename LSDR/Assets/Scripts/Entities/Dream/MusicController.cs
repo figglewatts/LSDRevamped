@@ -45,6 +45,8 @@ namespace Entities.Dream
 
 			Debug.Log("Chose track: " + selectedTrack);
 
+			DreamDirector.CurrentlyPlayingSong = Path.GetFileNameWithoutExtension(selectedTrack);
+
 			script.StartCoroutine(IOUtil.LoadOGGIntoSource(selectedTrack, script.Source, true, true));
 
 			EntityUtil.SetInstantiatedObjectTransform(e, ref instantiated);

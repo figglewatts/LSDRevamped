@@ -21,6 +21,8 @@ namespace Entities.Dream
 		public static int StaticityAccumulator = 0;
 		public static int HappinessAccumulator = 0;
 
+		public static string CurrentlyPlayingSong = "";
+
 		public static GameObject Player;
 
 		public static List<PlayerSpawn> PlayerSpawns = new List<PlayerSpawn>();
