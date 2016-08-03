@@ -540,6 +540,7 @@ GameObject:
   - 20: {fileID: 451942264}
   - 124: {fileID: 451942267}
   - 92: {fileID: 451942266}
+  - 114: {fileID: 451942265}
   m_Layer: 0
   m_Name: PauseMenuCamera
   m_TagString: MainCamera
@@ -581,6 +582,18 @@ Camera:
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
   m_StereoMirrorMode: 0
+--- !u!114 &451942265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 451942263}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 076b18c5372045444bd2545722974493, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Target: {fileID: 1639242879}
 --- !u!92 &451942266
 Behaviour:
   m_ObjectHideFlags: 0
@@ -602,11 +615,12 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 451942263}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.873, z: 0}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_Children: []
-  m_Father: {fileID: 1639242879}
+  m_Children:
+  - {fileID: 1839599781}
+  m_Father: {fileID: 1610015707}
   m_RootOrder: 0
 --- !u!1 &481015824
 GameObject:
@@ -709,7 +723,7 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 1
+          m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -1625,8 +1639,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
+  - {fileID: 451942268}
   - {fileID: 1639242879}
-  - {fileID: 1839599781}
   m_Father: {fileID: 0}
   m_RootOrder: 0
 --- !u!114 &1610015708
@@ -1645,7 +1659,7 @@ MonoBehaviour:
   MaxNegativeRotation: 320
   CanRotate: 1
   TargetCamera: {fileID: 1639242883}
-  MouseLookRotationMultiplier: 70
+  MouseLookRotationMultiplier: 50
   MaxY: 70
   MinY: -70
 --- !u!54 &1610015709
@@ -1691,6 +1705,7 @@ MonoBehaviour:
   BobbingAmount: 0.2
   Midpoint: 1
   TargetCamera: {fileID: 1639242883}
+  FootstepAudioSource: {fileID: 0}
 --- !u!114 &1610015712
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1838,10 +1853,9 @@ Transform:
   m_LocalPosition: {x: 0, y: 0.127, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_Children:
-  - {fileID: 451942268}
+  m_Children: []
   m_Father: {fileID: 1610015707}
-  m_RootOrder: 0
+  m_RootOrder: 1
 --- !u!81 &1639242880
 AudioListener:
   m_ObjectHideFlags: 0
@@ -2124,17 +2138,17 @@ RectTransform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1839599777}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 100}
   m_LocalScale: {x: 0.26978984, y: 0.26978984, z: 0.26978984}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 534533897}
-  m_Father: {fileID: 1610015707}
-  m_RootOrder: 1
+  m_Father: {fileID: 451942268}
+  m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -0.2, y: 0.1270032}
+  m_AnchoredPosition: {x: -0.2, y: -0.8729968}
   m_SizeDelta: {x: 761.3, y: 428}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1895981865

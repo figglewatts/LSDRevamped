@@ -13,7 +13,7 @@ namespace Entities.Player
 
 		void Update()
 		{
-			if (GameSettings.CanControlPlayer && !GameSettings.FPSMovementEnabled)
+			if (GameSettings.CanControlPlayer && !ControlSchemeManager.CurrentScheme.FPSMovementEnabled)
 			{
 				if (InputHandler.CheckButtonState("Left", ButtonState.HELD))
 				{

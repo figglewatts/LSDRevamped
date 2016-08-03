@@ -39,7 +39,7 @@ namespace Entities.Dream
 
 		private static GameObject _loadedDreamObject;
 
-		private static float _playerHeightOffset = 0.6F;
+		private static float _playerHeightOffset = 0.65F;
 
 		public static void BeginDream()
 		{
@@ -49,11 +49,9 @@ namespace Entities.Dream
 			StaticityAccumulator = 0;
 			HappinessAccumulator = 0;
 
-			// TODO: randomly generate level to load with seed
-			// TODO: randomly pick texture set with seed
+			string levelToLoad = RandUtil.RandomLevelFromDir(DreamJournalManager.CurrentJournal);
 
-			// TODO: temporary
-			string levelToLoad = RandUtil.RandomLevelFromDir("/");
+			// TODO: randomly pick texture set with seed
 			int textureSet = 2;
 
 			// populate payload with textureset info and level to load
@@ -64,7 +62,7 @@ namespace Entities.Dream
 			Shader.SetGlobalInt("_TextureSet", Payload.InitialTextureSetIndex);
 
 			// load dream scene
-			Fader.FadeIn(Color.black, 1.5F, () => {SceneManager.LoadScene("dream");});
+			Fader.FadeIn(Color.black, 1.5F, () => {SceneManager.LoadScene("dream"); Debug.Log("Fading");});
 		}
 
 		// TODO: write BeginFlashback method that sets the seed as well as starting a dream

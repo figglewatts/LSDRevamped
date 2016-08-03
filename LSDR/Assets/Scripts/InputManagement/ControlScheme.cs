@@ -14,6 +14,8 @@ namespace InputManagement
 		public bool FPSMovementEnabled;
 		public string SchemeName;
 
+		public float MouseSensitivity;
+
 		/// <summary>
 		/// Creates a control scheme with the default settings
 		/// </summary>
@@ -28,6 +30,7 @@ namespace InputManagement
 			Controls.Add("Sprint", KeyCode.Space);
 			FPSMovementEnabled = false;
 			SchemeName = "Classic";
+			MouseSensitivity = 1F;
 		}
 
 		/// <summary>
@@ -43,6 +46,7 @@ namespace InputManagement
 			}
 			FPSMovementEnabled = json["fpsMovementEnabled"].AsBool;
 			SchemeName = json["name"];
+			MouseSensitivity = json["mouseSensitivity"].AsFloat;
 		}
 
 		/// <summary>
@@ -60,6 +64,7 @@ namespace InputManagement
 			}
 			json["fpsMovementEnabled"].AsBool = FPSMovementEnabled;
 			json["name"] = SchemeName;
+			json["mouseSensitivity"].AsFloat = MouseSensitivity;
 			return json;
 		}
 	}

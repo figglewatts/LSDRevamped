@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using Game;
 using InputManagement;
+using UnityEngine.Audio;
+using Util;
 
 namespace Entities.Player
 {
@@ -16,9 +18,23 @@ namespace Entities.Player
 		public float Midpoint = 1F;
 		public Camera TargetCamera;
 
+		public AudioSource FootstepAudioSource;
+
+		private AudioMixer _masterMixer;
+
 		private float _timer;
 
-		void Start() {}
+		private bool _canPlayFootstepSound = true;
+
+		void Start()
+		{
+			_masterMixer = Resources.Load<AudioMixer>("Mixers/MasterMixer");
+		
+			FootstepAudioSource = gameObject.AddComponent<AudioSource>();
+			FootstepAudioSource.spatialBlend = 0; // 2d audio
+			FootstepAudioSource.outputAudioMixerGroup = _masterMixer.FindMatchingGroups("SFX")[0];
+			StartCoroutine(IOUtil.LoadOGGIntoSource(IOUtil.PathCombine("sfx", "SE_00003.ogg"), FootstepAudioSource));
+		}
 
 		// Update is called once per frame
 		void Update()
@@ -32,7 +48,8 @@ namespace Entities.Player
 				vertical = 1;
 			}
 			// make sure we don't headbob whilst rotating
-			if ((InputHandler.CheckButtonState("Left", ButtonState.HELD) || InputHandler.CheckButtonState("Right", ButtonState.HELD)) && GameSettings.FPSMovementEnabled)
+			if ((InputHandler.CheckButtonState("Left", ButtonState.HELD) || InputHandler.CheckButtonState("Right", ButtonState.HELD))
+				&& ControlSchemeManager.CurrentScheme.FPSMovementEnabled)
 			{
 				vertical = 1;
 			}
@@ -62,20 +79,27 @@ namespace Entities.Player
 				totalAxes = Mathf.Clamp(totalAxes, 0F, 1F);
 				translateChange = totalAxes*translateChange;
 				Vector3 pos = TargetCamera.transform.localPosition;
-				pos.y = Midpoint + translateChange;
-				if (GameSettings.HeadBobEnabled)
-				{
-					TargetCamera.transform.localPosition = pos;
-				}
+				pos.y = Midpoint + (GameSettings.HeadBobEnabled ? translateChange : 0);
+				TargetCamera.transform.localPosition = pos;
 			}
 			else
 			{
 				Vector3 pos = TargetCamera.transform.localPosition;
 				pos.y = Midpoint;
-				if (GameSettings.HeadBobEnabled)
+				TargetCamera.transform.localPosition = pos;
+			}
+
+			if (GameSettings.EnableFootstepSounds && waveslice <= -0.9F)
+			{
+				if (_canPlayFootstepSound)
 				{
-					TargetCamera.transform.localPosition = pos;
+					FootstepAudioSource.Play();
+					_canPlayFootstepSound = false;
 				}
+			}
+			else
+			{
+				_canPlayFootstepSound = true;
 			}
 		}
 	}

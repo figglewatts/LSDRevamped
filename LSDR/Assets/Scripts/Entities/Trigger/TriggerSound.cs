@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using Types;
 using UnityEngine;
+using UnityEngine.Audio;
 using Util;
 
 namespace Entities.Trigger
 {
-	// TODO: hook into sfx volume
-
 	public class TriggerSound : MonoBehaviour
 	{
 		public string SoundSrc;
@@ -19,6 +18,8 @@ namespace Entities.Trigger
 		public AudioSource Source;
 
 		private bool _playedYet = false;
+
+		private static AudioMixer _masterMixer = Resources.Load<AudioMixer>("Mixers/MasterMixer");
 
 		public static GameObject Instantiate(ENTITY e)
 		{
@@ -33,6 +34,7 @@ namespace Entities.Trigger
 			script.Source.loop = false;
 			script.Source.spatialBlend = 0; // 2D audio
 			script.Source.playOnAwake = false;
+			script.Source.outputAudioMixerGroup = _masterMixer.FindMatchingGroups("SFX")[0];
 
 			script.StartCoroutine(IOUtil.LoadOGGIntoSource(IOUtil.PathCombine("sfx", script.SoundSrc), script.Source));
 

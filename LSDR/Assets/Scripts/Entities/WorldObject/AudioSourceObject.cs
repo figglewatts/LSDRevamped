@@ -2,12 +2,11 @@
 using System.Collections;
 using Types;
 using UnityEngine;
+using UnityEngine.Audio;
 using Util;
 
 namespace Entities.WorldObject
 {
-	// TODO: hook into sfx volume
-
 	public class AudioSourceObject : MonoBehaviour
 	{
 		public string AudioClip;
@@ -19,6 +18,8 @@ namespace Entities.WorldObject
 		public AudioSource Source;
 
 		private float _audioTimer;
+
+		private static AudioMixer _masterMixer = Resources.Load<AudioMixer>("Mixers/MasterMixer");
 
 		public void Start() { StartCoroutine(PlayAudioCoroutine()); }
 
@@ -39,6 +40,7 @@ namespace Entities.WorldObject
 			script.Source.loop = script.LoopAudio;
 			script.Source.minDistance = script.MinDistance;
 			script.Source.spatialBlend = 1; // 3D audio
+			script.Source.outputAudioMixerGroup = _masterMixer.FindMatchingGroups("SFX")[0];
 
 			EntityUtil.SetInstantiatedObjectTransform(e, ref instantiated);
 

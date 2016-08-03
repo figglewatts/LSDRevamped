@@ -76,7 +76,7 @@ namespace Entities.Player
 			}
 
 	        float moveDirLeftRight = 0;
-	        if (GameSettings.FPSMovementEnabled)
+	        if (ControlSchemeManager.CurrentScheme.FPSMovementEnabled)
 	        {
 		        if (InputHandler.CheckButtonState("Left", ButtonState.HELD))
 		        {

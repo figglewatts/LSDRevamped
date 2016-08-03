@@ -29,6 +29,7 @@
 			float4 _MainTexA_ST;
 			uniform half4 unity_FogStart;
 			uniform half4 unity_FogEnd;
+			uniform float AffineIntensity;
 
 			v2f vert(appdata_full v)
 			{
@@ -53,8 +54,8 @@
 				//Affine Texture Mapping
 				float4 affinePos = vertex; //vertex;				
 				o.uv_MainTex = TRANSFORM_TEX(v.texcoord, _MainTexA);
-				o.uv_MainTex *= distance + (vertex.w*(UNITY_LIGHTMODEL_AMBIENT.a * 8)) / distance / 2;
-				o.normal = distance + (vertex.w*(UNITY_LIGHTMODEL_AMBIENT.a * 8)) / distance / 2;
+				o.uv_MainTex *= distance + (vertex.w*(AffineIntensity * 8)) / distance / 2;
+				o.normal = distance + (vertex.w*(AffineIntensity * 8)) / distance / 2;
 
 				//Fog
 				float4 fogColor = unity_FogColor;

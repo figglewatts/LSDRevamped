@@ -48,8 +48,6 @@ namespace Util
 		/// <returns>Null if error reading.</returns>
 		public static JSONClass ReadJSONFromDisk(string path)
 		{
-			// TODO: find usages and replace with resourcemanager
-
 			try
 			{
 				JSONClass json = JSON.Parse(File.ReadAllText(path)).AsObject;
@@ -68,7 +66,7 @@ namespace Util
 		/// </summary>
 		/// <param name="filePath">The path to the file.</param>
 		public static Texture2D LoadPNG(string filePath)
-		{
+		{		
 			Texture2D tex = null;
 
 			string fullFilePath = filePath;
@@ -106,7 +104,11 @@ namespace Util
 		/// </summary>
 		public static IEnumerator LoadOGGIntoSource(string filePath, AudioSource source, bool playOnLoad = false, bool absolutePath = false)
 		{
-			// TODO: handle missing files
+			if (!File.Exists(absolutePath ? filePath : PathCombine(Application.dataPath, filePath)))
+			{
+				Debug.LogError("Could not locate OGG at " + filePath);
+				yield break;
+			}
 		
 			WWW www = new WWW("file:///" +  (absolutePath ? filePath : PathCombine(Application.dataPath, filePath)));
 			while (!www.isDone)

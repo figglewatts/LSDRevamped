@@ -9,6 +9,8 @@ namespace IO
 	{
 		public static TMAP ReadFromFile(string filePath)
 		{
+			if (!File.Exists(filePath)) throw new FileNotFoundException("Could not find TMAP file!");
+		
 			TMAP tmap;
 			using (BinaryReader reader = new BinaryReader(File.Open(filePath, FileMode.Open)))
 			{

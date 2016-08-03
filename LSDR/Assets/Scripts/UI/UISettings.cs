@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using Game;
 using UI;
 
 public class UISettings : MonoBehaviour
@@ -24,5 +25,11 @@ public class UISettings : MonoBehaviour
 		{
 			obj.SetActive(obj == o);
 		}
+	}
+
+	public void ApplySettings()
+	{
+		GameSettings.ApplySettings();
+		GameSettings.SaveSettings();
 	}
 }

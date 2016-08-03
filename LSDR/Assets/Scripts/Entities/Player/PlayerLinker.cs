@@ -5,6 +5,7 @@ using Entities.Dream;
 using Entities.WorldObject;
 using Game;
 using UI;
+using UnityEngine.Audio;
 using Util;
 
 namespace Entities.Player
@@ -17,16 +18,19 @@ namespace Entities.Player
 
 		private float _linkTimer = 0F;
 
-		// TODO: hook this up to global SFX volume
 		private AudioSource _source;
 		private AudioClip _linkSound;
+		private AudioMixer _masterMixer;
 
 		private bool _touchingFloor;
 
 		// Use this for initialization
 		void Start()
 		{
+			_masterMixer = Resources.Load<AudioMixer>("Mixers/MasterMixer");
 			_source = GetComponent<AudioSource>();
+			_source.spatialBlend = 0; // 2D audio
+			_source.outputAudioMixerGroup = _masterMixer.FindMatchingGroups("SFX")[0];
 			_linkSound = Resources.Load<AudioClip>("Sound/Dream/linkSound");
 		}
 
@@ -55,7 +59,7 @@ namespace Entities.Player
 				LinkableObject o = hit.gameObject.transform.parent.transform.parent.GetComponent<LinkableObject>();
 
 				Color linkCol = o.ForceFadeColor ? o.FadeColor : RandUtil.RandColor();
-				string linkLevel = o.LinkToSpecificLevel ? IOUtil.PathCombine("levels", o.LinkedLevel) : RandUtil.RandomLevelFromDir(GameSettings.CurrentJournalDir);
+				string linkLevel = o.LinkToSpecificLevel ? IOUtil.PathCombine("levels", o.LinkedLevel) : RandUtil.RandomLevelFromDir(DreamJournalManager.CurrentJournal);
 
 				_linkTimer = 0;
 				Link(linkLevel, linkCol);
@@ -82,7 +86,7 @@ namespace Entities.Player
 
 		public void Link(bool playSound = true)
 		{
-			Link(RandUtil.RandomLevelFromDir(GameSettings.CurrentJournalDir), RandUtil.RandColor(), playSound);
+			Link(RandUtil.RandomLevelFromDir(DreamJournalManager.CurrentJournal), RandUtil.RandColor(), playSound);
 		}
 	}
 }

@@ -33,12 +33,21 @@ namespace Game
 
 			string fileExt = Path.GetExtension(normalizedPath);
 
+			bool fileNotFound = false;
+
 			switch (fileExt)
 			{
 				case ".png":
 				{
 					GenericResource<Texture2D> resource = new GenericResource<Texture2D>();
 					resource.Resource = IOUtil.LoadPNG(normalizedPath);
+
+					if (resource.Resource == null)
+					{
+						fileNotFound = true;
+						break;
+					}
+
 					resource.Lifespan = lifespan;
 					_resources.Add(normalizedPath, resource);
 					break;
@@ -47,6 +56,13 @@ namespace Game
 				{
 					GenericResource<JSONClass> resource = new GenericResource<JSONClass>();
 					resource.Resource = IOUtil.ReadJSONFromDisk(normalizedPath);
+
+					if (resource.Resource == null)
+					{
+						fileNotFound = true;
+						break;
+					}
+
 					resource.Lifespan = lifespan;
 					_resources.Add(normalizedPath, resource);
 					break;
@@ -54,6 +70,14 @@ namespace Game
 				case ".map":
 				{
 					GenericResource<GameObject> resource = new GenericResource<GameObject>();
+
+					if (!File.Exists(normalizedPath))
+					{
+						Debug.LogError("Could not load resource " + normalizedPath);
+						fileNotFound = true;
+						break;
+					}
+
 					resource.Resource = MapReader.LoadMap(normalizedPath, IOUtil.PathCombine(Application.dataPath, "textures", "wad"),
 						Shader.Find(GameSettings.UseClassicShaders ? "LSD/PSX/DiffuseSetNoAffine" : "LSD/DiffuseSet"),
 						Shader.Find(GameSettings.UseClassicShaders ? "LSD/PSX/TransparentSetNoAffine" : "LSD/TransparentSet"));
@@ -66,6 +90,14 @@ namespace Game
 				case ".tmap":
 				{
 					GenericResource<TMAP> resource = new GenericResource<TMAP>();
+
+					if (!File.Exists(normalizedPath))
+					{
+						Debug.LogError("Could not load resource " + normalizedPath);
+						fileNotFound = true;
+						break;
+					}
+
 					resource.Resource = ToriiMapReader.ReadFromFile(normalizedPath);
 					resource.Lifespan = lifespan;
 					_resources.Add(normalizedPath, resource);
@@ -74,6 +106,14 @@ namespace Game
 				case ".tobj":
 				{
 					GenericResource<GameObject> resource = new GenericResource<GameObject>();
+
+					if (!File.Exists(normalizedPath))
+					{
+						Debug.LogError("Could not load resource " + normalizedPath);
+						fileNotFound = true;
+						break;
+					}
+
 					TOBJ tobj = new TOBJ();
 					ToriiObjectReader.Read(normalizedPath, ref tobj);
 					resource.Resource = OBJReader.ReadOBJString(tobj.ObjectFile);
@@ -90,6 +130,11 @@ namespace Game
 				{
 					throw new ResourceLoadException("Did not recognize file type: " + normalizedPath);
 				}
+			}
+
+			if (fileNotFound)
+			{
+				throw new ResourceLoadException("Could not find resource!");
 			}
 
 			return ((GenericResource<DataType>) _resources[normalizedPath]).Resource;
@@ -119,7 +164,7 @@ namespace Game
 			public T Resource;
 		}
 
-		private class ResourceLoadException : Exception
+		public class ResourceLoadException : Exception
 		{
 			public ResourceLoadException() { }
 			public ResourceLoadException(string message) : base(message) { }

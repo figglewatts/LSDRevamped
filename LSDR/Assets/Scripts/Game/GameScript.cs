@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Game;
+using UnityEngine;
 using InputManagement;
 using IO;
 using Types;
@@ -23,9 +24,11 @@ public class GameScript : MonoBehaviour
 
 		ControlSchemeManager.Initialize();
 
-		ControlSchemeManager.SwitchToScheme("Classic");
+		DreamJournalManager.Initialize();
 
 		MapReader.MapScaleFactor = 1F;
+
+		GameSettings.LoadSettings();
 	}
 
 	void Update()

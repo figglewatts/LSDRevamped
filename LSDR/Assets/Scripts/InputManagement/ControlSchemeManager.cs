@@ -7,6 +7,8 @@ using UnityEngine;
 
 namespace InputManagement
 {
+	// TODO: handle scheme not found
+
 	public static class ControlSchemeManager
 	{
 		public static List<ControlScheme> LoadedSchemes = new List<ControlScheme>();
@@ -22,21 +24,34 @@ namespace InputManagement
 			LoadControlSchemes();
 		}
 
+		public static void AddScheme(ControlScheme scheme)
+		{
+			for (int i = 0; i < LoadedSchemes.Count; i++)
+			{
+				if (LoadedSchemes[i].SchemeName.Equals(scheme.SchemeName))
+				{
+					LoadedSchemes[i] = scheme;
+					return;
+				}
+			}
+			LoadedSchemes.Add(scheme);
+		}
+
 		public static void SwitchToScheme(string name)
 		{
 			for (int i = 0; i < LoadedSchemes.Count; i++)
 			{
 				if (LoadedSchemes[i].SchemeName.Equals(name))
 				{
-					_currentSchemeHandle = i;
+					SwitchToScheme(i);
 				}
 			}
-			ControlSchemeSwitched();
 		}
 
 		public static void SwitchToScheme(int i)
 		{
 			_currentSchemeHandle = i;
+			GameSettings.CurrentControlSchemeIndex = i;
 			ControlSchemeSwitched();
 		}
 
@@ -50,9 +65,10 @@ namespace InputManagement
 			}
 		}
 
-		private static void LoadControlSchemes()
+		public static void LoadControlSchemes()
 		{
-			// TODO: load settings before this then when this is done switch to selected control scheme
+			LoadedSchemes.Clear();
+		
 			string pathToControlSchemes = IOUtil.PathCombine(Application.persistentDataPath, "Settings", "ControlSchemes");
 
 			string[] schemes;
@@ -86,7 +102,6 @@ namespace InputManagement
 			{
 				InputHandler.RebindInput(inputName, CurrentScheme.Controls[inputName]);
 			}
-			GameSettings.FPSMovementEnabled = CurrentScheme.FPSMovementEnabled;
 		}
 	}
 }

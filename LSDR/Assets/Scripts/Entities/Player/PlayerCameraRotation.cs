@@ -15,7 +15,7 @@ namespace Entities.Player
 		public float MaxNegativeRotation = 320;
 		public bool CanRotate = true;
 		public Camera TargetCamera;
-		public float MouseLookRotationMultiplier = 50; // used because deltaTime makes things real slow
+		public float MouseLookRotationMultiplier = 10; // used because deltaTime makes things real slow
 		public float MaxY = 70F;
 		public float MinY = -70F;
 
@@ -41,13 +41,13 @@ namespace Entities.Player
 		{
 			if (!GameSettings.CanControlPlayer) return;
 		
-			if (GameSettings.FPSMovementEnabled)
+			if (ControlSchemeManager.CurrentScheme.FPSMovementEnabled)
 			{
-				transform.Rotate(0, Input.GetAxis("Mouse X") * GameSettings.MouseSensitivityX * Time.smoothDeltaTime * MouseLookRotationMultiplier,
+				transform.Rotate(0, Input.GetAxis("Mouse X") * ControlSchemeManager.CurrentScheme.MouseSensitivity * Time.smoothDeltaTime * MouseLookRotationMultiplier,
 					0, Space.Self);
 
-				_temp = Camera.main.transform;
-				_rotationX += -Input.GetAxis("Mouse Y") * GameSettings.MouseSensitivityY * Time.smoothDeltaTime * MouseLookRotationMultiplier;
+				_temp = TargetCamera.transform;
+				_rotationX += -Input.GetAxis("Mouse Y") * ControlSchemeManager.CurrentScheme.MouseSensitivity * Time.smoothDeltaTime * MouseLookRotationMultiplier;
 				_rotationX = ClampAngle(_rotationX, MinY, MaxY);
 				_temp.transform.localEulerAngles = new Vector3(_rotationX, TargetCamera.transform.localEulerAngles.y, 0);
 				Quaternion.Slerp(TargetCamera.transform.rotation, _temp.transform.rotation, Time.deltaTime);

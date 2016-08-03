@@ -12,17 +12,22 @@ namespace AutoUpdate
 		/// </summary>
 		public static int Get()
 		{
-			using (StreamReader r = new StreamReader(IOUtil.PathCombine(Application.dataPath, "../", "version.txt")))
+			if (Application.platform == RuntimePlatform.WindowsEditor)
 			{
-				try
+				return -1;
+			}
+
+			try
+			{
+				using (StreamReader r = new StreamReader(IOUtil.PathCombine(Application.dataPath, "../", "version.txt")))
 				{
 					return int.Parse(r.ReadLine());
 				}
-				catch (FormatException e)
-				{
-					Debug.LogException(e);
-					return -1;
-				}
+			}
+			catch (Exception e)
+			{
+				Debug.LogException(e);
+				return -1;
 			}
 		}
 	}
