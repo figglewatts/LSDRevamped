@@ -6755,6 +6755,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 552988694}
   - 114: {fileID: 552988693}
+  - 114: {fileID: 552988695}
   m_Layer: 0
   m_Name: ConsoleKeypressListener
   m_TagString: Untagged
@@ -6786,6 +6787,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 9
+--- !u!114 &552988695
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 552988692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78edc7addf86afe4a90c9865bae96fc7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DevConsoleScript: {fileID: 2073141387}
 --- !u!1 &579463435
 GameObject:
   m_ObjectHideFlags: 0
@@ -9756,10 +9769,10 @@ RectTransform:
   - {fileID: 1693325849}
   m_Father: {fileID: 1901915678}
   m_RootOrder: 0
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 343, y: -228.5}
+  m_SizeDelta: {x: 686, y: 457}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &997536076
 MonoBehaviour:
@@ -10822,10 +10835,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 857427421}
   m_RootOrder: 0
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 328, y: -20}
+  m_SizeDelta: {x: 636, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1080033935
 MonoBehaviour:
@@ -14876,10 +14889,10 @@ RectTransform:
   - {fileID: 961421714}
   m_Father: {fileID: 857427421}
   m_RootOrder: 1
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 666, y: -20}
+  m_SizeDelta: {x: 40, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1408078945
 MonoBehaviour:
@@ -16110,7 +16123,7 @@ RectTransform:
   m_Father: {fileID: 844974630}
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -18258,6 +18271,7 @@ GameObject:
   - 114: {fileID: 1769333729}
   - 114: {fileID: 1769333728}
   - 114: {fileID: 1769333727}
+  - 114: {fileID: 1769333731}
   m_Layer: 5
   m_Name: InputField
   m_TagString: Untagged
@@ -18280,10 +18294,10 @@ RectTransform:
   - {fileID: 1203067599}
   m_Father: {fileID: 1901915678}
   m_RootOrder: 1
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 343, y: -469.5}
+  m_SizeDelta: {x: 686, y: 25}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1769333727
 MonoBehaviour:
@@ -18399,6 +18413,53 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1769333725}
+--- !u!114 &1769333731
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1769333725}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1862395651, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 9
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2073141387}
+          m_MethodName: TextFieldSelected
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
+        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  - eventID: 10
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2073141387}
+          m_MethodName: TextFieldSelected
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
+        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  delegates: []
 --- !u!114 &1772350642 stripped
 MonoBehaviour:
   m_PrefabParentObject: {fileID: 114000012138961806, guid: d5436855d16f0bd4fb2c477b395f46a2,
@@ -20589,7 +20650,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2073141384
 RectTransform:
   m_ObjectHideFlags: 0
