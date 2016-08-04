@@ -18,6 +18,7 @@ namespace Game
 
 		// hidden settings
 		public static bool CanControlPlayer = true; // used to disable character motion, i.e. when linking
+		public static bool CanMouseLook = true;
 
 		#endregion
 

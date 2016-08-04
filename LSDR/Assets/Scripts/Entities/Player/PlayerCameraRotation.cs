@@ -43,6 +43,8 @@ namespace Entities.Player
 		
 			if (ControlSchemeManager.CurrentScheme.FPSMovementEnabled)
 			{
+				if (!GameSettings.CanMouseLook) return;
+
 				transform.Rotate(0, Input.GetAxis("Mouse X") * ControlSchemeManager.CurrentScheme.MouseSensitivity * Time.smoothDeltaTime * MouseLookRotationMultiplier,
 					0, Space.Self);
 
