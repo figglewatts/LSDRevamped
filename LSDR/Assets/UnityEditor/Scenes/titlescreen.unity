@@ -6756,6 +6756,7 @@ GameObject:
   - 4: {fileID: 552988694}
   - 114: {fileID: 552988693}
   - 114: {fileID: 552988695}
+  - 114: {fileID: 552988696}
   m_Layer: 0
   m_Name: ConsoleKeypressListener
   m_TagString: Untagged
@@ -6799,6 +6800,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DevConsoleScript: {fileID: 2073141387}
+--- !u!114 &552988696
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 552988692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4a71cd9685b16f4b8231426cd27d77a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DevConsole: {fileID: 2073141387}
 --- !u!1 &579463435
 GameObject:
   m_ObjectHideFlags: 0
@@ -9085,6 +9098,7 @@ GameObject:
   - 114: {fileID: 857427424}
   - 222: {fileID: 857427423}
   - 114: {fileID: 857427422}
+  - 114: {fileID: 857427425}
   m_Layer: 5
   m_Name: TitleBar
   m_TagString: Untagged
@@ -9165,6 +9179,20 @@ MonoBehaviour:
   m_Spacing: 0
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 1
+--- !u!114 &857427425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 857427420}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09ac6de9f56160e4a8c758ffad13b86c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 2073141384}
+  shouldReturn: 0
+  CameraCanvas: {fileID: 728271391}
 --- !u!1 &865449087
 GameObject:
   m_ObjectHideFlags: 0
@@ -12424,7 +12452,7 @@ MonoBehaviour:
     m_Alignment: 3
     m_AlignByGeometry: 0
     m_RichText: 0
-    m_HorizontalOverflow: 0
+    m_HorizontalOverflow: 1
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 

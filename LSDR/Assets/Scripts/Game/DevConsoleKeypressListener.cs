@@ -4,7 +4,7 @@ using UI;
 
 namespace Game
 {
-	public class ConsoleKeypressListener : MonoBehaviour
+	public class DevConsoleKeypressListener : MonoBehaviour
 	{
 		public UIDevConsole DevConsoleScript;
 	

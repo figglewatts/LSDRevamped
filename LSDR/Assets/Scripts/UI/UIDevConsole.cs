@@ -32,9 +32,6 @@ namespace UI
 		{
 			_consoleVisible = gameObject.activeSelf;
 
-			Application.logMessageReceived += HandleLog;
-			Debug.Log("test");
-
 			CommandInputField.onEndEdit.AddListener(val =>
 			{
 				if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)) CommandSubmit(val);
@@ -49,13 +46,17 @@ namespace UI
 
 			GameSettings.CanMouseLook = !state; // set it so we can't look while dev console is active
 			
-			if (state) _previousCursorViewState = Cursor.visible;
-			else TextFieldSelected(false);
-			
-			GameSettings.SetCursorViewState(state ? true : _previousCursorViewState);
-			
 			_consoleVisible = state;
 			gameObject.SetActive(state);
+
+			if (state)
+			{
+				_previousCursorViewState = Cursor.visible;
+				StartCoroutine(UpdateScrollRect());
+			}
+			else TextFieldSelected(false);
+
+			GameSettings.SetCursorViewState(state ? true : _previousCursorViewState);
 		}
 
 		public void ClearConsole()
@@ -77,13 +78,7 @@ namespace UI
 			CommandInputField.OnPointerClick(new PointerEventData(EventSystem.current));
 		}
 
-		private void HandleLog(string logString, string stackTrace, LogType type)
-		{
-			InstantiateOutputRow(logString, type);
-			StartCoroutine(UpdateScrollRect());
-		}
-
-		private void InstantiateOutputRow(string output, LogType type)
+		public void InstantiateOutputRow(string output, LogType type)
 		{
 			GameObject outputRow = Instantiate(ConsoleOutputRowPrefab);
 			outputRow.transform.SetParent(ConsoleOutputRowContainer.transform, false);
@@ -148,7 +143,7 @@ namespace UI
 		/// Used because ScrollRect takes a frame to update, so we need to wait for that
 		/// before we set the scrollbar position to the bottom
 		/// </summary>
-		private IEnumerator UpdateScrollRect()
+		public IEnumerator UpdateScrollRect()
 		{
 			yield return new WaitForEndOfFrame();
 			ContentScrollRect.verticalNormalizedPosition = 0;
