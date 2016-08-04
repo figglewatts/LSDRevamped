@@ -37,6 +37,8 @@ namespace Entities.Dream
 
 		public static event OnLevelFinishChangeHandler OnLevelFinishChange;
 
+		public static TextureSet CurrentTextureSet { get; private set; }
+
 		private static GameObject _loadedDreamObject;
 
 		private static float _playerHeightOffset = 0.65F;
@@ -44,22 +46,18 @@ namespace Entities.Dream
 		public static void BeginDream()
 		{
 			RandUtil.RefreshSeed();
-			// TODO: save this seed somewhere for flashbacks
 
 			StaticityAccumulator = 0;
 			HappinessAccumulator = 0;
 
 			string levelToLoad = RandUtil.RandomLevelFromDir(DreamJournalManager.CurrentJournal);
-
-			// TODO: randomly pick texture set with seed
-			int textureSet = 2;
+			
+			RefreshTextureSet(true);
 
 			// populate payload with textureset info and level to load
 			Payload = GameObject.FindGameObjectWithTag("DreamPayload").GetComponent<DreamPayload>();
+			Payload.DreamSeed = RandUtil.CurrentSeed;
 			Payload.InitialLevelToLoad = levelToLoad;
-			Payload.InitialTextureSetIndex = textureSet;
-
-			Shader.SetGlobalInt("_TextureSet", Payload.InitialTextureSetIndex);
 
 			// load dream scene
 			Fader.FadeIn(Color.black, 1.5F, () => {SceneManager.LoadScene("dream"); Debug.Log("Fading");});
@@ -130,6 +128,17 @@ namespace Entities.Dream
 			else Debug.LogError("There are no player_spawn entities in the level, cannot spawn player!");
 
 			if (OnLevelFinishChange != null) OnLevelFinishChange.Invoke();
+		}
+
+		public static void RefreshTextureSet(bool canUseCurrent)
+		{
+			TextureSet textureSet = (TextureSet)RandUtil.Int(1, 5);
+			if (!canUseCurrent && textureSet == CurrentTextureSet)
+			{
+				RefreshTextureSet(false);
+			}
+			CurrentTextureSet = textureSet;
+			Shader.SetGlobalInt("_TextureSet", (int)textureSet);
 		}
 
 		private static Vector3 SetPlayerSpawn(Transform t)

@@ -24,6 +24,8 @@ namespace Entities.Player
 
 		private bool _touchingFloor;
 
+		private const int ChangeTextureSetChance = 100;
+
 		// Use this for initialization
 		void Start()
 		{
@@ -70,10 +72,15 @@ namespace Entities.Player
 		{
 			GameSettings.CanControlPlayer = false;
 			_canLink = false;
+
+			int shouldChangeTextureSetChance = RandUtil.Int(100);
+			bool shouldChangeTextureSet = shouldChangeTextureSetChance < ChangeTextureSetChance;
+
 			if (playSound) _source.PlayOneShot(_linkSound);
 			Fader.FadeIn(color, 1F, () =>
 			{
 				DreamDirector.SwitchDreamLevel(dreamFilePath, spawnName);
+				if (shouldChangeTextureSet) DreamDirector.RefreshTextureSet(false);
 				GameSettings.CanControlPlayer = true;
 				Fader.FadeOut(color, 1F, () =>
 				{

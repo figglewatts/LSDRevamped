@@ -5,8 +5,8 @@ namespace Entities.Dream
 {
 	public class DreamPayload : MonoBehaviour
 	{
+		public int DreamSeed;
 		public string InitialLevelToLoad;
-		public int InitialTextureSetIndex;
 		public List<string> LevelsVisited;
 		public List<Texture2D> LevelsVisitedPreviews;
 	}

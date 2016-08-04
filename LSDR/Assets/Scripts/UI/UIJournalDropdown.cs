@@ -22,6 +22,7 @@ namespace UI
 		{
 			JournalDropdown.ClearOptions();
 			JournalDropdown.AddOptions(DreamJournalManager.LoadedJournals);
+			JournalDropdown.value = GameSettings.CurrentJournalIndex;
 		}
 	}
 }
