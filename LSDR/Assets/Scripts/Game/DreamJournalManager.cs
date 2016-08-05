@@ -22,9 +22,23 @@ namespace Game
 			}
 		}
 
+		public static void SwitchJournal(string name)
+		{
+			for (int i = 0; i < LoadedJournals.Count; i++)
+			{
+				if (LoadedJournals[i].Equals(name))
+				{
+					SwitchJournal(i);
+					return;
+				}
+			}
+			Debug.LogWarning("Could not find journal: " + name);
+		}
+
 		public static void SwitchJournal(int i)
 		{
 			_currentJournalHandle = i;
+			Debug.Log("Journal switched to " + CurrentJournal);
 			GameSettings.CurrentJournalIndex = i;
 		}
 

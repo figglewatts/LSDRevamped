@@ -21,13 +21,10 @@ namespace AutoUpdate
 
 		public GameObject ErrorDialogPrefab;
 
-		private int patchIndex;
 		private bool ErrorOccurred;
 
 		private int NumberOfPatchesDownloaded;
 		private int CurrentPatchBuildNumber;
-		private bool FinishedPatching;
-		private string StatusMessage;
 
 		/// <summary>
 		/// For each patch available start the coroutine that downloads it and wait for it to complete.
@@ -38,15 +35,11 @@ namespace AutoUpdate
 
 			CreateTempDirectory();
 
-			patchIndex = 1;
-			FinishedPatching = false;
 			ErrorOccurred = false;
 
 			// loop through the patches and download and apply each one
 			foreach (int patchNumber in patchNumbers)
 			{
-				StatusMessage = "Downloading patch " + patchIndex + " of " + patchNumbers.Length + "...";
-
 				yield return StartCoroutine(DownloadArchive(resolvePatchDir(platformIdentifier, clientIdentifier), patchNumber));
 
 				if (ErrorOccurred)
@@ -146,7 +139,6 @@ namespace AutoUpdate
 					yield break;
 				}
 
-				patchIndex++;
 				NumberOfPatchesDownloaded++;
 
 				// update patch progress bar
@@ -160,7 +152,6 @@ namespace AutoUpdate
 		/// <param name="patchNumber">The build number of the patch</param>
 		private bool InstallPatch(int patchNumber)
 		{
-			StatusMessage = "Installing patch number " + patchNumber.ToString();
 			if (!RemoveFilesUsingManifest(patchNumber)) // first remove deleted files
 			{
 				return false; // an error has occurred when removing files

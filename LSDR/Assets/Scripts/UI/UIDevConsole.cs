@@ -1,8 +1,14 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using Entities.Dream;
 using Game;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Util;
 
 namespace UI
 {
@@ -56,7 +62,7 @@ namespace UI
 			}
 			else TextFieldSelected(false);
 
-			GameSettings.SetCursorViewState(state ? true : _previousCursorViewState);
+			GameSettings.SetCursorViewState(state ? true : DreamDirector.CurrentlyInDream ? false : true);
 		}
 
 		public void ClearConsole()
@@ -127,10 +133,51 @@ namespace UI
 
 		private void ProcessConsoleCommand(string command)
 		{
-			string[] commandFragments = command.Split(' ');
+			List<string> commandFragments = SplitConsoleCommand(command);
 
-			switch (commandFragments[0])
+			switch (commandFragments[0].ToLowerInvariant())
 			{
+				case "switchjournal":
+				{
+					DreamJournalManager.SwitchJournal(commandFragments[1]);
+					break;
+				}
+
+				case "loadlevel":
+				{
+					string levelName = commandFragments[1];
+				
+					if (commandFragments.Count > 2) DreamJournalManager.SwitchJournal(commandFragments[2]);
+
+					string levelPath = IOUtil.PathCombine(Application.dataPath, "levels", DreamJournalManager.CurrentJournal, levelName + ".tmap");
+
+					if (!File.Exists(levelPath))
+					{
+						Debug.LogError("Level " + levelName + " does not exist");
+						break;
+					}
+
+					if (!DreamDirector.CurrentlyInDream)
+					{
+						DreamDirector.BeginDream(levelPath);
+						SetConsoleState(false);
+						break;
+					}
+					else
+					{
+						DreamDirector.SwitchDreamLevel(levelPath);
+						break;
+					}
+                }
+
+				case "textureset":
+				{
+					int set = int.Parse(commandFragments[1]);
+                    Shader.SetGlobalInt("_TextureSet", set);
+					Debug.Log("Switched texture set to " + (TextureSet)set);
+					break;
+				}
+			
 				default:
 				{
 					Debug.LogWarning("Did not recognize command: " + commandFragments[0]);
@@ -147,6 +194,15 @@ namespace UI
 		{
 			yield return new WaitForEndOfFrame();
 			ContentScrollRect.verticalNormalizedPosition = 0;
+		}
+
+		private List<string> SplitConsoleCommand(string command)
+		{
+			return command.Split('"')
+					 .Select((element, index) => index % 2 == 0  // If even index
+										   ? element.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)  // Split the item
+										   : new string[] { element })  // Keep the entire item
+					 .SelectMany(element => element).ToList();
 		}
 	}
 }

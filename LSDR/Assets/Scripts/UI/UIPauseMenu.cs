@@ -51,6 +51,16 @@ namespace UI
 			}
 		}
 
+		public void QuitToMenu()
+		{
+			DreamDirector.ExitDream();
+		}
+
+		public void QuitToDesktop()
+		{
+			Application.Quit();
+		}
+
 		public void ChangePauseState(int state)
 		{
 			ChangePauseState((PauseState)state);
@@ -67,7 +77,7 @@ namespace UI
 					SettingsObject.SetActive(false);
 					PauseMenuObject.SetActive(true);
 					PauseScreenBackgroundObject.SetActive(true);
-					PauseGame(true);
+					GameSettings.PauseGame(true);
 					break;
 				}
 				case PauseState.NOT_PAUSED:
@@ -75,7 +85,7 @@ namespace UI
 					PauseScreenBackgroundObject.SetActive(false);
 					PauseMenuObject.SetActive(false);
 					SettingsObject.SetActive(false);
-					PauseGame(false);
+					GameSettings.PauseGame(false);
 					break;
 				}
 				case PauseState.SETTINGS:
@@ -86,12 +96,6 @@ namespace UI
 					break;
 				}
             }
-		}
-
-		private void PauseGame(bool pauseState)
-		{
-			GameSettings.SetCursorViewState(pauseState);
-			Time.timeScale = pauseState ? 0 : 1;
 		}
 
 		private void UpdateSongDisplayText()

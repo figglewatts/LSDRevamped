@@ -17,8 +17,7 @@ namespace Game
 		public static int CurrentControlSchemeIndex;
 
 		// hidden settings
-		public static bool CanControlPlayer = true; // used to disable character motion, i.e. when linking
-		public static bool CanMouseLook = true;
+		
 
 		#endregion
 
@@ -51,12 +50,27 @@ namespace Game
 
 		#endregion
 
+		#region Global Gameplay Settings (not serialized)
+
+		public static bool CanControlPlayer = true; // used to disable character motion, i.e. when linking
+		public static bool CanMouseLook = true; // used to disable mouse looking, i.e. when paused
+		public static bool IsPaused = false;
+
+		#endregion
+
 		private static AudioMixer _masterMixer = Resources.Load<AudioMixer>("Mixers/MasterMixer");
 
 		public static void SetCursorViewState(bool state)
 		{
 			Cursor.visible = state;
 			Cursor.lockState = state ? CursorLockMode.None : CursorLockMode.Locked;
+		}
+
+		public static void PauseGame(bool pauseState)
+		{
+			IsPaused = pauseState;
+			SetCursorViewState(pauseState);
+			Time.timeScale = pauseState ? 0 : 1;
 		}
 
 		public static void SetDefaultSettings()

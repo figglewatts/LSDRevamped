@@ -39,19 +39,30 @@ namespace Entities.Dream
 
 		public static TextureSet CurrentTextureSet { get; private set; }
 
+		public static bool CurrentlyInDream = false;
+
 		private static GameObject _loadedDreamObject;
 
 		private static float _playerHeightOffset = 0.65F;
 
 		public static void BeginDream()
 		{
+			BeginDream(RandUtil.RandomLevelFromDir(DreamJournalManager.CurrentJournal));
+		}
+
+		public static void BeginDream(string level)
+		{
+			if (CurrentlyInDream) return;
+
+			CurrentlyInDream = true;
+
 			RandUtil.RefreshSeed();
 
 			StaticityAccumulator = 0;
 			HappinessAccumulator = 0;
 
-			string levelToLoad = RandUtil.RandomLevelFromDir(DreamJournalManager.CurrentJournal);
-			
+			string levelToLoad = level;
+
 			RefreshTextureSet(true);
 
 			// populate payload with textureset info and level to load
@@ -60,23 +71,39 @@ namespace Entities.Dream
 			Payload.InitialLevelToLoad = levelToLoad;
 
 			// load dream scene
-			Fader.FadeIn(Color.black, 1.5F, () => {SceneManager.LoadScene("dream"); Debug.Log("Fading");});
+			Fader.FadeIn(Color.black, 1.5F, () => { SceneManager.LoadScene("dream"); });
 		}
 
 		// TODO: write BeginFlashback method that sets the seed as well as starting a dream
 
 		public static void EndDream()
 		{
-			Fader.ClearHandler(); // clear all the junk from the post-fade event handler
-			PlayerSpawns.Clear();
-			Target.Targets.Clear();
+			if (!CurrentlyInDream) return;
 
-			ResourceManager.ClearLifespan(ResourceLifespan.LEVEL);
-			ResourceManager.ClearLifespan(ResourceLifespan.DREAM);
+			CurrentlyInDream = false;
 		
-			// TODO: end dream stuff
+			DreamCleanup();
+		}
 
-			Player = null;
+		public static void ExitDream()
+		{
+			if (!CurrentlyInDream) return;
+
+			CurrentlyInDream = false;
+		
+			DreamCleanup();
+
+			Payload.ClearPayload();
+
+			GameSettings.PauseGame(false);
+
+			GameSettings.SetCursorViewState(true);
+
+			Fader.FadeIn(Color.black, 1F, () =>
+			{
+				SceneManager.LoadScene("titlescreen");
+				Fader.FadeOut(0.5F);
+			});
 		}
 
 		public static void SwitchDreamLevel(string levelPath, string spawnPoint = "")
@@ -139,6 +166,21 @@ namespace Entities.Dream
 			}
 			CurrentTextureSet = textureSet;
 			Shader.SetGlobalInt("_TextureSet", (int)textureSet);
+		}
+
+		/// <summary>
+		/// Called when a dream is ended, be it manually or automatically
+		/// </summary>
+		private static void DreamCleanup()
+		{
+			Fader.ClearHandler(); // clear all the junk from the post-fade event handler
+			PlayerSpawns.Clear();
+			Target.Targets.Clear();
+
+			ResourceManager.ClearLifespan(ResourceLifespan.LEVEL);
+			ResourceManager.ClearLifespan(ResourceLifespan.DREAM);
+
+			Player = null;
 		}
 
 		private static Vector3 SetPlayerSpawn(Transform t)
