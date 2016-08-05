@@ -26,6 +26,7 @@ namespace Game
 
 		// modifiable settings
 		public static bool UseClassicShaders = true;
+		public static bool UsePixelationShader = true;
 		public static int CurrentResolutionIndex;
 		public static int CurrentQualityIndex;
 		public static bool Fullscreen;
@@ -64,6 +65,7 @@ namespace Game
 			CurrentControlSchemeIndex = 0;
 			CanControlPlayer = true;
 			UseClassicShaders = true;
+			UsePixelationShader = true;
 			CurrentResolutionIndex = FindResolutionIndex();
 			CurrentQualityIndex = QualitySettings.GetQualityLevel();
 			Fullscreen = Screen.fullScreen;
@@ -108,6 +110,7 @@ namespace Game
 			CurrentControlSchemeIndex = settingsJson["controls"]["currentControlSchemeIndex"].AsInt;
 
 			UseClassicShaders = settingsJson["graphics"]["classicShaders"].AsBool;
+			UsePixelationShader = settingsJson["graphics"]["pixelationShader"].AsBool;
 			CurrentResolutionIndex = settingsJson["graphics"]["currentResolutionIndex"].AsInt;
 			CurrentQualityIndex = settingsJson["graphics"]["currentQualityIndex"].AsInt;
 			Fullscreen = settingsJson["graphics"]["fullscreen"].AsBool;
@@ -131,6 +134,7 @@ namespace Game
 			settingsJson["controls"]["currentControlSchemeIndex"].AsInt = CurrentControlSchemeIndex;
 
 			settingsJson["graphics"]["classicShaders"].AsBool = UseClassicShaders;
+			settingsJson["graphics"]["pixelationShader"].AsBool = UsePixelationShader;
 			settingsJson["graphics"]["currentResolutionIndex"].AsInt = CurrentResolutionIndex;
 			settingsJson["graphics"]["currentQualityIndex"].AsInt = CurrentQualityIndex;
 			settingsJson["graphics"]["fullscreen"].AsBool = Fullscreen;
