@@ -79,6 +79,8 @@
 
 			uniform int _TextureSet;
 
+			uniform float _FogStep;
+
 			float4 frag(v2f IN) : COLOR
 			{
 				half4 c;
@@ -99,7 +101,9 @@
 					c = tex2D(_MainTexA, IN.uv_MainTex)*IN.color;
 				}
 				half4 color = c*(IN.colorFog.a);
-				color.rgb += IN.colorFog.rgb*(1 - IN.colorFog.a);
+				float fogIntensity = (1 - IN.colorFog.a);
+				float steppedFogIntensity = round(fogIntensity / _FogStep) * _FogStep;
+				color.rgb += IN.colorFog.rgb*steppedFogIntensity;
 				if (c.a < _Cutoff)
 				{
 					discard;

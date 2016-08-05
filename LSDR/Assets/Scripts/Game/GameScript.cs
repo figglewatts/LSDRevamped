@@ -29,6 +29,8 @@ public class GameScript : MonoBehaviour
 		MapReader.MapScaleFactor = 1F;
 
 		GameSettings.LoadSettings();
+
+		Shader.SetGlobalFloat("_FogStep", 0.08F);
 	}
 
 	void Update()
