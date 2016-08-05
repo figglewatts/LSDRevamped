@@ -13,8 +13,8 @@ namespace Game
 		#region Player Control Settings
 
 		// modifiable settings
-		public static bool HeadBobEnabled = true;
-		public static int CurrentControlSchemeIndex = 0;
+		public static bool HeadBobEnabled;
+		public static int CurrentControlSchemeIndex;
 
 		// hidden settings
 		public static bool CanControlPlayer = true; // used to disable character motion, i.e. when linking
@@ -25,15 +25,15 @@ namespace Game
 		#region Graphical Settings
 
 		// modifiable settings
-		public static bool UseClassicShaders = true;
-		public static bool UsePixelationShader = true;
+		public static bool UseClassicShaders;
+		public static bool UsePixelationShader;
 		public static int CurrentResolutionIndex;
 		public static int CurrentQualityIndex;
 		public static bool Fullscreen;
 		public static float FOV;
 		
 		// hidden settings
-		public static float AffineIntensity = 0.5F; // the intensity of the affine texture mapping used in classic shaders
+		public static float AffineIntensity; // the intensity of the affine texture mapping used in classic shaders
 
 		#endregion
 
@@ -45,9 +45,9 @@ namespace Game
 
 		#region Audio Settings
 
-		public static bool EnableFootstepSounds = true;
-		public static float MusicVolume = 1F;
-		public static float SFXVolume = 1F;
+		public static bool EnableFootstepSounds;
+		public static float MusicVolume;
+		public static float SFXVolume;
 
 		#endregion
 

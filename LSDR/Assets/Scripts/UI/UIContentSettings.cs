@@ -18,10 +18,7 @@ namespace UI
 			CurrentJournalDropdown.value = GameSettings.CurrentJournalIndex;
 		}
 
-		public void UpdateSettings()
-		{
-			GameSettings.HeadBobEnabled = EnableHeadBobToggle.isOn;
-			GameSettings.EnableFootstepSounds = EnableFootstepSoundsToggle.isOn;
-		}
+		public void UpdateHeadbob(bool value) { GameSettings.HeadBobEnabled = value; }
+		public void UpdateFootstep(bool value) { GameSettings.EnableFootstepSounds = value; }
 	}
 }
