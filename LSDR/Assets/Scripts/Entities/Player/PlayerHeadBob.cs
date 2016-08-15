@@ -69,6 +69,17 @@ namespace Entities.Player
 				if (_timer > Mathf.PI*2)
 				{
 					_timer = _timer - (Mathf.PI*2);
+					_canPlayFootstepSound = true;
+				}
+
+				// if the sine wave is at the lowest part (happens at 3 * Pi divided by 2, or 1.5 * Pi)
+				if (GameSettings.EnableFootstepSounds && _timer > (3*Mathf.PI)/2)
+				{
+					if (_canPlayFootstepSound)
+					{
+						FootstepAudioSource.Play();
+						_canPlayFootstepSound = false;
+					}
 				}
 			}
 
@@ -87,19 +98,6 @@ namespace Entities.Player
 				Vector3 pos = TargetCamera.transform.localPosition;
 				pos.y = Midpoint;
 				TargetCamera.transform.localPosition = pos;
-			}
-
-			if (GameSettings.EnableFootstepSounds && waveslice <= -0.9F)
-			{
-				if (_canPlayFootstepSound)
-				{
-					FootstepAudioSource.Play();
-					_canPlayFootstepSound = false;
-				}
-			}
-			else
-			{
-				_canPlayFootstepSound = true;
 			}
 		}
 	}

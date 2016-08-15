@@ -6,8 +6,7 @@ namespace UI
 {
 	public class UIMainMenuButtons : MonoBehaviour
 	{
-		public GameObject GraphObject;
-		public GameObject SettingsObject;
+		public UIMainMenu MainMenu;
 	
 		public void StartButtonPressed()
 		{
@@ -18,8 +17,7 @@ namespace UI
 		{
 			Fader.FadeIn(Color.black, 0.5F, () =>
 			{
-				GraphObject.SetActive(true);
-				gameObject.SetActive(false);
+				MainMenu.ChangeMenuState(UIMainMenu.MenuState.GRAPH);
 				Fader.FadeOut(0.5F);
 			});
 		}
@@ -28,8 +26,7 @@ namespace UI
 		{
 			Fader.FadeIn(Color.black, 0.5F, () =>
 			{
-				SettingsObject.SetActive(true);
-				gameObject.SetActive(false);
+				MainMenu.ChangeMenuState(UIMainMenu.MenuState.SETTINGS);
 				Fader.FadeOut(0.5F);
 			});
 		}

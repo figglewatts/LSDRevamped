@@ -8,14 +8,13 @@ namespace UI
 {
 	public class UIGraph : MonoBehaviour
 	{
-		public GameObject MainMenuObject;
+		public UIMainMenu MainMenu;
 
 		public void GoBackButtonPressed()
 		{
 			Fader.FadeIn(Color.black, 0.5F, () =>
 			{
-				gameObject.SetActive(false);
-				MainMenuObject.SetActive(true);
+				MainMenu.ChangeMenuState(UIMainMenu.MenuState.MAIN);
 				Fader.FadeOut(0.5F);
 			});
 		}

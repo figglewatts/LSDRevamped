@@ -32,8 +32,8 @@ namespace Entities.Player
 
 			_originalRotation = Quaternion.Euler(0, TargetCamera.transform.rotation.eulerAngles.y, TargetCamera.transform.rotation.eulerAngles.z);
 
-			_maxNeg = Quaternion.Euler(320, TargetCamera.transform.rotation.eulerAngles.y, TargetCamera.transform.rotation.eulerAngles.z);
-			_maxPos = Quaternion.Euler(40, TargetCamera.transform.rotation.eulerAngles.y, TargetCamera.transform.rotation.eulerAngles.z);
+			_maxNeg = Quaternion.Euler(MaxNegativeRotation, TargetCamera.transform.rotation.eulerAngles.y, TargetCamera.transform.rotation.eulerAngles.z);
+			_maxPos = Quaternion.Euler(MaxPositiveRotation, TargetCamera.transform.rotation.eulerAngles.y, TargetCamera.transform.rotation.eulerAngles.z);
 		}
 
 		// Update is called once per frame

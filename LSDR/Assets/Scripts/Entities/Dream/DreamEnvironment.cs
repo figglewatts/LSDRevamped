@@ -6,8 +6,8 @@ namespace Entities.Dream
 {
 	public class DreamEnvironment : MonoBehaviour
 	{
-		public float Staticity;
-		public float Happiness;
+		public int Staticity;
+		public int Happiness;
 		public Color SunColor;
 		public Color FogColor;
 		public Color SkyColor;
@@ -18,13 +18,21 @@ namespace Entities.Dream
 		public bool UseSun;
 		public bool UseClouds;
 
+		public void Start()
+		{
+			DreamDirector.HappinessAccumulator += Happiness;
+			DreamDirector.StaticityAccumulator += Staticity;
+
+			// TODO: set other values with this entity
+		}
+
 		public static GameObject Instantiate(ENTITY e)
 		{
 			GameObject instantiated = new GameObject(e.Classname);
 			DreamEnvironment dreamEnvironment = instantiated.AddComponent<DreamEnvironment>();
 
-			dreamEnvironment.Staticity = EntityUtil.TryParseFloat("Staticity", e);
-			dreamEnvironment.Happiness = EntityUtil.TryParseFloat("Happiness", e);
+			dreamEnvironment.Staticity = EntityUtil.TryParseInt("Staticity", e);
+			dreamEnvironment.Happiness = EntityUtil.TryParseInt("Happiness", e);
 
 			dreamEnvironment.SpawnGreyman = e.GetSpawnflagValue(0, 6);
 			dreamEnvironment.ForceSkyColor = e.GetSpawnflagValue(1, 6);

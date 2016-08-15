@@ -181,6 +181,12 @@ namespace UI
 					Debug.Log("Switched texture set to " + (TextureSet)set);
 					break;
 				}
+
+				case "enddream":
+				{
+					DreamDirector.EndDream();
+					break;
+				}
 			
 				default:
 				{

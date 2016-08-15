@@ -4122,6 +4122,7 @@ GameObject:
   - 114: {fileID: 1610015711}
   - 114: {fileID: 1610015713}
   - 114: {fileID: 1610015714}
+  - 114: {fileID: 1610015716}
   - 82: {fileID: 1610015715}
   m_Layer: 0
   m_Name: Player
@@ -4343,6 +4344,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
+--- !u!114 &1610015716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1610015705}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f59ed85a9c144140b341e7b2832560f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _targetCamera: {fileID: 1639242883}
 --- !u!1 &1639242878
 GameObject:
   m_ObjectHideFlags: 0

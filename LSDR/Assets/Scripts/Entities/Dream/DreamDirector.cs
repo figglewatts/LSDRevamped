@@ -41,9 +41,14 @@ namespace Entities.Dream
 
 		public static bool CurrentlyInDream = false;
 
+		public const float DREAM_MAX_TIME = 7;
+
 		private static GameObject _loadedDreamObject;
 
 		private static float _playerHeightOffset = 0.65F;
+
+		// how much to affect the happiness value if the dream is ended by falling
+		private const int FALLING_HAPPINESS_PENALTY = -2;
 
 		public static void BeginDream()
 		{
@@ -76,15 +81,39 @@ namespace Entities.Dream
 
 		// TODO: write BeginFlashback method that sets the seed as well as starting a dream
 
-		public static void EndDream()
+		/// <summary>
+		/// Ends the dream with the happiness penalty for falling
+		/// </summary>
+		public static void EndDreamFall()
+		{
+			if (!CurrentlyInDream) return;
+
+			HappinessAccumulator += FALLING_HAPPINESS_PENALTY;
+
+			EndDream(2F);
+		}
+
+		public static void EndDream(float fadeInSpeed = 5F)
 		{
 			if (!CurrentlyInDream) return;
 
 			CurrentlyInDream = false;
 		
 			DreamCleanup();
+
+			Payload.DreamEnded = true;
+
+			Fader.FadeIn(Color.black, fadeInSpeed, () =>
+			{
+				SceneManager.LoadScene("titlescreen");
+				GameSettings.SetCursorViewState(true);
+			});
 		}
 
+		/// <summary>
+		/// Exits the dream without saving state.
+		/// Used for quitting from pause menu.
+		/// </summary>
 		public static void ExitDream()
 		{
 			if (!CurrentlyInDream) return;

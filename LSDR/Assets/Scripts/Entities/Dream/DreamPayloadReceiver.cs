@@ -8,7 +8,7 @@ using Util;
 
 namespace Entities.Dream
 {
-	public class PayloadReceiver : MonoBehaviour
+	public class DreamPayloadReceiver : MonoBehaviour
 	{
 		private DreamPayload _receivedPayload;
 
@@ -28,6 +28,8 @@ namespace Entities.Dream
 			DreamDirector.SwitchDreamLevel(_receivedPayload.InitialLevelToLoad);
 
 			GameSettings.SetCursorViewState(false);
+
+			GameSettings.CanControlPlayer = true;
 
 			Fader.FadeOut(1F);
 		}
