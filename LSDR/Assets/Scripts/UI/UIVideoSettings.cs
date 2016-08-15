@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using Game;
 using UnityEngine.UI;
 
@@ -10,6 +9,7 @@ namespace UI
 		public Toggle UseClassicShadersToggle;
 		public Toggle UsePixelationShaderToggle;
 		public Toggle FullscreenToggle;
+		public Toggle LimitFramerateToggle;
 		public Slider FOVSlider;
 		public Dropdown ResolutionDropdown;
 		public Dropdown QualityDropdown;
@@ -22,16 +22,19 @@ namespace UI
 			FOVSlider.value = GameSettings.FOV;
 			ResolutionDropdown.value = GameSettings.CurrentResolutionIndex;
 			QualityDropdown.value = GameSettings.CurrentQualityIndex;
+			LimitFramerateToggle.isOn = GameSettings.LimitFramerate;
 		}
 
 		public void ValueChanged()
 		{
-			GameSettings.UseClassicShaders = UseClassicShadersToggle.isOn;
-			GameSettings.UsePixelationShader = UsePixelationShaderToggle.isOn;
-			GameSettings.Fullscreen = FullscreenToggle.isOn;
 			GameSettings.FOV = FOVSlider.value;
 			GameSettings.CurrentResolutionIndex = ResolutionDropdown.value;
 			GameSettings.CurrentQualityIndex = QualityDropdown.value;
 		}
+
+		public void ClassicShadersToggleChanged(bool value) { GameSettings.UseClassicShaders = value; }
+		public void PixelationShaderToggleChanged(bool value) { GameSettings.UsePixelationShader = value; }
+		public void FullscreenToggleChanged(bool value) { GameSettings.Fullscreen = value; }
+		public void FramerateLimitToggleChanged(bool value) { GameSettings.LimitFramerate = value; }
 	}
 }

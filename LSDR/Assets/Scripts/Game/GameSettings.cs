@@ -30,6 +30,7 @@ namespace Game
 		public static int CurrentQualityIndex;
 		public static bool Fullscreen;
 		public static float FOV;
+		public static bool LimitFramerate;
 		
 		// hidden settings
 		public static float AffineIntensity; // the intensity of the affine texture mapping used in classic shaders
@@ -58,6 +59,12 @@ namespace Game
 
 		#endregion
 
+		#region Gameplay Constants
+
+		public const int FRAMERATE_LIMIT = 25;
+
+		#endregion
+
 		private static AudioMixer _masterMixer = Resources.Load<AudioMixer>("Mixers/MasterMixer");
 
 		public static void SetCursorViewState(bool state)
@@ -83,7 +90,8 @@ namespace Game
 			CurrentResolutionIndex = FindResolutionIndex();
 			CurrentQualityIndex = QualitySettings.GetQualityLevel();
 			Fullscreen = Screen.fullScreen;
-			FOV = 70;
+			FOV = 60;
+			LimitFramerate = false;
 			AffineIntensity = 0.5F;
 			CurrentJournalIndex = 0;
 			EnableFootstepSounds = true;
@@ -95,6 +103,7 @@ namespace Game
 		{
 			ControlSchemeManager.SwitchToScheme(CurrentControlSchemeIndex);
 			Screen.SetResolution(Screen.resolutions[CurrentResolutionIndex].width, Screen.resolutions[CurrentResolutionIndex].height, Fullscreen);
+			Application.targetFrameRate = LimitFramerate ? FRAMERATE_LIMIT : -1;
 			Shader.SetGlobalFloat("AffineIntensity", AffineIntensity);
 			DreamJournalManager.SwitchJournal(CurrentJournalIndex);
 			_masterMixer.SetFloat("MusicVolume", -80 + (MusicVolume*80));
@@ -129,6 +138,7 @@ namespace Game
 			CurrentQualityIndex = settingsJson["graphics"]["currentQualityIndex"].AsInt;
 			Fullscreen = settingsJson["graphics"]["fullscreen"].AsBool;
 			FOV = settingsJson["graphics"]["fov"].AsFloat;
+			LimitFramerate = settingsJson["graphics"]["limitFramerate"].AsBool;
 			AffineIntensity = settingsJson["graphics"]["affineIntensity"].AsFloat;
 
 			CurrentJournalIndex = settingsJson["content"]["currentJournalIndex"].AsInt;
@@ -153,6 +163,7 @@ namespace Game
 			settingsJson["graphics"]["currentQualityIndex"].AsInt = CurrentQualityIndex;
 			settingsJson["graphics"]["fullscreen"].AsBool = Fullscreen;
 			settingsJson["graphics"]["fov"].AsFloat = FOV;
+			settingsJson["graphics"]["limitFramerate"].AsBool = LimitFramerate;
 			settingsJson["graphics"]["affineIntensity"].AsFloat = AffineIntensity;
 
 			settingsJson["content"]["currentJournalIndex"].AsInt = CurrentJournalIndex;
