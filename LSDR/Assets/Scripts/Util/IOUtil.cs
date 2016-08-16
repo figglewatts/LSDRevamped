@@ -32,6 +32,8 @@ namespace Util
 
 			try
 			{
+				FileInfo file = new FileInfo(path);
+				file.Directory.Create();
 				File.WriteAllText(path, json.ToString());
 			}
 			catch (IOException e)

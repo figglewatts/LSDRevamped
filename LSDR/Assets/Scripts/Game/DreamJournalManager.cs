@@ -40,6 +40,7 @@ namespace Game
 			_currentJournalHandle = i;
 			Debug.Log("Journal switched to " + CurrentJournal);
 			GameSettings.CurrentJournalIndex = i;
+			SaveGameManager.LoadGame();
 		}
 
 		private static int _currentJournalHandle = 0;

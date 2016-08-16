@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Game;
 using UI;
 
 namespace Entities.Dream
@@ -19,6 +20,12 @@ namespace Entities.Dream
 			if (!_receivedPayload.DreamEnded) return;
 
 			MainMenu.ChangeMenuState(UIMainMenu.MenuState.GRAPH);
+
+			DreamDirector.AddPayloadToPriorDreams(_receivedPayload);
+
+			DreamDirector.CurrentDay++;
+
+			SaveGameManager.SaveCurrentGame();
 
 			// TODO: save game data to file
 

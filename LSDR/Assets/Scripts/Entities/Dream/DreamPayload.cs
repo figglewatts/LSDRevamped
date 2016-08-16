@@ -8,7 +8,6 @@ namespace Entities.Dream
 		public int DreamSeed;
 		public string InitialLevelToLoad;
 		public List<string> LevelsVisited;
-		public List<Texture2D> LevelsVisitedPreviews;
 		public float TimeInDream { get { return _dreamTimer; } }
 
 		// did the dream end by timer or falling?
@@ -30,7 +29,6 @@ namespace Entities.Dream
 			DreamSeed = 0;
 			InitialLevelToLoad = string.Empty;
 			LevelsVisited.Clear();
-			LevelsVisitedPreviews.Clear();
 			DreamEnded = false;
 			_dreamTimer = 0;
 		}

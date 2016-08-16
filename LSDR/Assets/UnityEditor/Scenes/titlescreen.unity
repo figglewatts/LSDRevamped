@@ -1218,8 +1218,8 @@ RectTransform:
   m_RootOrder: 1
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 86.75, y: -35.5}
-  m_SizeDelta: {x: 78.5, y: 29}
+  m_AnchoredPosition: {x: 86.75, y: -35.375}
+  m_SizeDelta: {x: 78.5, y: 29.25}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &121491734
 MonoBehaviour:
@@ -8021,7 +8021,6 @@ MonoBehaviour:
   DreamSeed: 0
   InitialLevelToLoad: 
   LevelsVisited: []
-  LevelsVisitedPreviews: []
   DreamEnded: 0
 --- !u!4 &814297137
 Transform:
@@ -9444,6 +9443,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 224: {fileID: 1020737224}
+  - 223: {fileID: 1020737225}
   m_Layer: 5
   m_Name: GraphSquareContainer
   m_TagString: Untagged
@@ -9469,6 +9469,25 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!223 &1020737225
+Canvas:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1020737223}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 1
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 1
+  m_SortingBucketNormalizedSize: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
 --- !u!1 &1032191495
 GameObject:
   m_ObjectHideFlags: 0
@@ -12268,6 +12287,7 @@ GameObject:
   - 224: {fileID: 1229651999}
   - 222: {fileID: 1229652001}
   - 114: {fileID: 1229652000}
+  - 114: {fileID: 1229652002}
   m_Layer: 5
   m_Name: DayText
   m_TagString: Untagged
@@ -12332,6 +12352,18 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1229651998}
+--- !u!114 &1229652002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1229651998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eda01bf3a0dd8e04c9eb3a421d1ba472, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DayTextElement: {fileID: 1229652000}
 --- !u!1 &1248433937
 GameObject:
   m_ObjectHideFlags: 0
@@ -14174,8 +14206,8 @@ RectTransform:
   m_RootOrder: 1
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 115, y: -35.5}
-  m_SizeDelta: {x: 89.75, y: 29}
+  m_AnchoredPosition: {x: 115, y: -35.375}
+  m_SizeDelta: {x: 89.75, y: 29.25}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1398503126
 MonoBehaviour:
@@ -17144,8 +17176,8 @@ RectTransform:
   m_RootOrder: 1
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 86.75, y: -35.5}
-  m_SizeDelta: {x: 107.25, y: 29}
+  m_AnchoredPosition: {x: 86.75, y: -35.375}
+  m_SizeDelta: {x: 107.25, y: 29.25}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1724042876
 MonoBehaviour:
@@ -19382,6 +19414,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MainMenu: {fileID: 2096262376}
+  GraphSquareContainer: {fileID: 1020737224}
 --- !u!1 &1975570820
 GameObject:
   m_ObjectHideFlags: 0
@@ -19913,8 +19946,8 @@ RectTransform:
   m_RootOrder: 1
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 115, y: -35.5}
-  m_SizeDelta: {x: 112.5, y: 29}
+  m_AnchoredPosition: {x: 115, y: -35.375}
+  m_SizeDelta: {x: 112.5, y: 29.25}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2039034163
 MonoBehaviour:

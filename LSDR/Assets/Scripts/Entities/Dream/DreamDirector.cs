@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Entities.Action;
 using Entities.Player;
 using Entities.WorldObject;
@@ -21,6 +19,10 @@ namespace Entities.Dream
 		public static int StaticityAccumulator = 0;
 		public static int HappinessAccumulator = 0;
 
+		public static List<Vector2> GraphSquares = new List<Vector2>();
+
+		public static List<Types.Dream> PriorDreams = new List<Types.Dream>();
+
 		public static string CurrentlyPlayingSong = "";
 
 		public static GameObject Player;
@@ -29,7 +31,7 @@ namespace Entities.Dream
 		public static bool PlayerSpawnForced = false;
 		public static int ForcedSpawnIndex = 0;
 
-		public static int CurrentDay = 1;
+		public static int CurrentDay;
 
 		public static string[] LevelPaths;
 
@@ -41,7 +43,7 @@ namespace Entities.Dream
 
 		public static bool CurrentlyInDream = false;
 
-		public const float DREAM_MAX_TIME = 7;
+		public const float DREAM_MAX_TIME = 30;
 
 		private static GameObject _loadedDreamObject;
 
@@ -49,6 +51,23 @@ namespace Entities.Dream
 
 		// how much to affect the happiness value if the dream is ended by falling
 		private const int FALLING_HAPPINESS_PENALTY = -2;
+
+		public static void AddGraphSquare(int x, int y)
+		{
+			GraphSquares.Add(new Vector2(Mathf.Clamp(x, -9, 9), Mathf.Clamp(y, -9, 9)));
+		}
+
+		/// <summary>
+		/// Used to remember prior dreams. Converts payload values to Dream struct and adds to list.
+		/// </summary>
+		public static void AddPayloadToPriorDreams(DreamPayload p)
+		{
+			Types.Dream d;
+			d.LevelsVisited = p.LevelsVisited.ToArray();
+			d.TimeInDream = p.TimeInDream;
+			d.Seed = p.DreamSeed;
+			PriorDreams.Add(d);
+		}
 
 		public static void BeginDream()
 		{
@@ -103,6 +122,8 @@ namespace Entities.Dream
 
 			Payload.DreamEnded = true;
 
+			AddGraphSquare(StaticityAccumulator, HappinessAccumulator);
+
 			Fader.FadeIn(Color.black, fadeInSpeed, () =>
 			{
 				SceneManager.LoadScene("titlescreen");
@@ -154,7 +175,6 @@ namespace Entities.Dream
 			TMAP t;
 			_loadedDreamObject = IOUtil.LoadToriiMap(levelPath, ResourceLifespan.DREAM, out t);
 			Payload.LevelsVisited.Add(t.Header.Name);
-			Payload.LevelsVisitedPreviews.Add(IOUtil.LoadPNGByteArray(t.Header.Preview));
 
 			if (PlayerSpawns.Count > 0)
 			{
