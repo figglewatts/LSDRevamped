@@ -1,0 +1,220 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: SkyGradient
+  m_Shader: {fileID: 4800000, guid: f83fef17d58ac9849992408acec0fcf3, type: 3}
+  m_ShaderKeywords: _EMISSION
+  m_LightmapFlags: 1
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  m_SavedProperties:
+    serializedVersion: 2
+    m_TexEnvs:
+    - first:
+        name: _BumpMap
+      second:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
+        name: _DetailAlbedoMap
+      second:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
+        name: _DetailMask
+      second:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
+        name: _DetailNormalMap
+      second:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
+        name: _EmissionMap
+      second:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
+        name: _MainTex
+      second:
+        m_Texture: {fileID: 2800000, guid: 2c201065f2dde844288a4f7d32b81a97, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
+        name: _MetallicGlossMap
+      second:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
+        name: _OcclusionMap
+      second:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
+        name: _ParallaxMap
+      second:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
+        name: _SunTex
+      second:
+        m_Texture: {fileID: 2800000, guid: 1df7ebd9721277a46bb1ddda3a74dd73, type: 3}
+        m_Scale: {x: 40, y: 24}
+        m_Offset: {x: -22.7, y: -14.1}
+    m_Floats:
+    - first:
+        name: _Blend1
+      second: 1
+    - first:
+        name: _BumpScale
+      second: 1
+    - first:
+        name: _Cutoff
+      second: 0.783
+    - first:
+        name: _DetailNormalMapScale
+      second: 1
+    - first:
+        name: _DstBlend
+      second: 0
+    - first:
+        name: _Exponent1
+      second: 1.5
+    - first:
+        name: _Exponent2
+      second: 1.5
+    - first:
+        name: _GlossMapScale
+      second: 1
+    - first:
+        name: _Glossiness
+      second: 0.5
+    - first:
+        name: _GlossyReflections
+      second: 1
+    - first:
+        name: _GradientStep
+      second: 0.147
+    - first:
+        name: _Intensity
+      second: 1
+    - first:
+        name: _Metallic
+      second: 0
+    - first:
+        name: _Middle
+      second: 0.5
+    - first:
+        name: _Mode
+      second: 0
+    - first:
+        name: _OcclusionStrength
+      second: 1
+    - first:
+        name: _Offset
+      second: 0.419
+    - first:
+        name: _OffsetInner
+      second: 0.054
+    - first:
+        name: _OffsetOuter
+      second: 0.383
+    - first:
+        name: _Parallax
+      second: 0.02
+    - first:
+        name: _SkyExponent1
+      second: 0.8
+    - first:
+        name: _SkyExponent2
+      second: 0.8
+    - first:
+        name: _SkyIntensity
+      second: 1
+    - first:
+        name: _SmoothnessTextureChannel
+      second: 0
+    - first:
+        name: _SpecularHighlights
+      second: 1
+    - first:
+        name: _SrcBlend
+      second: 1
+    - first:
+        name: _SunAlpha
+      second: 50
+    - first:
+        name: _SunAltitude
+      second: 763.4
+    - first:
+        name: _SunAzimuth
+      second: 116.29
+    - first:
+        name: _SunBeta
+      second: 2.4
+    - first:
+        name: _SunIntensity
+      second: 1
+    - first:
+        name: _UVSec
+      second: 0
+    - first:
+        name: _ZWrite
+      second: 1
+    m_Colors:
+    - first:
+        name: _Color
+      second: {r: 1, g: 0, b: 0, a: 1}
+    - first:
+        name: _Color1
+      second: {r: 0, g: 0.72794116, b: 0.72794116, a: 0}
+    - first:
+        name: _Color2
+      second: {r: 0.96470594, g: 0.6156863, b: 0.7725491, a: 0}
+    - first:
+        name: _Color3
+      second: {r: 0, g: 0.7294118, b: 0.7294118, a: 0}
+    - first:
+        name: _ColorBot
+      second: {r: 0, g: 0.627451, b: 1, a: 1}
+    - first:
+        name: _ColorMid
+      second: {r: 1, g: 0.5735294, b: 0.5735294, a: 1}
+    - first:
+        name: _ColorTop
+      second: {r: 0, g: 0.6275859, b: 1, a: 1}
+    - first:
+        name: _EmissionColor
+      second: {r: 0, g: 0, b: 0, a: 1}
+    - first:
+        name: _SkyColor1
+      second: {r: 0.3602941, g: 0.62683815, b: 1, a: 0}
+    - first:
+        name: _SkyColor2
+      second: {r: 0.89, g: 0.666, b: 0.766, a: 0}
+    - first:
+        name: _SkyColor3
+      second: {r: 0, g: 0.31764707, b: 0.76470596, a: 0}
+    - first:
+        name: _SunColor
+      second: {r: 1, g: 0, b: 0, a: 1}
+    - first:
+        name: _SunVector
+      second: {r: 0.4, g: 0.51, b: 0.74, a: 0}
+    - first:
+        name: _Tint
+      second: {r: 1, g: 0.61960787, b: 0.7803922, a: 1}
