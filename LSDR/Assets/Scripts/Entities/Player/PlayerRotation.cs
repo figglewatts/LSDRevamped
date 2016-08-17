@@ -15,13 +15,13 @@ namespace Entities.Player
 		{
 			if (GameSettings.CanControlPlayer && !ControlSchemeManager.CurrentScheme.FPSMovementEnabled)
 			{
-				if (InputHandler.CheckButtonState("Left", ButtonState.HELD))
+				if (InputHandler.CheckButtonState("Left", ButtonState.HELD) || Input.GetAxis("Horizontal") < -PlayerMovement.JOYSTICK_MOVE_THRESHOLD)
 				{
 					Vector3 transformRotation = transform.rotation.eulerAngles;
 					transformRotation.y -= RotationSpeed * Time.deltaTime;
 					transform.rotation = Quaternion.Euler(transformRotation);
 				}
-				else if (InputHandler.CheckButtonState("Right", ButtonState.HELD))
+				else if (InputHandler.CheckButtonState("Right", ButtonState.HELD) || Input.GetAxis("Horizontal") > PlayerMovement.JOYSTICK_MOVE_THRESHOLD)
 				{
 					Vector3 transformRotation = transform.rotation.eulerAngles;
 					transformRotation.y += RotationSpeed * Time.deltaTime;

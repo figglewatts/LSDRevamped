@@ -2,6 +2,7 @@
 using System.Collections;
 using Game;
 using UnityEngine.UI;
+using UnityEngine.VR;
 
 namespace Graphics
 {
@@ -17,6 +18,8 @@ namespace Graphics
 
 		void Start()
 		{
+			if (GameSettings.VR) return;
+
 			int width = GameSettings.UsePixelationShader ? Screen.width/PixelSize : Screen.width;
 			int height = GameSettings.UsePixelationShader ? Screen.height/PixelSize : Screen.height;
 		

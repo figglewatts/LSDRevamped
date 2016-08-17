@@ -43,7 +43,7 @@ namespace Entities.Dream
 
 		public static bool CurrentlyInDream = false;
 
-		public const float DREAM_MAX_TIME = 30;
+		public const float DREAM_MAX_TIME = 600;
 
 		private static GameObject _loadedDreamObject;
 
@@ -71,6 +71,17 @@ namespace Entities.Dream
 
 		public static void BeginDream()
 		{
+			if (GraphSquares.Count > 0)
+			{
+				int xPos = (int) GraphSquares[GraphSquares.Count - 1].x;
+				int yPos = (int) GraphSquares[GraphSquares.Count - 1].y;
+				string level;
+				if (GetLevelFromGraphPosition(xPos, yPos, out level))
+				{
+					BeginDream(level);
+					return;
+				}
+			}
 			BeginDream(RandUtil.RandomLevelFromDir(DreamJournalManager.CurrentJournal));
 		}
 
@@ -93,6 +104,8 @@ namespace Entities.Dream
 			Payload = GameObject.FindGameObjectWithTag("DreamPayload").GetComponent<DreamPayload>();
 			Payload.DreamSeed = RandUtil.CurrentSeed;
 			Payload.InitialLevelToLoad = levelToLoad;
+
+			ResourceManager.ClearLifespan(ResourceLifespan.MENU);
 
 			// load dream scene
 			Fader.FadeIn(Color.black, 1.5F, () => { SceneManager.LoadScene("dream"); });
@@ -181,7 +194,7 @@ namespace Entities.Dream
 				int spawnPointHandle = 0;
 				if (spawnPoint.Equals(string.Empty)) // random spawn point
 				{
-					spawnPointHandle = (PlayerSpawnForced && CurrentDay == 1)
+					spawnPointHandle = (PlayerSpawnForced || CurrentDay == 1)
 						? ForcedSpawnIndex
 						: RandUtil.Int(0, PlayerSpawns.Count);
 				}
@@ -236,6 +249,35 @@ namespace Entities.Dream
 		{
 			return new Vector3(t.position.x, t.position.y + _playerHeightOffset,
 					t.position.z);
+		}
+
+		private static bool GetLevelFromGraphPosition(int x, int y, out string level)
+		{
+			// 9 is squares to middle of graph, 19 is dimension of graph
+			int actualX = x + 9;
+			int actualY = Mathf.Abs((y + 9) - 18); // GetPixels32 is flipped
+
+			int textureArrayIndex = (actualY*19) + actualX;
+
+			try
+			{
+				Texture2D graphTexMap =
+					ResourceManager.Load<Texture2D>(IOUtil.PathCombine("levels", DreamJournalManager.CurrentJournal + ".png"),
+						ResourceLifespan.MENU);
+				Color32[] colorTest = graphTexMap.GetPixels32();
+				int levelIndex = graphTexMap.GetPixels32()[textureArrayIndex].a;
+
+				level = IOUtil.GetLevelFromIndex(levelIndex, DreamJournalManager.CurrentJournal);
+
+				return true;
+			}
+			catch (ResourceManager.ResourceLoadException e)
+			{
+				Debug.Log("Could not find graph spawn texture, defaulting to random spawn");
+			}
+
+			level = null;
+			return false;
 		}
 	}
 }

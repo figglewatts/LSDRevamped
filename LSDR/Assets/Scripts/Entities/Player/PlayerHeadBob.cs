@@ -2,6 +2,7 @@
 using Game;
 using InputManagement;
 using UnityEngine.Audio;
+using UnityEngine.VR;
 using Util;
 
 namespace Entities.Player
@@ -40,7 +41,7 @@ namespace Entities.Player
 		void Update()
 		{
 			if (!GameSettings.CanControlPlayer) return;
-			
+
 			float waveslice = 0F;
 			float vertical = 0;
 			if (InputHandler.CheckButtonState("Forward", ButtonState.HELD))

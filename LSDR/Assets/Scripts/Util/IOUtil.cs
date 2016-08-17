@@ -216,6 +216,12 @@ namespace Util
 			return tmapObject;
 		}
 
+		public static string GetLevelFromIndex(int index, string journal)
+		{
+			string[] levels = Directory.GetFiles(PathCombine(Application.dataPath, "levels", journal), "*.tmap");
+			return levels[index];
+		}
+
 		/// <summary>
 		/// Combines A and B to form a full path.
 		/// </summary>

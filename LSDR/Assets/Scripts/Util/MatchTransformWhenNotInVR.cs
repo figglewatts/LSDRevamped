@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Game;
 using UnityEngine.VR;
 
 namespace Util
@@ -11,12 +12,14 @@ namespace Util
 	public class MatchTransformWhenNotInVR : MonoBehaviour
 	{
 		public Transform Target;
+		public bool WhenInVR = false;
+		public bool MatchPosition = true;
 
 		void Update()
 		{
-			if (VRSettings.loadedDeviceName.Equals(string.Empty)) return;
+			if (!GameSettings.VR != WhenInVR) return;
 
-			transform.position = Target.position;
+			if (MatchPosition) transform.position = Target.position;
 			transform.rotation = Target.rotation;
 		}
 	}

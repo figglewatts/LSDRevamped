@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using Game;
 using UnityEngine.UI;
+using UnityEngine.VR;
 
 namespace UI
 {
@@ -32,7 +33,10 @@ namespace UI
 			GameSettings.CurrentQualityIndex = QualityDropdown.value;
 		}
 
-		public void ClassicShadersToggleChanged(bool value) { GameSettings.UseClassicShaders = value; }
+		public void ClassicShadersToggleChanged(bool value)
+		{
+			GameSettings.UseClassicShaders = value && !GameSettings.VR;
+		}
 		public void PixelationShaderToggleChanged(bool value) { GameSettings.UsePixelationShader = value; }
 		public void FullscreenToggleChanged(bool value) { GameSettings.Fullscreen = value; }
 		public void FramerateLimitToggleChanged(bool value) { GameSettings.LimitFramerate = value; }

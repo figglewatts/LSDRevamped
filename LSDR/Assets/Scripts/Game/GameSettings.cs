@@ -2,6 +2,7 @@
 using SimpleJSON;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.VR;
 using Util;
 
 namespace Game
@@ -15,9 +16,6 @@ namespace Game
 		// modifiable settings
 		public static bool HeadBobEnabled;
 		public static int CurrentControlSchemeIndex;
-
-		// hidden settings
-		
 
 		#endregion
 
@@ -56,6 +54,7 @@ namespace Game
 		public static bool CanControlPlayer = true; // used to disable character motion, i.e. when linking
 		public static bool CanMouseLook = true; // used to disable mouse looking, i.e. when paused
 		public static bool IsPaused = false;
+		public static bool VR = !VRSettings.loadedDeviceName.Equals(string.Empty);
 
 		#endregion
 
@@ -132,7 +131,7 @@ namespace Game
 			HeadBobEnabled = settingsJson["controls"]["headbob"].AsBool;
 			CurrentControlSchemeIndex = settingsJson["controls"]["currentControlSchemeIndex"].AsInt;
 
-			UseClassicShaders = settingsJson["graphics"]["classicShaders"].AsBool;
+			UseClassicShaders = settingsJson["graphics"]["classicShaders"].AsBool && !VR;
 			UsePixelationShader = settingsJson["graphics"]["pixelationShader"].AsBool;
 			CurrentResolutionIndex = settingsJson["graphics"]["currentResolutionIndex"].AsInt;
 			CurrentQualityIndex = settingsJson["graphics"]["currentQualityIndex"].AsInt;

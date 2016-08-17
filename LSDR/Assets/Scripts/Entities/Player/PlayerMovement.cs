@@ -13,7 +13,9 @@ namespace Entities.Player
 		public float MovementSpeed;
         public float GravityMultiplier;
 
-        private Vector2 _inputVector;
+		public const float JOYSTICK_MOVE_THRESHOLD = 0.3F;
+
+		private Vector2 _inputVector;
         private Vector3 _moveDir = Vector3.zero;
         private CharacterController _characterController;
         private CollisionFlags _collisionFlags;
@@ -66,11 +68,11 @@ namespace Entities.Player
 			if (!GameSettings.CanControlPlayer) return;
 			
 			float moveDirFrontBack = 0;
-	        if (InputHandler.CheckButtonState("Forward", ButtonState.HELD))
+	        if (InputHandler.CheckButtonState("Forward", ButtonState.HELD) || Input.GetAxis("Vertical") > JOYSTICK_MOVE_THRESHOLD)
 	        {
 		        moveDirFrontBack = 1;
 	        }
-			else if (InputHandler.CheckButtonState("Backward", ButtonState.HELD))
+			else if (InputHandler.CheckButtonState("Backward", ButtonState.HELD) || Input.GetAxis("Vertical") < -JOYSTICK_MOVE_THRESHOLD)
 			{
 				moveDirFrontBack = -1;
 			}
@@ -78,11 +80,11 @@ namespace Entities.Player
 	        float moveDirLeftRight = 0;
 	        if (ControlSchemeManager.CurrentScheme.FPSMovementEnabled)
 	        {
-		        if (InputHandler.CheckButtonState("Left", ButtonState.HELD))
+		        if (InputHandler.CheckButtonState("Left", ButtonState.HELD) || Input.GetAxis("Horizontal") < -JOYSTICK_MOVE_THRESHOLD)
 		        {
 			        moveDirLeftRight = -1;
 		        }
-				else if (InputHandler.CheckButtonState("Right", ButtonState.HELD))
+				else if (InputHandler.CheckButtonState("Right", ButtonState.HELD) || Input.GetAxis("Horizontal") > JOYSTICK_MOVE_THRESHOLD)
 				{
 					moveDirLeftRight = 1;
 				}

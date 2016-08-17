@@ -22,7 +22,6 @@ namespace UI
 		private void SetDayText(int dayNumber)
 		{
 			DayTextElement.text = "Day " + dayNumber;
-			Debug.Log("Setting day text");
 		}
 	}
 }

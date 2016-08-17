@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using Game;
 using InputManagement;
+using UnityEngine.VR;
 
 namespace Entities.Player
 {
@@ -39,8 +40,8 @@ namespace Entities.Player
 		// Update is called once per frame
 		void Update()
 		{
-			if (!GameSettings.CanControlPlayer) return;
-		
+			if (!GameSettings.CanControlPlayer || GameSettings.VR) return;
+
 			if (ControlSchemeManager.CurrentScheme.FPSMovementEnabled)
 			{
 				if (!GameSettings.CanMouseLook) return;

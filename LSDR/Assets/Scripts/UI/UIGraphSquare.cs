@@ -34,7 +34,7 @@ namespace UI
 		{
 			if (MostRecent)
 			{
-				if (Time.timeSinceLevelLoad%FLASH_TIME > FLASH_TIME/2) { _graphSquareImage.color = Color.red; Debug.Log("RED");} 
+				if (Time.timeSinceLevelLoad%FLASH_TIME > FLASH_TIME/2) { _graphSquareImage.color = Color.red; } 
 				else _graphSquareImage.color = new Color(0.2F*ColourModifier, 0.2F*ColourModifier, 0.2F*ColourModifier);
 			}
 			else _graphSquareImage.color = new Color(0.2F * ColourModifier, 0.2F * ColourModifier, 0.2F * ColourModifier);

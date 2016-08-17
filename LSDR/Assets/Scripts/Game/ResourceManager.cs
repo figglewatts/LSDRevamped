@@ -176,6 +176,7 @@ namespace Game
 	{
 		LEVEL,
 		DREAM,
+		MENU,
 		GLOBAL
 	}
 }
