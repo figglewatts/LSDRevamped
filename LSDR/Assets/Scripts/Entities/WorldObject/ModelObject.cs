@@ -71,7 +71,7 @@ namespace Entities.WorldObject
 				script.StartCoroutine(IOUtil.LoadOGGIntoSource(IOUtil.PathCombine("sfx", script.AudioClip), script.Source));
 				script.LoopDelay = EntityUtil.TryParseFloat("Loop delay", e);
 			}
-			if (script.HasActionSequence) DreamDirector.OnLevelFinishChange += script.PostLoad;
+			if (script.HasActionSequence) DreamDirector.PostLoadEvent += script.PostLoad;
 
 			EntityUtil.SetInstantiatedObjectTransform(e, ref instantiated);
 

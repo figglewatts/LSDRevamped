@@ -29,7 +29,7 @@ namespace Entities.Action
 			actionScript.MoveSpeed = EntityUtil.TryParseFloat("Move speed", e);
 			actionScript.FaceMovementDir = e.GetSpawnflagValue(0, 1);
 
-			DreamDirector.OnLevelFinishChange += actionScript.PostLoad;
+			DreamDirector.PostLoadEvent += actionScript.PostLoad;
 
 			EntityUtil.SetInstantiatedObjectTransform(e, ref instantiated);
 

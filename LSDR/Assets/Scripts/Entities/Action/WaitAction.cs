@@ -20,7 +20,7 @@ namespace Entities.Action
 
 			actionScript.WaitTime = EntityUtil.TryParseFloat("Wait time", e);
 
-			DreamDirector.OnLevelFinishChange += actionScript.PostLoad;
+			DreamDirector.PostLoadEvent += actionScript.PostLoad;
 
 			EntityUtil.SetInstantiatedObjectTransform(e, ref instantiated);
 

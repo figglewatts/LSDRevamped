@@ -30,7 +30,7 @@ namespace Entities.Action
 
 			actionScript.RotateInstantly = e.GetSpawnflagValue(0, 1);
 
-			DreamDirector.OnLevelFinishChange += actionScript.PostLoad;
+			DreamDirector.PostLoadEvent += actionScript.PostLoad;
 
 			EntityUtil.SetInstantiatedObjectTransform(e, ref instantiated);
 

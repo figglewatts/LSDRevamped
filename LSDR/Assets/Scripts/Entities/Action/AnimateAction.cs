@@ -20,7 +20,7 @@ namespace Entities.Action
 			actionScript.SequencePosition = EntityUtil.TryParseInt("Sequence position", e);
 			actionScript.AnimationName = e.GetPropertyValue("Animation");
 
-			DreamDirector.OnLevelFinishChange += actionScript.PostLoad;
+			DreamDirector.PostLoadEvent += actionScript.PostLoad;
 
 			EntityUtil.SetInstantiatedObjectTransform(e, ref instantiated);
 

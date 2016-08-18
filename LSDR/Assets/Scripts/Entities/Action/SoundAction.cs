@@ -26,7 +26,7 @@ namespace Entities.Action
 
 			actionScript.PathToAudioClip = e.GetPropertyValue("Audio clip");
 
-			DreamDirector.OnLevelFinishChange += actionScript.PostLoad;
+			DreamDirector.PostLoadEvent += actionScript.PostLoad;
 
 			EntityUtil.SetInstantiatedObjectTransform(e, ref instantiated);
 

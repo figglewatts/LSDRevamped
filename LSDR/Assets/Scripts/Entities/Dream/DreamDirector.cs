@@ -39,6 +39,9 @@ namespace Entities.Dream
 
 		public static event OnLevelFinishChangeHandler OnLevelFinishChange;
 
+		// works like OnLevelFinishChange but is cleared before each level is loaded
+		public static event OnLevelFinishChangeHandler PostLoadEvent;
+
 		public static TextureSet CurrentTextureSet { get; private set; }
 
 		public static bool CurrentlyInDream = false;
@@ -171,13 +174,17 @@ namespace Entities.Dream
 
 		public static void SwitchDreamLevel(string levelPath, string spawnPoint = "")
 		{
-			OnLevelFinishChange = null; // clear prior events
+			PostLoadEvent = null;
 			
 			if (_loadedDreamObject)
 			{
 				UnityEngine.Object.Destroy(_loadedDreamObject);
 				ResourceManager.ClearLifespan(ResourceLifespan.LEVEL);
 			}
+
+			GameObject.FindGameObjectWithTag("EnvironmentController")
+				.GetComponent<EnvironmentController>()
+				.EnvironmentEntity = null;
 
 			PlayerSpawns.Clear();
 			PlayerSpawnForced = false;
@@ -216,6 +223,7 @@ namespace Entities.Dream
 			}
 			else Debug.LogError("There are no player_spawn entities in the level, cannot spawn player!");
 
+			if (PostLoadEvent != null) PostLoadEvent.Invoke();
 			if (OnLevelFinishChange != null) OnLevelFinishChange.Invoke();
 		}
 
@@ -238,6 +246,9 @@ namespace Entities.Dream
 			Fader.ClearHandler(); // clear all the junk from the post-fade event handler
 			PlayerSpawns.Clear();
 			Target.Targets.Clear();
+
+			OnLevelFinishChange = null;
+			PostLoadEvent = null;
 
 			ResourceManager.ClearLifespan(ResourceLifespan.LEVEL);
 			ResourceManager.ClearLifespan(ResourceLifespan.DREAM);

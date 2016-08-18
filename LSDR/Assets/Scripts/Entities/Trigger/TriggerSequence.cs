@@ -23,7 +23,7 @@ namespace Entities.Trigger
 
 			script.SequenceName = e.GetPropertyValue("Sequence name");
 
-			DreamDirector.OnLevelFinishChange += script.PostLoad;
+			DreamDirector.PostLoadEvent += script.PostLoad;
 
 			EntityUtil.SetInstantiatedObjectTransform(e, ref instantiated);
 
