@@ -59,6 +59,8 @@ namespace Entities.Dream
 				.GetComponent<EnvironmentController>()
 				.EnvironmentEntity = dreamEnvironment;
 
+			DreamDirector.CanSpawnGreyman = dreamEnvironment.SpawnGreyman;
+
 			return instantiated;
 		}
 	}

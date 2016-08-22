@@ -58,9 +58,12 @@ namespace Game
 
 		#endregion
 
-		#region Gameplay Constants
+		#region Gameplay Constants (not serialized)
 
 		public const int FRAMERATE_LIMIT = 25;
+
+		// grey man will spawn approx 1 in every CHANCE_FOR_GREYMAN-1 times
+		public const int CHANCE_FOR_GREYMAN = 100;
 
 		#endregion
 

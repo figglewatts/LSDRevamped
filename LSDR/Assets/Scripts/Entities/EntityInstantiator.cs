@@ -112,5 +112,14 @@ namespace Entities
 
 			return entityObject;
 		}
+
+		public static GameObject InstantiatePrefab(string filePath, Vector3 position = default(Vector3), Quaternion rotation = default(Quaternion))
+		{
+			GameObject prefab = GameObject.Instantiate(Resources.Load<GameObject>(filePath));
+			prefab.transform.SetParent(DreamDirector.LoadedDreamObject.transform, true);
+			prefab.transform.position = position;
+			prefab.transform.rotation = rotation;
+			return prefab;
+		}
 	}
 }

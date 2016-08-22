@@ -1,6 +1,7 @@
 ﻿Shader "LSD/PSX/Diffuse" {
 	Properties{
 		_MainTex("Base (RGB)", 2D) = "white" {}
+		_Tint("Tint", Color) = (1,1,1,1)
 	}
 		SubShader{
 		Tags{ "RenderType" = "Opaque" }
@@ -77,6 +78,8 @@
 
 	uniform float _FogStep;
 
+	float4 _Tint;
+
 	float4 frag(v2f IN) : COLOR
 	{
 		half4 c = tex2D(_MainTex, IN.uv_MainTex / IN.normal.r)*IN.color;
@@ -84,6 +87,7 @@
 		float fogIntensity = (1 - IN.colorFog.a);
 		float steppedFogIntensity = round(fogIntensity / _FogStep) * _FogStep;
 		color.rgb += IN.colorFog.rgb*steppedFogIntensity;
+		color.rgb *= _Tint.rgb;
 		return color;
 	}
 		ENDCG

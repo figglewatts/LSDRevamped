@@ -44,16 +44,20 @@ namespace Entities.Dream
 
 		public static TextureSet CurrentTextureSet { get; private set; }
 
+		public static bool CanSpawnGreyman = false;
+
 		public static bool CurrentlyInDream = false;
 
 		public const float DREAM_MAX_TIME = 600;
 
+		// how much to affect the happiness value if the dream is ended by falling
+		public const int FALLING_HAPPINESS_PENALTY = -2;
+		public const int GREYMAN_HAPPINESS_PENALTY = -2;
+
 		private static GameObject _loadedDreamObject;
+		public static GameObject LoadedDreamObject { get { return _loadedDreamObject; } }
 
 		private static float _playerHeightOffset = 0.65F;
-
-		// how much to affect the happiness value if the dream is ended by falling
-		private const int FALLING_HAPPINESS_PENALTY = -2;
 
 		public static void AddGraphSquare(int x, int y)
 		{
@@ -249,6 +253,8 @@ namespace Entities.Dream
 
 			OnLevelFinishChange = null;
 			PostLoadEvent = null;
+
+			CanSpawnGreyman = false;
 
 			ResourceManager.ClearLifespan(ResourceLifespan.LEVEL);
 			ResourceManager.ClearLifespan(ResourceLifespan.DREAM);

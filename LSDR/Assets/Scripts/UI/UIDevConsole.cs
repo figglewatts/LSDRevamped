@@ -34,6 +34,8 @@ namespace UI
 		private bool _consoleVisible;
 		private bool _previousCursorViewState;
 
+		void Awake() { DevConsole.ConsoleUI = this; }
+
 		void Start()
 		{
 			_consoleVisible = gameObject.activeSelf;
@@ -78,7 +80,7 @@ namespace UI
 
 		private void CommandSubmit(string command)
 		{
-			ProcessConsoleCommand(command);
+			DevConsole.ProcessConsoleCommand(command);
 			CommandInputField.text = string.Empty;
 			EventSystem.current.SetSelectedGameObject(CommandInputField.gameObject);
 			CommandInputField.OnPointerClick(new PointerEventData(EventSystem.current));
@@ -131,71 +133,6 @@ namespace UI
 			}
 		}
 
-		private void ProcessConsoleCommand(string command)
-		{
-			List<string> commandFragments = SplitConsoleCommand(command);
-
-			switch (commandFragments[0].ToLowerInvariant())
-			{
-				case "switchjournal":
-				{
-					DreamJournalManager.SwitchJournal(commandFragments[1]);
-					break;
-				}
-
-				case "loadlevel":
-				{
-					string levelName = commandFragments[1];
-					
-					// if there is a journal specified switch to it
-					if (commandFragments.Count > 2) DreamJournalManager.SwitchJournal(commandFragments[2]);
-
-					string levelPath = IOUtil.PathCombine(Application.dataPath, "levels", DreamJournalManager.CurrentJournal, levelName + ".tmap");
-
-					// check if the level exists before doing anything
-					if (!File.Exists(levelPath))
-					{
-						Debug.LogError("Level " + levelName + " does not exist");
-						break;
-					}
-
-					// if we're not in a dream begin one with the specified level
-					if (!DreamDirector.CurrentlyInDream)
-					{
-						DreamDirector.BeginDream(levelPath);
-						SetConsoleState(false);
-						break;
-					}
-					else
-					{
-						// otherwise just swap out the level for the specified one
-						DreamDirector.SwitchDreamLevel(levelPath);
-						break;
-					}
-                }
-
-				case "textureset":
-				{
-					int set = int.Parse(commandFragments[1]);
-                    Shader.SetGlobalInt("_TextureSet", set);
-					Debug.Log("Switched texture set to " + (TextureSet)set);
-					break;
-				}
-
-				case "enddream":
-				{
-					DreamDirector.EndDream();
-					break;
-				}
-			
-				default:
-				{
-					Debug.LogWarning("Did not recognize command: " + commandFragments[0]);
-					break;
-				}
-			}
-		}
-
 		/// <summary>
 		/// Used because ScrollRect takes a frame to update, so we need to wait for that
 		/// before we set the scrollbar position to the bottom
@@ -204,15 +141,6 @@ namespace UI
 		{
 			yield return new WaitForEndOfFrame();
 			ContentScrollRect.verticalNormalizedPosition = 0;
-		}
-
-		private List<string> SplitConsoleCommand(string command)
-		{
-			return command.Split('"')
-					 .Select((element, index) => index % 2 == 0  // If even index
-										   ? element.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)  // Split the item
-										   : new string[] { element })  // Keep the entire item
-					 .SelectMany(element => element).ToList();
 		}
 	}
 }
