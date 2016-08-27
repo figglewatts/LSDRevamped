@@ -31,6 +31,7 @@ public class GameScript : MonoBehaviour
 		GameSettings.LoadSettings();
 
 		Shader.SetGlobalFloat("_FogStep", 0.08F);
+		Shader.SetGlobalFloat("AffineIntensity", 0.5F);
 
 		SaveGameManager.LoadGame();
 	}
