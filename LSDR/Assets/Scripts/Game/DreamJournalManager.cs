@@ -54,7 +54,7 @@ namespace Game
 
 		public static void LoadJournals()
 		{
-			foreach (string dir in Directory.GetDirectories(IOUtil.PathCombine(Application.dataPath, "levels")))
+			foreach (string dir in Directory.GetDirectories(IOUtil.PathCombine(Application.streamingAssetsPath, "levels")))
 			{
 				LoadedJournals.Add(Path.GetFileNameWithoutExtension(dir));
 			}

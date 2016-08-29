@@ -47,7 +47,7 @@ namespace Util
 
 		public static string RandomLevelFromDir(string levelDir)
 		{
-			string[] filesInDir = Directory.GetFiles(IOUtil.PathCombine(Application.dataPath, "levels", levelDir), "*.tmap");
+			string[] filesInDir = Directory.GetFiles(IOUtil.PathCombine(Application.streamingAssetsPath, "levels", levelDir), "*.tmap");
 			return IOUtil.PathCombine("levels", levelDir, filesInDir[Int(filesInDir.Length)]);
 		}
 

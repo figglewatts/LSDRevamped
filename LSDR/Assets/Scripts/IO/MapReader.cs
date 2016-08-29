@@ -253,7 +253,7 @@ namespace IO
 			}
 			tempTextureName += ".png";
 
-			string mapTexturesPath = IOUtil.PathCombine(Application.dataPath, _pathToMapTextures);
+			string mapTexturesPath = IOUtil.PathCombine(Application.streamingAssetsPath, _pathToMapTextures);
 
 			// perform a lookup for which wad the texture is in
 			string wadName = GetTextureWad(textureName, mapTexturesPath);

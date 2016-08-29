@@ -15,6 +15,17 @@ namespace UI
 		public Dropdown ResolutionDropdown;
 		public Dropdown QualityDropdown;
 
+		public void Start()
+		{
+			UseClassicShadersToggle.isOn = GameSettings.UseClassicShaders;
+			UsePixelationShaderToggle.isOn = GameSettings.UsePixelationShader;
+			FullscreenToggle.isOn = GameSettings.Fullscreen;
+			FOVSlider.value = GameSettings.FOV;
+			ResolutionDropdown.value = GameSettings.CurrentResolutionIndex;
+			QualityDropdown.value = GameSettings.CurrentQualityIndex;
+			LimitFramerateToggle.isOn = GameSettings.LimitFramerate;
+		}
+
 		public void OnEnable()
 		{
 			UseClassicShadersToggle.isOn = GameSettings.UseClassicShaders;

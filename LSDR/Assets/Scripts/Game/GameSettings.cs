@@ -104,7 +104,15 @@ namespace Game
 		public static void ApplySettings()
 		{
 			ControlSchemeManager.SwitchToScheme(CurrentControlSchemeIndex);
-			Screen.SetResolution(Screen.resolutions[CurrentResolutionIndex].width, Screen.resolutions[CurrentResolutionIndex].height, Fullscreen);
+
+			if (CurrentResolutionIndex > Screen.resolutions.Length)
+			{
+				Screen.SetResolution(Screen.resolutions[0].width, Screen.resolutions[0].height, Fullscreen);
+			}
+			else
+			{
+				Screen.SetResolution(Screen.resolutions[CurrentResolutionIndex].width, Screen.resolutions[CurrentResolutionIndex].height, Fullscreen);
+			}
 			Application.targetFrameRate = LimitFramerate ? FRAMERATE_LIMIT : -1;
 			Shader.SetGlobalFloat("AffineIntensity", AffineIntensity);
 			DreamJournalManager.SwitchJournal(CurrentJournalIndex);

@@ -9,7 +9,6 @@ using Game;
 using IO;
 using SimpleJSON;
 using Types;
-using UnityEditor.Animations;
 
 namespace Util
 {
@@ -106,13 +105,13 @@ namespace Util
 		/// </summary>
 		public static IEnumerator LoadOGGIntoSource(string filePath, AudioSource source, bool playOnLoad = false, bool absolutePath = false)
 		{
-			if (!File.Exists(absolutePath ? filePath : PathCombine(Application.dataPath, filePath)))
+			if (!File.Exists(absolutePath ? filePath : PathCombine(Application.streamingAssetsPath, filePath)))
 			{
 				Debug.LogError("Could not locate OGG at " + filePath);
 				yield break;
 			}
 		
-			WWW www = new WWW("file:///" +  (absolutePath ? filePath : PathCombine(Application.dataPath, filePath)));
+			WWW www = new WWW("file:///" +  (absolutePath ? filePath : PathCombine(Application.streamingAssetsPath, filePath)));
 			while (!www.isDone)
 			{
 				yield return null;
@@ -218,7 +217,7 @@ namespace Util
 
 		public static string GetLevelFromIndex(int index, string journal)
 		{
-			string[] levels = Directory.GetFiles(PathCombine(Application.dataPath, "levels", journal), "*.tmap");
+			string[] levels = Directory.GetFiles(PathCombine(Application.streamingAssetsPath, "levels", journal), "*.tmap");
 			return levels[index];
 		}
 

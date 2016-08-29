@@ -35,10 +35,10 @@ namespace Entities.Dream
 
 			script.UseSubDirectories = e.GetSpawnflagValue(0, 1);
 
-			string selectedDir = IOUtil.PathCombine(Application.dataPath, script.MusicDirectory);
+			string selectedDir = IOUtil.PathCombine(Application.streamingAssetsPath, script.MusicDirectory);
 			if (script.UseSubDirectories)
 			{
-				string[] dirsToChooseFrom = Directory.GetDirectories(IOUtil.PathCombine(Application.dataPath, script.MusicDirectory));
+				string[] dirsToChooseFrom = Directory.GetDirectories(IOUtil.PathCombine(Application.streamingAssetsPath, script.MusicDirectory));
 				selectedDir = RandUtil.RandomArrayElement(dirsToChooseFrom);
 				Debug.Log("Selected " + selectedDir);
 			}

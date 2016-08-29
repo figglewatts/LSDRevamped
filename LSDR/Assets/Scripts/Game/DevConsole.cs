@@ -33,7 +33,7 @@ namespace Game
 					// if there is a journal specified switch to it
 					if (commandFragments.Count > 2) DreamJournalManager.SwitchJournal(commandFragments[2]);
 
-					string levelPath = IOUtil.PathCombine(Application.dataPath, "levels", DreamJournalManager.CurrentJournal, levelName + ".tmap");
+					string levelPath = IOUtil.PathCombine(Application.streamingAssetsPath, "levels", DreamJournalManager.CurrentJournal, levelName + ".tmap");
 
 					// check if the level exists before doing anything
 					if (!File.Exists(levelPath))

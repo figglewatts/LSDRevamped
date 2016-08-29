@@ -14,7 +14,7 @@ namespace UI
 
 		void Start()
 		{
-			string[] titleScreenSongs = Directory.GetFiles(IOUtil.PathCombine(Application.dataPath, "music", "title"), "*.ogg");
+			string[] titleScreenSongs = Directory.GetFiles(IOUtil.PathCombine(Application.streamingAssetsPath, "music", "title"), "*.ogg");
 			int songHandle = RandUtil.Int(titleScreenSongs.Length);
 			StartCoroutine(IOUtil.LoadOGGIntoSource(titleScreenSongs[songHandle], source, true, true));
 		}

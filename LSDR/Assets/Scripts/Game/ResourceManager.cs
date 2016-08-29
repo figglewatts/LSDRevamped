@@ -23,7 +23,7 @@ namespace Game
 
 		public static DataType Load<DataType>(string filePath, ResourceLifespan lifespan = ResourceLifespan.GLOBAL, bool absolutePath = false)
 		{
-			string normalizedPath = IOUtil.NormalizePath(absolutePath ? filePath : IOUtil.PathCombine(Application.dataPath, filePath));
+			string normalizedPath = IOUtil.NormalizePath(absolutePath ? filePath : IOUtil.PathCombine(Application.streamingAssetsPath, filePath));
 			
 			// if the cache contains the resource, return it
 			if (_resources.ContainsKey(normalizedPath))
@@ -78,7 +78,7 @@ namespace Game
 						break;
 					}
 
-					resource.Resource = MapReader.LoadMap(normalizedPath, IOUtil.PathCombine(Application.dataPath, "textures", "wad"),
+					resource.Resource = MapReader.LoadMap(normalizedPath, IOUtil.PathCombine(Application.streamingAssetsPath, "textures", "wad"),
 						Shader.Find(GameSettings.UseClassicShaders ? "LSD/PSX/DiffuseSetNoAffine" : "LSD/DiffuseSet"),
 						Shader.Find(GameSettings.UseClassicShaders ? "LSD/PSX/TransparentSetNoAffine" : "LSD/TransparentSet"));
 					resource.Resource.transform.SetParent(_resourceManagerGameObject.transform);
