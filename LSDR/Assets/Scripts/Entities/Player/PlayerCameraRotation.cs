@@ -2,6 +2,7 @@
 using Game;
 using InputManagement;
 using UnityEngine.VR;
+using System.Collections.Generic;
 
 namespace Entities.Player
 {
@@ -15,7 +16,7 @@ namespace Entities.Player
 		public float MaxPositiveRotation = 40;
 		public float MaxNegativeRotation = 320;
 		public bool CanRotate = true;
-		public Camera TargetCamera;
+		public List<Camera> TargetCameras;
 		public float MouseLookRotationMultiplier = 10; // used because deltaTime makes things real slow
 		public float MaxY = 70F;
 		public float MinY = -70F;
@@ -31,10 +32,14 @@ namespace Entities.Player
 		{
 			GameSettings.SetCursorViewState(true);
 
-			_originalRotation = Quaternion.Euler(0, TargetCamera.transform.rotation.eulerAngles.y, TargetCamera.transform.rotation.eulerAngles.z);
+			foreach (Camera c in TargetCameras)
+			{
+				_originalRotation = Quaternion.Euler(0, c.transform.rotation.eulerAngles.y, c.transform.rotation.eulerAngles.z);
 
-			_maxNeg = Quaternion.Euler(MaxNegativeRotation, TargetCamera.transform.rotation.eulerAngles.y, TargetCamera.transform.rotation.eulerAngles.z);
-			_maxPos = Quaternion.Euler(MaxPositiveRotation, TargetCamera.transform.rotation.eulerAngles.y, TargetCamera.transform.rotation.eulerAngles.z);
+				_maxNeg = Quaternion.Euler(MaxNegativeRotation, c.transform.rotation.eulerAngles.y, c.transform.rotation.eulerAngles.z);
+				_maxPos = Quaternion.Euler(MaxPositiveRotation, c.transform.rotation.eulerAngles.y, c.transform.rotation.eulerAngles.z);
+			}
+			
 		}
 
 		// Update is called once per frame
@@ -42,44 +47,47 @@ namespace Entities.Player
 		{
 			if (!GameSettings.CanControlPlayer || GameSettings.VR) return;
 
-			if (ControlSchemeManager.CurrentScheme.FPSMovementEnabled)
+			foreach (Camera c in TargetCameras)
 			{
-				if (!GameSettings.CanMouseLook) return;
-
-				transform.Rotate(0, Input.GetAxis("Mouse X") * ControlSchemeManager.CurrentScheme.MouseSensitivity * Time.smoothDeltaTime * MouseLookRotationMultiplier,
-					0, Space.Self);
-
-				_temp = TargetCamera.transform;
-				_rotationX += -Input.GetAxis("Mouse Y") * ControlSchemeManager.CurrentScheme.MouseSensitivity * Time.smoothDeltaTime * MouseLookRotationMultiplier;
-				_rotationX = ClampAngle(_rotationX, MinY, MaxY);
-				_temp.transform.localEulerAngles = new Vector3(_rotationX, TargetCamera.transform.localEulerAngles.y, 0);
-				Quaternion.Slerp(TargetCamera.transform.rotation, _temp.transform.rotation, Time.deltaTime);
-			}
-			else
-			{
-				_maxNeg = Quaternion.Euler(MaxNegativeRotation, TargetCamera.transform.rotation.eulerAngles.y,
-					TargetCamera.transform.rotation.eulerAngles.z);
-				_maxPos = Quaternion.Euler(MaxPositiveRotation, TargetCamera.transform.rotation.eulerAngles.y,
-					TargetCamera.transform.rotation.eulerAngles.z);
-				_originalRotation = Quaternion.Euler(0, TargetCamera.transform.rotation.eulerAngles.y,
-					TargetCamera.transform.rotation.eulerAngles.z);
-				if (CanRotate)
+				if (ControlSchemeManager.CurrentScheme.FPSMovementEnabled)
 				{
-					if (InputHandler.CheckButtonState("LookUp", ButtonState.HELD))
+					if (!GameSettings.CanMouseLook) return;
+
+					transform.Rotate(0, Input.GetAxis("Mouse X") * ControlSchemeManager.CurrentScheme.MouseSensitivity * Time.smoothDeltaTime * MouseLookRotationMultiplier,
+						0, Space.Self);
+
+					_temp = c.transform;
+					_rotationX += -Input.GetAxis("Mouse Y") * ControlSchemeManager.CurrentScheme.MouseSensitivity * Time.smoothDeltaTime * MouseLookRotationMultiplier;
+					_rotationX = ClampAngle(_rotationX, MinY, MaxY);
+					_temp.transform.localEulerAngles = new Vector3(_rotationX, c.transform.localEulerAngles.y, 0);
+					Quaternion.Slerp(c.transform.rotation, _temp.transform.rotation, Time.deltaTime);
+				}
+				else
+				{
+					_maxNeg = Quaternion.Euler(MaxNegativeRotation, c.transform.rotation.eulerAngles.y,
+						c.transform.rotation.eulerAngles.z);
+					_maxPos = Quaternion.Euler(MaxPositiveRotation, c.transform.rotation.eulerAngles.y,
+						c.transform.rotation.eulerAngles.z);
+					_originalRotation = Quaternion.Euler(0, c.transform.rotation.eulerAngles.y,
+						c.transform.rotation.eulerAngles.z);
+					if (CanRotate)
 					{
-						TargetCamera.transform.rotation = Quaternion.RotateTowards(TargetCamera.transform.rotation, _maxNeg,
-							RotationSpeed*Time.deltaTime);
-					}
-					if (InputHandler.CheckButtonState("LookDown", ButtonState.HELD))
-					{
-						TargetCamera.transform.rotation = Quaternion.RotateTowards(TargetCamera.transform.rotation, _maxPos,
-							RotationSpeed*Time.deltaTime);
-					}
-					if (!InputHandler.CheckButtonState("LookUp", ButtonState.HELD) &&
-					    !InputHandler.CheckButtonState("LookDown", ButtonState.HELD))
-					{
-						TargetCamera.transform.rotation = Quaternion.RotateTowards(TargetCamera.transform.rotation, _originalRotation,
-							RotationSpeed*Time.deltaTime);
+						if (InputHandler.CheckButtonState("LookUp", ButtonState.HELD))
+						{
+							c.transform.rotation = Quaternion.RotateTowards(c.transform.rotation, _maxNeg,
+								RotationSpeed * Time.deltaTime);
+						}
+						if (InputHandler.CheckButtonState("LookDown", ButtonState.HELD))
+						{
+							c.transform.rotation = Quaternion.RotateTowards(c.transform.rotation, _maxPos,
+								RotationSpeed * Time.deltaTime);
+						}
+						if (!InputHandler.CheckButtonState("LookUp", ButtonState.HELD) &&
+							!InputHandler.CheckButtonState("LookDown", ButtonState.HELD))
+						{
+							c.transform.rotation = Quaternion.RotateTowards(c.transform.rotation, _originalRotation,
+								RotationSpeed * Time.deltaTime);
+						}
 					}
 				}
 			}

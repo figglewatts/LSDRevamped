@@ -10863,12 +10863,12 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 713805986}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
-  m_Father: {fileID: 1639242879}
-  m_RootOrder: 0
+  m_Father: {fileID: 1610015707}
+  m_RootOrder: 2
 --- !u!114 &713805988
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11930,6 +11930,7 @@ Transform:
   m_Children:
   - {fileID: 1839599781}
   - {fileID: 451942268}
+  - {fileID: 713805987}
   - {fileID: 1639242879}
   m_Father: {fileID: 0}
   m_RootOrder: 1
@@ -11948,7 +11949,9 @@ MonoBehaviour:
   MaxPositiveRotation: 40
   MaxNegativeRotation: 320
   CanRotate: 1
-  TargetCamera: {fileID: 1639242883}
+  TargetCameras:
+  - {fileID: 713805991}
+  - {fileID: 1639242883}
   MouseLookRotationMultiplier: 50
   MaxY: 70
   MinY: -70
@@ -12156,10 +12159,9 @@ Transform:
   m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_Children:
-  - {fileID: 713805987}
+  m_Children: []
   m_Father: {fileID: 1610015707}
-  m_RootOrder: 2
+  m_RootOrder: 3
 --- !u!81 &1639242880
 AudioListener:
   m_ObjectHideFlags: 0
