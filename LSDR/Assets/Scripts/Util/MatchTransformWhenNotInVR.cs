@@ -17,7 +17,7 @@ namespace Util
 
 		void Update()
 		{
-			if (!GameSettings.VR != WhenInVR) return;
+			if (WhenInVR && !GameSettings.VR) return;
 
 			if (MatchPosition) transform.position = Target.position;
 			transform.rotation = Target.rotation;
