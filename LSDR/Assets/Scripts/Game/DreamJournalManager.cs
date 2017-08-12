@@ -35,11 +35,27 @@ namespace Game
 			Debug.LogWarning("Could not find journal: " + name);
 		}
 
+        /// <summary>
+        /// Sets the dream journal without loading data.
+        /// Only use this for initial game start, as data has
+        /// already been loaded.
+        /// </summary>
+        /// <param name="i">The index of the journal.</param>
+	    public static void SetJournal(int i)
+        {
+            _currentJournalHandle = i;
+            Debug.Log("Journal switched to " + CurrentJournal);
+            GameSettings.CurrentJournalIndex = i;
+        }
+
+        /// <summary>
+        /// The same as SetJournal() but also loads game data.
+        /// To be used for when the user switches journals.
+        /// </summary>
+        /// <param name="i">The index of the journal.</param>
 		public static void SwitchJournal(int i)
 		{
-			_currentJournalHandle = i;
-			Debug.Log("Journal switched to " + CurrentJournal);
-			GameSettings.CurrentJournalIndex = i;
+			SetJournal(i);
 			SaveGameManager.LoadGame();
 		}
 

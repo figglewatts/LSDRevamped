@@ -9,8 +9,6 @@ namespace Game
 {
 	public static class GameSettings
 	{
-		// TODO: load from file
-
 		#region Player Control Settings
 
 		// modifiable settings
@@ -84,7 +82,9 @@ namespace Game
 
 		public static void SetDefaultSettings()
 		{
-			HeadBobEnabled = true;
+            Debug.Log("Setting default settings...");
+
+            HeadBobEnabled = true;
 			CurrentControlSchemeIndex = 0;
 			CanControlPlayer = true;
 			UseClassicShaders = true;
@@ -115,9 +115,12 @@ namespace Game
 			}
 			Application.targetFrameRate = LimitFramerate ? FRAMERATE_LIMIT : -1;
 			Shader.SetGlobalFloat("AffineIntensity", AffineIntensity);
-			DreamJournalManager.SwitchJournal(CurrentJournalIndex);
+			DreamJournalManager.SetJournal(CurrentJournalIndex);
 			_masterMixer.SetFloat("MusicVolume", -80 + (MusicVolume*80));
 			_masterMixer.SetFloat("SFXVolume", -80 + (SFXVolume * 80));
+
+            Debug.Log("Applying game settings...");
+            Debug.Log("Affine intensity: " + AffineIntensity);
 		}
 
 		public static void LoadSettings()
@@ -138,6 +141,8 @@ namespace Game
 				ApplySettings();
 				return;
 			}
+
+            Debug.Log("Loading game settings...");
 
 			HeadBobEnabled = settingsJson["controls"]["headbob"].AsBool;
 			CurrentControlSchemeIndex = settingsJson["controls"]["currentControlSchemeIndex"].AsInt;
@@ -162,7 +167,9 @@ namespace Game
 
 		public static void SaveSettings()
 		{
-			JSONClass settingsJson = new JSONClass();
+            Debug.Log("Saving game settings...");
+
+            JSONClass settingsJson = new JSONClass();
 			
 			settingsJson["controls"]["headbob"].AsBool = HeadBobEnabled;
 			settingsJson["controls"]["currentControlSchemeIndex"].AsInt = CurrentControlSchemeIndex;

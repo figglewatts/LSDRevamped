@@ -40,7 +40,7 @@ namespace Game
 
 		public static void LoadGame()
 		{
-			Debug.Log("Loading game");
+			Debug.Log("SaveGameManager: Loading game");
 		
 			try
 			{

@@ -28,7 +28,8 @@ public class UISettings : MonoBehaviour
 
 	public void ApplySettings()
 	{
-		GameSettings.ApplySettings();
 		GameSettings.SaveSettings();
-	}
+	    GameSettings.ApplySettings();
+        SaveGameManager.LoadGame();
+    }
 }
