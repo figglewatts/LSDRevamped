@@ -114,7 +114,7 @@ namespace Game
 				Screen.SetResolution(Screen.resolutions[CurrentResolutionIndex].width, Screen.resolutions[CurrentResolutionIndex].height, Fullscreen);
 			}
 			Application.targetFrameRate = LimitFramerate ? FRAMERATE_LIMIT : -1;
-			Shader.SetGlobalFloat("AffineIntensity", AffineIntensity);
+			Shader.SetGlobalFloat("AffineIntensity", 0.5F);
 			DreamJournalManager.SetJournal(CurrentJournalIndex);
 			_masterMixer.SetFloat("MusicVolume", -80 + (MusicVolume*80));
 			_masterMixer.SetFloat("SFXVolume", -80 + (SFXVolume * 80));
