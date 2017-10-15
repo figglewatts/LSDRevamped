@@ -1,4 +1,6 @@
-﻿Shader "LSD/Sky/AlphaBlend" {
+﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+Shader "LSD/Sky/AlphaBlend" {
 	Properties{
 		_MainTex("Sun Texture", 2D) = "white" {}
 		_Tint("Tint", Color) = (1,1,1,1)
@@ -37,7 +39,7 @@
 			{
 				v2f o;
 
-				o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+				o.pos = UnityObjectToClipPos(v.vertex);
 				o.uv_MainTex = TRANSFORM_TEX(v.texcoord, _MainTex);
 				o.color = v.color;
 

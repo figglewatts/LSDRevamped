@@ -1,4 +1,6 @@
-﻿Shader "LSD/PSX/TransparentSet" {
+﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+Shader "LSD/PSX/TransparentSet" {
 	Properties{
 		_MainTexA("Albedo A (RGB)", 2D) = "white" {}
 		_MainTexB("Albedo B (RGB)", 2D) = "white" {}
@@ -38,7 +40,7 @@
 				v2f o;
 
 				//Vertex snapping
-				float4 snapToPixel = mul(UNITY_MATRIX_MVP,v.vertex);
+				float4 snapToPixel = UnityObjectToClipPos(v.vertex);
 				float4 vertex = snapToPixel;
 				vertex.xyz = snapToPixel.xyz / snapToPixel.w;
 				vertex.x = floor(160 * vertex.x) / 160;
@@ -74,7 +76,7 @@
 				//Cut out polygons
 				if (distance > unity_FogStart.z + unity_FogColor.a * 255)
 				{
-					o.pos.w = 0;
+					o.color.a = 0;
 				}
 
 

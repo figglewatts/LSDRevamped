@@ -1,4 +1,6 @@
-﻿Shader "LSD/TransparentSet" {
+﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+Shader "LSD/TransparentSet" {
 	Properties{
 		_MainTexA("Albedo A (RGB)", 2D) = "white" {}
 		_MainTexB("Albedo B (RGB)", 2D) = "white" {}
@@ -35,7 +37,7 @@
 			{
 				v2f o;
 
-				o.pos = mul(UNITY_MATRIX_MVP,v.vertex);
+				o.pos = UnityObjectToClipPos(v.vertex);
 
 				o.color = float4(ShadeVertexLightsFull(v.vertex, v.normal, 4, true), 1.0);
 				o.color *= v.color;

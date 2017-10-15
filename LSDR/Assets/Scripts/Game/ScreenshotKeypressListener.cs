@@ -30,7 +30,7 @@ namespace Game
 			if (!Directory.Exists(_screenshotPath)) Directory.CreateDirectory(_screenshotPath);
 
 			Debug.Log("Taking screenshot");
-			Application.CaptureScreenshot(IOUtil.PathCombine(_screenshotPath, "Screenshot_" + _screenshotNumber + ".png"));
+            ScreenCapture.CaptureScreenshot(IOUtil.PathCombine(_screenshotPath, "Screenshot_" + _screenshotNumber + ".png"));
 			_screenshotNumber++;
 			PlayerPrefs.SetInt("LSDR.ScreenshotCounter", _screenshotNumber);
 		}

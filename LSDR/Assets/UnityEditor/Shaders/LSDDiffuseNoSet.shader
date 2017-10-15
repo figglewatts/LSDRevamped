@@ -1,4 +1,6 @@
-﻿Shader "LSD/Diffuse" {
+﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+Shader "LSD/Diffuse" {
 	Properties{
 		_MainTex("Albedo (RGB)", 2D) = "white" {}
 		_Tint("Tint", Color) = (1,1,1,1)
@@ -30,7 +32,7 @@
 	{
 		v2f o;
 
-		o.pos = mul(UNITY_MATRIX_MVP,v.vertex);
+		o.pos = UnityObjectToClipPos(v.vertex);
 
 		o.color = float4(ShadeVertexLightsFull(v.vertex, v.normal, 4, true), 1.0);
 		o.color *= v.color;

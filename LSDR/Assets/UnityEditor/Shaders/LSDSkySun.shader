@@ -1,4 +1,6 @@
-﻿Shader "LSD/Sky/Sun" {
+﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+Shader "LSD/Sky/Sun" {
 	Properties{
 		_MainTex("Sun Texture", 2D) = "white" {}
 		_Cutoff("Alpha Cutoff", Range(0, 1)) = 0.5
@@ -31,7 +33,7 @@
 	{
 		v2f o;
 
-		o.pos = mul(UNITY_MATRIX_MVP,v.vertex);
+		o.pos = UnityObjectToClipPos(v.vertex);
 
 		o.color = v.color;
 

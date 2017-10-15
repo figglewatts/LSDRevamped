@@ -1,4 +1,6 @@
-﻿Shader "LSD/PSX/Transparent" {
+﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+Shader "LSD/PSX/Transparent" {
 	Properties{
 		_MainTex("Base (RGB)", 2D) = "white" {}
 		_Cutoff("Alpha Cutoff", Range(0, 1)) = 0.5
@@ -35,7 +37,7 @@
 		v2f o;
 
 		//Vertex snapping
-		float4 snapToPixel = mul(UNITY_MATRIX_MVP,v.vertex);
+		float4 snapToPixel = UnityObjectToClipPos(v.vertex);
 		float4 vertex = snapToPixel;
 		vertex.xyz = snapToPixel.xyz / snapToPixel.w;
 		vertex.x = floor(160 * vertex.x) / 160;
