@@ -55,7 +55,8 @@ Shader "LSD/PSX/TransparentSet" {
 				o.color = float4(ShadeVertexLightsFull(v.vertex, v.normal, 4, true), 1.0);
 				o.color *= v.color;
 
-				float distance = length(mul(UNITY_MATRIX_MV,v.vertex));
+				fixed4 xzPos = fixed4(v.vertex.x, 0, v.vertex.z, v.vertex.w);
+				float distance = length(mul(UNITY_MATRIX_MV,xzPos));
 
 				//Affine Texture Mapping
 				float4 affinePos = vertex;//vertex;				
