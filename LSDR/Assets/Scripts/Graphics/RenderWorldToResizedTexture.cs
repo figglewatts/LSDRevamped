@@ -25,7 +25,7 @@ namespace Graphics
 		
 			_tex = new RenderTexture(width, height, 24, RenderTextureFormat.ARGB32);
 			_tex.filterMode = FilterMode;
-			_tex.generateMips = false;
+			_tex.autoGenerateMips = false;
 			_tex.Create();
 			foreach (Camera c in ImageCameras) c.targetTexture = _tex;
 		}
