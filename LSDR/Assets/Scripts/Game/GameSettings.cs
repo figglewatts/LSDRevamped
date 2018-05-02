@@ -52,7 +52,7 @@ namespace Game
 		public static bool CanControlPlayer = true; // used to disable character motion, i.e. when linking
 		public static bool CanMouseLook = true; // used to disable mouse looking, i.e. when paused
 		public static bool IsPaused = false;
-		public static bool VR = !VRSettings.loadedDeviceName.Equals(string.Empty);
+		public static bool VR = !UnityEngine.XR.XRSettings.loadedDeviceName.Equals(string.Empty);
 
 		#endregion
 

@@ -56,11 +56,13 @@ Shader "LSD/TransparentSet" {
 				o.colorFog = fogColor;
 				o.colorFog.a = clamp(fogDensity,0,1);
 
-				//Cut out polygons
+				//Cut out polygons (Broken)
+				/*
 				if (distance > unity_FogStart.z + unity_FogColor.a * 255)
 				{
 					o.pos.w = 0;
 				}
+				*/
 
 
 				return o;
