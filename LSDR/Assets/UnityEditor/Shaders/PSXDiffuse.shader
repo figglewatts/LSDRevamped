@@ -5,11 +5,11 @@ Shader "LSD/PSX/Diffuse" {
 		_MainTex("Base (RGB)", 2D) = "white" {}
 		_Tint("Tint", Color) = (1,1,1,1)
 	}
-		SubShader{
+	SubShader{
 		Tags{ "RenderType" = "Opaque" }
 		LOD 200
 
-		Pass{
+	Pass{
 		Lighting On
 		CGPROGRAM
 
@@ -49,7 +49,7 @@ Shader "LSD/PSX/Diffuse" {
 		o.color = float4(ShadeVertexLightsFull(v.vertex, v.normal, 4, true), 1.0);
 		o.color *= v.color;
 
-		float distance = length(mul(UNITY_MATRIX_MV,v.vertex));
+		float distance = length(UnityObjectToViewPos(v.vertex));
 
 		//Affine Texture Mapping
 		float4 affinePos = vertex; //vertex;				
@@ -70,7 +70,7 @@ Shader "LSD/PSX/Diffuse" {
 		//Cut out polygons
 		if (distance > unity_FogStart.z + unity_FogColor.a * 255)
 		{
-			o.pos.w = 0;
+			o.pos /= 0;
 		}
 
 		return o;

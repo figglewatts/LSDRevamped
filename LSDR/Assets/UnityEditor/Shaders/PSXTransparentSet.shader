@@ -56,7 +56,7 @@ Shader "LSD/PSX/TransparentSet" {
 				o.color *= v.color;
 
 				fixed4 xzPos = fixed4(v.vertex.x, 0, v.vertex.z, v.vertex.w);
-				float distance = length(mul(UNITY_MATRIX_MV,xzPos));
+				float distance = length(UnityObjectToViewPos(xzPos));
 
 				//Affine Texture Mapping
 				float4 affinePos = vertex;//vertex;				
@@ -77,7 +77,7 @@ Shader "LSD/PSX/TransparentSet" {
 				//Cut out polygons
 				if (distance > unity_FogStart.z + unity_FogColor.a * 255)
 				{
-					o.color.a = 0;
+					o.pos /= 0;
 				}
 
 

@@ -52,7 +52,7 @@ Shader "LSD/PSX/TransparentSet" {
 				o.color = float4(ShadeVertexLightsFull(v.vertex, v.normal, 4, true), 1.0);
 				o.color *= v.color;
 
-				float distance = length(mul(UNITY_MATRIX_MV,v.vertex));
+				float distance = length(UnityObjectToViewPos(v.vertex));
 
 				o.uv_MainTex = TRANSFORM_TEX(v.texcoord, _MainTexA);
 
@@ -67,7 +67,7 @@ Shader "LSD/PSX/TransparentSet" {
 				//Cut out polygons
 				if (distance > unity_FogStart.z + unity_FogColor.a * 255)
 				{
-					o.pos.w = 0;
+					o.pos /= 0;
 				}
 
 
