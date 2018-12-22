@@ -11,6 +11,6 @@ public class SetCameraFOV : MonoBehaviour
 		if (GameSettings.VR) return;
 
 		Camera c = GetComponent<Camera>();
-		c.fieldOfView = GameSettings.FOV;
+		c.fieldOfView = GameSettings.CurrentSettings.FOV;
 	}
 }

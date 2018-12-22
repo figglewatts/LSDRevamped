@@ -140,7 +140,7 @@ namespace Util
 					if (Path.GetFileNameWithoutExtension(t.ObjectTexture).Contains("["))
 					{
 						// part of a texture set
-						m.shader = Shader.Find(GameSettings.UseClassicShaders ? "LSD/PSX/TransparentSet" : "LSD/TransparentSet");
+						m.shader = Shader.Find(GameSettings.CurrentSettings.UseClassicShaders ? "LSD/PSX/TransparentSet" : "LSD/TransparentSet");
 
 						string texNameWithoutExtension = Path.GetFileNameWithoutExtension(t.ObjectTexture);
 						string baseTexName = texNameWithoutExtension.Substring(1);
@@ -154,7 +154,7 @@ namespace Util
 					}
 					else
 					{
-						m.shader = Shader.Find(GameSettings.UseClassicShaders ? "LSD/PSX/Transparent" : "Transparent/Diffuse");
+						m.shader = Shader.Find(GameSettings.CurrentSettings.UseClassicShaders ? "LSD/PSX/Transparent" : "Transparent/Diffuse");
 						m.SetTexture("_MainTex", ResourceManager.Load<Texture2D>(t.ObjectTexture, lifespan));
 					}
 				}

@@ -51,7 +51,7 @@ namespace InputManagement
 		public static void SwitchToScheme(int i)
 		{
 			_currentSchemeHandle = i;
-			GameSettings.CurrentControlSchemeIndex = i;
+			GameSettings.CurrentSettings.CurrentControlSchemeIndex = i;
 			ControlSchemeSwitched();
 		}
 

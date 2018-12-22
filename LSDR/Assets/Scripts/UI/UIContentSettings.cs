@@ -13,12 +13,12 @@ namespace UI
 
 		public void OnEnable()
 		{
-			EnableHeadBobToggle.isOn = GameSettings.HeadBobEnabled;
-			EnableFootstepSoundsToggle.isOn = GameSettings.EnableFootstepSounds;
-			CurrentJournalDropdown.value = GameSettings.CurrentJournalIndex;
+			EnableHeadBobToggle.isOn = GameSettings.CurrentSettings.HeadBobEnabled;
+			EnableFootstepSoundsToggle.isOn = GameSettings.CurrentSettings.EnableFootstepSounds;
+			CurrentJournalDropdown.value = GameSettings.CurrentSettings.CurrentJournalIndex;
 		}
 
-		public void UpdateHeadbob(bool value) { GameSettings.HeadBobEnabled = value; }
-		public void UpdateFootstep(bool value) { GameSettings.EnableFootstepSounds = value; }
+		public void UpdateHeadbob(bool value) { GameSettings.CurrentSettings.HeadBobEnabled = value; }
+		public void UpdateFootstep(bool value) { GameSettings.CurrentSettings.EnableFootstepSounds = value; }
 	}
 }

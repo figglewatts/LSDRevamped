@@ -17,8 +17,8 @@ namespace UI
 
 		public void OnEnable()
 		{
-			ControlSchemePicked(GameSettings.CurrentControlSchemeIndex);
-			ControlSchemeDropdown.ControlSchemeDropdown.value = GameSettings.CurrentControlSchemeIndex;
+			ControlSchemePicked(GameSettings.CurrentSettings.CurrentControlSchemeIndex);
+			ControlSchemeDropdown.ControlSchemeDropdown.value = GameSettings.CurrentSettings.CurrentControlSchemeIndex;
 		}
 
 		public void SchemeNameFinishEdit()

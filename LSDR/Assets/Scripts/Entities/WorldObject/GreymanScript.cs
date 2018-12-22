@@ -19,7 +19,7 @@ public class GreymanScript : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
-		_greymanMaterial = new Material(Shader.Find(GameSettings.UseClassicShaders ? "LSD/PSX/Diffuse" : "LSD/Diffuse"));
+		_greymanMaterial = new Material(Shader.Find(GameSettings.CurrentSettings.UseClassicShaders ? "LSD/PSX/Diffuse" : "LSD/Diffuse"));
 		_greymanMaterial.SetColor("_Tint", GreymanColor);
 
 		GreymanMesh.GetComponent<Renderer>().material = _greymanMaterial;

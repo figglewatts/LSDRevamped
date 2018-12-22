@@ -20,8 +20,8 @@ namespace Graphics
 		{
 			if (GameSettings.VR) return;
 
-			int width = GameSettings.UsePixelationShader ? Screen.width/PixelSize : Screen.width;
-			int height = GameSettings.UsePixelationShader ? Screen.height/PixelSize : Screen.height;
+			int width = GameSettings.CurrentSettings.UsePixelationShader ? Screen.width/PixelSize : Screen.width;
+			int height = GameSettings.CurrentSettings.UsePixelationShader ? Screen.height/PixelSize : Screen.height;
 		
 			_tex = new RenderTexture(width, height, 24, RenderTextureFormat.ARGB32);
 			_tex.filterMode = FilterMode;

@@ -74,7 +74,7 @@ namespace Entities.Player
 				}
 
 				// if the sine wave is at the lowest part (happens at 3 * Pi divided by 2, or 1.5 * Pi)
-				if (GameSettings.EnableFootstepSounds && _timer > (3*Mathf.PI)/2)
+				if (GameSettings.CurrentSettings.EnableFootstepSounds && _timer > (3*Mathf.PI)/2)
 				{
 					if (_canPlayFootstepSound)
 					{
@@ -91,7 +91,7 @@ namespace Entities.Player
 				totalAxes = Mathf.Clamp(totalAxes, 0F, 1F);
 				translateChange = totalAxes*translateChange;
 				Vector3 pos = TargetCamera.transform.localPosition;
-				pos.y = Midpoint + (GameSettings.HeadBobEnabled ? translateChange : 0);
+				pos.y = Midpoint + (GameSettings.CurrentSettings.HeadBobEnabled ? translateChange : 0);
 				TargetCamera.transform.localPosition = pos;
 			}
 			else

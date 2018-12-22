@@ -45,7 +45,7 @@ namespace Game
         {
             _currentJournalHandle = i;
             Debug.Log("Journal switched to " + CurrentJournal);
-            GameSettings.CurrentJournalIndex = i;
+            GameSettings.CurrentSettings.CurrentJournalIndex = i;
         }
 
         /// <summary>

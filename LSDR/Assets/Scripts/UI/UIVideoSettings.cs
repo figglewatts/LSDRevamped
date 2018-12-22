@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using Game;
+using Torii.Binding;
+using UnityEditor;
 using UnityEngine.UI;
 using UnityEngine.VR;
 
@@ -17,39 +19,20 @@ namespace UI
 
 		public void Start()
 		{
-			UseClassicShadersToggle.isOn = GameSettings.UseClassicShaders;
-			UsePixelationShaderToggle.isOn = GameSettings.UsePixelationShader;
-			FullscreenToggle.isOn = GameSettings.Fullscreen;
-			FOVSlider.value = GameSettings.FOV;
-			ResolutionDropdown.value = GameSettings.CurrentResolutionIndex;
-			QualityDropdown.value = GameSettings.CurrentQualityIndex;
-			LimitFramerateToggle.isOn = GameSettings.LimitFramerate;
+		    GameSettings.SettingsBindBroker.Bind(() => UseClassicShadersToggle.isOn,
+		        () => GameSettings.CurrentSettings.UseClassicShaders, BindingType.TwoWay);
+		    GameSettings.SettingsBindBroker.Bind(() => UsePixelationShaderToggle.isOn,
+		        () => GameSettings.CurrentSettings.UsePixelationShader, BindingType.TwoWay);
+		    GameSettings.SettingsBindBroker.Bind(() => FullscreenToggle.isOn, 
+		        () => GameSettings.CurrentSettings.Fullscreen, BindingType.TwoWay);
+		    GameSettings.SettingsBindBroker.Bind(() => FOVSlider.value, () => GameSettings.CurrentSettings.FOV,
+		        BindingType.TwoWay);
+		    GameSettings.SettingsBindBroker.Bind(() => ResolutionDropdown.value,
+		        () => GameSettings.CurrentSettings.CurrentResolutionIndex, BindingType.TwoWay);
+		    GameSettings.SettingsBindBroker.Bind(() => QualityDropdown.value,
+		        () => GameSettings.CurrentSettings.CurrentQualityIndex, BindingType.TwoWay);
+		    GameSettings.SettingsBindBroker.Bind(() => LimitFramerateToggle.isOn,
+		        () => GameSettings.CurrentSettings.LimitFramerate, BindingType.TwoWay);
 		}
-
-		public void OnEnable()
-		{
-			UseClassicShadersToggle.isOn = GameSettings.UseClassicShaders;
-			UsePixelationShaderToggle.isOn = GameSettings.UsePixelationShader;
-			FullscreenToggle.isOn = GameSettings.Fullscreen;
-			FOVSlider.value = GameSettings.FOV;
-			ResolutionDropdown.value = GameSettings.CurrentResolutionIndex;
-			QualityDropdown.value = GameSettings.CurrentQualityIndex;
-			LimitFramerateToggle.isOn = GameSettings.LimitFramerate;
-		}
-
-		public void ValueChanged()
-		{
-			GameSettings.FOV = FOVSlider.value;
-			GameSettings.CurrentResolutionIndex = ResolutionDropdown.value;
-			GameSettings.CurrentQualityIndex = QualityDropdown.value;
-		}
-
-		public void ClassicShadersToggleChanged(bool value)
-		{
-			GameSettings.UseClassicShaders = value && !GameSettings.VR;
-		}
-		public void PixelationShaderToggleChanged(bool value) { GameSettings.UsePixelationShader = value; }
-		public void FullscreenToggleChanged(bool value) { GameSettings.Fullscreen = value; }
-		public void FramerateLimitToggleChanged(bool value) { GameSettings.LimitFramerate = value; }
 	}
 }

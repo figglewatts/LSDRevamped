@@ -1,5 +1,11 @@
-﻿using InputManagement;
+﻿using System;
+using System.IO;
+using InputManagement;
+using Newtonsoft.Json;
 using SimpleJSON;
+using Torii.Binding;
+using Torii.Serialization;
+using Torii.Util;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.VR;
@@ -7,65 +13,251 @@ using Util;
 
 namespace Game
 {
-	public static class GameSettings
+	[JsonObject]
+    public class GameSettings : IPropertyWatcher
 	{
 		#region Player Control Settings
 
 		// modifiable settings
-		public static bool HeadBobEnabled;
-		public static int CurrentControlSchemeIndex;
+	    private bool _headbobEnabled;
+
+	    public bool HeadBobEnabled
+	    {
+	        get { return _headbobEnabled; }
+	        set
+	        {
+	            _headbobEnabled = value;
+                NotifyPropertyChange(nameof(HeadBobEnabled));
+	        }
+	    }
+
+	    private int _currentControlSchemeIndex;
+
+	    public int CurrentControlSchemeIndex
+	    {
+	        get { return _currentControlSchemeIndex; }
+	        set
+	        {
+	            _currentControlSchemeIndex = value;
+                NotifyPropertyChange(nameof(CurrentControlSchemeIndex));
+	        }
+	    }
 
 		#endregion
 
 		#region Graphical Settings
 
 		// modifiable settings
-		public static bool UseClassicShaders;
-		public static bool UsePixelationShader;
-		public static int CurrentResolutionIndex;
-		public static int CurrentQualityIndex;
-		public static bool Fullscreen;
-		public static float FOV;
-		public static bool LimitFramerate;
-		
-		// hidden settings
-		public static float AffineIntensity; // the intensity of the affine texture mapping used in classic shaders
+	    private bool _useClassicShaders;
+
+	    public bool UseClassicShaders
+	    {
+	        get { return _useClassicShaders; }
+	        set
+	        {
+	            _useClassicShaders = value;
+                NotifyPropertyChange(nameof(UseClassicShaders));
+	        }
+	    }
+
+	    private bool _usePixelationShader;
+
+	    public bool UsePixelationShader
+	    {
+	        get { return _usePixelationShader; }
+	        set
+	        {
+	            _usePixelationShader = value;
+                NotifyPropertyChange(nameof(UsePixelationShader));
+	        }
+	    }
+
+	    private int _currentResolutionIndex;
+	    public int CurrentResolutionIndex {
+	        get { return _currentResolutionIndex; }
+	        set
+	        {
+	            _currentResolutionIndex = value;
+                NotifyPropertyChange(nameof(CurrentResolutionIndex));
+	        }
+	    }
+
+	    private int _currentQualityIndex;
+
+	    public int CurrentQualityIndex
+	    {
+	        get { return _currentQualityIndex; }
+	        set
+	        {
+	            _currentQualityIndex = value;
+                NotifyPropertyChange(nameof(CurrentQualityIndex));
+	        }
+	    }
+
+	    private bool _fullscreen;
+
+	    public bool Fullscreen
+	    {
+	        get { return _fullscreen; }
+	        set
+	        {
+	            _fullscreen = value;
+                NotifyPropertyChange(nameof(Fullscreen));
+	        }
+	    }
+
+	    private float _fov;
+
+	    public float FOV
+	    {
+	        get { return _fov; }
+	        set
+	        {
+	            _fov = value;
+                NotifyPropertyChange(nameof(FOV));
+	        }
+	    }
+
+	    private bool _limitFramerate;
+
+	    public bool LimitFramerate
+	    {
+	        get { return _limitFramerate; }
+	        set
+	        {
+	            _limitFramerate = value;
+                NotifyPropertyChange(nameof(LimitFramerate));
+	        }
+	    }
+
+	    // hidden settings
+        [JsonIgnore]
+		public float AffineIntensity { get; set; } // the intensity of the affine texture mapping used in classic shaders
 
 		#endregion
 
 		#region Journal Settings
 
-		public static int CurrentJournalIndex = 0;
+	    private int _currentJournalIndex;
 
-		#endregion
+	    public int CurrentJournalIndex
+	    {
+	        get { return _currentJournalIndex; }
+	        set
+	        {
+	            _currentJournalIndex = value;
+                NotifyPropertyChange(nameof(CurrentJournalIndex));
+	        }
+	    }
+
+#endregion
 
 		#region Audio Settings
 
-		public static bool EnableFootstepSounds;
-		public static float MusicVolume;
-		public static float SFXVolume;
+	    private bool _enableFootstepSounds;
 
-		#endregion
+	    public bool EnableFootstepSounds
+	    {
+	        get { return _enableFootstepSounds; }
+	        set
+	        {
+	            _enableFootstepSounds = value;
+                NotifyPropertyChange(nameof(EnableFootstepSounds));
+	        }
+	    }
+
+	    private float _musicVolume;
+
+	    public float MusicVolume
+	    {
+	        get { return _musicVolume; }
+	        set
+	        {
+	            _musicVolume = value;
+                NotifyPropertyChange(nameof(MusicVolume));
+	        }
+	    }
+
+	    private float _sfxVolume;
+
+	    public float SFXVolume
+	    {
+	        get { return _sfxVolume; }
+	        set
+	        {
+	            _sfxVolume = value;
+                NotifyPropertyChange(nameof(SFXVolume));
+	        }
+	    }
+
+#endregion
 
 		#region Global Gameplay Settings (not serialized)
 
+        [JsonIgnore]
 		public static bool CanControlPlayer = true; // used to disable character motion, i.e. when linking
+
+        [JsonIgnore]
 		public static bool CanMouseLook = true; // used to disable mouse looking, i.e. when paused
+
+        [JsonIgnore]
 		public static bool IsPaused = false;
+
+        [JsonIgnore]
 		public static bool VR = !UnityEngine.XR.XRSettings.loadedDeviceName.Equals(string.Empty);
 
 		#endregion
 
 		#region Gameplay Constants (not serialized)
 
+        [JsonIgnore]
 		public const int FRAMERATE_LIMIT = 25;
 
 		// grey man will spawn approx 1 in every CHANCE_FOR_GREYMAN-1 times
+        [JsonIgnore]
 		public const int CHANCE_FOR_GREYMAN = 100;
 
 		#endregion
 
-		private static AudioMixer _masterMixer = Resources.Load<AudioMixer>("Mixers/MasterMixer");
+		private static readonly AudioMixer _masterMixer = Resources.Load<AudioMixer>("Mixers/MasterMixer");
+
+        private static readonly ToriiSerializer _serializer = new ToriiSerializer();
+
+	    private static string SettingsPath => PathUtil.Combine(Application.persistentDataPath, "settings.json");
+
+	    private static GameSettings _currentSettings;
+
+	    public static BindBroker SettingsBindBroker = new BindBroker();
+
+	    public static GameSettings CurrentSettings
+	    {
+	        get { return _currentSettings; }
+	        set
+	        {
+	            _currentSettings = value;
+                ApplySettings(value);
+	        }
+	    }
+
+	    public GameSettings()
+	    {
+	        HeadBobEnabled = true;
+	        CurrentControlSchemeIndex = 0;
+	        CanControlPlayer = true;
+	        UseClassicShaders = true;
+	        UsePixelationShader = true;
+	        CurrentResolutionIndex = FindResolutionIndex();
+	        CurrentQualityIndex = QualitySettings.GetQualityLevel();
+	        Fullscreen = Screen.fullScreen;
+	        FOV = 60;
+	        LimitFramerate = false;
+	        AffineIntensity = 0.5F;
+	        CurrentJournalIndex = 0;
+	        EnableFootstepSounds = true;
+	        MusicVolume = 1F;
+	        SFXVolume = 1F;
+	        GUID = Guid.NewGuid();
+	    }
 
 		public static void SetCursorViewState(bool state)
 		{
@@ -80,116 +272,52 @@ namespace Game
 			Time.timeScale = pauseState ? 0 : 1;
 		}
 
-		public static void SetDefaultSettings()
+		public static void ApplySettings(GameSettings settings)
 		{
-            Debug.Log("Setting default settings...");
+			ControlSchemeManager.SwitchToScheme(settings.CurrentControlSchemeIndex);
 
-            HeadBobEnabled = true;
-			CurrentControlSchemeIndex = 0;
-			CanControlPlayer = true;
-			UseClassicShaders = true;
-			UsePixelationShader = true;
-			CurrentResolutionIndex = FindResolutionIndex();
-			CurrentQualityIndex = QualitySettings.GetQualityLevel();
-			Fullscreen = Screen.fullScreen;
-			FOV = 60;
-			LimitFramerate = false;
-			AffineIntensity = 0.5F;
-			CurrentJournalIndex = 0;
-			EnableFootstepSounds = true;
-			MusicVolume = 1F;
-			SFXVolume = 1F;
-		}
-
-		public static void ApplySettings()
-		{
-			ControlSchemeManager.SwitchToScheme(CurrentControlSchemeIndex);
-
-			if (CurrentResolutionIndex > Screen.resolutions.Length)
+			if (settings.CurrentResolutionIndex > Screen.resolutions.Length)
 			{
-				Screen.SetResolution(Screen.resolutions[0].width, Screen.resolutions[0].height, Fullscreen);
+			    Screen.SetResolution(Screen.resolutions[0].width, Screen.resolutions[0].height, settings.Fullscreen);
 			}
 			else
 			{
-				Screen.SetResolution(Screen.resolutions[CurrentResolutionIndex].width, Screen.resolutions[CurrentResolutionIndex].height, Fullscreen);
+			    Screen.SetResolution(Screen.resolutions[settings.CurrentResolutionIndex].width,
+			        Screen.resolutions[settings.CurrentResolutionIndex].height, settings.Fullscreen);
 			}
-			Application.targetFrameRate = LimitFramerate ? FRAMERATE_LIMIT : -1;
-			Shader.SetGlobalFloat("AffineIntensity", 0.5F);
-			DreamJournalManager.SetJournal(CurrentJournalIndex);
-			_masterMixer.SetFloat("MusicVolume", -80 + (MusicVolume*80));
-			_masterMixer.SetFloat("SFXVolume", -80 + (SFXVolume * 80));
+			Application.targetFrameRate = settings.LimitFramerate ? FRAMERATE_LIMIT : -1;
+			Shader.SetGlobalFloat("AffineIntensity", settings.AffineIntensity);
+			DreamJournalManager.SetJournal(settings.CurrentJournalIndex);
+			_masterMixer.SetFloat("MusicVolume", -80 + (settings.MusicVolume*80));
+			_masterMixer.SetFloat("SFXVolume", -80 + (settings.SFXVolume * 80));
 
             Debug.Log("Applying game settings...");
-            Debug.Log("Affine intensity: " + AffineIntensity);
+            Debug.Log("Affine intensity: " + settings.AffineIntensity);
 		}
 
 		public static void LoadSettings()
 		{
-			JSONClass settingsJson;
-			try
-			{
-				settingsJson =
-					ResourceManager.Load<JSONClass>(IOUtil.PathCombine(Application.persistentDataPath, "Settings", "settings.json"),
-						ResourceLifespan.GLOBAL, true);
-			}
-			catch (ResourceManager.ResourceLoadException e)
-			{
-				// must be first startup or settings has been deleted somehow
-				Debug.Log("First startup, initializing settings!");
-				SetDefaultSettings();
-				SaveSettings();
-				ApplySettings();
-				return;
-			}
-
-            Debug.Log("Loading game settings...");
-
-			HeadBobEnabled = settingsJson["controls"]["headbob"].AsBool;
-			CurrentControlSchemeIndex = settingsJson["controls"]["currentControlSchemeIndex"].AsInt;
-
-			UseClassicShaders = settingsJson["graphics"]["classicShaders"].AsBool && !VR;
-			UsePixelationShader = settingsJson["graphics"]["pixelationShader"].AsBool;
-			CurrentResolutionIndex = settingsJson["graphics"]["currentResolutionIndex"].AsInt;
-			CurrentQualityIndex = settingsJson["graphics"]["currentQualityIndex"].AsInt;
-			Fullscreen = settingsJson["graphics"]["fullscreen"].AsBool;
-			FOV = settingsJson["graphics"]["fov"].AsFloat;
-			LimitFramerate = settingsJson["graphics"]["limitFramerate"].AsBool;
-			AffineIntensity = settingsJson["graphics"]["affineIntensity"].AsFloat;
-
-			CurrentJournalIndex = settingsJson["content"]["currentJournalIndex"].AsInt;
-
-			EnableFootstepSounds = settingsJson["audio"]["footstepSounds"].AsBool;
-			MusicVolume = settingsJson["audio"]["musicVolume"].AsFloat;
-			SFXVolume = settingsJson["audio"]["sfxVolume"].AsFloat;
-
-			ApplySettings();
+		    Debug.Log("Loading game settings...");
+		    
+		    // check to see if the settings file exists
+		    if (File.Exists(SettingsPath))
+		    {
+		        CurrentSettings = _serializer.Deserialize<GameSettings>(SettingsPath);
+		    }
+		    else
+		    {
+		        // create the default settings
+                Debug.Log("Settings.json not found, creating default settings");
+                CurrentSettings = new GameSettings();
+                SaveSettings(CurrentSettings);
+		    }
 		}
 
-		public static void SaveSettings()
+		public static void SaveSettings(GameSettings settings)
 		{
             Debug.Log("Saving game settings...");
 
-            JSONClass settingsJson = new JSONClass();
-			
-			settingsJson["controls"]["headbob"].AsBool = HeadBobEnabled;
-			settingsJson["controls"]["currentControlSchemeIndex"].AsInt = CurrentControlSchemeIndex;
-
-			settingsJson["graphics"]["classicShaders"].AsBool = UseClassicShaders;
-			settingsJson["graphics"]["pixelationShader"].AsBool = UsePixelationShader;
-			settingsJson["graphics"]["currentResolutionIndex"].AsInt = CurrentResolutionIndex;
-			settingsJson["graphics"]["currentQualityIndex"].AsInt = CurrentQualityIndex;
-			settingsJson["graphics"]["fullscreen"].AsBool = Fullscreen;
-			settingsJson["graphics"]["fov"].AsFloat = FOV;
-			settingsJson["graphics"]["limitFramerate"].AsBool = LimitFramerate;
-			settingsJson["graphics"]["affineIntensity"].AsFloat = AffineIntensity;
-
-			settingsJson["content"]["currentJournalIndex"].AsInt = CurrentJournalIndex;
-
-			settingsJson["audio"]["footstepSounds"].AsBool = EnableFootstepSounds;
-			settingsJson["audio"]["musicVolume"].AsFloat = MusicVolume;
-			settingsJson["audio"]["sfxVolume"].AsFloat = SFXVolume;
-
-			IOUtil.WriteJSONToDisk(settingsJson, IOUtil.PathCombine(Application.persistentDataPath, "Settings", "settings.json"));
+		    _serializer.Serialize(settings, SettingsPath);
 		}
 
 		private static int FindResolutionIndex()
@@ -202,5 +330,12 @@ namespace Game
 			Debug.LogWarning("Could not find screen resolution!");
 			return 0;
 		}
+
+	    public event Action<string, IPropertyWatcher> OnPropertyChange;
+
+        [JsonIgnore]
+	    public Guid GUID { get; }
+
+	    public void NotifyPropertyChange(string propertyName) { OnPropertyChange?.Invoke(propertyName, this); }
 	}
 }

@@ -28,8 +28,8 @@ public class UISettings : MonoBehaviour
 
 	public void ApplySettings()
 	{
-		GameSettings.SaveSettings();
-	    GameSettings.ApplySettings();
+		GameSettings.SaveSettings(GameSettings.CurrentSettings);
+	    GameSettings.ApplySettings(GameSettings.CurrentSettings);
         SaveGameManager.LoadGame();
     }
 }

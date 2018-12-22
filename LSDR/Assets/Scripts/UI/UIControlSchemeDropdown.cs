@@ -14,13 +14,13 @@ namespace UI
 		void Start()
 		{
 			UpdateDropdown();
-			ControlSchemeDropdown.value = GameSettings.CurrentControlSchemeIndex;
+			ControlSchemeDropdown.value = GameSettings.CurrentSettings.CurrentControlSchemeIndex;
 		}
 
 		void OnEnable()
 		{
 			UpdateDropdown();
-			ControlSchemeDropdown.value = GameSettings.CurrentControlSchemeIndex;
+			ControlSchemeDropdown.value = GameSettings.CurrentSettings.CurrentControlSchemeIndex;
 		}
 
 		public void UpdateDropdown()

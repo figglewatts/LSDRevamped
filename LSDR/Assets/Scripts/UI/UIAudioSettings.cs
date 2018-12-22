@@ -15,20 +15,20 @@ public class UIAudioSettings : MonoBehaviour
 
 	public void OnEnable()
 	{
-		MusicVolumeSlider.value = GameSettings.MusicVolume;
-		SFXVolumeSlider.value = GameSettings.SFXVolume;
+		MusicVolumeSlider.value = GameSettings.CurrentSettings.MusicVolume;
+		SFXVolumeSlider.value = GameSettings.CurrentSettings.SFXVolume;
 	}
 
 	public void MusicVolumeChanged(float val)
 	{
-		GameSettings.MusicVolume = val;
+		GameSettings.CurrentSettings.MusicVolume = val;
 		float dbVolume = baseVal + (val*(maxVal - baseVal));
 		MasterMixer.SetFloat("MusicVolume", dbVolume);
 	}
 
 	public void SFXVolumeChanged(float val)
 	{
-		GameSettings.SFXVolume = val;
+		GameSettings.CurrentSettings.SFXVolume = val;
 		float dbVolume = baseVal + (val*(maxVal - baseVal));
 		MasterMixer.SetFloat("SFXVolume", dbVolume);
 	}
