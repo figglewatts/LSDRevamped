@@ -1,15 +1,26 @@
 ﻿using UnityEngine;
 using System.Collections;
-using UnityEngine.UI;
+using Torii.Binding;
+using Torii.UI;
 
 namespace UI
 {
 	public class UISliderHandleDisplay : MonoBehaviour
-	{
-		public Text TextElement;
-		public float ScaleFactor = 100;
-		public string PostFix = "%";
+    {
+        private Slider _slider;
 
-		public void ChangeTextToSliderValue(float value) { TextElement.text = Mathf.Round(value*ScaleFactor) + PostFix; }
+        public Text HandleText;
+
+        public float ScaleFactor = 100;
+        public string PostFix = "%";
+
+        public void ChangeTextToSliderValue(float value) { HandleText.text = Mathf.Round(value * ScaleFactor) + PostFix; }
+
+        public void Start()
+        {
+            _slider = GetComponent<Slider>();
+            ChangeTextToSliderValue(_slider.value);
+            _slider.onValueChanged.AddListener(ChangeTextToSliderValue);
+        }
 	}
 }

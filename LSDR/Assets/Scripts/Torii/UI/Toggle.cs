@@ -1,0 +1,39 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using Torii.Binding;
+using UnityEngine;
+
+namespace Torii.UI
+{
+    public class Toggle : UnityEngine.UI.Toggle, IPropertyWatcher
+    {
+        public new bool isOn
+        {
+            get { return base.isOn; }
+            set
+            {
+                base.isOn = value;
+                NotifyPropertyChange(nameof(isOn));
+            }
+        }
+
+        protected override void Awake()
+        {
+            base.Awake();
+            onValueChanged.AddListener(v => { NotifyPropertyChange(nameof(isOn)); });
+            GUID = Guid.NewGuid();
+        }
+
+        [HideInInspector]
+        public event Action<string, IPropertyWatcher> OnPropertyChange;
+
+        [HideInInspector]
+        public Guid GUID { get; private set; }
+
+        public void NotifyPropertyChange(string propertyName)
+        {
+            OnPropertyChange?.Invoke(propertyName, this);
+        }
+    }
+}

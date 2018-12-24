@@ -9,6 +9,9 @@ namespace UI
 	{
 		public Text BuildNumberText;
 
-		void Start() { BuildNumberText.text = "Build " + BuildNumber.Get(); }
-	}
+        void Start()
+        {
+            BuildNumberText.text = typeof(UIBuildNumberDisplay).Assembly.GetName().Version.ToString();
+        }
+    }
 }

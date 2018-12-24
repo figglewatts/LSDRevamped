@@ -1,4 +1,5 @@
-﻿using Game;
+﻿using System.Reflection;
+using Game;
 using UnityEngine;
 using InputManagement;
 using IO;
@@ -6,11 +7,14 @@ using Types;
 using UI;
 using Util;
 
+[assembly: AssemblyVersion("0.1.*")]
 public class GameScript : MonoBehaviour
 {
 	void Start()
 	{
 		// do game startup stuff here
+
+        Debug.Log(typeof(GameScript).Assembly.GetName().Version);
 
 		InputHandler.AddInput("Forward", KeyCode.W);
 		InputHandler.AddInput("Backward", KeyCode.S);

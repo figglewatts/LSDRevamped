@@ -2,6 +2,7 @@
 using System.IO;
 using InputManagement;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using SimpleJSON;
 using Torii.Binding;
 using Torii.Serialization;
@@ -114,6 +115,7 @@ namespace Game
 	        set
 	        {
 	            _fov = value;
+                Debug.Log("Setting FOV to " + _fov);
                 NotifyPropertyChange(nameof(FOV));
 	        }
 	    }
@@ -227,7 +229,12 @@ namespace Game
 
 	    private static GameSettings _currentSettings;
 
-	    public static BindBroker SettingsBindBroker = new BindBroker();
+        public event Action<string, IPropertyWatcher> OnPropertyChange;
+
+        [JsonIgnore]
+        public Guid GUID { get; }
+
+        public static BindBroker SettingsBindBroker = new BindBroker();
 
 	    public static GameSettings CurrentSettings
 	    {
@@ -259,6 +266,15 @@ namespace Game
 	        GUID = Guid.NewGuid();
 	    }
 
+        static GameSettings()
+        {
+            _serializer.RegisterJsonSerializationSettings(typeof(GameSettings), new JsonSerializerSettings()
+            {
+                Formatting = Formatting.Indented,
+                SerializationBinder = new DefaultSerializationBinder()
+            });
+        }
+
 		public static void SetCursorViewState(bool state)
 		{
 			Cursor.visible = state;
@@ -288,8 +304,8 @@ namespace Game
 			Application.targetFrameRate = settings.LimitFramerate ? FRAMERATE_LIMIT : -1;
 			Shader.SetGlobalFloat("AffineIntensity", settings.AffineIntensity);
 			DreamJournalManager.SetJournal(settings.CurrentJournalIndex);
-			_masterMixer.SetFloat("MusicVolume", -80 + (settings.MusicVolume*80));
-			_masterMixer.SetFloat("SFXVolume", -80 + (settings.SFXVolume * 80));
+			SetMusicVolume(settings.MusicVolume);
+            SetSFXVolume(settings.SFXVolume);
 
             Debug.Log("Applying game settings...");
             Debug.Log("Affine intensity: " + settings.AffineIntensity);
@@ -320,7 +336,17 @@ namespace Game
 		    _serializer.Serialize(settings, SettingsPath);
 		}
 
-		private static int FindResolutionIndex()
+        public static void SetMusicVolume(float val)
+        {
+            _masterMixer.SetFloat("MusicVolume", volumeToDb(val));
+        }
+
+        public static void SetSFXVolume(float val)
+        {
+            _masterMixer.SetFloat("SFXVolume", volumeToDb(val));
+        }
+
+        private static int FindResolutionIndex()
 		{
 			Resolution[] resolutions = Screen.resolutions;
 			for (int i = 0; i < resolutions.Length; i++)
@@ -331,10 +357,11 @@ namespace Game
 			return 0;
 		}
 
-	    public event Action<string, IPropertyWatcher> OnPropertyChange;
-
-        [JsonIgnore]
-	    public Guid GUID { get; }
+        private static float volumeToDb(float volume)
+        {
+            if (volume <= 0) return -80;
+            return 20 * Mathf.Log10(volume);
+        }
 
 	    public void NotifyPropertyChange(string propertyName) { OnPropertyChange?.Invoke(propertyName, this); }
 	}
