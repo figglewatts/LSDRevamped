@@ -2,29 +2,19 @@
 using System.Collections.Generic;
 using Game;
 using UI;
+using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class UISettings : MonoBehaviour
 {
-	public UIMainMenu MainMenu;
+    public Button BackButton;
 
-	public List<GameObject> MenuTabObjects = new List<GameObject>();
+    public Button.ButtonClickedEvent OnBackButtonPressed;
 
-	public void BackButtonPressed()
-	{
-		Fader.FadeIn(Color.black, 0.5F, () =>
-		{
-			MainMenu.ChangeMenuState(UIMainMenu.MenuState.MAIN);
-			Fader.FadeOut(0.5F);
-		});
-	}
-
-	public void ChangeTab(GameObject o)
-	{
-		foreach (GameObject obj in MenuTabObjects)
-		{
-			obj.SetActive(obj == o);
-		}
-	}
+    public void Start()
+    {
+        BackButton.onClick = OnBackButtonPressed;
+    }
 
 	public void ApplySettings()
 	{

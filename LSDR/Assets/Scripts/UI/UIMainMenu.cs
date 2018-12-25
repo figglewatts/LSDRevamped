@@ -51,5 +51,14 @@ namespace UI
             }
 			CurrentState = state;
 		}
+
+        public void ShowAfterFade()
+        {
+            Fader.FadeIn(Color.black, 0.5F, () =>
+            {
+                ChangeMenuState(MenuState.MAIN);
+                Fader.FadeOut(0.5F);
+            });
+        }
 	}
 }

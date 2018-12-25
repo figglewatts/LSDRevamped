@@ -14,10 +14,11 @@ namespace UI
 		public GameObject SettingsObject;
 		public Text SongNameTextElement;
 		public Text SongArtistTextElement;
+        public UISettings UISettingsScript;
 
 		private PauseState _pauseState;
 
-		private enum PauseState
+		public enum PauseState
 		{
 			NOT_PAUSED = 0,
 			MAIN_PAUSE = 1,
@@ -45,6 +46,7 @@ namespace UI
 					case PauseState.SETTINGS:
 					{
 						ChangePauseState(PauseState.NOT_PAUSED);
+                        UISettingsScript.ApplySettings();
 						break;
 					}
 				}
@@ -66,7 +68,7 @@ namespace UI
 			ChangePauseState((PauseState)state);
 		}
 
-		private void ChangePauseState(PauseState state)
+		public void ChangePauseState(PauseState state)
 		{
 			_pauseState = state;
 			switch (state)

@@ -306,6 +306,7 @@ namespace Game
 			DreamJournalManager.SetJournal(settings.CurrentJournalIndex);
 			SetMusicVolume(settings.MusicVolume);
             SetSFXVolume(settings.SFXVolume);
+            QualitySettings.SetQualityLevel(settings.CurrentQualityIndex, true);
 
             Debug.Log("Applying game settings...");
             Debug.Log("Affine intensity: " + settings.AffineIntensity);
