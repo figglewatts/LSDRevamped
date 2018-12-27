@@ -8,7 +8,8 @@ namespace UI
 {
 	public class UIControlSchemeCreator : MonoBehaviour
 	{
-		public Toggle FpsMovementToggle;
+        /*
+        public Toggle FpsMovementToggle;
 		public Slider MouseSensitivitySlider;
 		public InputField SchemeNameInputField;
 		public Button CreateControlSchemeButton;
@@ -53,5 +54,6 @@ namespace UI
 			ControlSchemeManager.SerializeSchemes();
 			ControlSchemeDropdown.UpdateDropdown();
 		}
+        */
 	}
 }

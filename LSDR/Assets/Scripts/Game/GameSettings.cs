@@ -290,7 +290,8 @@ namespace Game
 
 		public static void ApplySettings(GameSettings settings)
 		{
-			ControlSchemeManager.SwitchToScheme(settings.CurrentControlSchemeIndex);
+			// TODO: control schemes
+            //ControlSchemeManager.SwitchToScheme(settings.CurrentControlSchemeIndex);
 
 			if (settings.CurrentResolutionIndex > Screen.resolutions.Length)
 			{

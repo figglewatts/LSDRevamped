@@ -14,18 +14,6 @@ public class GameScript : MonoBehaviour
 	{
 		// do game startup stuff here
 
-        Debug.Log(typeof(GameScript).Assembly.GetName().Version);
-
-		InputHandler.AddInput("Forward", KeyCode.W);
-		InputHandler.AddInput("Backward", KeyCode.S);
-		InputHandler.AddInput("Left", KeyCode.A);
-		InputHandler.AddInput("Right", KeyCode.D);
-		InputHandler.AddInput("LookUp", KeyCode.Q);
-		InputHandler.AddInput("LookDown", KeyCode.E);
-		InputHandler.AddInput("Sprint", KeyCode.Space);
-
-		InputHandler.Initialize();
-
 		ControlSchemeManager.Initialize();
 
 		DreamJournalManager.Initialize();
@@ -38,12 +26,5 @@ public class GameScript : MonoBehaviour
 		Shader.SetGlobalFloat("AffineIntensity", 0.5F);
 
 		SaveGameManager.LoadGame();
-	}
-
-	void Update()
-	{
-		// Do game update stuff here
-
-		InputHandler.HandleInput();
 	}
 }

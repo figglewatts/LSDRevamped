@@ -2,106 +2,74 @@
 using System.Collections.Generic;
 using System.IO;
 using Game;
+using Torii.Serialization;
 using Util;
 using UnityEngine;
 
 namespace InputManagement
 {
-	// TODO: handle scheme not found
-
 	public static class ControlSchemeManager
-	{
-		public static List<ControlScheme> LoadedSchemes = new List<ControlScheme>();
-		public static ControlScheme CurrentScheme
-		{
-			get { return LoadedSchemes[_currentSchemeHandle]; }
-		}
+    {
+        public static List<ControlScheme> Schemes;
 
-		private static int _currentSchemeHandle;
+        public static ControlScheme Current => Schemes[_currentControlSchemeIndex];
 
-		public static void Initialize()
-		{
-			LoadControlSchemes();
-		}
+        private static readonly ToriiSerializer _serializer = new ToriiSerializer();
 
-		public static void AddScheme(ControlScheme scheme)
-		{
-			for (int i = 0; i < LoadedSchemes.Count; i++)
-			{
-				if (LoadedSchemes[i].SchemeName.Equals(scheme.SchemeName))
-				{
-					LoadedSchemes[i] = scheme;
-					return;
-				}
-			}
-			LoadedSchemes.Add(scheme);
-		}
+        private static int _currentControlSchemeIndex = 1;
 
-		public static void SwitchToScheme(string name)
-		{
-			for (int i = 0; i < LoadedSchemes.Count; i++)
-			{
-				if (LoadedSchemes[i].SchemeName.Equals(name))
-				{
-					SwitchToScheme(i);
-				}
-			}
-		}
+        private static string PathToControlSchemes =>
+            IOUtil.PathCombine(Application.persistentDataPath, "input-schemes");
 
-		public static void SwitchToScheme(int i)
-		{
-			_currentSchemeHandle = i;
-			GameSettings.CurrentSettings.CurrentControlSchemeIndex = i;
-			ControlSchemeSwitched();
-		}
+        private static List<ControlScheme> deserializeControlSchemes(string path)
+        {
+            List<ControlScheme> schemes = new List<ControlScheme>();
 
-		public static void SerializeSchemes()
-		{
-			string pathToControlSchemes = IOUtil.PathCombine(Application.persistentDataPath, "Settings", "ControlSchemes");
+            if (!Directory.Exists(PathToControlSchemes))
+            {
+                Directory.CreateDirectory(PathToControlSchemes);
+            }
 
-			foreach (ControlScheme scheme in LoadedSchemes)
-			{
-				IOUtil.WriteJSONToDisk(scheme.SerializeToJSON(), IOUtil.PathCombine(pathToControlSchemes, scheme.SchemeName + ".json"));
-			}
-		}
+            foreach (string file in Directory.GetFiles(path, "*.dat"))
+            {
+                schemes.Add(_serializer.Deserialize<ControlScheme>(file));
+            }
 
-		public static void LoadControlSchemes()
-		{
-			LoadedSchemes.Clear();
-		
-			string pathToControlSchemes = IOUtil.PathCombine(Application.persistentDataPath, "Settings", "ControlSchemes");
+            return schemes;
+        }
 
-			string[] schemes;
-			try
-			{
-				schemes = Directory.GetFiles(pathToControlSchemes);
-			}
-			catch (DirectoryNotFoundException e)
-			{
-				Debug.Log("Could not find controlschemes folder, should be first startup!");
-				Directory.CreateDirectory(pathToControlSchemes);
-				LoadedSchemes.Add(new ControlScheme());
-				SerializeSchemes();
-				return;
-			}
-			catch (IOException e)
-			{
-				Debug.LogException(e);
-				return;
-			}
-			
-			foreach (string schemeFile in schemes)
-			{
-				LoadedSchemes.Add(new ControlScheme(schemeFile));
-			}
-		}
+        public static void SerializeControlSchemes(List<ControlScheme> schemes)
+        {
+            foreach (var scheme in schemes)
+            {
+                _serializer.Serialize(scheme, IOUtil.PathCombine(PathToControlSchemes, scheme.Name + ".dat"));
+            }
+        }
 
-		private static void ControlSchemeSwitched()
-		{
-			foreach (string inputName in CurrentScheme.Controls.Keys)
-			{
-				InputHandler.RebindInput(inputName, CurrentScheme.Controls[inputName]);
-			}
-		}
-	}
+        public static void UseScheme(int idx)
+        {
+            if (idx > Schemes.Count)
+            {
+                Debug.LogError(
+                    $"Cannot select control scheme with index {idx} - exceeds scheme count: {Schemes.Count}!");
+                return;
+            }
+
+            _currentControlSchemeIndex = idx;
+        }
+
+        public static void Initialize()
+        {
+            Schemes = deserializeControlSchemes(PathToControlSchemes);
+
+            // if no schemes are present create and serialise the default scheme
+            if (Schemes.Count <= 0)
+            {
+                Debug.Log("No control schemes found - creating new ones!");
+                Schemes.Add(new ControlScheme(ControlActions.CreateDefaultTank(), "Classic", false));
+                Schemes.Add(new ControlScheme(ControlActions.CreateDefaultFps(), "Revamped", true));
+                SerializeControlSchemes(Schemes);
+            }
+        }
+    }
 }

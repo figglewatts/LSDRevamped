@@ -66,29 +66,9 @@ namespace Entities.Player
         {
 	        speed = 0;
 			if (!GameSettings.CanControlPlayer) return;
-			
-			float moveDirFrontBack = 0;
-	        if (InputHandler.CheckButtonState("Forward", ButtonState.HELD) || Input.GetAxis("Vertical") > JOYSTICK_MOVE_THRESHOLD)
-	        {
-		        moveDirFrontBack = 1;
-	        }
-			else if (InputHandler.CheckButtonState("Backward", ButtonState.HELD) || Input.GetAxis("Vertical") < -JOYSTICK_MOVE_THRESHOLD)
-			{
-				moveDirFrontBack = -1;
-			}
 
-	        float moveDirLeftRight = 0;
-	        if (ControlSchemeManager.CurrentScheme.FPSMovementEnabled)
-	        {
-		        if (InputHandler.CheckButtonState("Left", ButtonState.HELD) || Input.GetAxis("Horizontal") < -JOYSTICK_MOVE_THRESHOLD)
-		        {
-			        moveDirLeftRight = -1;
-		        }
-				else if (InputHandler.CheckButtonState("Right", ButtonState.HELD) || Input.GetAxis("Horizontal") > JOYSTICK_MOVE_THRESHOLD)
-				{
-					moveDirLeftRight = 1;
-				}
-	        }
+            float moveDirFrontBack = ControlSchemeManager.Current.Actions.MoveY;
+	        float moveDirLeftRight = ControlSchemeManager.Current.FpsControls ? ControlSchemeManager.Current.Actions.MoveX : 0f;
 		
 			// set the desired speed to be walking or running
             speed = MovementSpeed;

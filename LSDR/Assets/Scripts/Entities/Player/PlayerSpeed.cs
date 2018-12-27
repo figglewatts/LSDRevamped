@@ -38,7 +38,7 @@ namespace Entities.Player
 		// Update is called once per frame
 		void Update()
 		{
-			if (InputHandler.CheckButtonState("Sprint", ButtonState.HELD))
+			if (ControlSchemeManager.Current.Actions.Run.IsPressed)
 			{
 				_isSprinting = true;
 				_spaceHeldTimer += Time.deltaTime;
@@ -72,9 +72,8 @@ namespace Entities.Player
 			}
 
 			// if space is not pressed and no movement keys are pressed
-			if (!InputHandler.CheckButtonState("Sprint", ButtonState.HELD)
-			    && !InputHandler.CheckButtonState("Forward", ButtonState.HELD)
-			    && !InputHandler.CheckButtonState("Backward", ButtonState.HELD))
+			if (!ControlSchemeManager.Current.Actions.Run.IsPressed
+			    && !ControlSchemeManager.Current.Actions.Move.IsPressed)
 			{
 				_isSprinting = false;
 				_isSprintingFast = false;

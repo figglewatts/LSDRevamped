@@ -13,20 +13,12 @@ namespace Entities.Player
 
 		void Update()
 		{
-			if (GameSettings.CanControlPlayer && !ControlSchemeManager.CurrentScheme.FPSMovementEnabled)
-			{
-				if (InputHandler.CheckButtonState("Left", ButtonState.HELD) || Input.GetAxis("Horizontal") < -PlayerMovement.JOYSTICK_MOVE_THRESHOLD)
-				{
-					Vector3 transformRotation = transform.rotation.eulerAngles;
-					transformRotation.y -= RotationSpeed * Time.deltaTime;
-					transform.rotation = Quaternion.Euler(transformRotation);
-				}
-				else if (InputHandler.CheckButtonState("Right", ButtonState.HELD) || Input.GetAxis("Horizontal") > PlayerMovement.JOYSTICK_MOVE_THRESHOLD)
-				{
-					Vector3 transformRotation = transform.rotation.eulerAngles;
-					transformRotation.y += RotationSpeed * Time.deltaTime;
-					transform.rotation = Quaternion.Euler(transformRotation);
-				}
+			if (GameSettings.CanControlPlayer && !ControlSchemeManager.Current.FpsControls)
+            {
+                float rotAmount = ControlSchemeManager.Current.Actions.MoveX;
+                Vector3 transformRotation = transform.rotation.eulerAngles;
+                transformRotation.y += rotAmount * RotationSpeed * Time.deltaTime;
+                transform.rotation = Quaternion.Euler(transformRotation);
 			}
 		}
 	}

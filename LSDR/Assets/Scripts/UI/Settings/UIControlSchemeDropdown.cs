@@ -8,7 +8,8 @@ namespace UI
 {
 	public class UIControlSchemeDropdown : MonoBehaviour
 	{
-		public Dropdown ControlSchemeDropdown;
+        /*
+        public Dropdown ControlSchemeDropdown;
 
 		// Use this for initialization
 		void Start()
@@ -33,5 +34,6 @@ namespace UI
 			}
 			ControlSchemeDropdown.AddOptions(dropdownOptions);
 		}
+        */
 	}
 }

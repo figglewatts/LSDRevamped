@@ -6,7 +6,8 @@ namespace UI
 {
 	public class UIControlRebindMenu : MonoBehaviour
 	{
-		public GameObject RebindButtonContainer;
+        /*
+        public GameObject RebindButtonContainer;
 
 		private List<GameObject> _instantiatedButtons = new List<GameObject>();
 
@@ -46,6 +47,6 @@ namespace UI
 			script.ControlName.text = controlName;
 			script.InputName.text = inputName;
 			_instantiatedButtons.Add(button);
-		}
+		}*/
 	}
 }

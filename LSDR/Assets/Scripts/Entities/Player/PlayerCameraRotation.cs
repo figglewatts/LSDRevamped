@@ -29,8 +29,8 @@ namespace Entities.Player
 		private float _rotationX;
 
 		void Start()
-		{
-			GameSettings.SetCursorViewState(true);
+        {
+            GameSettings.SetCursorViewState(true);
 
 			foreach (Camera c in TargetCameras)
 			{
@@ -49,15 +49,19 @@ namespace Entities.Player
 
 			foreach (Camera c in TargetCameras)
 			{
-				if (ControlSchemeManager.CurrentScheme.FPSMovementEnabled)
+				if (ControlSchemeManager.Current.FpsControls)
 				{
 					if (!GameSettings.CanMouseLook) return;
 
-					transform.Rotate(0, Input.GetAxis("Mouse X") * ControlSchemeManager.CurrentScheme.MouseSensitivity * Time.smoothDeltaTime * MouseLookRotationMultiplier,
-						0, Space.Self);
+                    transform.Rotate(0,
+                        ControlSchemeManager.Current.Actions.LookX * ControlSchemeManager.Current.MouseSensitivity *
+                        Time.smoothDeltaTime * MouseLookRotationMultiplier,
+                        0, Space.Self);
 
 					_temp = c.transform;
-					_rotationX += -Input.GetAxis("Mouse Y") * ControlSchemeManager.CurrentScheme.MouseSensitivity * Time.smoothDeltaTime * MouseLookRotationMultiplier;
+                    _rotationX += -ControlSchemeManager.Current.Actions.LookX *
+                                  ControlSchemeManager.Current.MouseSensitivity * Time.smoothDeltaTime *
+                                  MouseLookRotationMultiplier;
 					_rotationX = ClampAngle(_rotationX, MinY, MaxY);
 					_temp.transform.localEulerAngles = new Vector3(_rotationX, c.transform.localEulerAngles.y, 0);
 					Quaternion.Slerp(c.transform.rotation, _temp.transform.rotation, Time.deltaTime);
@@ -72,18 +76,18 @@ namespace Entities.Player
 						c.transform.rotation.eulerAngles.z);
 					if (CanRotate)
 					{
-						if (InputHandler.CheckButtonState("LookUp", ButtonState.HELD))
+						if (ControlSchemeManager.Current.Actions.LookUp.IsPressed)
 						{
 							c.transform.rotation = Quaternion.RotateTowards(c.transform.rotation, _maxNeg,
 								RotationSpeed * Time.deltaTime);
 						}
-						if (InputHandler.CheckButtonState("LookDown", ButtonState.HELD))
+						if (ControlSchemeManager.Current.Actions.LookDown.IsPressed)
 						{
 							c.transform.rotation = Quaternion.RotateTowards(c.transform.rotation, _maxPos,
 								RotationSpeed * Time.deltaTime);
 						}
-						if (!InputHandler.CheckButtonState("LookUp", ButtonState.HELD) &&
-							!InputHandler.CheckButtonState("LookDown", ButtonState.HELD))
+						if (!ControlSchemeManager.Current.Actions.LookUp.IsPressed &&
+							!ControlSchemeManager.Current.Actions.LookDown.IsPressed)
 						{
 							c.transform.rotation = Quaternion.RotateTowards(c.transform.rotation, _originalRotation,
 								RotationSpeed * Time.deltaTime);

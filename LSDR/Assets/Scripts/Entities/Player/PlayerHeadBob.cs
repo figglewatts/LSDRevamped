@@ -44,17 +44,17 @@ namespace Entities.Player
 
 			float waveslice = 0F;
 			float vertical = 0;
-			if (InputHandler.CheckButtonState("Forward", ButtonState.HELD))
+			if (ControlSchemeManager.Current.Actions.Forward.IsPressed)
 			{
 				vertical = 1;
 			}
 			// make sure we don't headbob whilst rotating
-			if ((InputHandler.CheckButtonState("Left", ButtonState.HELD) || InputHandler.CheckButtonState("Right", ButtonState.HELD))
-				&& ControlSchemeManager.CurrentScheme.FPSMovementEnabled)
+			if ((ControlSchemeManager.Current.Actions.Left.IsPressed || ControlSchemeManager.Current.Actions.Right.IsPressed)
+				&& ControlSchemeManager.Current.FpsControls)
 			{
 				vertical = 1;
 			}
-			if (InputHandler.CheckButtonState("Backward", ButtonState.HELD))
+			if (ControlSchemeManager.Current.Actions.Backward.IsPressed)
 			{
 				vertical = -1;
 			}
