@@ -59,7 +59,7 @@ namespace Entities.Player
                         0, Space.Self);
 
 					_temp = c.transform;
-                    _rotationX += -ControlSchemeManager.Current.Actions.LookX *
+                    _rotationX += -ControlSchemeManager.Current.Actions.LookY *
                                   ControlSchemeManager.Current.MouseSensitivity * Time.smoothDeltaTime *
                                   MouseLookRotationMultiplier;
 					_rotationX = ClampAngle(_rotationX, MinY, MaxY);

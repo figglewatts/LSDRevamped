@@ -1,9 +1,7 @@
 ﻿using UnityEngine;
 using Game;
 using Torii.Binding;
-using UnityEditor;
 using Torii.UI;
-using UnityEngine.VR;
 
 namespace UI
 {

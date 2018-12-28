@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using UnityEngine;
 using Util;
@@ -21,7 +22,7 @@ namespace AutoUpdate
 			{
 				using (StreamReader r = new StreamReader(IOUtil.PathCombine(Application.dataPath, "../", "version.txt")))
 				{
-					return int.Parse(r.ReadLine());
+					return int.Parse(r.ReadLine(), CultureInfo.InvariantCulture);
 				}
 			}
 			catch (Exception e)

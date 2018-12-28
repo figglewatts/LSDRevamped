@@ -16,7 +16,7 @@ namespace InputManagement
 
         private static readonly ToriiSerializer _serializer = new ToriiSerializer();
 
-        private static int _currentControlSchemeIndex = 1;
+        private static int _currentControlSchemeIndex = 0;
 
         private static string PathToControlSchemes =>
             IOUtil.PathCombine(Application.persistentDataPath, "input-schemes");

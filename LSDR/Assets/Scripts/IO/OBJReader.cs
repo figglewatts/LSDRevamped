@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using UnityEngine;
@@ -109,29 +110,29 @@ namespace IO
 							{
 								// vertex & vertex normal, no UV data
 								// v//vn
-								verts[i - 1] = int.Parse(indices[0]);
-								norms[i - 1] = int.Parse(indices[1]);
+								verts[i - 1] = int.Parse(indices[0], CultureInfo.InvariantCulture);
+								norms[i - 1] = int.Parse(indices[1], CultureInfo.InvariantCulture);
 							}
 							else if (indices.Length == 2)
 							{
 								// vertex & UV data, no normals
 								// v/vt
-								verts[i - 1] = int.Parse(indices[0]);
-								uvs[i - 1] = int.Parse(indices[1]);
+								verts[i - 1] = int.Parse(indices[0], CultureInfo.InvariantCulture);
+								uvs[i - 1] = int.Parse(indices[1], CultureInfo.InvariantCulture);
 							}
 							else if (indices.Length == 3)
 							{
 								// all 3 present
 								// v/vt/vn
-								verts[i - 1] = int.Parse(indices[0]);
-								uvs[i - 1] = int.Parse(indices[1]);
-								norms[i - 1] = int.Parse(indices[2]);
+								verts[i - 1] = int.Parse(indices[0], CultureInfo.InvariantCulture);
+								uvs[i - 1] = int.Parse(indices[1], CultureInfo.InvariantCulture);
+								norms[i - 1] = int.Parse(indices[2], CultureInfo.InvariantCulture);
 							}
 							else if (indices.Length == 1)
 							{
 								// it's probably just vertex data
 								// v
-								verts[i - 1] = (int.Parse(indices[0]));
+								verts[i - 1] = (int.Parse(indices[0], CultureInfo.InvariantCulture));
 							}
 						}
 
@@ -206,7 +207,7 @@ namespace IO
 		private static float StringToFloat(string s)
 		{
 			float returnVal;
-			float.TryParse(s, out returnVal);
+			float.TryParse(s, NumberStyles.Float, CultureInfo.InvariantCulture, out returnVal);
 			return returnVal;
 		}
 

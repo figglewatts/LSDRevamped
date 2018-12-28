@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using Types;
@@ -8,11 +9,13 @@ using UnityEngine;
 namespace Util
 {
 	public static class EntityUtil
-	{
-		public static float TryParseFloat(string propertyName, ENTITY e)
+    {
+        public static CultureInfo Culture = CultureInfo.InvariantCulture;
+
+        public static float TryParseFloat(string propertyName, ENTITY e)
 		{
 			float result;
-			if (!float.TryParse(e.GetPropertyValue(propertyName), out result))
+			if (!float.TryParse(e.GetPropertyValue(propertyName), NumberStyles.Float, Culture, out result))
 			{
 				Debug.LogWarning("Unable to parse property \"" + propertyName + "in " + e.Classname + ": " +
 				                 e.GetPropertyValue(propertyName));
@@ -24,7 +27,7 @@ namespace Util
 		public static int TryParseInt(string propertyName, ENTITY e)
 		{
 			int result;
-			if (!int.TryParse(e.GetPropertyValue(propertyName), out result))
+			if (!int.TryParse(e.GetPropertyValue(propertyName), NumberStyles.Integer, Culture, out result))
 			{
 				Debug.LogWarning("Unable to parse property \"" + propertyName + "in " + e.Classname + ": " +
 								 e.GetPropertyValue(propertyName));
@@ -45,7 +48,7 @@ namespace Util
 			}
 
 			float r;
-			if (!float.TryParse(colorParts[0], out r))
+			if (!float.TryParse(colorParts[0], NumberStyles.Float, Culture, out r))
 			{
 				Debug.LogWarning("Unable to parse property \"" + propertyName + "in " + e.Classname + ": " +
 								 e.GetPropertyValue(propertyName) + ", unable to parse red component: " + colorParts[0]);
@@ -53,7 +56,7 @@ namespace Util
 			}
 
 			float g;
-			if (!float.TryParse(colorParts[1], out g))
+			if (!float.TryParse(colorParts[1], NumberStyles.Float, Culture, out g))
 			{
 				Debug.LogWarning("Unable to parse property \"" + propertyName + "in " + e.Classname + ": " +
 								 e.GetPropertyValue(propertyName) + ", unable to parse green component: " + colorParts[1]);
@@ -61,7 +64,7 @@ namespace Util
 			}
 
 			float b;
-			if (!float.TryParse(colorParts[2], out b))
+			if (!float.TryParse(colorParts[2], NumberStyles.Float, Culture, out b))
 			{
 				Debug.LogWarning("Unable to parse property \"" + propertyName + "in " + e.Classname + ": " +
 								 e.GetPropertyValue(propertyName) + ", unable to parse blue component: " + colorParts[2]);
