@@ -3,8 +3,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using ICSharpCode.SharpZipLib.Core;
 using SimpleJSON;
-using Ionic.Zip;
+using ICSharpCode.SharpZipLib.Zip;
 using Util;
 
 namespace AutoUpdate
@@ -158,15 +159,26 @@ namespace AutoUpdate
 			}
 
 			// then install the patch by extracting the archive into the game's directory
-			using (ZipFile archive = ZipFile.Read(tempDir() + "/" + patchNumber + ".zip"))
+			using (ZipFile archive = new ZipFile(tempDir() + "/" + patchNumber + ".zip"))
 			{
 				foreach (ZipEntry e in archive)
 				{
-					List<string> extractedFiles = new List<string>();
+				    if (!e.IsFile) continue;
+				    
+				    List<string> extractedFiles = new List<string>();
 					try
 					{
-						e.Extract(Path.Combine(Application.dataPath, "../"), ExtractExistingFileAction.OverwriteSilently);
-						extractedFiles.Add(Path.Combine(Application.dataPath, "../") + Path.DirectorySeparatorChar + e.FileName);
+					    string entryFilename = e.Name;
+					    byte[] buffer = new byte[4096];
+					    Stream zipStream = archive.GetInputStream(e);
+					    string fullZipToPath = IOUtil.PathCombine(Application.dataPath, "../", entryFilename);
+					    string directoryName = Path.GetDirectoryName(fullZipToPath);
+					    if (directoryName.Length > 0) Directory.CreateDirectory(directoryName);
+					    using (FileStream sr = File.Create(fullZipToPath))
+					    {
+                            StreamUtils.Copy(zipStream, sr, buffer);
+					    }
+						extractedFiles.Add(fullZipToPath);
 					}
 					catch (Exception exception)
 					{

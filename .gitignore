@@ -4,7 +4,6 @@
 /LSDR/[Bb]uild/
 /LSDR/[Bb]uilds/
 /LSDR/Assets/AssetStoreTools*
-/LSDR/Assets/packages/**
 
 /[Ll]ibrary/
 /[Tt]emp/
@@ -46,7 +45,7 @@ sysinfo.txt
 *.dll.meta
 
 # packages folder (for NuGet)
-LSDR/packages/**
+LSDR/nuget-packages/**
 
 # dependencies folder
 LSDR/Assets/UnityEditor/Dep/External/**
