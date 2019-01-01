@@ -10,7 +10,7 @@ using Util;
 [assembly: AssemblyVersion("0.1.*")]
 public class GameScript : MonoBehaviour
 {
-	void Start()
+	void Awake()
 	{
 		// do game startup stuff here
 
