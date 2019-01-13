@@ -26,6 +26,14 @@ namespace InputManagement
         public PlayerAction Submit => Run;
         public PlayerAction Back => LookBehind;
 
+        public static readonly BindingListenOptions DefaultListenOptions = new BindingListenOptions
+        {
+            IncludeMouseButtons = true,
+            MaxAllowedBindings = 2,
+            UnsetDuplicateBindingsOnSet = true,
+            IncludeModifiersAsFirstClassKeys = true
+        };
+
         public ControlActions()
         {
             Left = CreatePlayerAction("Left");
@@ -43,6 +51,8 @@ namespace InputManagement
             LookX = CreateOneAxisPlayerAction(LookLeft, LookRight);
             LookY = CreateOneAxisPlayerAction(LookDown, LookUp);
             Move = CreateTwoAxisPlayerAction(Left, Right, Backward, Forward);
+
+            ListenOptions = DefaultListenOptions;
         }
 
         public static ControlActions CreateDefaultTank()

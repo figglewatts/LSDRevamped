@@ -10,9 +10,11 @@ using Util;
 [assembly: AssemblyVersion("0.1.*")]
 public class GameScript : MonoBehaviour
 {
-	void Awake()
+	void Start()
 	{
 		// do game startup stuff here
+
+        GameSettings.Initialize();
 
 		ControlSchemeManager.Initialize();
 

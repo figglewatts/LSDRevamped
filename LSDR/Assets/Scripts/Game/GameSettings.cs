@@ -221,7 +221,7 @@ namespace Game
 
 		#endregion
 
-		private static readonly AudioMixer _masterMixer = Resources.Load<AudioMixer>("Mixers/MasterMixer");
+	    private static AudioMixer _masterMixer;
 
         private static readonly ToriiSerializer _serializer = new ToriiSerializer();
 
@@ -364,6 +364,11 @@ namespace Game
             if (volume <= 0) return -80;
             return 20 * Mathf.Log10(volume);
         }
+
+	    public static void Initialize()
+	    {
+	        _masterMixer = Resources.Load<AudioMixer>("Mixers/MasterMixer");
+	    }
 
 	    public void NotifyPropertyChange(string propertyName) { OnPropertyChange?.Invoke(propertyName, this); }
 	}

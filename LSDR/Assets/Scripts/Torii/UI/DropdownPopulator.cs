@@ -4,7 +4,8 @@ using UnityEngine;
 
 namespace Torii.UI
 {
-    public class DropdownPopulator : MonoBehaviour
+    [RequireComponent(typeof(Dropdown))]
+    public class DropdownPopulator : MonoBehaviour, IPopulator<string>
     {
         protected Dropdown _dropdown;
 
@@ -16,10 +17,10 @@ namespace Torii.UI
             _dropdown.ClearOptions();
         }
 
-        public void Populate(List<string> values)
+        public void Populate(List<string> with)
         {
             Clear();
-            _dropdown.AddOptions(values);
+            _dropdown.AddOptions(with);
         }
     }
 }
