@@ -22,6 +22,18 @@ public class UIRebindContainerPopulator : ContainerPopulator
     public Button TemplateActionAButton;
     public Button TemplateActionBButton;
 
+    public ControlScheme EditingScheme
+    {
+        get { return _editingScheme; }
+        set
+        {
+            _editingScheme = value;
+            PopulateRebindContainer();
+        }
+    }
+
+    [SerializeField] private ControlScheme _editingScheme;
+
     private bool _validTemplate = true;
 
     void Awake()
@@ -31,13 +43,13 @@ public class UIRebindContainerPopulator : ContainerPopulator
 
     void Start()
     {
-        if (_validTemplate) populateRebindContainer();
+        if (_validTemplate) PopulateRebindContainer();
     }
 
-    private void populateRebindContainer()
+    public void PopulateRebindContainer()
     {
         List<GameObject> population = new List<GameObject>();
-        foreach (var action in ControlSchemeManager.Current.Actions.Actions)
+        foreach (var action in _editingScheme.Actions.Actions)
         {
             population.Add(createRebindRow(action));
         }
@@ -62,7 +74,7 @@ public class UIRebindContainerPopulator : ContainerPopulator
     private void rebindAction(PlayerAction action, Button rebindButton, BindingSource binding)
     {
         action.ListenOptions = ControlActions.DefaultListenOptions;
-        action.ListenOptions.OnBindingAdded += (playerAction, source) => populateRebindContainer();
+        action.ListenOptions.OnBindingAdded += (playerAction, source) => PopulateRebindContainer();
         action.ListenOptions.OnBindingRejected += (playerAction, source, rejectionType) =>
         {
             rebindButton.GetComponentInChildren<Text>().text = source.Name;

@@ -16,7 +16,9 @@ namespace InputManagement
 
         private static readonly ToriiSerializer _serializer = new ToriiSerializer();
 
-        private static int _currentControlSchemeIndex = 0;
+        private static int _currentControlSchemeIndex;
+
+        public static int CurrentSchemeIndex => _currentControlSchemeIndex;
 
         private static string PathToControlSchemes =>
             IOUtil.PathCombine(Application.persistentDataPath, "input-schemes");
@@ -46,6 +48,8 @@ namespace InputManagement
             }
         }
 
+        public static void ReloadSchemes() { Schemes = deserializeControlSchemes(PathToControlSchemes); }
+
         public static void UseScheme(int idx)
         {
             if (idx > Schemes.Count)
@@ -54,7 +58,7 @@ namespace InputManagement
                     $"Cannot select control scheme with index {idx} - exceeds scheme count: {Schemes.Count}!");
                 return;
             }
-
+            Debug.Log($"Using control scheme {idx}: {Schemes[idx].Name}");
             _currentControlSchemeIndex = idx;
         }
 
@@ -67,7 +71,7 @@ namespace InputManagement
             {
                 Debug.Log("No control schemes found - creating new ones!");
                 Schemes.Add(new ControlScheme(ControlActions.CreateDefaultTank(), "Classic", false));
-                Schemes.Add(new ControlScheme(ControlActions.CreateDefaultFps(), "Revamped", true));
+                Schemes.Add(new ControlScheme(ControlActions.CreateDefaultFps(), "Revamped", true, 5F));
                 SerializeControlSchemes(Schemes);
             }
         }

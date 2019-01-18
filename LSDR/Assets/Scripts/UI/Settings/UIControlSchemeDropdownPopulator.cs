@@ -10,6 +10,13 @@ public class UIControlSchemeDropdownPopulator : DropdownPopulator
 	protected override void Awake () 
 	{
 		base.Awake();
-        Populate(ControlSchemeManager.Schemes.Select(scheme => scheme.Name).ToList());
+	    PopulateDropdown();
 	}
+
+    public void PopulateDropdown()
+    {
+        var list = ControlSchemeManager.Schemes.Select(scheme => scheme.Name).ToList();
+        list.Sort();
+        Populate(list);
+    }
 }

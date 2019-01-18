@@ -18,7 +18,7 @@ namespace InputManagement
         public ControlActions Actions => _controlActions;
 
         [ProtoMember(1)]
-        public string Name { get; }
+        public string Name { get; set; }
 
         [ProtoMember(2)]
         public string SchemeString
@@ -28,10 +28,10 @@ namespace InputManagement
         }
 
         [ProtoMember(3)]
-        public bool FpsControls { get; }
+        public bool FpsControls { get; set; }
 
         [ProtoMember(4)]
-        public float MouseSensitivity { get; }
+        public float MouseSensitivity { get; set; }
 
         public ControlScheme() : this(new ControlActions(), "default", false) { }
 

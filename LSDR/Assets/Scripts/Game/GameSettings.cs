@@ -290,8 +290,9 @@ namespace Game
 
 		public static void ApplySettings(GameSettings settings)
 		{
-			// TODO: control schemes
-            //ControlSchemeManager.SwitchToScheme(settings.CurrentControlSchemeIndex);
+            // TODO: try and catch exceptions for erroneous loaded values (i.e. array idx) and reset to default if error
+		    
+		    ControlSchemeManager.UseScheme(settings.CurrentControlSchemeIndex);
 
 			if (settings.CurrentResolutionIndex > Screen.resolutions.Length)
 			{

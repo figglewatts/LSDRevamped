@@ -53,6 +53,11 @@ namespace UI
             }
         }
 
+        public void SetAllButtonsEnabled(bool state)
+        {
+            TabButtons.ForEach(button => button.interactable = state);
+        }
+
         private void onTabButtonClick(int i)
         {
             TabViews[i].gameObject.SetActive(true);

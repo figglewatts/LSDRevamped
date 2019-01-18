@@ -81,7 +81,7 @@ namespace InputManagement
             actions.LookBehind.AddDefaultBinding(InputControlType.Action2);
 
             actions.Run.AddDefaultBinding(Key.Space);
-            actions.Run.AddDefaultBinding(InputControlType.Action2);
+            actions.Run.AddDefaultBinding(InputControlType.Action1);
 
             return actions;
         }
@@ -114,8 +114,11 @@ namespace InputManagement
             actions.LookRight.AddDefaultBinding(Mouse.PositiveX);
             actions.LookRight.AddDefaultBinding(InputControlType.RightStickRight);
 
+            actions.LookBehind.AddDefaultBinding(Key.Z);
+            actions.LookBehind.AddDefaultBinding(InputControlType.Action2);
+
             actions.Run.AddDefaultBinding(Key.Space);
-            actions.Run.AddDefaultBinding(InputControlType.Action2);
+            actions.Run.AddDefaultBinding(InputControlType.Action1);
 
             return actions;
         }
