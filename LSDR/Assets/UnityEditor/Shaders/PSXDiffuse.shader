@@ -1,17 +1,16 @@
 ﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
 
 Shader "LSD/PSX/Diffuse" {
-	Properties{
+	Properties {
 		_MainTex("Base (RGB)", 2D) = "white" {}
-		_Tint("Tint", Color) = (1,1,1,1)
 	}
-	SubShader{
-		Tags{ "RenderType" = "Opaque" }
+	SubShader {
+		Tags { "RenderType" = "Opaque" }
 		LOD 200
 
-	Pass{
-		Lighting On
-		CGPROGRAM
+	    Pass {
+		    Lighting On
+		    CGPROGRAM
 
 #pragma vertex vert
 #pragma fragment frag
@@ -48,6 +47,7 @@ Shader "LSD/PSX/Diffuse" {
 		//	o.color =  float4(ShadeVertexLights(v.vertex, v.normal), 1.0);
 		o.color = float4(ShadeVertexLightsFull(v.vertex, v.normal, 4, true), 1.0);
 		o.color *= v.color;
+		o.vertCol = v.color;
 
 		float distance = length(UnityObjectToViewPos(v.vertex));
 
@@ -55,7 +55,7 @@ Shader "LSD/PSX/Diffuse" {
 		float4 affinePos = vertex; //vertex;				
 		o.uv_MainTex = TRANSFORM_TEX(v.texcoord, _MainTex);
 		o.uv_MainTex *= distance + (vertex.w*(AffineIntensity * 8)) / distance / 2;
-		o.normal = distance + (vertex.w*(AffineIntensity * 8)) / distance / 2;
+		o.normal.r = distance + (vertex.w*(AffineIntensity * 8)) / distance / 2;
 
 		//Fog
 		float4 fogColor = unity_FogColor;
@@ -84,12 +84,14 @@ Shader "LSD/PSX/Diffuse" {
 
 	float4 frag(v2f IN) : COLOR
 	{
-		half4 c = tex2D(_MainTex, IN.uv_MainTex / IN.normal.r)*IN.color;
+		half4 c = tex2D(_MainTex, IN.uv_MainTex / IN.normal.r);
 		half4 color = c*(IN.colorFog.a);
 		float fogIntensity = (1 - IN.colorFog.a);
 		float steppedFogIntensity = round(fogIntensity / _FogStep) * _FogStep;
 		color.rgb += IN.colorFog.rgb*steppedFogIntensity;
 		color.rgb *= _Tint.rgb;
+		color.rgb *= IN.color;
+		if (c.a <= 0.1 && !any(c.rgb)) discard;
 		return color;
 	}
 		ENDCG

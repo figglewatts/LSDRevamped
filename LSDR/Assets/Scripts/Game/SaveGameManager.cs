@@ -10,6 +10,7 @@ using Util;
 
 namespace Game
 {
+	// TODO: redo all of this
 	public static class SaveGameManager
 	{
 		private static JSONClass _gameState;
@@ -38,6 +39,7 @@ namespace Game
 			IOUtil.WriteJSONToDisk(_gameState, SaveGamePath);
 		}
 
+		/*
 		public static void LoadGame()
 		{
 			Debug.Log("SaveGameManager: Loading game");
@@ -75,7 +77,7 @@ namespace Game
 				DreamDirector.CurrentDay = 1;
 			}
 		}
-
+	*/
 		private static void AppendPayload(DreamPayload p, int index, ref JSONClass savedGame)
 		{
 			for (int j = 0; j < p.LevelsVisited.Count; j++)

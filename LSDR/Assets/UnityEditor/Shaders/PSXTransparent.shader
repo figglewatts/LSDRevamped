@@ -3,13 +3,13 @@
 Shader "LSD/PSX/Transparent" {
 	Properties{
 		_MainTex("Base (RGB)", 2D) = "white" {}
-		_Cutoff("Alpha Cutoff", Range(0, 1)) = 0.5
 	}
 		SubShader{
 		Tags{ "Queue" = "Transparent" "RenderType" = "Transparent" }
 		LOD 200
-		Blend SrcAlpha OneMinusSrcAlpha
+		
 		Pass{
+		Blend SrcAlpha OneMinusSrcAlpha
 		Lighting On
 		CGPROGRAM
 
@@ -22,6 +22,7 @@ Shader "LSD/PSX/Transparent" {
 		fixed4 pos : SV_POSITION;
 		half4 color : COLOR0;
 		half4 colorFog : COLOR1;
+		half4 vertCol : COLOR2;
 		float2 uv_MainTex : TEXCOORD0;
 		half3 normal: TEXCOORD1;
 	};
@@ -51,6 +52,7 @@ Shader "LSD/PSX/Transparent" {
 		//o.color = float4(ShadeVertexLights(v.vertex, v.normal), 1.0);
 		o.color = float4(ShadeVertexLightsFull(v.vertex, v.normal, 4, true), 1.0);
 		o.color *= v.color;
+		o.vertCol = v.color;
 
 		float distance = length(UnityObjectToViewPos(v.vertex));
 
@@ -86,16 +88,22 @@ Shader "LSD/PSX/Transparent" {
 
 	float4 frag(v2f IN) : COLOR
 	{
-		half4 c = tex2D(_MainTex, IN.uv_MainTex / IN.normal.r)*IN.color;
+		/*half4 c = tex2D(_MainTex, IN.uv_MainTex / IN.normal.r);
 		half4 color = c*(IN.colorFog.a);
 		float fogIntensity = (1 - IN.colorFog.a);
 		float steppedFogIntensity = round(fogIntensity / _FogStep) * _FogStep;
 		color.rgb += IN.colorFog.rgb*steppedFogIntensity;
-		if (c.a < _Cutoff)
-		{
-			discard;
-		}
-		color.a = c.a;
+		// step is 1 if c.a >= 0 (textured)
+		float alpha = lerp(IN.vertCol.a, c.a, step(c.a, 0.1));
+		half4 resColor = half4(c.rgb * IN.vertCol.rgb, alpha);*/
+		
+		half4 color = tex2D(_MainTex, IN.uv_MainTex / IN.normal.r);
+		color *= IN.colorFog.a;
+		float fogIntensity = (1 - IN.colorFog.a);
+		float steppedFogIntensity = round(fogIntensity / _FogStep) * _FogStep;
+		color.rgb += IN.colorFog * steppedFogIntensity;
+		color *= IN.vertCol;
+		
 		return color;
 	}
 		ENDCG

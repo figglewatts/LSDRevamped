@@ -21,7 +21,7 @@ namespace Entities.Dream
 
 		public static List<Vector2> GraphSquares = new List<Vector2>();
 
-		public static List<Types.Dream> PriorDreams = new List<Types.Dream>();
+		//public static List<Types.Dream> PriorDreams = new List<Types.Dream>();
 
 		public static string CurrentlyPlayingSong = "";
 
@@ -69,11 +69,11 @@ namespace Entities.Dream
 		/// </summary>
 		public static void AddPayloadToPriorDreams(DreamPayload p)
 		{
-			Types.Dream d;
-			d.LevelsVisited = p.LevelsVisited.ToArray();
-			d.TimeInDream = p.TimeInDream;
-			d.Seed = p.DreamSeed;
-			PriorDreams.Add(d);
+			//Types.Dream d;
+			//d.LevelsVisited = p.LevelsVisited.ToArray();
+			//d.TimeInDream = p.TimeInDream;
+			//d.Seed = p.DreamSeed;
+			//PriorDreams.Add(d);
 		}
 
 		public static void BeginDream()

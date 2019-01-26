@@ -65,7 +65,7 @@ namespace UI
 	        {
 	            case ControlSchemeCreatorMode.Create:
 	            {
-	                _currentlyEditingScheme = new ControlScheme(ControlActions.CreateDefaultTank(), "NewScheme", false);
+		            _currentlyEditingScheme = new ControlScheme(ControlActions.CreateDefaultTank(), "NewScheme", false);
 	                SubmitSchemeButtonText.text = "Create";
 	                NameVerifier.CanHaveSameName = false;
 	                SubmitSchemeButton.interactable = NameVerifier.Validate(_currentlyEditingScheme.Name);
@@ -101,6 +101,7 @@ namespace UI
 	                ControlSchemeManager.Schemes.Add(_currentlyEditingScheme);
                     ControlSchemeManager.UseScheme(ControlSchemeManager.Schemes.Count - 1);
 	                break;
+	                
 	            }
 	            case ControlSchemeCreatorMode.Edit:
 	            {

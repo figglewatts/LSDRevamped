@@ -56,7 +56,7 @@ namespace Game
 		public static void SwitchJournal(int i)
 		{
 			SetJournal(i);
-			SaveGameManager.LoadGame();
+			//SaveGameManager.LoadGame();
 		}
 
 		private static int _currentJournalHandle = 0;

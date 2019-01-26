@@ -1,11 +1,11 @@
 ﻿using System.Reflection;
 using Game;
+using Graphics;
 using UnityEngine;
 using InputManagement;
 using IO;
-using Types;
-using UI;
-using Util;
+using ResourceHandlers;
+using ResourceManager = Torii.Resource.ResourceManager;
 
 [assembly: AssemblyVersion("0.1.*")]
 public class GameScript : MonoBehaviour
@@ -15,6 +15,10 @@ public class GameScript : MonoBehaviour
 		// do game startup stuff here
 
         GameSettings.Initialize();
+        
+        ResourceManager.Initialize();
+        ResourceManager.RegisterHandler(new LBDHandler());
+        ResourceManager.RegisterHandler(new TIXHandler());
 
 		ControlSchemeManager.Initialize();
 
@@ -26,7 +30,10 @@ public class GameScript : MonoBehaviour
 
 		Shader.SetGlobalFloat("_FogStep", 0.08F);
 		Shader.SetGlobalFloat("AffineIntensity", 0.5F);
+		
+		PsxVram.Initialize();
 
-		SaveGameManager.LoadGame();
+		// TODO
+		//SaveGameManager.LoadGame();
 	}
 }
