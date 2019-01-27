@@ -5,6 +5,7 @@ Shader "LSDR/ClassicDiffuseSet" {
         _MainTexC ("Albedo C (RGB)", 2D) = "white" {}
         _MainTexD ("Albedo D (RGB)", 2D) = "white" {}
         _Tint ("Tint Color", Color) = (1, 1, 1, 1)
+        [PerRendererData]_FogAddition ("FogAddition", Color) = (0, 0, 0)
     }
     SubShader {
         Tags { "RenderType" = "Opaque" }

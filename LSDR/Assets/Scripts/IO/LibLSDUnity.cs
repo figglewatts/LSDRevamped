@@ -29,7 +29,7 @@ namespace IO
         }
 
         public static Mesh MeshFromTMDObject(TMDObject obj)
-        {
+        {   
             Mesh result = new Mesh();
             List<Vector3> verts = new List<Vector3>();
             List<Vector3> normals = new List<Vector3>();
@@ -153,13 +153,19 @@ namespace IO
             result.normals = normals.ToArray();
             result.colors32 = colors.ToArray();
             result.uv = uvs.ToArray();
-            result.subMeshCount = 2;
-            
+
             // regular mesh
-            result.SetTriangles(indices, 0, false, 0);
-            
+            if (indices.Count >= 3)
+            {
+                result.SetTriangles(indices, 0, false, 0);
+            }
+
             // alpha blended mesh
-            result.SetTriangles(alphaBlendIndices, 1, false, 0);
+            if (alphaBlendIndices.Count >= 3)
+            {
+                result.subMeshCount = 2;
+                result.SetTriangles(alphaBlendIndices, 1, false, 0);
+            }
 
             return result;
         }
@@ -186,16 +192,9 @@ namespace IO
             
             // combine into mesh
             Mesh combined = new Mesh();
-            combined.subMeshCount = 2;
             combined.CombineMeshes(meshesCreated.ToArray(), true);
             MeshCollider mc = lbdTilemap.AddComponent<MeshCollider>();
             mc.sharedMesh = combined;
-
-            MeshFilter mf = lbdTilemap.AddComponent<MeshFilter>();
-            mf.sharedMesh = combined;
-
-            MeshRenderer mr = lbdTilemap.AddComponent<MeshRenderer>();
-            mr.sharedMaterials = PsxVram.Materials;
 
             lbdTilemap.isStatic = true;
 
@@ -225,12 +224,14 @@ namespace IO
             List<CombineInstance> meshesCreated)
         {
             GameObject lbdTile = new GameObject($"Tile {tile.TileType}");
-            //MeshFilter mf = lbdTile.AddComponent<MeshFilter>();
-            //MeshRenderer mr = lbdTile.AddComponent<MeshRenderer>();
+            MeshFilter mf = lbdTile.AddComponent<MeshFilter>();
+            MeshRenderer mr = lbdTile.AddComponent<MeshRenderer>();
+            lbdTile.AddComponent<CullMeshOnDistance>();
+            lbdTile.AddComponent<MeshFog>();
             TMDObject tileObj = tilesTmd.ObjectTable[tile.TileType];
             Mesh tileMesh = MeshFromTMDObject(tileObj);
-            //mf.mesh = tileMesh;
-            //mr.sharedMaterials = PsxVram.Materials;
+            mf.mesh = tileMesh;
+            mr.sharedMaterials = PsxVram.Materials;
 
             switch (tile.TileDirection)
             {
@@ -257,17 +258,9 @@ namespace IO
             CombineInstance combine = new CombineInstance()
             {
                 mesh = tileMesh,
-                transform = localToWorldMatrix,
-                subMeshIndex = 0
-            };
-            CombineInstance combineTrans = new CombineInstance()
-            {
-                mesh = tileMesh,
-                transform = localToWorldMatrix,
-                subMeshIndex = 1
+                transform = localToWorldMatrix
             };
             meshesCreated.Add(combine);
-            meshesCreated.Add(combineTrans);
 
             return lbdTile;
         }
@@ -299,7 +292,6 @@ namespace IO
                     tex.Apply();
                 }
             }
-
             
             return tex;
         }

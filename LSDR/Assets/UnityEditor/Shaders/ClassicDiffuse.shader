@@ -2,6 +2,7 @@ Shader "LSDR/ClassicDiffuse" {
     Properties {
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
         _Tint ("Tint Color", Color) = (1, 1, 1, 1)
+        [PerRendererData]_FogAddition ("FogAddition", Color) = (0, 0, 0)
     }
     SubShader {
         Tags { "RenderType" = "Opaque" }
@@ -58,6 +59,7 @@ Shader "LSDR/ClassicDiffuse" {
             
             sampler2D _MainTex;
             fixed4 _Tint;
+            fixed4 _FogAddition;
             
             float4 frag(classicV2F input) : COLOR
             {
@@ -71,6 +73,9 @@ Shader "LSDR/ClassicDiffuse" {
                 
                 // apply tint
                 output *= _Tint;
+                
+                // apply fog
+                output += _FogAddition;
                 
                 return output;
             }

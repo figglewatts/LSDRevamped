@@ -2,6 +2,7 @@ Shader "LSDR/ClassicDiffuseAlphaBlend" {
     Properties {
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
         _Tint ("Tint Color", Color) = (1, 1, 1, 1)
+        [PerRendererData]_FogAddition ("FogAddition", Color) = (0, 0, 0)
     }
     SubShader {
         Tags { "Queue" = "Transparent" "RenderType" = "Transparent" }
@@ -59,6 +60,7 @@ Shader "LSDR/ClassicDiffuseAlphaBlend" {
             
             sampler2D _MainTex;
             fixed4 _Tint;
+            fixed4 _FogAddition;
             
             float4 frag(classicV2F input) : COLOR
             {
@@ -69,6 +71,9 @@ Shader "LSDR/ClassicDiffuseAlphaBlend" {
                 
                 // apply tint
                 output *= _Tint;
+                
+                // apply fog
+                output += _FogAddition;
                 
                 return output;
             }
