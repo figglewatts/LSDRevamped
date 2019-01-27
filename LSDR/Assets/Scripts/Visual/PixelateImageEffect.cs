@@ -3,7 +3,7 @@
 
 using UnityEngine;
 
-namespace Graphics
+namespace Visual
 {
     [ExecuteInEditMode]
     public class PixelateImageEffect : MonoBehaviour

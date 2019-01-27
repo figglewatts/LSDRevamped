@@ -1,10 +1,10 @@
 ﻿using System.Reflection;
 using Game;
-using Graphics;
 using UnityEngine;
 using InputManagement;
 using IO;
 using ResourceHandlers;
+using Visual;
 using ResourceManager = Torii.Resource.ResourceManager;
 
 [assembly: AssemblyVersion("0.1.*")]

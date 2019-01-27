@@ -2,7 +2,6 @@
 using Game;
 using InputManagement;
 using UnityEngine.Audio;
-using UnityEngine.VR;
 using Util;
 
 namespace Entities.Player
@@ -12,8 +11,6 @@ namespace Entities.Player
 	/// </summary>
 	public class PlayerHeadBob : MonoBehaviour
 	{
-		// TODO: footstep sounds
-	
 		public float BobbingSpeed = 0.18F;
 		public float BobbingAmount = 0.2F;
 		public float Midpoint = 1F;
@@ -27,6 +24,8 @@ namespace Entities.Player
 
 		private bool _canPlayFootstepSound = true;
 
+		private Transform _targetCamTransform;
+
 		void Start()
 		{
 			_masterMixer = Resources.Load<AudioMixer>("Mixers/MasterMixer");
@@ -35,6 +34,8 @@ namespace Entities.Player
 			FootstepAudioSource.spatialBlend = 0; // 2d audio
 			FootstepAudioSource.outputAudioMixerGroup = _masterMixer.FindMatchingGroups("SFX")[0];
 			StartCoroutine(IOUtil.LoadOGGIntoSource(IOUtil.PathCombine("sfx", "SE_00003.ogg"), FootstepAudioSource));
+
+			_targetCamTransform = TargetCamera.transform;
 		}
 
 		// Update is called once per frame
@@ -42,39 +43,28 @@ namespace Entities.Player
 		{
 			if (!GameSettings.CanControlPlayer) return;
 
-			float waveslice = 0F;
-			float vertical = 0;
-			if (ControlSchemeManager.Current.Actions.Forward.IsPressed)
-			{
-				vertical = 1;
-			}
-			// make sure we don't headbob whilst rotating
-			if ((ControlSchemeManager.Current.Actions.Left.IsPressed || ControlSchemeManager.Current.Actions.Right.IsPressed)
-				&& ControlSchemeManager.Current.FpsControls)
-			{
-				vertical = 1;
-			}
-			if (ControlSchemeManager.Current.Actions.Backward.IsPressed)
-			{
-				vertical = -1;
-			}
+			float sineWave = 0F;
+			float forwardMovement = ControlSchemeManager.Current.Actions.MoveY.Value;
 
-			if (Mathf.Abs(vertical) < float.Epsilon)
+			if (Mathf.Abs(forwardMovement) < float.Epsilon)
 			{
 				_timer = 0;
 			}
 			else
 			{
-				waveslice = Mathf.Sin(_timer);
+				// advance sine wave and increment timer
+				sineWave = Mathf.Sin(_timer);
 				_timer = _timer + (BobbingSpeed*Time.deltaTime);
+				
+				// reset timer when sine wave repeats
 				if (_timer > Mathf.PI*2)
 				{
-					_timer = _timer - (Mathf.PI*2);
+					_timer = 0;
 					_canPlayFootstepSound = true;
 				}
 
-				// if the sine wave is at the lowest part (happens at 3 * Pi divided by 2, or 1.5 * Pi)
-				if (GameSettings.CurrentSettings.EnableFootstepSounds && _timer > (3*Mathf.PI)/2)
+				// check to see if we're at the bottom of the curve (3Pi / 2)
+				if (GameSettings.CurrentSettings.EnableFootstepSounds && _timer > (Mathf.PI * 3f) / 2f)
 				{
 					if (_canPlayFootstepSound)
 					{
@@ -83,22 +73,22 @@ namespace Entities.Player
 					}
 				}
 			}
-
-			if (Mathf.Abs(waveslice) > float.Epsilon)
+			
+			// update 'head' position
+			if (Mathf.Abs(sineWave) > float.Epsilon)
 			{
-				float translateChange = waveslice*BobbingAmount;
-				float totalAxes = Mathf.Abs(vertical);
-				totalAxes = Mathf.Clamp(totalAxes, 0F, 1F);
-				translateChange = totalAxes*translateChange;
-				Vector3 pos = TargetCamera.transform.localPosition;
+				// only compute pos change if sine wave isn't near 0
+				float translateChange = sineWave * BobbingAmount;
+				//translateChange *= Mathf.Abs(forwardMovement); // scale by movement amount
+				Vector3 pos = _targetCamTransform.localPosition;
 				pos.y = Midpoint + (GameSettings.CurrentSettings.HeadBobEnabled ? translateChange : 0);
-				TargetCamera.transform.localPosition = pos;
+				_targetCamTransform.localPosition = pos;
 			}
 			else
 			{
-				Vector3 pos = TargetCamera.transform.localPosition;
+				Vector3 pos = _targetCamTransform.localPosition;
 				pos.y = Midpoint;
-				TargetCamera.transform.localPosition = pos;
+				_targetCamTransform.localPosition = pos;
 			}
 		}
 	}

@@ -40,7 +40,8 @@ namespace Entities.Player
 
 		public void OnControllerColliderHit(ControllerColliderHit hit)
 		{
-			if (DreamDirector.Payload.DreamEnded) return;
+			// TODO
+			//if (DreamDirector.Payload.DreamEnded) return;
 		
 			if (!hit.gameObject.tag.Equals("Linkable")) return;
 			

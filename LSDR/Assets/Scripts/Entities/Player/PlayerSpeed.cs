@@ -20,7 +20,7 @@ namespace Entities.Player
 		public float SprintFastBobSpeed = 48F;
 		public float SprintFastBobAmount = 0.04F;
 
-		private float _spaceHeldTimer;
+		private float _sprintingTimer;
 
 		private PlayerHeadBob _headBob;
 		private PlayerMovement _playerMovement;
@@ -41,16 +41,12 @@ namespace Entities.Player
 			if (ControlSchemeManager.Current.Actions.Run.IsPressed)
 			{
 				_isSprinting = true;
-				_spaceHeldTimer += Time.deltaTime;
-			}
-			else
-			{
-				_spaceHeldTimer = 0F;
 			}
 
 			if (_isSprinting)
 			{
-				if (_spaceHeldTimer > 10)
+				_sprintingTimer += Time.deltaTime;
+				if (_sprintingTimer > 10)
 				{
 					_isSprintingFast = true;
 					_playerMovement.MovementSpeed = SprintFastMoveSpeed;
@@ -73,7 +69,7 @@ namespace Entities.Player
 
 			// if space is not pressed and no movement keys are pressed
 			if (!ControlSchemeManager.Current.Actions.Run.IsPressed
-			    && !ControlSchemeManager.Current.Actions.Move.IsPressed)
+			    && !ControlSchemeManager.Current.Actions.MoveY.IsPressed)
 			{
 				_isSprinting = false;
 				_isSprintingFast = false;

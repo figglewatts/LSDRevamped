@@ -1,10 +1,8 @@
-﻿using UnityEngine;
-using System.Collections;
-using Game;
+﻿using Game;
+using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.VR;
 
-namespace Graphics
+namespace Visual
 {
 	public class RenderWorldToResizedTexture : MonoBehaviour
 	{

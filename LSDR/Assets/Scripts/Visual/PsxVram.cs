@@ -2,7 +2,7 @@ using IO;
 using libLSD.Formats;
 using UnityEngine;
 
-namespace Graphics
+namespace Visual
 {
     public static class PsxVram
     {

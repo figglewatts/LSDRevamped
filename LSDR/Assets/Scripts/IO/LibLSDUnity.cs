@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using Graphics;
 using UnityEngine;
 using libLSD.Formats;
 using libLSD.Types;
 using UnityEditor;
+using Visual;
 
 namespace IO
 {
@@ -167,6 +167,7 @@ namespace IO
         public static GameObject CreateLBDTileMap(LBD lbd)
         {
             GameObject lbdTilemap = new GameObject("LBD TileMap");
+            List<CombineInstance> meshesCreated = new List<CombineInstance>();
 
             int tileNo = 0;
             foreach (LBDTile tile in lbd.TileLayout)
@@ -176,47 +177,60 @@ namespace IO
 
                 if (tile.DrawTile)
                 {
-                    GameObject lbdTile = createLBDTile(tile, lbd.ExtraTiles, x, y, lbd.Tiles);
+                    GameObject lbdTile = createLBDTile(tile, lbd.ExtraTiles, x, y, lbd.Tiles, meshesCreated);
                     lbdTile.transform.SetParent(lbdTilemap.transform);
                 }
 
                 tileNo++;
             }
+            
+            // combine into mesh
+            Mesh combined = new Mesh();
+            combined.subMeshCount = 2;
+            combined.CombineMeshes(meshesCreated.ToArray(), true);
+            MeshCollider mc = lbdTilemap.AddComponent<MeshCollider>();
+            mc.sharedMesh = combined;
+
+            MeshFilter mf = lbdTilemap.AddComponent<MeshFilter>();
+            mf.sharedMesh = combined;
+
+            MeshRenderer mr = lbdTilemap.AddComponent<MeshRenderer>();
+            mr.sharedMaterials = PsxVram.Materials;
 
             lbdTilemap.isStatic = true;
 
             return lbdTilemap;
         }
 
-        private static GameObject createLBDTile(LBDTile tile, LBDTile[] extraTiles, int x, int y, TMD tilesTmd)
+        private static GameObject createLBDTile(LBDTile tile, LBDTile[] extraTiles, int x, int y, TMD tilesTmd, 
+            List<CombineInstance> meshesCreated)
         {
-            GameObject lbdTile = createSingleLBDTile(tile, x, y, tilesTmd);
+            GameObject lbdTile = createSingleLBDTile(tile, x, y, tilesTmd, meshesCreated);
 
             LBDTile curTile = tile;
             int i = 0;
             while (curTile.ExtraTileIndex >= 0 && i <= 1)
             {
                 LBDTile extraTile = extraTiles[curTile.ExtraTileIndex];
-                GameObject extraTileObj = createSingleLBDTile(extraTile, x, y, tilesTmd);
+                GameObject extraTileObj = createSingleLBDTile(extraTile, x, y, tilesTmd, meshesCreated);
                 extraTileObj.transform.SetParent(lbdTile.transform, true);
                 curTile = extraTile;
                 i++;
             }
 
-            lbdTile.isStatic = true;
-
             return lbdTile;
         }
 
-        private static GameObject createSingleLBDTile(LBDTile tile, int x, int y, TMD tilesTmd)
+        private static GameObject createSingleLBDTile(LBDTile tile, int x, int y, TMD tilesTmd, 
+            List<CombineInstance> meshesCreated)
         {
             GameObject lbdTile = new GameObject($"Tile {tile.TileType}");
-            MeshFilter mf = lbdTile.AddComponent<MeshFilter>();
-            MeshRenderer mr = lbdTile.AddComponent<MeshRenderer>();
+            //MeshFilter mf = lbdTile.AddComponent<MeshFilter>();
+            //MeshRenderer mr = lbdTile.AddComponent<MeshRenderer>();
             TMDObject tileObj = tilesTmd.ObjectTable[tile.TileType];
             Mesh tileMesh = MeshFromTMDObject(tileObj);
-            mf.mesh = tileMesh;
-            mr.sharedMaterials = PsxVram.Materials;
+            //mf.mesh = tileMesh;
+            //mr.sharedMaterials = PsxVram.Materials;
 
             switch (tile.TileDirection)
             {
@@ -238,6 +252,22 @@ namespace IO
             }
             
             lbdTile.transform.position = new Vector3(x, -tile.TileHeight, y);
+
+            var localToWorldMatrix = lbdTile.transform.localToWorldMatrix;
+            CombineInstance combine = new CombineInstance()
+            {
+                mesh = tileMesh,
+                transform = localToWorldMatrix,
+                subMeshIndex = 0
+            };
+            CombineInstance combineTrans = new CombineInstance()
+            {
+                mesh = tileMesh,
+                transform = localToWorldMatrix,
+                subMeshIndex = 1
+            };
+            meshesCreated.Add(combine);
+            meshesCreated.Add(combineTrans);
 
             return lbdTile;
         }

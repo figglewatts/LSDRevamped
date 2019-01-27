@@ -1,10 +1,10 @@
 ﻿// Sunburst effects.
 // By Keijiro Takahashi, 2013
 // https://github.com/keijiro/unity-sunburst-mesh-fx
-using UnityEngine;
-using System.Collections;
 
-namespace Graphics
+using UnityEngine;
+
+namespace Visual
 {
 	[RequireComponent(typeof(MeshFilter)), RequireComponent(typeof(MeshRenderer))]
 	public class SunburstEffects : MonoBehaviour
