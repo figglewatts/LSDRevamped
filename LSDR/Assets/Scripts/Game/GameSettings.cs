@@ -209,7 +209,7 @@ namespace Game
 		public static bool VR = !UnityEngine.XR.XRSettings.loadedDeviceName.Equals(string.Empty);
 
 		// should the fog mode be additive or subtractive
-		[JsonIgnore] public static bool SubtractiveFog = true;
+		[JsonIgnore] public static bool SubtractiveFog = false;
 
 		#endregion
 
