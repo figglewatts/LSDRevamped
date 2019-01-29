@@ -18,8 +18,8 @@ namespace Visual
 
         public static void Initialize()
         {
-            VramMaterial = new Material(Shader.Find("LSDR/RevampedDiffuse"));
-            VramAlphaBlendMaterial = new Material(Shader.Find("LSDR/RevampedDiffuseAlphaBlend"));
+            VramMaterial = new Material(Shader.Find("LSDR/ClassicDiffuse"));
+            VramAlphaBlendMaterial = new Material(Shader.Find("LSDR/ClassicDiffuseAlphaBlend"));
         }
 
         public static void LoadVramTix(TIX tix)
@@ -27,6 +27,7 @@ namespace Visual
             VramTexture = LibLSDUnity.GetTextureFromTIX(tix);
             VramMaterial.SetTexture(_mainTex, VramTexture);
             VramAlphaBlendMaterial.SetTexture(_mainTex, VramTexture);
+            
         }
     }
 }

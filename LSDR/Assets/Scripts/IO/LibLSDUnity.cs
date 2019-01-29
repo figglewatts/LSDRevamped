@@ -196,7 +196,10 @@ namespace IO
             MeshCollider mc = lbdTilemap.AddComponent<MeshCollider>();
             mc.sharedMesh = combined;
 
-            lbdTilemap.isStatic = true;
+            LBDSlab slab = lbdTilemap.AddComponent<LBDSlab>();
+            slab.MeshFog = lbdTilemap.GetComponentsInChildren<MeshFog>();
+            slab.CullMesh = lbdTilemap.GetComponentsInChildren<CullMeshOnDistance>();
+            slab.MeshRenderers = lbdTilemap.GetComponentsInChildren<MeshRenderer>();
 
             return lbdTilemap;
         }
@@ -258,9 +261,22 @@ namespace IO
             CombineInstance combine = new CombineInstance()
             {
                 mesh = tileMesh,
-                transform = localToWorldMatrix
+                transform = localToWorldMatrix,
+                subMeshIndex = 0
             };
             meshesCreated.Add(combine);
+
+            // if tile has transparent part
+            if (tileMesh.subMeshCount > 1)
+            {
+                CombineInstance combineTrans = new CombineInstance()
+                {
+                    mesh = tileMesh,
+                    transform = localToWorldMatrix,
+                    subMeshIndex = 1
+                };
+                meshesCreated.Add(combineTrans); 
+            }
 
             return lbdTile;
         }
