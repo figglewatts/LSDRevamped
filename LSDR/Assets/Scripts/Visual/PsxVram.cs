@@ -1,6 +1,8 @@
 using IO;
 using libLSD.Formats;
+using Torii.Resource;
 using UnityEngine;
+using Util;
 
 namespace Visual
 {
@@ -16,10 +18,16 @@ namespace Visual
 
         public static Material[] Materials => new[] {VramMaterial, VramAlphaBlendMaterial};
 
+        private static string _vramMaterialPath =
+            IOUtil.PathCombine(Application.streamingAssetsPath, "materials", "psx-vram-diffuse.json");
+
+        private static string _vramAlphaMaterialPath =
+            IOUtil.PathCombine(Application.streamingAssetsPath, "materials", "psx-vram-alpha.json");
+
         public static void Initialize()
         {
-            VramMaterial = new Material(Shader.Find("LSDR/ClassicDiffuse"));
-            VramAlphaBlendMaterial = new Material(Shader.Find("LSDR/ClassicDiffuseAlphaBlend"));
+            VramMaterial = ResourceManager.Load<Material>(_vramMaterialPath);
+            VramAlphaBlendMaterial = ResourceManager.Load<Material>(_vramAlphaMaterialPath);
         }
 
         public static void LoadVramTix(TIX tix)

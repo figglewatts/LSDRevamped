@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using SimpleJSON;
 using Torii.Exceptions;
-using Torii.Resource.Handlers;
 using Torii.UI;
 using Torii.Util;
 using UnityEngine;
@@ -29,7 +28,6 @@ namespace Torii.Resource
 
         public static void Initialize()
         {
-            RegisterHandler(new Texture2DHandler());
         }
 
         public static void ClearLifespan(string span)
@@ -42,6 +40,7 @@ namespace Torii.Resource
                 if (res.Value.Lifespan == spanID)
                 {
                     toRemove.Add(res.Key);
+                    res.Value.OnExpire?.Invoke();
                 }
             }
 

@@ -19,6 +19,8 @@ public class GameScript : MonoBehaviour
         ResourceManager.Initialize();
         ResourceManager.RegisterHandler(new LBDHandler());
         ResourceManager.RegisterHandler(new TIXHandler());
+        ResourceManager.RegisterHandler(new Texture2DHandler());
+        ResourceManager.RegisterHandler(new MaterialHandler());
 
 		ControlSchemeManager.Initialize();
 

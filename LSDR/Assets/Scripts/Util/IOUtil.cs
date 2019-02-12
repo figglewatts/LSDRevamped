@@ -14,6 +14,7 @@ namespace Util
 {
 	public static class IOUtil
 	{
+		// TODO: make redundant
 		/// <summary>
 		/// Writes the contents of a JSON file to disk. Note that this does not use prettyprint.
 		/// </summary>
@@ -42,6 +43,7 @@ namespace Util
 			}
 		}
 
+		// TODO: make redundant
 		/// <summary>
 		/// Reads JSON from disk into JSONClass.
 		/// </summary>
@@ -62,6 +64,7 @@ namespace Util
 			return null;
 		}
 
+		// TODO: make redundant
 		/// <summary>
 		/// Create a Texture2D from a PNG file.
 		/// </summary>
@@ -91,6 +94,7 @@ namespace Util
 			return tex;
 		}
 
+		// TODO: make redundant
 		public static Texture2D LoadPNGByteArray(byte[] array)
 		{
 			Texture2D tex = new Texture2D(2, 2, TextureFormat.ARGB32, false); // (2, 2) temporary POT size, next line resizes automatically
@@ -100,6 +104,7 @@ namespace Util
 			return tex;
 		}
 
+		// TODO: make redundant
 		/// <summary>
 		/// Loads an OGG file into the specified AudioSource
 		/// </summary>
@@ -121,6 +126,7 @@ namespace Util
 			if (playOnLoad) source.Play();
 		}
 
+		// TODO: make redundant
 		/// <summary>
 		/// Loads a Torii object (3D model with animations) and returns a gameobject
 		/// </summary>
@@ -185,6 +191,7 @@ namespace Util
 			return g;
 		}
 
+		// TODO: make redundant
 		/// <summary>
 		/// Loads MAP file geometry into a mesh and returns a gameobject
 		/// </summary>
@@ -195,6 +202,7 @@ namespace Util
             return map;
 		}
 
+		// TODO: make redundant
 		/// <summary>
 		/// Loads a Torii map and returns a gameobject with entities in the torii map as child elements
 		/// </summary>
@@ -215,6 +223,7 @@ namespace Util
 			return tmapObject;
 		}
 
+		// TODO: make redundant
 		public static string GetLevelFromIndex(int index, string journal)
 		{
 			string[] levels = Directory.GetFiles(PathCombine(Application.streamingAssetsPath, "levels", journal), "*.tmap");

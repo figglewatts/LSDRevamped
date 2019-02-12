@@ -17,6 +17,8 @@ namespace Torii.Resource
             Lifespan = lifespan;
             ResourceType = type;
         }
+
+        public Action OnExpire;
     }
 
     public enum ResourceType
