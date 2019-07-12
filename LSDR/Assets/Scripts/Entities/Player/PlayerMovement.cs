@@ -5,17 +5,26 @@ using InputManagement;
 namespace Entities.Player
 {
     /// <summary>
-	/// Handles player motion. Moving forwards and backwards, and left to right if FPS movement is enabled.
+	/// Handles player motion. Moving forwards and backwards, and strafing if FPS movement is enabled.
 	/// </summary>
 	[RequireComponent(typeof (CharacterController))]
     public class PlayerMovement : MonoBehaviour
     {
-		public float MovementSpeed;
+		/// <summary>
+		/// The speed at which to move. Set in editor.
+		/// </summary>
+        public float MovementSpeed;
+		
+		/// <summary>
+		/// The multiplier on gravity. Affects falling speed. Set in editor.
+		/// </summary>
         public float GravityMultiplier;
 
+		/// <summary>
+		/// The threshold above which to move the player when using a gamepad.
+		/// </summary>
 		public const float JOYSTICK_MOVE_THRESHOLD = 0.3F;
 
-		private Vector2 _inputVector;
         private Vector3 _moveDir = Vector3.zero;
         private CharacterController _characterController;
         private CollisionFlags _collisionFlags;
@@ -40,45 +49,54 @@ namespace Entities.Player
 
         private void FixedUpdate()
         {
-            float speed;
-            GetInput(out speed);
-            // always move along the camera forward as it is the direction that it being aimed at
-            Vector3 desiredMove = transform.forward*_inputVector.y + transform.right*_inputVector.x;
+            // get movement direction from input
+	        Vector2 moveDirection = getInput();
+            
+            // apply this movement direction to the forward and right vectors of the player
+            var trans = transform;
+            Vector3 desiredMove = trans.forward*moveDirection.y + trans.right*moveDirection.x;
 
-            // get a normal for the surface that is being touched to move along it
+            // get a normal for the surface that is being touched (if any) to move along it
             RaycastHit hitInfo;
-            Physics.SphereCast(transform.position, _characterController.radius, Vector3.down, out hitInfo,
+            Physics.SphereCast(trans.position, _characterController.radius, Vector3.down, out hitInfo,
                                _characterController.height/2f, ~0, QueryTriggerInteraction.Ignore);
             desiredMove = Vector3.ProjectOnPlane(desiredMove, hitInfo.normal).normalized;
 
-            _moveDir.x = desiredMove.x*speed;
-            _moveDir.z = desiredMove.z*speed;
+            // modify the current movement direction to include these new calculated values
+            _moveDir.x = desiredMove.x*MovementSpeed;
+            _moveDir.z = desiredMove.z*MovementSpeed;
 
-
+            // if we're not grounded we want to apply gravity to this movement direction, for falling
             if (!_characterController.isGrounded)
             {
 				_moveDir += Physics.gravity * GravityMultiplier * Time.fixedDeltaTime;
 			}
+            
+            // move the character controller
             _collisionFlags = _characterController.Move(_moveDir*Time.fixedDeltaTime);
         }
 
-        private void GetInput(out float speed)
+        /// <summary>
+        /// Get the input movement vector from the control scheme.
+        /// </summary>
+        /// <returns>Movement direction.</returns>
+        private Vector2 getInput()
         {
-	        speed = 0;
-			if (!GameSettings.CanControlPlayer) return;
+			// if we can't control the player return zero for input direction
+	        if (!GameSettings.CanControlPlayer) return Vector2.zero;
 
+	        // get vector axes from input system
             float moveDirFrontBack = ControlSchemeManager.Current.Actions.MoveY;
 	        float moveDirLeftRight = ControlSchemeManager.Current.FpsControls ? ControlSchemeManager.Current.Actions.MoveX : 0f;
-		
-			// set the desired speed to be walking or running
-            speed = MovementSpeed;
-            _inputVector = new Vector2(moveDirLeftRight, moveDirFrontBack);
+            Vector2 input = new Vector2(moveDirLeftRight, moveDirFrontBack);
 
-            // normalize input if it exceeds 1 in combined length:
-            if (_inputVector.sqrMagnitude > 1)
+            // normalize input if it exceeds 1 in combined length (for diagonal movement):
+            if (input.sqrMagnitude > 1)
             {
-                _inputVector.Normalize();
+                input.Normalize();
             }
+
+            return input;
         }
 
         private void OnControllerColliderHit(ControllerColliderHit hit)

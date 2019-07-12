@@ -8,6 +8,7 @@ using Util;
 
 namespace Entities.Dream
 {
+	// TODO: DreamDirector refactoring, DreamPayloadReceiver
 	public class DreamPayloadReceiver : MonoBehaviour
 	{
 		private DreamPayload _receivedPayload;

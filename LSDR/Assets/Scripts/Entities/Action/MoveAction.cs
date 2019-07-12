@@ -7,6 +7,7 @@ using Util;
 
 namespace Entities.Action
 {
+	// TODO: MoveAction is obsolete
 	public class MoveAction : BaseAction
 	{
 		public string TargetName;

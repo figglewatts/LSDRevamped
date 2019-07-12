@@ -8,7 +8,7 @@ using Util;
 
 namespace Game
 {
-	// TODO: handle journal not found
+	// TODO: update with new way dream journals are handled
 
 	public static class DreamJournalManager
 	{

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace Entities.Dream
 {
+	// TODO: DreamDirector refactoring for DreamPayload
 	public class DreamPayload : MonoBehaviour
 	{
 		public int DreamSeed;

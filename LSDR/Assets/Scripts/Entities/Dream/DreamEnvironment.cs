@@ -4,6 +4,7 @@ using Util;
 
 namespace Entities.Dream
 {
+	// TODO: DreamEnvironment is obsolete
 	public class DreamEnvironment : MonoBehaviour
 	{
 		public int Staticity;

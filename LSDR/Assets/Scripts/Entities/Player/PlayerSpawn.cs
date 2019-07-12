@@ -9,6 +9,7 @@ using Util;
 
 namespace Entities.Player
 {
+	// TODO: PlayerSpawn is obsolete
 	public class PlayerSpawn : MonoBehaviour
 	{
 		public string Name;

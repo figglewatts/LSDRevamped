@@ -7,6 +7,7 @@ using Entities.Dream;
 
 namespace Entities.Action
 {
+	// TODO: WaitAction is obsolete
 	public class WaitAction : BaseAction
 	{
 		public float WaitTime;

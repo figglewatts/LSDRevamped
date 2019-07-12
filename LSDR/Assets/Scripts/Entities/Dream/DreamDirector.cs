@@ -14,6 +14,7 @@ namespace Entities.Dream
 {
 	public delegate void OnLevelFinishChangeHandler();
 
+	// TODO: DreamDirector refactoring
 	public static class DreamDirector
 	{
 		public static int StaticityAccumulator = 0;

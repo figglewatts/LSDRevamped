@@ -5,6 +5,7 @@ using Util;
 
 namespace Entities.Action
 {
+	// TODO: ActionSequence is obsolete
 	public class ActionSequence : MonoBehaviour
 	{
 		public static List<ActionSequence> Sequences = new List<ActionSequence>();

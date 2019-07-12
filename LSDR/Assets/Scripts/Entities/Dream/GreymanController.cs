@@ -5,6 +5,7 @@ using Entities.Dream;
 using Game;
 using Util;
 
+// TODO: refactor GreymanController to be more reliable
 public class GreymanController : MonoBehaviour
 {
 	public float DistanceFromPlayer = 10F;

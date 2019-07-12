@@ -3,6 +3,7 @@ using System.Collections;
 using Entities.Dream;
 using Util;
 
+// TODO: make EnvironmentController obsolete by new environment features and DreamDirector refactor
 public class EnvironmentController : MonoBehaviour
 {
 	[HideInInspector]

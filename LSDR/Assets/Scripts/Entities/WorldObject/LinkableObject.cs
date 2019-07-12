@@ -3,6 +3,7 @@ using System.Collections;
 
 namespace Entities.WorldObject
 {
+	// TODO: LinkableObject is now obsolete
 	public class LinkableObject : MonoBehaviour
 	{
 		public string LinkedLevel;

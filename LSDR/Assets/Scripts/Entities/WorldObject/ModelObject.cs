@@ -9,6 +9,7 @@ using Game;
 
 namespace Entities.WorldObject
 {
+	// TODO: ModelObject is now obsolete
 	public class ModelObject : LinkableObject
 	{
 		public string ModelSrc;

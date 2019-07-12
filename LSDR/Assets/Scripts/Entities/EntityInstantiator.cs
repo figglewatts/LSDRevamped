@@ -10,6 +10,7 @@ using Util;
 
 namespace Entities
 {
+	// TODO: EntityInstantiator is now obsolete
 	public static class EntityInstantiator
 	{
 		public static GameObject Instantiate(ENTITY e)

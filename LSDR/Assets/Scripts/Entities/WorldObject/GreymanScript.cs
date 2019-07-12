@@ -4,6 +4,7 @@ using Entities.Dream;
 using Game;
 using UI;
 
+// TODO: refactor GraymanScript
 public class GreymanScript : MonoBehaviour
 {
 	public Color GreymanColor;

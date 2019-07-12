@@ -10,6 +10,7 @@ using Util;
 
 namespace Entities.Trigger
 {
+	// TODO: TriggerSequence is obsolete
 	public class TriggerSequence : MonoBehaviour
 	{
 		public string SequenceName;

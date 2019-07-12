@@ -10,6 +10,7 @@ using Util;
 
 namespace Entities.Player
 {
+	// TODO: refactor PlayerLinker in DreamDirector refactor
 	public class PlayerLinker : MonoBehaviour
 	{
 		public float LinkDelay = 0.7F;

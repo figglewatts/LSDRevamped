@@ -6,6 +6,7 @@ using Util;
 
 namespace Entities.Action
 {
+	// TODO: RotateAction is obsolete
 	public class RotateAction : BaseAction
 	{
 		public float Rotation;

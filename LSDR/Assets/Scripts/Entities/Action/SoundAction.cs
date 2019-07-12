@@ -7,6 +7,7 @@ using Util;
 
 namespace Entities.Action
 {
+	// TODO: SoundAction is obsolete
 	public class SoundAction : BaseAction
 	{
 		public string PathToAudioClip;

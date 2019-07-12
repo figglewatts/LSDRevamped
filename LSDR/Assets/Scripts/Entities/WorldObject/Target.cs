@@ -5,6 +5,7 @@ using Util;
 
 namespace Entities.WorldObject
 {
+	// TODO: Target is now obsolete
 	public class Target : MonoBehaviour
 	{
 		public static List<Target> Targets = new List<Target>();

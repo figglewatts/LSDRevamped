@@ -6,6 +6,7 @@ using Util;
 
 namespace Entities.Trigger
 {
+	// TODO: TriggerTeleport is obsolete
 	public class TriggerTeleport : MonoBehaviour
 	{
 		public string TargetName;

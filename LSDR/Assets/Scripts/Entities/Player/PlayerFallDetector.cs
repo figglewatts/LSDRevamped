@@ -6,9 +6,14 @@ using Game;
 
 namespace Entities.Player
 {
+	/// <summary>
+	/// Used to detect whether or not a player is currently falling.
+	/// </summary>
 	[RequireComponent(typeof(CharacterController))]
 	public class PlayerFallDetector : MonoBehaviour
 	{
+		// TODO: refactor PlayerFallDetector to fix falling, as well as during DreamDirector refactor
+		
 		[SerializeField]
 		private Camera _targetCamera;
 		private CharacterController _playerController;

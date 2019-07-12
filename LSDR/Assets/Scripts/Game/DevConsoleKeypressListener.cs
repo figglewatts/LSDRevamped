@@ -4,6 +4,7 @@ using UI;
 
 namespace Game
 {
+	// TODO: Refactor DevConsoleKeypressListener in DevConsole refactor
 	public class DevConsoleKeypressListener : MonoBehaviour
 	{
 		public UIDevConsole DevConsoleScript;

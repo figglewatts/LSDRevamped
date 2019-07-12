@@ -8,6 +8,7 @@ using Util;
 
 namespace Entities.Action
 {
+	// TODO: AnimateAction is obsolete
 	public class AnimateAction : BaseAction
 	{
 		public string AnimationName;

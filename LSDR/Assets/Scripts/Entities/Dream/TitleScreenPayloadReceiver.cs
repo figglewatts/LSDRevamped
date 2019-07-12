@@ -5,6 +5,7 @@ using UI;
 
 namespace Entities.Dream
 {
+	// TODO: refactor TitleScreenPayloadReceiver in DreamDirector refactor
 	public class TitleScreenPayloadReceiver : MonoBehaviour
 	{
 		public UIMainMenu MainMenu;

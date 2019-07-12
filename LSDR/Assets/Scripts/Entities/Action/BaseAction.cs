@@ -7,6 +7,7 @@ using UnityEngine;
 
 namespace Entities.Action
 {
+	// TODO: BaseAction is obsolete
 	public abstract class BaseAction : MonoBehaviour
 	{
 		public string Name;

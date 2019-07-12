@@ -11,6 +11,7 @@ using Util;
 
 namespace Game
 {
+	// TODO: Refactor DevConsole (also DreamDirector refactor)
 	public static class DevConsole
 	{
 		public static UIDevConsole ConsoleUI;

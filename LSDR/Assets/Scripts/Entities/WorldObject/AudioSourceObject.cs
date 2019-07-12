@@ -7,6 +7,7 @@ using Util;
 
 namespace Entities.WorldObject
 {
+	// TODO: AudioSourceObject is obsolete
 	public class AudioSourceObject : MonoBehaviour
 	{
 		public string AudioClip;

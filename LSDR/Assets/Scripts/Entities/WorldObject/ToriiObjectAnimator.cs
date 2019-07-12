@@ -4,6 +4,7 @@ using Types;
 
 namespace Entities.WorldObject
 {
+	// TODO: ToriiObjectAnimator is now obsolete
 	public class ToriiObjectAnimator : MonoBehaviour
 	{
 		public TOBJ ToriiObject;

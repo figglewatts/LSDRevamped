@@ -9,6 +9,7 @@ using Util;
 
 namespace Entities.Trigger
 {
+	// TODO: TriggerSound is obsolete
 	public class TriggerSound : MonoBehaviour
 	{
 		public string SoundSrc;

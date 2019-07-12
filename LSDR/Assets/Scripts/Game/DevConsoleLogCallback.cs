@@ -7,6 +7,7 @@ namespace Game
 	/// Used to set up the log callback for the developer console
 	/// so it can get output from the unity console
 	/// </summary>
+	// TODO: DevConsole refactor: Refactor DevConsoleLogCallback
 	public class DevConsoleLogCallback : MonoBehaviour
 	{
 		public UIDevConsole DevConsole;

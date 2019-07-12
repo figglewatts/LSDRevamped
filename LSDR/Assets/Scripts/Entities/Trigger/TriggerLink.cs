@@ -9,6 +9,7 @@ using Util;
 
 namespace Entities.Trigger
 {
+	// TODO: TriggerLink is obsolete
 	public class TriggerLink : MonoBehaviour
 	{
 		public string LinkedLevel;

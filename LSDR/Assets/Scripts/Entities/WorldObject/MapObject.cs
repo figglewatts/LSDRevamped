@@ -5,6 +5,7 @@ using Util;
 
 namespace Entities.WorldObject
 {
+	// TODO: MapObject is now obsolete
 	public class MapObject : LinkableObject
 	{
 		public string MapSrc;
