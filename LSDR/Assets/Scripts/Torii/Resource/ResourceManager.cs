@@ -56,7 +56,6 @@ namespace Torii.Resource
                         _resources.Remove(key);
                         break;
                 }
-                
             }
         }
 
@@ -84,7 +83,7 @@ namespace Torii.Resource
 
             if (path.Equals(string.Empty))
             {
-                throw new ArgumentException("Could not load resource: path argument cannot be empty", "path");
+                throw new ArgumentException("Could not load resource: path argument cannot be empty", nameof(path));
             }
 
             if (!File.Exists(path))

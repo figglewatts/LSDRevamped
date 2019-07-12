@@ -25,8 +25,8 @@ namespace Visual
                 {
                     cullMesh.enabled = value;
                 }
-
-                if (!value)
+                
+                if (value == false)
                 {
                     foreach (MeshRenderer r in MeshRenderers)
                     {

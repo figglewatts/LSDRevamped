@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using libLSD.Formats;
 using libLSD.Types;
-using UnityEditor;
 using Visual;
 
 namespace IO
@@ -234,7 +233,7 @@ namespace IO
             TMDObject tileObj = tilesTmd.ObjectTable[tile.TileType];
             Mesh tileMesh = MeshFromTMDObject(tileObj);
             mf.mesh = tileMesh;
-            mr.sharedMaterials = PsxVram.Materials;
+            mr.sharedMaterials = new[] {PsxVram.VramMaterial, PsxVram.VramAlphaBlendMaterial};
 
             switch (tile.TileDirection)
             {
