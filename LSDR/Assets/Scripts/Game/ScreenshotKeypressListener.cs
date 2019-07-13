@@ -1,25 +1,26 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 using System.IO;
 using Util;
 
 namespace Game
 {
+	/// <summary>
+	/// ScreenshotKeypressListener is a MonoBehaviour that, when put on something, will listen for the screenshot key
+	/// to be pressed, and take a screenshot.
+	/// </summary>
 	public class ScreenshotKeypressListener : MonoBehaviour
 	{
-		private int _screenshotNumber;
+		// the path to the directory where screenshots are saved
+		private readonly string SCREENSHOT_PATH = IOUtil.PathCombine(Application.persistentDataPath, "screenshots");
 
-		private string _screenshotPath;
-
-		public void Awake()
-		{
-			_screenshotNumber = PlayerPrefs.GetInt("LSDR.ScreenshotCounter");
-			_screenshotPath = IOUtil.PathCombine(Application.persistentDataPath, "screenshots");
-		}
+		// the key to use to take a screenshot
+		private readonly KeyCode SCREENSHOT_KEY = KeyCode.F9;
 	
 		void Update()
 		{
-			if (Input.GetKeyDown(KeyCode.F9))
+			if (Input.GetKeyDown(SCREENSHOT_KEY))
 			{
 				TakeScreenshot();
 			}
@@ -27,12 +28,17 @@ namespace Game
 
 		private void TakeScreenshot()
 		{
-			if (!Directory.Exists(_screenshotPath)) Directory.CreateDirectory(_screenshotPath);
+			// first check if the screenshot directory exists, and create it if it doesn't
+			if (!Directory.Exists(SCREENSHOT_PATH)) Directory.CreateDirectory(SCREENSHOT_PATH);
 
+			// put the time in the screenshot name so we don't overwrite
+			string screenshotName = "Screenshot_" + DateTime.Now.ToString("MM/dd/yyy HH:mm:ss tt") + ".png";
+
+			// take the screenshot
 			Debug.Log("Taking screenshot");
-            ScreenCapture.CaptureScreenshot(IOUtil.PathCombine(_screenshotPath, "Screenshot_" + _screenshotNumber + ".png"));
-			_screenshotNumber++;
-			PlayerPrefs.SetInt("LSDR.ScreenshotCounter", _screenshotNumber);
+            ScreenCapture.CaptureScreenshot(
+	            IOUtil.PathCombine(SCREENSHOT_PATH, screenshotName)
+	        );
 		}
 	}
 }

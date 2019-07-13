@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,6 +13,7 @@ using Util;
 
 namespace Game
 {
+	// TODO: the old version of ResourceManager is now obsolete, but still used by a lot of files
 	public static class ResourceManager
 	{
 		private static Dictionary<string, GenericResource> _resources = new Dictionary<string, GenericResource>();

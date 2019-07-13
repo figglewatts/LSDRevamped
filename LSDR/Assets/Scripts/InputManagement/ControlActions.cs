@@ -5,8 +5,12 @@ using UnityEngine;
 
 namespace InputManagement
 {
+    /// <summary>
+    /// ControlActions is the InControl ActionSet used for game inputs.
+    /// </summary>
     public class ControlActions : PlayerActionSet
     {
+        // all possible inputs
         public PlayerAction Left;
         public PlayerAction Right;
         public PlayerAction Forward;
@@ -23,9 +27,11 @@ namespace InputManagement
         public PlayerOneAxisAction LookY;
         public PlayerTwoAxisAction Move;
 
+        // UI inputs submit and back are bound to these inputs
         public PlayerAction Submit => Run;
         public PlayerAction Back => LookBehind;
 
+        // set these listen options
         public static readonly BindingListenOptions DefaultListenOptions = new BindingListenOptions
         {
             IncludeMouseButtons = true,
@@ -34,6 +40,9 @@ namespace InputManagement
             IncludeModifiersAsFirstClassKeys = true
         };
 
+        /// <summary>
+        /// Create the ControlActions with names.
+        /// </summary>
         public ControlActions()
         {
             Left = CreatePlayerAction("Left");
@@ -55,6 +64,10 @@ namespace InputManagement
             ListenOptions = DefaultListenOptions;
         }
 
+        /// <summary>
+        /// The default bindings for tank (classic) controls.
+        /// </summary>
+        /// <returns>Default bindings for tank controls.</returns>
         public static ControlActions CreateDefaultTank()
         {
             ControlActions actions = new ControlActions();
@@ -86,6 +99,10 @@ namespace InputManagement
             return actions;
         }
 
+        /// <summary>
+        /// Create default bindings for FPS controls.
+        /// </summary>
+        /// <returns>Default bindings for FPS controls.</returns>
         public static ControlActions CreateDefaultFps()
         {
             ControlActions actions = new ControlActions();

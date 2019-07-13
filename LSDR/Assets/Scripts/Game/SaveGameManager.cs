@@ -10,7 +10,7 @@ using Util;
 
 namespace Game
 {
-	// TODO: redo all of this
+	// TODO: redo SaveGameManager
 	public static class SaveGameManager
 	{
 		private static JSONClass _gameState;

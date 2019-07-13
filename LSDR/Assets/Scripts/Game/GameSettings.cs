@@ -14,14 +14,21 @@ using Util;
 
 namespace Game
 {
+	/// <summary>
+	/// GameSettings is the class used for storing and serialisation/deserialisation of the game's settings.
+	/// It also contains numerous functions for applying game settings.
+	/// </summary>
 	[JsonObject]
     public class GameSettings : IPropertyWatcher
 	{
 		#region Player Control Settings
 
-		// modifiable settings
+		// private member of HeadBobEnabled
 	    private bool _headbobEnabled;
 
+	    /// <summary>
+	    /// HeadBobEnabled is used to toggle player head bobbing.
+	    /// </summary>
 	    public bool HeadBobEnabled
 	    {
 	        get { return _headbobEnabled; }
@@ -32,8 +39,13 @@ namespace Game
 	        }
 	    }
 
+	    // private member of CurrentControlSchemeIndex
 	    private int _currentControlSchemeIndex;
 
+	    /// <summary>
+	    /// CurrentControlSchemeIndex is used to indicate which control scheme we're using.
+	    /// Please see ControlSchemeManager for more detail.
+	    /// </summary>
 	    public int CurrentControlSchemeIndex
 	    {
 	        get { return _currentControlSchemeIndex; }
@@ -48,9 +60,12 @@ namespace Game
 
 		#region Graphical Settings
 
-		// modifiable settings
+		// private member of UseClassicShaders
 	    private bool _useClassicShaders;
 
+	    /// <summary>
+	    /// Whether or not classic (PS1) shaders are enabled.
+	    /// </summary>
 	    public bool UseClassicShaders
 	    {
 	        get { return _useClassicShaders; }
@@ -61,8 +76,12 @@ namespace Game
 	        }
 	    }
 
+	    // private member of UsePixelationShader
 	    private bool _usePixelationShader;
 
+	    /// <summary>
+	    /// Whether or not to pixelate the screen to the PS1 resolution.
+	    /// </summary>
 	    public bool UsePixelationShader
 	    {
 	        get { return _usePixelationShader; }
@@ -73,7 +92,12 @@ namespace Game
 	        }
 	    }
 
+	    // private member of CurrentResolutionIndex
 	    private int _currentResolutionIndex;
+	    
+	    /// <summary>
+	    /// The index into Screen.resolutions that the current resolution is.
+	    /// </summary>
 	    public int CurrentResolutionIndex {
 	        get { return _currentResolutionIndex; }
 	        set
@@ -83,8 +107,12 @@ namespace Game
 	        }
 	    }
 
+	    // private member of CurrentQualityIndex
 	    private int _currentQualityIndex;
 
+	    /// <summary>
+	    /// The index into Unity's quality settings that we should be on.
+	    /// </summary>
 	    public int CurrentQualityIndex
 	    {
 	        get { return _currentQualityIndex; }
@@ -95,8 +123,12 @@ namespace Game
 	        }
 	    }
 
+	    // private member of Fullscreen
 	    private bool _fullscreen;
 
+	    /// <summary>
+	    /// Whether or not we're currently in fullscreen mode.
+	    /// </summary>
 	    public bool Fullscreen
 	    {
 	        get { return _fullscreen; }
@@ -107,8 +139,12 @@ namespace Game
 	        }
 	    }
 
+	    // private member of FOV
 	    private float _fov;
 
+	    /// <summary>
+	    /// The camera FOV.
+	    /// </summary>
 	    public float FOV
 	    {
 	        get { return _fov; }
@@ -120,8 +156,12 @@ namespace Game
 	        }
 	    }
 
+	    // private member of LimitFramerate
 	    private bool _limitFramerate;
 
+	    /// <summary>
+	    /// Whether or not to limit the framerate to that of the PS1.
+	    /// </summary>
 	    public bool LimitFramerate
 	    {
 	        get { return _limitFramerate; }
@@ -132,7 +172,9 @@ namespace Game
 	        }
 	    }
 
-	    // hidden settings
+	    /// <summary>
+	    /// Hidden setting. How intense to render the affine effect used in PS1 shaders.
+	    /// </summary>
         [JsonIgnore]
 		public float AffineIntensity { get; set; } // the intensity of the affine texture mapping used in classic shaders
 
@@ -140,8 +182,12 @@ namespace Game
 
 		#region Journal Settings
 
+		// private member of CurrentJournalIndex
 	    private int _currentJournalIndex;
 
+	    /// <summary>
+	    /// The index into the array of dream journals we're currently on. See DreamJournalManager.
+	    /// </summary>
 	    public int CurrentJournalIndex
 	    {
 	        get { return _currentJournalIndex; }
@@ -156,8 +202,12 @@ namespace Game
 
 		#region Audio Settings
 
+		// private member of EnableFootstepSounds
 	    private bool _enableFootstepSounds;
 
+	    /// <summary>
+	    /// Whether or not footstep sounds are enabled.
+	    /// </summary>
 	    public bool EnableFootstepSounds
 	    {
 	        get { return _enableFootstepSounds; }
@@ -168,8 +218,12 @@ namespace Game
 	        }
 	    }
 
+	    // private member of MusicVolume
 	    private float _musicVolume;
 
+	    /// <summary>
+	    /// The current volume of music.
+	    /// </summary>
 	    public float MusicVolume
 	    {
 	        get { return _musicVolume; }
@@ -180,8 +234,12 @@ namespace Game
 	        }
 	    }
 
+	    // private member of SFXVolume
 	    private float _sfxVolume;
 
+	    /// <summary>
+	    /// The current volume of SFX.
+	    /// </summary>
 	    public float SFXVolume
 	    {
 	        get { return _sfxVolume; }
@@ -196,49 +254,79 @@ namespace Game
 
 		#region Global Gameplay Settings (not serialized)
 
+		/// <summary>
+		/// Used to disable player motion, i.e. when linking.
+		/// </summary>
         [JsonIgnore]
-		public static bool CanControlPlayer = true; // used to disable character motion, i.e. when linking
+		public static bool CanControlPlayer = true;
 
+		/// <summary>
+		/// Used to disable mouse looking, i.e. when paused. Please use SetCursorViewState().
+		/// </summary>
         [JsonIgnore]
-		public static bool CanMouseLook = true; // used to disable mouse looking, i.e. when paused
+		public static bool CanMouseLook = true;
 
+		/// <summary>
+		/// Whether or not the game is currently paused.
+		/// </summary>
         [JsonIgnore]
 		public static bool IsPaused = false;
 
+		/// <summary>
+		/// Whether or not we're in VR mode.
+		/// </summary>
         [JsonIgnore]
 		public static bool VR = !UnityEngine.XR.XRSettings.loadedDeviceName.Equals(string.Empty);
 
-		// should the fog mode be additive or subtractive
+		/// <summary>
+		/// Should the fog be additive or subtractive.
+		/// TODO: move subtractive fog into dream environment?
+		/// </summary>
 		[JsonIgnore] public static bool SubtractiveFog = false;
 
 		#endregion
 
 		#region Gameplay Constants (not serialized)
 
+		/// <summary>
+		/// The framerate of the PS1. Used when framerate limiting is enabled.
+		/// </summary>
         [JsonIgnore]
 		public const int FRAMERATE_LIMIT = 25;
 
-		// grey man will spawn approx 1 in every CHANCE_FOR_GREYMAN-1 times
+		/// <summary>
+		/// Grey man will spawn approx 1 in every CHANCE_FOR_GREYMAN-1 times.
+		/// TODO: put chance_for_greyman in dream data?
+		/// </summary>
         [JsonIgnore]
 		public const int CHANCE_FOR_GREYMAN = 100;
 
 		#endregion
 
+		// reference to master audio mixer used for volume controls
 	    private static AudioMixer _masterMixer;
 
+	    // reference to serializer used for loading/saving data
         private static readonly ToriiSerializer _serializer = new ToriiSerializer();
 
+        // the path to the settings serialized file
 	    private static string SettingsPath => PathUtil.Combine(Application.persistentDataPath, "settings.json");
-
+	    
+	    // the currently loaded settings
 	    private static GameSettings _currentSettings;
 
+	    #region BindBroker fields
         public event Action<string, IPropertyWatcher> OnPropertyChange;
 
         [JsonIgnore]
         public Guid GUID { get; }
 
         public static BindBroker SettingsBindBroker = new BindBroker();
+        #endregion
 
+		/// <summary>
+		/// Get the currently loaded GameSettings, to access deserialized settings.
+		/// </summary>
 	    public static GameSettings CurrentSettings
 	    {
 	        get { return _currentSettings; }
@@ -249,6 +337,9 @@ namespace Game
 	        }
 	    }
 
+		/// <summary>
+		/// Create a new instance of the settings object with default values.
+		/// </summary>
 	    public GameSettings()
 	    {
 	        HeadBobEnabled = true;
@@ -269,6 +360,9 @@ namespace Game
 	        GUID = Guid.NewGuid();
 	    }
 
+		/// <summary>
+		/// Static constructor to initialise the serializer.
+		/// </summary>
         static GameSettings()
         {
             _serializer.RegisterJsonSerializationSettings(typeof(GameSettings), new JsonSerializerSettings()
@@ -278,12 +372,20 @@ namespace Game
             });
         }
 
+		/// <summary>
+		/// Set the cursor view state. True sets the cursor to visible and unlocks it, false does the inverse.
+		/// </summary>
+		/// <param name="state">Cursor state to set.</param>
 		public static void SetCursorViewState(bool state)
 		{
 			Cursor.visible = state;
 			Cursor.lockState = state ? CursorLockMode.None : CursorLockMode.Locked;
 		}
 
+		/// <summary>
+		/// Change the game's pause state. Pausing the game will enable the mouse pointer.
+		/// </summary>
+		/// <param name="pauseState">The pause state to set.</param>
 		public static void PauseGame(bool pauseState)
 		{
 			IsPaused = pauseState;
@@ -291,32 +393,52 @@ namespace Game
 			Time.timeScale = pauseState ? 0 : 1;
 		}
 
+		/// <summary>
+		/// Apply the game settings. This function propagates the given settings to all game systems that need them.
+		/// </summary>
+		/// <param name="settings">The settings to apply.</param>
 		public static void ApplySettings(GameSettings settings)
 		{
             // TODO: try and catch exceptions for erroneous loaded values (i.e. array idx) and reset to default if error
 		    
+            // set the control scheme
 		    ControlSchemeManager.UseScheme(settings.CurrentControlSchemeIndex);
 
+		    // set the resolution
 			if (settings.CurrentResolutionIndex > Screen.resolutions.Length)
 			{
-			    Screen.SetResolution(Screen.resolutions[0].width, Screen.resolutions[0].height, settings.Fullscreen);
+			    // if the resolution is invalid, set it to the lowest resolution
+				Screen.SetResolution(Screen.resolutions[0].width, Screen.resolutions[0].height, settings.Fullscreen);
 			}
 			else
 			{
 			    Screen.SetResolution(Screen.resolutions[settings.CurrentResolutionIndex].width,
 			        Screen.resolutions[settings.CurrentResolutionIndex].height, settings.Fullscreen);
 			}
+			
+			// set framerate to limit or not
 			Application.targetFrameRate = settings.LimitFramerate ? FRAMERATE_LIMIT : -1;
+			
+			// set retro shader affine intensity
 			Shader.SetGlobalFloat("AffineIntensity", settings.AffineIntensity);
+			
+			// set the current dream journal
 			DreamJournalManager.SetJournal(settings.CurrentJournalIndex);
+			
+			// set volumes
 			SetMusicVolume(settings.MusicVolume);
             SetSFXVolume(settings.SFXVolume);
+            
+            // set the graphics quality
             QualitySettings.SetQualityLevel(settings.CurrentQualityIndex, true);
 
             Debug.Log("Applying game settings...");
             Debug.Log("Affine intensity: " + settings.AffineIntensity);
 		}
 
+		/// <summary>
+		/// Load the saved settings from the file.
+		/// </summary>
 		public static void LoadSettings()
 		{
 		    Debug.Log("Loading game settings...");
@@ -335,6 +457,10 @@ namespace Game
 		    }
 		}
 
+		/// <summary>
+		/// Save the given settings to the settings file.
+		/// </summary>
+		/// <param name="settings">The settings to save.</param>
 		public static void SaveSettings(GameSettings settings)
 		{
             Debug.Log("Saving game settings...");
@@ -342,16 +468,25 @@ namespace Game
 		    _serializer.Serialize(settings, SettingsPath);
 		}
 
+		/// <summary>
+		/// Set the music volume.
+		/// </summary>
+		/// <param name="val">Music volume in percentage.</param>
         public static void SetMusicVolume(float val)
         {
             _masterMixer.SetFloat("MusicVolume", volumeToDb(val));
         }
 
+		/// <summary>
+		/// Set the SFX volume.
+		/// </summary>
+		/// <param name="val">SFX volume in percentage.</param>
         public static void SetSFXVolume(float val)
         {
             _masterMixer.SetFloat("SFXVolume", volumeToDb(val));
         }
 
+		// find the current resolution index
         private static int FindResolutionIndex()
 		{
 			Resolution[] resolutions = Screen.resolutions;
@@ -363,17 +498,22 @@ namespace Game
 			return 0;
 		}
 
+        // convert a volume percentage into decibels
         private static float volumeToDb(float volume)
         {
             if (volume <= 0) return -80;
             return 20 * Mathf.Log10(volume);
         }
 
+        /// <summary>
+        /// Initialize settings. Should be called on game startup.
+        /// </summary>
 	    public static void Initialize()
 	    {
 	        _masterMixer = Resources.Load<AudioMixer>("Mixers/MasterMixer");
 	    }
 
+        // used for BindBrokers
 	    public void NotifyPropertyChange(string propertyName) { OnPropertyChange?.Invoke(propertyName, this); }
 	}
 }
