@@ -12,12 +12,13 @@ namespace LSDR.IO
 			using (BinaryReader reader = new BinaryReader(File.Open(location, FileMode.Open)))
 			{
 				char[] signature = reader.ReadChars(8);
-				//if (signature != SIGNATURE)
-				//{
-				//	throw new Exception("Invalid signature in .tobj file.");
-				//}
+				if (signature != new [] {'T', 'O', 'R', 'I', 'I', 'O', 'B', 'J'})
+				{
+					throw new FileLoadException("Invalid signature in .tobj file.");
+				}
 
 				int version = reader.ReadInt32();
+				Debug.Log("Version is: " + version);
 				// check version later?
 
 				tobj.ObjectFile = reader.ReadString();

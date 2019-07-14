@@ -28,7 +28,6 @@ namespace LSDR.UI
 		public ScrollRect ContentScrollRect;
 
 		private bool _consoleVisible;
-		private bool _previousCursorViewState;
 
 		void Awake() { DevConsole.ConsoleUI = this; }
 
@@ -55,12 +54,11 @@ namespace LSDR.UI
 
 			if (state)
 			{
-				_previousCursorViewState = Cursor.visible;
 				StartCoroutine(UpdateScrollRect());
 			}
 			else TextFieldSelected(false);
 
-			GameSettings.SetCursorViewState(state ? true : DreamDirector.CurrentlyInDream ? false : true);
+			GameSettings.SetCursorViewState(state || !DreamDirector.CurrentlyInDream);
 		}
 
 		public void ClearConsole()

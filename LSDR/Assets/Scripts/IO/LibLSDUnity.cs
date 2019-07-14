@@ -34,6 +34,7 @@ namespace LSDR.IO
             foreach (var obj in tmd.ObjectTable)
             {
                 Mesh m = MeshFromTMDObject(obj);
+                meshList.Add(m);
             }
             
             return meshList;
@@ -359,8 +360,6 @@ namespace LSDR.IO
                     var image = GetImageDataFromTIM(tim);
                     int actualXPos = (tim.PixelData.XPosition - 320) * 2;
                     int actualYPos = 512 - tim.PixelData.YPosition - image.Height;
-
-                    Color[] td = TimDataToColors(image);
                     
                     tex.SetPixels(actualXPos, actualYPos, image.Width, image.Height, TimDataToColors(image));
                     tex.Apply();

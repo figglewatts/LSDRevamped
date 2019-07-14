@@ -27,7 +27,7 @@ namespace Torii.Resource
         private static readonly ResourceLifespans _lifespans;
 
         // the file to load resource lifespans from
-        private static readonly string lifespansDataFileName = "resourcelifespans.json";
+        //private static readonly string lifespansDataFileName = "resourcelifespans.json";
 
         /// <summary>
         /// Statically initialize the ResourceManager.

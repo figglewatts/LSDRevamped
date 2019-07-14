@@ -281,7 +281,6 @@ namespace LSDR.Entities.Dream
 				Texture2D graphTexMap =
 					ResourceManager.Load<Texture2D>(IOUtil.PathCombine("levels", DreamJournalManager.CurrentJournal + ".png"),
 						ResourceLifespan.MENU);
-				Color32[] colorTest = graphTexMap.GetPixels32();
 				int levelIndex = graphTexMap.GetPixels32()[textureArrayIndex].a;
 
 				level = IOUtil.GetLevelFromIndex(levelIndex, DreamJournalManager.CurrentJournal);
@@ -291,6 +290,7 @@ namespace LSDR.Entities.Dream
 			catch (ResourceManager.ResourceLoadException e)
 			{
 				Debug.Log("Could not find graph spawn texture, defaulting to random spawn");
+				Debug.LogException(e);
 			}
 
 			level = null;
