@@ -1,10 +1,9 @@
 ﻿using UnityEngine;
-using Game;
-using InputManagement;
-using UnityEngine.VR;
+using LSDR.Game;
+using LSDR.InputManagement;
 using System.Collections.Generic;
 
-namespace Entities.Player
+namespace LSDR.Entities.Player
 {
 	/// <summary>
 	/// Controls player camera motion.

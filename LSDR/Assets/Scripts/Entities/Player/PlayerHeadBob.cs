@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
-using Game;
-using InputManagement;
+using LSDR.Game;
+using LSDR.InputManagement;
 using UnityEngine.Audio;
-using Util;
+using LSDR.Util;
 
-namespace Entities.Player
+namespace LSDR.Entities.Player
 {
 	/// <summary>
 	/// Handles player head bobbing and footstep sounds. Footstep sounds are handled here as footsteps need to be

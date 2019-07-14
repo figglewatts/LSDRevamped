@@ -1,10 +1,10 @@
-using IO;
+using LSDR.IO;
 using libLSD.Formats;
 using Torii.Resource;
 using UnityEngine;
-using Util;
+using LSDR.Util;
 
-namespace Visual
+namespace LSDR.Visual
 {
     /// <summary>
     /// Virtual PSX VRAM. A TIX file can be loaded into it to populate it.

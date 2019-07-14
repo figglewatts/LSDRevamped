@@ -2,9 +2,9 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using Torii.Resource;
 using UnityEngine;
-using Util;
+using LSDR.Util;
 
-namespace Visual
+namespace LSDR.Visual
 {
     /// <summary>
     /// A MaterialManifest is a JSON object that defines how to generate a Material.

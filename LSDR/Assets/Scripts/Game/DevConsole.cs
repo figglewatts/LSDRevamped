@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
-using Entities.Dream;
-using UI;
+using LSDR.Entities.Dream;
+using LSDR.UI;
 using UnityEngine;
-using Util;
+using LSDR.Util;
 
-namespace Game
+namespace LSDR.Game
 {
 	// TODO: Refactor DevConsole (also DreamDirector refactor)
 	public static class DevConsole

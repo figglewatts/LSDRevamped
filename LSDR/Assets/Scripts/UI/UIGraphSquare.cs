@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
 
-namespace UI
+namespace LSDR.UI
 {
 	/// <summary>
 	/// A single square in the dream graph.

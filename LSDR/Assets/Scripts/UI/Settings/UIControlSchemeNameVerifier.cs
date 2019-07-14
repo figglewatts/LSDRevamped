@@ -1,62 +1,57 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using InputManagement;
+﻿using System.Linq;
+using LSDR.InputManagement;
 using UnityEngine;
 using UnityEngine.UI;
 
-/// <summary>
-/// Verifies a control scheme name.
-/// </summary>
-[RequireComponent(typeof(InputField))]
-public class UIControlSchemeNameVerifier : MonoBehaviour
+namespace LSDR.UI.Settings
 {
-    public Button Button;
-
-    public bool CanHaveSameName
-    {
-        get { return _canHaveSameName; }
-        set { _canHaveSameName = value; }
-    }
-
-    [SerializeField]
-    private bool _canHaveSameName = false;
-
-    [SerializeField]
-    private InputField _inputField;
-
-    void Awake()
-    {
-        _inputField = GetComponent<InputField>();
-        _inputField.onValueChanged.AddListener(validateInput);
-        Button.interactable = false;
-    }
-
     /// <summary>
-    /// Validate this control scheme name.
+    /// Verifies a control scheme name.
     /// </summary>
-    /// <param name="input">The control scheme name.</param>
-    /// <returns>False if invalid, true otherwise.</returns>
-    public bool Validate(string input)
+    [RequireComponent(typeof(InputField))]
+    public class UIControlSchemeNameVerifier : MonoBehaviour
     {
-        // scheme can't be empty
-        if (string.IsNullOrEmpty(input))
+        public Button Button;
+
+        public bool CanHaveSameName { get { return _canHaveSameName; } set { _canHaveSameName = value; } }
+
+        [SerializeField] private bool _canHaveSameName = false;
+
+        [SerializeField] private InputField _inputField;
+
+        void Awake()
         {
-            return false;
+            _inputField = GetComponent<InputField>();
+            _inputField.onValueChanged.AddListener(validateInput);
+            Button.interactable = false;
         }
 
-        // scheme can't overwrite another scheme
-        if (!CanHaveSameName && ControlSchemeManager.Schemes.Count(scheme => scheme.Name == input) > 0)
+        /// <summary>
+        /// Validate this control scheme name.
+        /// </summary>
+        /// <param name="input">The control scheme name.</param>
+        /// <returns>False if invalid, true otherwise.</returns>
+        public bool Validate(string input)
         {
-            return false;
+            // scheme can't be empty
+            if (string.IsNullOrEmpty(input))
+            {
+                return false;
+            }
+
+            // scheme can't overwrite another scheme
+            if (!CanHaveSameName && ControlSchemeManager.Schemes.Count(scheme => scheme.Name == input) > 0)
+            {
+                return false;
+            }
+
+            return true;
         }
 
-        return true;
-    }
-
-    private void validateInput(string input)
-    {
-        // set the button's state when the text changes
-        Button.interactable = Validate(input);
+        private void validateInput(string input)
+        {
+            // set the button's state when the text changes
+            Button.interactable = Validate(input);
+        }
     }
 }

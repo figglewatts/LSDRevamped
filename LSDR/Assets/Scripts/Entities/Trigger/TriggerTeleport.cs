@@ -1,10 +1,10 @@
-﻿using Entities.WorldObject;
-using Types;
-using UI;
+﻿using LSDR.Entities.WorldObject;
+using LSDR.Types;
+using LSDR.UI;
 using UnityEngine;
-using Util;
+using LSDR.Util;
 
-namespace Entities.Trigger
+namespace LSDR.Entities.Trigger
 {
 	// TODO: TriggerTeleport is obsolete
 	public class TriggerTeleport : MonoBehaviour

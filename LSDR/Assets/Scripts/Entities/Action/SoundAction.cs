@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Entities.Dream;
-using Types;
+using LSDR.Entities.Dream;
+using LSDR.Types;
 using UnityEngine.Audio;
-using Util;
+using LSDR.Util;
 
-namespace Entities.Action
+namespace LSDR.Entities.Action
 {
 	// TODO: SoundAction is obsolete
 	public class SoundAction : BaseAction

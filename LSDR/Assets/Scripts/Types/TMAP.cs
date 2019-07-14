@@ -1,7 +1,6 @@
 ﻿using System;
-using IO;
 
-namespace Types
+namespace LSDR.Types
 {
 	// TODO: TMAP might be obsolete now
 	[Serializable]

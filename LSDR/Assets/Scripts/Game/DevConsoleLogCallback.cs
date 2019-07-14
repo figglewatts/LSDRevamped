@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
-using UI;
+using LSDR.UI;
 
-namespace Game
+namespace LSDR.Game
 {
 	/// <summary>
 	/// Used to set up the log callback for the developer console

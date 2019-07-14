@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using UnityEngine;
-using Util;
+using LSDR.Util;
 
-namespace Game
+namespace LSDR.Game
 {
 	// TODO: update with new way dream journals are handled
 

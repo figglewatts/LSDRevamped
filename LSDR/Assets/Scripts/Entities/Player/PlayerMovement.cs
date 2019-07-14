@@ -1,8 +1,8 @@
-using Game;
+using LSDR.Game;
 using UnityEngine;
-using InputManagement;
+using LSDR.InputManagement;
 
-namespace Entities.Player
+namespace LSDR.Entities.Player
 {
     /// <summary>
 	/// Handles player motion. Moving forwards and backwards, and strafing if FPS movement is enabled.

@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using libLSD.Formats;
 using libLSD.Types;
-using Visual;
+using LSDR.Visual;
 
-namespace IO
+namespace LSDR.IO
 {
     /// <summary>
     /// Contains numerous utility methods for converting data in original game format to formats Unity likes.

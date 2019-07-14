@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace UI
+namespace LSDR.UI
 {
 	/// <summary>
 	/// Used by animation events to invoke post-fade delegates.

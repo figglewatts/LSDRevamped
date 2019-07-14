@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Entities.Dream;
-using Types;
+﻿using LSDR.Entities.Dream;
+using LSDR.Types;
 using UnityEngine;
-using Util;
+using LSDR.Util;
 
-namespace Entities.Player
+namespace LSDR.Entities.Player
 {
 	// TODO: PlayerSpawn is obsolete
 	public class PlayerSpawn : MonoBehaviour

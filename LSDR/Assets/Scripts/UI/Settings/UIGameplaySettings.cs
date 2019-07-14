@@ -1,10 +1,9 @@
 ﻿using UnityEngine;
-using System.Collections;
-using Game;
+using LSDR.Game;
 using Torii.Binding;
 using Torii.UI;
 
-namespace UI.Settings
+namespace LSDR.UI.Settings
 {
 	/// <summary>
 	/// Menu for setting gameplay settings.

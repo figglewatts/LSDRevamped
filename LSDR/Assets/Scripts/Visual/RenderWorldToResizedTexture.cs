@@ -1,8 +1,8 @@
-﻿using Game;
+﻿using LSDR.Game;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Visual
+namespace LSDR.Visual
 {
 	// TODO: is RenderWorldToResizedTexture used?
 	public class RenderWorldToResizedTexture : MonoBehaviour

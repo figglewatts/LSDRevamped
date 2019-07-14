@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Game;
+﻿using LSDR.Game;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace UI
+namespace LSDR.UI
 {
 	// TODO: refactor UICurrentJournalDisplay in DreamDirector refactor
 	public class UICurrentJournalDisplay : MonoBehaviour

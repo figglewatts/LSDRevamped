@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections;
-using UI;
+using LSDR.UI;
 
-namespace Game
+namespace LSDR.Game
 {
 	// TODO: Refactor DevConsoleKeypressListener in DevConsole refactor
 	public class DevConsoleKeypressListener : MonoBehaviour

@@ -1,14 +1,12 @@
-﻿using System;
-using UnityEngine;
-using System.Collections;
-using Entities.Dream;
-using Entities.WorldObject;
-using Game;
-using UI;
+﻿using UnityEngine;
+using LSDR.Entities.Dream;
+using LSDR.Entities.WorldObject;
+using LSDR.Game;
+using LSDR.UI;
 using UnityEngine.Audio;
-using Util;
+using LSDR.Util;
 
-namespace Entities.Player
+namespace LSDR.Entities.Player
 {
 	// TODO: refactor PlayerLinker in DreamDirector refactor
 	public class PlayerLinker : MonoBehaviour

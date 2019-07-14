@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-namespace UI
+namespace LSDR.UI
 {
 	/// <summary>
 	/// Makes a worldspace canvas resize based on camera FOV by having it start as a camera canvas

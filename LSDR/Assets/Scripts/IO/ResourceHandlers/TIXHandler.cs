@@ -3,7 +3,7 @@ using System.IO;
 using libLSD.Formats;
 using Torii.Resource;
 
-namespace ResourceHandlers
+namespace LSDR.IO.ResourceHandlers
 {
     /// <summary>
     /// Load a TIX texture archive from disk.

@@ -1,10 +1,10 @@
 ﻿using System.Collections;
-using Entities.Dream;
-using Types;
+using LSDR.Entities.Dream;
+using LSDR.Types;
 using UnityEngine;
-using Util;
+using LSDR.Util;
 
-namespace Entities.Action
+namespace LSDR.Entities.Action
 {
 	// TODO: RotateAction is obsolete
 	public class RotateAction : BaseAction

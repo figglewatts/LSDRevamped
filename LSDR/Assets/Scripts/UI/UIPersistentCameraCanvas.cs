@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.SceneManagement;
 
-namespace UI
+namespace LSDR.UI
 {
 	/// <summary>
 	/// Used to make a camera canvas that persists between scene loads.

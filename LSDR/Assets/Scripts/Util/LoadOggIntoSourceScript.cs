@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-namespace Util
+namespace LSDR.Util
 {
 	// TODO: is LoadOggIntoSourceScript redundant?
 	public class LoadOggIntoSourceScript : MonoBehaviour

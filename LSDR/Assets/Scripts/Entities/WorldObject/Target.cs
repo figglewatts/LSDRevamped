@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using Types;
+using LSDR.Types;
 using UnityEngine;
-using Util;
+using LSDR.Util;
 
-namespace Entities.WorldObject
+namespace LSDR.Entities.WorldObject
 {
 	// TODO: Target is now obsolete
 	public class Target : MonoBehaviour

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using Types;
+using LSDR.Types;
 using UnityEngine;
-using Util;
+using LSDR.Util;
 
-namespace Entities.Action
+namespace LSDR.Entities.Action
 {
 	// TODO: ActionSequence is obsolete
 	public class ActionSequence : MonoBehaviour

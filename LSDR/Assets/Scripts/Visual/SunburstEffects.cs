@@ -4,7 +4,7 @@
 
 using UnityEngine;
 
-namespace Visual
+namespace LSDR.Visual
 {
 	[RequireComponent(typeof(MeshFilter)), RequireComponent(typeof(MeshRenderer))]
 	public class SunburstEffects : MonoBehaviour

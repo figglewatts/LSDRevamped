@@ -1,10 +1,8 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System.Runtime.InteropServices;
-using Entities.Dream;
-using Game;
+using LSDR.Entities.Dream;
+using LSDR.Game;
 
-namespace Entities.Player
+namespace LSDR.Entities.Player
 {
 	/// <summary>
 	/// Used to detect whether or not a player is currently falling.

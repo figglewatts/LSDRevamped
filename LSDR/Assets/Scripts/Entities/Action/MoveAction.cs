@@ -1,11 +1,11 @@
 ﻿using System.Collections;
-using Entities.Dream;
-using Entities.WorldObject;
+using LSDR.Entities.Dream;
+using LSDR.Entities.WorldObject;
 using UnityEngine;
-using Types;
-using Util;
+using LSDR.Types;
+using LSDR.Util;
 
-namespace Entities.Action
+namespace LSDR.Entities.Action
 {
 	// TODO: MoveAction is obsolete
 	public class MoveAction : BaseAction

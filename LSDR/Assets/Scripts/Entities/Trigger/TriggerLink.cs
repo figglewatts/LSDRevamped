@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Entities.Player;
-using Types;
+﻿using LSDR.Entities.Player;
+using LSDR.Types;
 using UnityEngine;
-using Util;
+using LSDR.Util;
 
-namespace Entities.Trigger
+namespace LSDR.Entities.Trigger
 {
 	// TODO: TriggerLink is obsolete
 	public class TriggerLink : MonoBehaviour

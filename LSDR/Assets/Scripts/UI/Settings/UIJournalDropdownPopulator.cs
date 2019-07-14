@@ -1,9 +1,7 @@
-﻿using UnityEngine;
-using System.Collections;
-using Game;
+﻿using LSDR.Game;
 using Torii.UI;
 
-namespace UI
+namespace LSDR.UI.Settings
 {
 	/// <summary>
 	/// Populate the dream journal dropdown menu.

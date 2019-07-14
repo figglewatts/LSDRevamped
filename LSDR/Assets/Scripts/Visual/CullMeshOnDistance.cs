@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Visual
+namespace LSDR.Visual
 {
     /// <summary>
     /// When attached to a GameObject, will disable the renderer when the camera is a certain distance away.

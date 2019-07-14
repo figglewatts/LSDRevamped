@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace Dream
+namespace LSDR.Dream
 {
     /// <summary>
     /// Dream is used as a data container for Dream information.

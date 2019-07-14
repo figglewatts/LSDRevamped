@@ -1,11 +1,11 @@
 ﻿using System;
 using UnityEngine;
-using System.Collections;
-using Entities.Dream;
-using Game;
+using LSDR.Entities.Dream;
+using LSDR.Game;
+using LSDR.UI.Settings;
 using UnityEngine.UI;
 
-namespace UI
+namespace LSDR.UI
 {
 	/// <summary>
 	/// The pause menu of the game.

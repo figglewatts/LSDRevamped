@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace AutoUpdate
+namespace LSDR.AutoUpdate
 {
 	public class UpdateChecker : MonoBehaviour
 	{

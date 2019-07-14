@@ -1,7 +1,7 @@
-using Game;
+using LSDR.Game;
 using UnityEngine;
 
-namespace Visual
+namespace LSDR.Visual
 {
     /// <summary>
     /// When attached to a GameObject, will set its fog color based on distance from camera, and render settings.

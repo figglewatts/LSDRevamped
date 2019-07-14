@@ -1,10 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System.Linq;
-using Game;
 using InControl;
-using InputManagement;
-using Torii.Binding;
+using LSDR.InputManagement;
 using Torii.UI;
 
 namespace LSDR.UI.Settings
@@ -94,7 +90,7 @@ namespace LSDR.UI.Settings
 	        RebindContainerPopulator.EditingScheme = _currentlyEditingScheme;
 	        UseFpsControlsToggle.isOn = _currentlyEditingScheme.FpsControls;
 	        MouseSensitivitySlider.value = _currentlyEditingScheme.MouseSensitivity;
-            TopButtonsTabView.SetAllButtonsEnabled(false);
+            TopButtonsTabView.SetAllButtonsInteractable(false);
 	        SettingsApplyButton.interactable = false;
 	        SettingsBackButton.interactable = false;
 	    }
@@ -132,7 +128,7 @@ namespace LSDR.UI.Settings
 	    {
 	        CreatorObject.SetActive(false);
 	        SelectorObject.SetActive(true);
-            TopButtonsTabView.SetAllButtonsEnabled(true);
+            TopButtonsTabView.SetAllButtonsInteractable(true);
 	        SettingsApplyButton.interactable = true;
 	        SettingsBackButton.interactable = true;
 	    }

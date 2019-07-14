@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
-using InputManagement;
+using LSDR.InputManagement;
 
-namespace Entities.Player
+namespace LSDR.Entities.Player
 {
 	/// <summary>
 	/// Handles player walk speed and headbob speed and amplitude. 

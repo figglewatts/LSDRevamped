@@ -6,9 +6,9 @@ using System.IO;
 using ICSharpCode.SharpZipLib.Core;
 using SimpleJSON;
 using ICSharpCode.SharpZipLib.Zip;
-using Util;
+using LSDR.Util;
 
-namespace AutoUpdate
+namespace LSDR.AutoUpdate
 {
 	public class UpdaterScript : MonoBehaviour
 	{

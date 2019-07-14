@@ -1,9 +1,7 @@
-﻿using System;
-using UnityEngine;
-using System.Collections;
-using Types;
+﻿using UnityEngine;
+using LSDR.Types;
 
-namespace Entities.WorldObject
+namespace LSDR.Entities.WorldObject
 {
 	/// <summary>
 	/// Used to access TOBJ struct on instantiated GameObjects

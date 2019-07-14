@@ -1,11 +1,9 @@
 using System;
 using System.IO;
-using IO;
 using libLSD.Formats;
 using Torii.Resource;
-using UnityEngine;
 
-namespace ResourceHandlers
+namespace LSDR.IO.ResourceHandlers
 {
     /// <summary>
     /// A ResourceHandler to handle loading LBD files.

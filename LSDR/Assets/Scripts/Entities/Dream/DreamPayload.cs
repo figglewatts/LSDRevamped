@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-namespace Entities.Dream
+namespace LSDR.Entities.Dream
 {
 	// TODO: DreamDirector refactoring for DreamPayload
 	public class DreamPayload : MonoBehaviour

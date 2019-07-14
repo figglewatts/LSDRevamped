@@ -1,11 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Types;
-using Util;
-using System;
-using Entities.Dream;
+using LSDR.Types;
+using LSDR.Util;
+using LSDR.Entities.Dream;
 
-namespace Entities.Action
+namespace LSDR.Entities.Action
 {
 	// TODO: WaitAction is obsolete
 	public class WaitAction : BaseAction

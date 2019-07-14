@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Entities.Dream;
-using Game;
-using Types;
-using UI;
-using Util;
+using LSDR.Entities.Dream;
+using LSDR.Game;
+using LSDR.Types;
+using LSDR.UI;
+using LSDR.Util;
 
-namespace Entities.Dream
+namespace LSDR.Entities.Dream
 {
 	// TODO: DreamDirector refactoring, DreamPayloadReceiver
 	public class DreamPayloadReceiver : MonoBehaviour

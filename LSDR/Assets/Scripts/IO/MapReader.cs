@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using Game;
+using LSDR.Game;
 using MapParse;
 using MapParse.Types;
 using UnityEngine;
-using Util;
+using LSDR.Util;
 
-namespace IO
+namespace LSDR.IO
 {
 	// TODO: MapReader is now obsolete
 	public static class MapReader

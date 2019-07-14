@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
-using Game;
-using InputManagement;
+using LSDR.Game;
+using LSDR.InputManagement;
 
-namespace Entities.Player
+namespace LSDR.Entities.Player
 {
 	/// <summary>
 	/// Handles player left and right rotation. This is for classic control mode.

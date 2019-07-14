@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections;
 using UnityEngine;
 
-namespace Entities.Action
+namespace LSDR.Entities.Action
 {
 	// TODO: BaseAction is obsolete
 	public abstract class BaseAction : MonoBehaviour

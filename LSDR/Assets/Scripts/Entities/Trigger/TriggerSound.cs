@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Types;
+﻿using LSDR.Types;
 using UnityEngine;
 using UnityEngine.Audio;
-using Util;
+using LSDR.Util;
 
-namespace Entities.Trigger
+namespace LSDR.Entities.Trigger
 {
 	// TODO: TriggerSound is obsolete
 	public class TriggerSound : MonoBehaviour

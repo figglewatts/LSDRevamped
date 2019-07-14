@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace AutoUpdate
+namespace LSDR.AutoUpdate
 {
 	public class UpdateMenu : MonoBehaviour
 	{

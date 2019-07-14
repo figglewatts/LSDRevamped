@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Game;
-using Newtonsoft.Json;
-using ProtoBuf;
-using SimpleJSON;
-using UnityEngine;
-using Util;
+﻿using ProtoBuf;
 
-namespace InputManagement
+namespace LSDR.InputManagement
 {
     /// <summary>
     /// ControlScheme is a data container used to store a control scheme.

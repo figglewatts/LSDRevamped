@@ -1,9 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections;
-using Game;
-using UnityEngine.VR;
+using LSDR.Game;
 
-namespace Util
+namespace LSDR.Util
 {
 	/// <summary>
 	/// Used to make things match the transform of another object when not in VR mode

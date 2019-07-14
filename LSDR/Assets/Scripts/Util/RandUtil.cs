@@ -3,7 +3,7 @@ using System.IO;
 using UnityEngine;
 using Random = System.Random;
 
-namespace Util
+namespace LSDR.Util
 {
 	/// <summary>
 	/// Utility functions for generating random numbers.

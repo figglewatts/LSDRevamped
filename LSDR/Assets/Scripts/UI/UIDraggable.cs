@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace UI
+namespace LSDR.UI
 {
 	/// <summary>
 	/// When attached to a gameobject, make a given transform draggable with the mouse.

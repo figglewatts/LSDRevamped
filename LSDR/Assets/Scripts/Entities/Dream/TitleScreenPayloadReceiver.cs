@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
-using System.Collections;
-using Game;
-using UI;
+using LSDR.Game;
+using LSDR.UI;
 
-namespace Entities.Dream
+namespace LSDR.Entities.Dream
 {
 	// TODO: refactor TitleScreenPayloadReceiver in DreamDirector refactor
 	public class TitleScreenPayloadReceiver : MonoBehaviour

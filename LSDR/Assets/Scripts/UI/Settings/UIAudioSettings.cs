@@ -1,7 +1,6 @@
-﻿using Game;
+﻿using LSDR.Game;
 using Torii.Binding;
 using UnityEngine;
-using UnityEngine.Audio;
 using Torii.UI;
 
 namespace LSDR.UI.Settings

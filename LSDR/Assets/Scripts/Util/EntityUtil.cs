@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using Types;
+using LSDR.Types;
 using UnityEngine;
 
-namespace Util
+namespace LSDR.Util
 {
 	// TODO: EntityUtil might be obsolete now
 	public static class EntityUtil

@@ -1,18 +1,15 @@
 ﻿using System;
 using System.IO;
-using InputManagement;
+using LSDR.InputManagement;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using SimpleJSON;
 using Torii.Binding;
 using Torii.Serialization;
 using Torii.Util;
 using UnityEngine;
 using UnityEngine.Audio;
-using UnityEngine.VR;
-using Util;
 
-namespace Game
+namespace LSDR.Game
 {
 	/// <summary>
 	/// GameSettings is the class used for storing and serialisation/deserialisation of the game's settings.

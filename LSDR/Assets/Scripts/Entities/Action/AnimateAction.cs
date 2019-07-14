@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections;
-using Entities.Dream;
-using Entities.WorldObject;
-using Types;
+﻿using System.Collections;
+using LSDR.Entities.Dream;
+using LSDR.Entities.WorldObject;
+using LSDR.Types;
 using UnityEngine;
-using Util;
+using LSDR.Util;
 
-namespace Entities.Action
+namespace LSDR.Entities.Action
 {
 	// TODO: AnimateAction is obsolete
 	public class AnimateAction : BaseAction

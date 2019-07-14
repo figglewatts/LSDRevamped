@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using Entities.Action;
-using Entities.Player;
-using Entities.WorldObject;
-using Game;
-using Types;
-using UI;
+﻿using System.Collections.Generic;
+using LSDR.Entities.Action;
+using LSDR.Entities.Player;
+using LSDR.Entities.WorldObject;
+using LSDR.Game;
+using LSDR.Types;
+using LSDR.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Util;
+using LSDR.Util;
 
-namespace Entities.Dream
+namespace LSDR.Entities.Dream
 {
 	public delegate void OnLevelFinishChangeHandler();
 

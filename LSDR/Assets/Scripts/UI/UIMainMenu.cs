@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-namespace UI
+namespace LSDR.UI
 {
 	/// <summary>
 	/// The main menu of the game.

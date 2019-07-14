@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-namespace Entities.WorldObject
+namespace LSDR.Entities.WorldObject
 {
 	// TODO: LinkableObject is now obsolete
 	public class LinkableObject : MonoBehaviour

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Util
+namespace LSDR.Util
 {
     /// <summary>
     /// MatchTransform matches the transform of the attached object to a given target.

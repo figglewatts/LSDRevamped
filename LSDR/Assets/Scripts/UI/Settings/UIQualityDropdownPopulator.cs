@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Torii.UI;
 
-namespace UI
+namespace LSDR.UI.Settings
 {
 	/// <summary>
 	/// Populate the quality settings dropdown menu.

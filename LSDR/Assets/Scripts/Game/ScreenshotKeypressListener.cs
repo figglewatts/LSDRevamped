@@ -1,10 +1,9 @@
 ﻿using System;
 using UnityEngine;
-using System.Collections;
 using System.IO;
-using Util;
+using LSDR.Util;
 
-namespace Game
+namespace LSDR.Game
 {
 	/// <summary>
 	/// ScreenshotKeypressListener is a MonoBehaviour that, when put on something, will listen for the screenshot key

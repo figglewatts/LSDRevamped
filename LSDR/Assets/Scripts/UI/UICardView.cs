@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine.UI;
 
-namespace UI
+namespace LSDR.UI
 {
 	/// <summary>
 	/// Defines a UI view with 'cards' that are swapped out by a next and a previous button.

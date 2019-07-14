@@ -1,9 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using InControl;
-using UnityEngine;
+﻿using InControl;
 
-namespace InputManagement
+namespace LSDR.InputManagement
 {
     /// <summary>
     /// ControlActions is the InControl ActionSet used for game inputs.

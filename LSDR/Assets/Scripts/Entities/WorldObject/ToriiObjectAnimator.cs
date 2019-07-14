@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using Types;
+using LSDR.Types;
 
-namespace Entities.WorldObject
+namespace LSDR.Entities.WorldObject
 {
 	// TODO: ToriiObjectAnimator is now obsolete
 	public class ToriiObjectAnimator : MonoBehaviour

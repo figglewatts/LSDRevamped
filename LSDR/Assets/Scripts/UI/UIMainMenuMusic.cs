@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.IO;
-using Util;
+using LSDR.Util;
 
-namespace UI
+namespace LSDR.UI
 {
 	/// <summary>
 	/// Randomly plays a song from the title screen music folder.

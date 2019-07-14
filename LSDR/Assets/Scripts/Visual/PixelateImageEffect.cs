@@ -3,7 +3,7 @@
 
 using UnityEngine;
 
-namespace Visual
+namespace LSDR.Visual
 {
     /// <summary>
     /// Image effect for pixellating a camera.

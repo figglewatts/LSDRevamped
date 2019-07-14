@@ -1,14 +1,12 @@
-﻿using System;
-using Entities.Action;
-using Entities.Dream;
-using Entities.Player;
-using Entities.Trigger;
-using Entities.WorldObject;
-using Types;
+﻿using LSDR.Entities.Action;
+using LSDR.Entities.Dream;
+using LSDR.Entities.Player;
+using LSDR.Entities.Trigger;
+using LSDR.Entities.WorldObject;
+using LSDR.Types;
 using UnityEngine;
-using Util;
 
-namespace Entities
+namespace LSDR.Entities
 {
 	// TODO: EntityInstantiator is now obsolete
 	public static class EntityInstantiator

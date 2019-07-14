@@ -1,16 +1,11 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Entities.Dream;
-using Game;
+using LSDR.Entities.Dream;
+using LSDR.Game;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using Util;
 
-namespace UI
+namespace LSDR.UI
 {
 	// TODO: refactor UIDevConsole in DevConsole refactor
 	public class UIDevConsole : MonoBehaviour

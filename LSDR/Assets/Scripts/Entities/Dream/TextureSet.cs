@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Entities.Dream
+﻿namespace LSDR.Entities.Dream
 {
 	// TODO: does TextureSet need to be in the Entities.Dream namespace?
 	/// <summary>

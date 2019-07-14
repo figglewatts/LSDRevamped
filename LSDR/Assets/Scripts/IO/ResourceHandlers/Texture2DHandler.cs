@@ -3,7 +3,7 @@ using System.IO;
 using Torii.Resource;
 using UnityEngine;
 
-namespace ResourceHandlers
+namespace LSDR.IO.ResourceHandlers
 {
     /// <summary>
     /// Load a PNG image from disk.

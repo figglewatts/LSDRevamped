@@ -2,16 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Entities.WorldObject;
-using IO;
-using MapParse;
-using MapParse.Types;
+using LSDR.Entities.WorldObject;
+using LSDR.IO;
 using SimpleJSON;
-using Types;
+using LSDR.Types;
 using UnityEngine;
-using Util;
+using LSDR.Util;
 
-namespace Game
+namespace LSDR.Game
 {
 	// TODO: the old version of ResourceManager is now obsolete, but still used by a lot of files
 	public static class ResourceManager

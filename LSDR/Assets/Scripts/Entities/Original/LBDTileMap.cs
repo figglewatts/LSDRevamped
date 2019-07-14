@@ -1,13 +1,12 @@
 using System.IO;
-using IO;
+using LSDR.IO;
 using libLSD.Formats;
 using Torii.Resource;
-using UnityEditor;
 using UnityEngine;
-using Util;
-using Visual;
+using LSDR.Util;
+using LSDR.Visual;
 
-namespace Entities.Original
+namespace LSDR.Entities.Original
 {
     /// <summary>
     /// LBDTileMap is a MonoBehaviour used for loading a tilemap of LBD files.

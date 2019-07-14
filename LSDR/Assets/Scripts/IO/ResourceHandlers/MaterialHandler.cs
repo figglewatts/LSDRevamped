@@ -1,12 +1,10 @@
 using System;
 using System.IO;
 using Newtonsoft.Json;
-using Torii.Exceptions;
 using Torii.Resource;
-using UnityEngine;
-using Visual;
+using LSDR.Visual;
 
-namespace ResourceHandlers
+namespace LSDR.IO.ResourceHandlers
 {
     /// <summary>
     /// Load a Material manifest from disk.

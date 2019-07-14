@@ -1,9 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections;
-using Torii.Binding;
 using Torii.UI;
 
-namespace UI
+namespace LSDR.UI
 {
 	/// <summary>
 	/// Display a value on the handle of a UI slider.

@@ -2,15 +2,13 @@
 using System;
 using System.Collections;
 using System.IO;
-using System.Net;
-using Entities;
-using Entities.WorldObject;
-using Game;
-using IO;
+using LSDR.Entities;
+using LSDR.Entities.WorldObject;
+using LSDR.Game;
 using SimpleJSON;
-using Types;
+using LSDR.Types;
 
-namespace Util
+namespace LSDR.Util
 {
 	// TODO: I'm pretty sure most of IOUtil is now redundant
 	public static class IOUtil

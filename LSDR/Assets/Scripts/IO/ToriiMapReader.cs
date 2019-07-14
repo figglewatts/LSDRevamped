@@ -1,9 +1,7 @@
-﻿using System;
-using System.IO;
-using Types;
-using UnityEngine;
+﻿using System.IO;
+using LSDR.Types;
 
-namespace IO
+namespace LSDR.IO
 {
 	public static class ToriiMapReader
 	{

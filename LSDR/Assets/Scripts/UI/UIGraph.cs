@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Entities.Dream;
+﻿using System.Collections.Generic;
+using LSDR.Entities.Dream;
 using UnityEngine;
 
-namespace UI
+namespace LSDR.UI
 {
 	/// <summary>
 	/// The dream graph.

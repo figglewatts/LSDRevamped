@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace UI
+namespace LSDR.UI
 {
 	/// <summary>
 	/// Fader is used to fade a color in/out of the entire screen.

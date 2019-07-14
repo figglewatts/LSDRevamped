@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace UI
+namespace LSDR.UI
 {
 	/// <summary>
 	/// An output row in the console.

@@ -1,9 +1,9 @@
-﻿using Game;
-using Types;
+﻿using LSDR.Game;
+using LSDR.Types;
 using UnityEngine;
-using Util;
+using LSDR.Util;
 
-namespace Entities.WorldObject
+namespace LSDR.Entities.WorldObject
 {
 	// TODO: MapObject is now obsolete
 	public class MapObject : LinkableObject

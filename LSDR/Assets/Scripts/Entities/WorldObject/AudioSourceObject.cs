@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections;
-using Types;
+using LSDR.Types;
 using UnityEngine;
 using UnityEngine.Audio;
-using Util;
+using LSDR.Util;
 
-namespace Entities.WorldObject
+namespace LSDR.Entities.WorldObject
 {
 	// TODO: AudioSourceObject is obsolete
 	public class AudioSourceObject : MonoBehaviour

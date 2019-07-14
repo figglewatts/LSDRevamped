@@ -1,13 +1,12 @@
-﻿using Types;
+﻿using LSDR.Types;
 using UnityEngine;
-using Util;
-using System;
+using LSDR.Util;
 using System.Collections;
-using Entities.Action;
-using Entities.Dream;
-using Game;
+using LSDR.Entities.Action;
+using LSDR.Entities.Dream;
+using LSDR.Game;
 
-namespace Entities.WorldObject
+namespace LSDR.Entities.WorldObject
 {
 	// TODO: ModelObject is now obsolete
 	public class ModelObject : LinkableObject

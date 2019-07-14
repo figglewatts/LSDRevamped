@@ -1,8 +1,8 @@
 ﻿using System.IO;
 using UnityEngine;
-using Types;
+using LSDR.Types;
 
-namespace IO
+namespace LSDR.IO
 {
 	public static class ToriiObjectReader
 	{

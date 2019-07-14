@@ -1,9 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections;
-using AutoUpdate;
 using UnityEngine.UI;
 
-namespace UI
+namespace LSDR.UI
 {
 	/// <summary>
 	/// Display the build number on text at the top of the screen.

@@ -5,7 +5,7 @@ using System.IO;
 using System.Text;
 using UnityEngine;
 
-namespace IO
+namespace LSDR.IO
 {
 	/// <summary>
 	/// OBJReader is used for loading OBJ files.

@@ -1,8 +1,7 @@
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using UnityEngine;
 
-namespace Visual
+namespace LSDR.Visual
 {
     /// <summary>
     /// MaterialRegistry is used to keep track of which Materials are used in a scene, so that properties/shaders

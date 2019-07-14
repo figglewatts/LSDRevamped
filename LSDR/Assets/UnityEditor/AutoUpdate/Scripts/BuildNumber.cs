@@ -2,9 +2,9 @@
 using System.Globalization;
 using System.IO;
 using UnityEngine;
-using Util;
+using LSDR.Util;
 
-namespace AutoUpdate
+namespace LSDR.AutoUpdate
 {
 	public static class BuildNumber
 	{

@@ -1,27 +1,28 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Game;
-using InputManagement;
+﻿using LSDR.Game;
+using LSDR.InputManagement;
 using Torii.Binding;
 using Torii.UI;
 using UnityEngine;
 
-/// <summary>
-/// Menu for setting control scheme settings.
-/// </summary>
-public class UIControlSettings : MonoBehaviour
+namespace LSDR.UI.Settings
 {
-    public Dropdown CurrentSchemeDropdown;
-
-    public void Start()
+    /// <summary>
+    /// Menu for setting control scheme settings.
+    /// </summary>
+    public class UIControlSettings : MonoBehaviour
     {
-        GameSettings.SettingsBindBroker.RegisterData(CurrentSchemeDropdown);
+        public Dropdown CurrentSchemeDropdown;
 
-        CurrentSchemeDropdown.value = GameSettings.CurrentSettings.CurrentControlSchemeIndex;
+        public void Start()
+        {
+            GameSettings.SettingsBindBroker.RegisterData(CurrentSchemeDropdown);
 
-        CurrentSchemeDropdown.onValueChanged.AddListener(ControlSchemeManager.UseScheme);
+            CurrentSchemeDropdown.value = GameSettings.CurrentSettings.CurrentControlSchemeIndex;
 
-        GameSettings.SettingsBindBroker.Bind(() => CurrentSchemeDropdown.value,
-            () => GameSettings.CurrentSettings.CurrentControlSchemeIndex, BindingType.TwoWay);
+            CurrentSchemeDropdown.onValueChanged.AddListener(ControlSchemeManager.UseScheme);
+
+            GameSettings.SettingsBindBroker.Bind(() => CurrentSchemeDropdown.value,
+                () => GameSettings.CurrentSettings.CurrentControlSchemeIndex, BindingType.TwoWay);
+        }
     }
 }

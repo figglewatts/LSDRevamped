@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using Game;
 using Torii.Serialization;
-using Util;
+using LSDR.Util;
 using UnityEngine;
 
-namespace InputManagement
+namespace LSDR.InputManagement
 {
 	/// <summary>
 	/// ControlSchemeManager is used to manage all of the user's control schemes.

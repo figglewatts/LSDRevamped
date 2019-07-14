@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
-using Game;
+using LSDR.Game;
 using Torii.Binding;
 using Torii.UI;
 
-namespace UI
+namespace LSDR.UI.Settings
 {
 	/// <summary>
 	/// Script for video settings.

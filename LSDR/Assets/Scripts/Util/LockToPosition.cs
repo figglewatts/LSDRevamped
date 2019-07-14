@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-namespace Util
+namespace LSDR.Util
 {
 	// TODO: try and find out where LockToPosition is used
 	public class LockToPosition : MonoBehaviour

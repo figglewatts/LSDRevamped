@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Visual
+namespace LSDR.Visual
 {
     /// <summary>
     /// Handles culling and fog of all tiles within an LBD.

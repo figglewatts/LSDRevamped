@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Entities.Action;
-using Entities.Dream;
-using Types;
+﻿using LSDR.Entities.Action;
+using LSDR.Entities.Dream;
+using LSDR.Types;
 using UnityEngine;
-using Util;
+using LSDR.Util;
 
-namespace Entities.Trigger
+namespace LSDR.Entities.Trigger
 {
 	// TODO: TriggerSequence is obsolete
 	public class TriggerSequence : MonoBehaviour

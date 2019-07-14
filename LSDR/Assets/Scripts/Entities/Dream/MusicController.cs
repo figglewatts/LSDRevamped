@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using Types;
+﻿using System.IO;
+using LSDR.Types;
 using UnityEngine;
 using UnityEngine.Audio;
-using Util;
+using LSDR.Util;
 
-namespace Entities.Dream
+namespace LSDR.Entities.Dream
 {
 	// TODO: refactor MusicController to be more reliable
 	public class MusicController : MonoBehaviour

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Torii.UI;
 
-namespace UI.Settings
+namespace LSDR.UI.Settings
 {
 	/// <summary>
 	/// Populate the resolution dropdown menu.

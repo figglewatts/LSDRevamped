@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Util
+namespace LSDR.Util
 {
 	/// <summary>
 	/// If attached to a GameObject, won't destroy it on scene load. Also ensures that there isn't an existing

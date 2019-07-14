@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Entities.Dream;
+﻿using LSDR.Entities.Dream;
 using SimpleJSON;
-using Types;
 using UnityEngine;
-using Util;
+using LSDR.Util;
 
-namespace Game
+namespace LSDR.Game
 {
 	// TODO: redo SaveGameManager
 	public static class SaveGameManager

@@ -1,8 +1,8 @@
-﻿using Types;
+﻿using LSDR.Types;
 using UnityEngine;
-using Util;
+using LSDR.Util;
 
-namespace Entities.Dream
+namespace LSDR.Entities.Dream
 {
 	// TODO: DreamEnvironment is obsolete
 	public class DreamEnvironment : MonoBehaviour

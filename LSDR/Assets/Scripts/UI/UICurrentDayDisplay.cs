@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
-using System.Collections;
-using Entities.Dream;
 using UnityEngine.UI;
+using LSDR.Entities.Dream;
 
-namespace UI
+namespace LSDR.UI
 {
 	// TODO: refactor UICurrentDayDisplay in DreamDirector refactor
 	public class UICurrentDayDisplay : MonoBehaviour

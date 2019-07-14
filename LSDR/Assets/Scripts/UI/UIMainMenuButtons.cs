@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections;
-using Entities.Dream;
+using LSDR.Entities.Dream;
 
-namespace UI
+namespace LSDR.UI
 {
 	/// <summary>
 	/// Script for main menu buttons. Contains their functionality on click.

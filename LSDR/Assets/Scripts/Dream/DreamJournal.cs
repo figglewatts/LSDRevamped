@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Dream
+namespace LSDR.Dream
 {
     /// <summary>
     /// DreamJournal is used to store all information about a dream journal (set of dreams to use when playing).

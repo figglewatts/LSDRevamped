@@ -1,42 +1,44 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Entities;
-using Entities.Dream;
-using Game;
-using Util;
+using LSDR.Game;
+using LSDR.Util;
 
-// TODO: refactor GreymanController to be more reliable
-public class GreymanController : MonoBehaviour
+namespace LSDR.Entities.Dream
 {
-	public float DistanceFromPlayer = 10F;
-
-	[SerializeField] private float _minWaitTime;
-	[SerializeField] private float _maxWaitTime;
-
-	// Use this for initialization
-	void Start() { StartCoroutine(RollForGreyman()); }
-
-	public void SpawnGreyman()
+	// TODO: refactor GreymanController to be more reliable
+	public class GreymanController : MonoBehaviour
 	{
-		Vector3 pos = DreamDirector.Player.transform.position + (DreamDirector.Player.transform.forward*DistanceFromPlayer);
-		Vector3 forward = DreamDirector.Player.transform.position - pos;
-		Quaternion rot = Quaternion.LookRotation(forward, Vector3.up);
-		EntityInstantiator.InstantiatePrefab("Prefabs/Greyman", pos, rot);
-	}
+		public float DistanceFromPlayer = 10F;
 
-	private IEnumerator RollForGreyman()
-	{
-		while (true)
+		[SerializeField] private float _minWaitTime;
+		[SerializeField] private float _maxWaitTime;
+
+		// Use this for initialization
+		void Start() { StartCoroutine(RollForGreyman()); }
+
+		public void SpawnGreyman()
 		{
-			if (DreamDirector.CanSpawnGreyman)
+			Vector3 pos = DreamDirector.Player.transform.position +
+			              (DreamDirector.Player.transform.forward * DistanceFromPlayer);
+			Vector3 forward = DreamDirector.Player.transform.position - pos;
+			Quaternion rot = Quaternion.LookRotation(forward, Vector3.up);
+			EntityInstantiator.InstantiatePrefab("Prefabs/Greyman", pos, rot);
+		}
+
+		private IEnumerator RollForGreyman()
+		{
+			while (true)
 			{
-				int chance = RandUtil.Int(GameSettings.CHANCE_FOR_GREYMAN);
+				if (DreamDirector.CanSpawnGreyman)
+				{
+					int chance = RandUtil.Int(GameSettings.CHANCE_FOR_GREYMAN);
 
-				Debug.Log(chance);
-				if (chance == 0) SpawnGreyman();
+					Debug.Log(chance);
+					if (chance == 0) SpawnGreyman();
+				}
+
+				yield return new WaitForSeconds(RandUtil.Float(_minWaitTime, _maxWaitTime));
 			}
-
-			yield return new WaitForSeconds(RandUtil.Float(_minWaitTime, _maxWaitTime));
 		}
 	}
 }
