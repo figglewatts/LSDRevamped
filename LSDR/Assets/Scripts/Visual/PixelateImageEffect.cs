@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace Visual
 {
+    /// <summary>
+    /// Image effect for pixellating a camera.
+    /// </summary>
     [ExecuteInEditMode]
     public class PixelateImageEffect : MonoBehaviour
     {

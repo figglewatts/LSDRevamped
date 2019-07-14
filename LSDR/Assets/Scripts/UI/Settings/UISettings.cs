@@ -5,6 +5,9 @@ using UI;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
+/// <summary>
+/// Script for the entire settings menu.
+/// </summary>
 public class UISettings : MonoBehaviour
 {
     public Button BackButton;

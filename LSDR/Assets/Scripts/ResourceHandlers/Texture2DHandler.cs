@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace ResourceHandlers
 {
+    /// <summary>
+    /// Load a PNG image from disk.
+    /// </summary>
     public class Texture2DHandler : IResourceHandler
     {
         public Type HandlerType => typeof(Texture2D);
@@ -13,6 +16,8 @@ namespace ResourceHandlers
         {
             string fullFilePath = path;
             string extension = Path.GetExtension(fullFilePath);
+            
+            // make sure the extension is correct
             if (string.IsNullOrEmpty(extension))
             {
                 fullFilePath += ".png";

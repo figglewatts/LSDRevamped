@@ -5,7 +5,7 @@ namespace UI
 {
 	/// <summary>
 	/// Makes a worldspace canvas resize based on camera FOV by having it start as a camera canvas
-	/// then switching it to worldspace when it's loaded
+	/// then switching it to worldspace when it's loaded.
 	/// </summary>
 	[RequireComponent(typeof(Canvas))]
 	public class UICameraToWorldSpaceCanvas : MonoBehaviour

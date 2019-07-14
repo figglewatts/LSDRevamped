@@ -7,8 +7,16 @@ using UnityEngine;
 
 namespace IO
 {
+	/// <summary>
+	/// OBJReader is used for loading OBJ files.
+	/// </summary>
 	public static class OBJReader
 	{
+		/// <summary>
+		/// Read an OBJ from a file and create a GameObject of it.
+		/// </summary>
+		/// <param name="pathToObj">The path to the OBJ file.</param>
+		/// <returns>A GameObject with the created OBJ mesh.</returns>
 		public static GameObject ReadOBJFile(string pathToObj)
 		{
 			string objString = File.ReadAllText(pathToObj);
@@ -16,6 +24,11 @@ namespace IO
 			return gameObject;
 		}
 
+		/// <summary>
+		/// Read an OBJ string and convert it to a GameObject.
+		/// </summary>
+		/// <param name="obj">The OBJ string.</param>
+		/// <returns>A GameObject containing the stored mesh.</returns>
 		public static GameObject ReadOBJString(string obj)
 		{
 			GameObject baseGameObject = new GameObject("importedObj");
@@ -36,6 +49,7 @@ namespace IO
 			List<List<int?>> normalIndices = new List<List<int?>>();
 			// all that was so we can support multiple objects within an OBJ file
 
+			// set up the lists before processing
 			objObjects.Add(new GameObject());
 			objObjects[objectHandle].transform.SetParent(baseGameObject.transform);
 			objObjects[objectHandle].AddComponent<MeshRenderer>();
@@ -45,6 +59,7 @@ namespace IO
 			uvIndices.Add(new List<int?>());
 			normalIndices.Add(new List<int?>());
 
+			// set up buffered streams to read the OBJ string
 			byte[] byteArray = Encoding.ASCII.GetBytes(obj);
 			using (MemoryStream ms = new MemoryStream(byteArray))
 			using (BufferedStream bs = new BufferedStream(ms))
@@ -92,7 +107,7 @@ namespace IO
 						Vector2 uv = new Vector2(StringToFloat(words[1]), StringToFloat(words[2]));
 						UVs.Add(uv);
 					}
-					else if (words[0].Equals("f"))
+					else if (words[0].Equals("f")) // face
 					{
 						int numVertices = words.Length - 1;
 						bool isQuad = (numVertices%4) == 0;
@@ -165,6 +180,7 @@ namespace IO
 				}
 			}
 
+			// build the mesh for each object
 			for (int i = 0; i < objObjects.Count; i++)
 			{
 				Mesh mesh = meshes[i];
@@ -175,6 +191,16 @@ namespace IO
 			return baseGameObject;
 		}
 
+		/// <summary>
+		/// Build a mesh from a given set of verts, tries, UVs, indices, and normals.
+		/// </summary>
+		/// <param name="vertices">An array of vertices.</param>
+		/// <param name="triangles">An array of indices.</param>
+		/// <param name="uvs">An array of UVs.</param>
+		/// <param name="uvIndices">An array of indices into the UV array.</param>
+		/// <param name="normals">An array of normals.</param>
+		/// <param name="normalIndices">An array of indices into the normals array.</param>
+		/// <param name="m">The Mesh we're using to build this mesh.</param>
 		private static void BuildMesh(Vector3[] vertices, int[] triangles, Vector2[] uvs, int?[] uvIndices, Vector3[] normals,
 			int?[] normalIndices, ref Mesh m)
 		{
@@ -182,6 +208,8 @@ namespace IO
 			Vector3[] actualVertices = new Vector3[triangles.Length];
 			Vector3[] actualNormals = new Vector3[triangles.Length];
 			int[] actualTriangles = new int[triangles.Length];
+			
+			// for each index, populate the arrays corresponding to it
 			for (int i = 0; i < triangles.Length; i++)
 			{
 				actualVertices[i] = vertices[triangles[i]];
@@ -196,6 +224,7 @@ namespace IO
 				actualTriangles[i] = i;
 			}
 
+			// assign these new arrays to the mesh
 			m.vertices = actualVertices;
 			m.uv = actualUVs;
 			m.normals = actualNormals;
@@ -204,6 +233,7 @@ namespace IO
 			m.RecalculateBounds();
 		}
 
+		// convert a string to a float
 		private static float StringToFloat(string s)
 		{
 			float returnVal;

@@ -2,6 +2,9 @@ using UnityEngine;
 
 namespace Util
 {
+    /// <summary>
+    /// MatchTransform matches the transform of the attached object to a given target.
+    /// </summary>
     public class MatchTransform : MonoBehaviour
     {
         public bool MatchPosition

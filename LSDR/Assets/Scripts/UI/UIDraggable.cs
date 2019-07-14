@@ -3,22 +3,35 @@ using UnityEngine.EventSystems;
 
 namespace UI
 {
+	/// <summary>
+	/// When attached to a gameobject, make a given transform draggable with the mouse.
+	/// </summary>
 	public class UIDraggable : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 	{
-		public Transform target;
+		/// <summary>
+		/// The target of this draggable.
+		/// </summary>
+		public Transform Target;
+		
 		private bool isMouseDown = false;
 		private Vector3 startMousePosition;
 		private Vector3 startPosition;
-		public bool shouldReturn;
+		
+		/// <summary>
+		/// Should the target return?
+		/// </summary>
+		public bool ShouldReturn;
 
+		/// <summary>
+		/// The camera's canvas.
+		/// </summary>
 		public Canvas CameraCanvas;
 
-		// Use this for initialization
 		void Start()
 		{
-			if (!target)
+			if (!Target)
 			{
-				target = this.gameObject.transform;
+				Target = this.gameObject.transform;
 			}
 		}
 
@@ -26,7 +39,7 @@ namespace UI
 		{
 			isMouseDown = true;
 
-			startPosition = target.position;
+			startPosition = Target.position;
 			startMousePosition = MousePosToCanvasPos(Input.mousePosition);
 		}
 
@@ -34,13 +47,12 @@ namespace UI
 		{
 			isMouseDown = false;
 
-			if (shouldReturn)
+			if (ShouldReturn)
 			{
-				target.position = startPosition;
+				Target.position = startPosition;
 			}
 		}
 
-		// Update is called once per frame
 		void Update()
 		{
 			if (isMouseDown)
@@ -51,7 +63,7 @@ namespace UI
 
 				Vector3 pos = startPosition + diff;
 
-				target.position = pos;
+				Target.position = pos;
 			}
 		}
 

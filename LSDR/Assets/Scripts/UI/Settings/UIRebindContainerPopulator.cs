@@ -8,12 +8,29 @@ using UnityEngine;
 using UnityEngine.UI;
 using Text = UnityEngine.UI.Text;
 
+/// <summary>
+/// Populate the control rebind menu container.
+/// </summary>
 public class UIRebindContainerPopulator : ContainerPopulator
 {
+    /// <summary>
+    /// A single item in the Rebind container.
+    /// </summary>
     protected internal class RebindItem : MonoBehaviour
     {
+        /// <summary>
+        /// The name of the action.
+        /// </summary>
         public Text ActionName;
+        
+        /// <summary>
+        /// The primary button to rebind.
+        /// </summary>
         public Button ActionAButton;
+        
+        /// <summary>
+        /// The secondary button to rebind.
+        /// </summary>
         public Button ActionBButton;
     }
 
@@ -22,6 +39,9 @@ public class UIRebindContainerPopulator : ContainerPopulator
     public Button TemplateActionAButton;
     public Button TemplateActionBButton;
 
+    /// <summary>
+    /// Get/set the scheme we're currently editing.
+    /// </summary>
     public ControlScheme EditingScheme
     {
         get { return _editingScheme; }
@@ -46,6 +66,9 @@ public class UIRebindContainerPopulator : ContainerPopulator
         if (_validTemplate) PopulateRebindContainer();
     }
 
+    /// <summary>
+    /// Populate the container with rebind actions.
+    /// </summary>
     public void PopulateRebindContainer()
     {
         List<GameObject> population = new List<GameObject>();
@@ -56,6 +79,7 @@ public class UIRebindContainerPopulator : ContainerPopulator
         Populate(population);
     }
 
+    // create a single rebinding row
     private GameObject createRebindRow(PlayerAction action)
     {
         RebindItem row = Instantiate(Template.gameObject, transform, true).GetComponent<RebindItem>();
@@ -71,6 +95,7 @@ public class UIRebindContainerPopulator : ContainerPopulator
         return row.gameObject;
     }
 
+    // perform the rebind action
     private void rebindAction(PlayerAction action, Button rebindButton, BindingSource binding)
     {
         action.ListenOptions = ControlActions.DefaultListenOptions;

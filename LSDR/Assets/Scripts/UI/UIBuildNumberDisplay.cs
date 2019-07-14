@@ -5,7 +5,10 @@ using UnityEngine.UI;
 
 namespace UI
 {
-	public class UIBuildNumberDisplay : MonoBehaviour
+	/// <summary>
+	/// Display the build number on text at the top of the screen.
+	/// </summary>
+    public class UIBuildNumberDisplay : MonoBehaviour
 	{
 		public Text BuildNumberText;
 

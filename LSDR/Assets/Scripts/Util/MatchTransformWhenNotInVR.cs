@@ -8,6 +8,7 @@ namespace Util
 	/// <summary>
 	/// Used to make things match the transform of another object when not in VR mode
 	/// Mainly used to make the pause menu locked to camera unless we're in VR
+	/// TODO: is MatchTransformWhenNotInVR obsolete?
 	/// </summary>
 	public class MatchTransformWhenNotInVR : MonoBehaviour
 	{

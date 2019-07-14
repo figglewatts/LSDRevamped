@@ -12,6 +12,7 @@ using Types;
 
 namespace Util
 {
+	// TODO: I'm pretty sure most of IOUtil is now redundant
 	public static class IOUtil
 	{
 		// TODO: make redundant

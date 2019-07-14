@@ -4,6 +4,9 @@ using Entities.Dream;
 
 namespace UI
 {
+	/// <summary>
+	/// Script for main menu buttons. Contains their functionality on click.
+	/// </summary>
 	public class UIMainMenuButtons : MonoBehaviour
 	{
 		public UIMainMenu MainMenu;

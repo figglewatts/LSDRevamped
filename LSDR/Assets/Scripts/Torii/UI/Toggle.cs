@@ -6,6 +6,9 @@ using UnityEngine;
 
 namespace Torii.UI
 {
+    /// <summary>
+    /// Specialized instance of UnityEngine.UI.Toggle with bindable value.
+    /// </summary>
     public class Toggle : UnityEngine.UI.Toggle, IPropertyWatcher
     {
         public new bool isOn

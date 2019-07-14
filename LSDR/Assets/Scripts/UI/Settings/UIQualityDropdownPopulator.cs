@@ -5,6 +5,9 @@ using Torii.UI;
 
 namespace UI
 {
+	/// <summary>
+	/// Populate the quality settings dropdown menu.
+	/// </summary>
 	public class UIQualityDropdownPopulator : DropdownPopulator
 	{
 		protected override void Awake()

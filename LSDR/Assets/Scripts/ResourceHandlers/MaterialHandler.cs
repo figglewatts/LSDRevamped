@@ -8,6 +8,9 @@ using Visual;
 
 namespace ResourceHandlers
 {
+    /// <summary>
+    /// Load a Material manifest from disk.
+    /// </summary>
     public class MaterialHandler : IResourceHandler
     {
         public Type HandlerType => typeof(MaterialManifest);

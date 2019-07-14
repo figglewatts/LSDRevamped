@@ -4,6 +4,9 @@ using UnityEngine.UI;
 
 namespace UI
 {
+	/// <summary>
+	/// A single square in the dream graph.
+	/// </summary>
 	public class UIGraphSquare : MonoBehaviour
 	{
 		[Range(1, 5)] public int ColourModifier;
@@ -24,6 +27,7 @@ namespace UI
 
 		public void Start()
 		{
+			// set initial values
 			_graphSquareImage.rectTransform.anchoredPosition = new Vector2((Position.x + ANCHOR_OFFSET)*SQUARE_DIMENSION,
 				(Position.y - ANCHOR_OFFSET)*SQUARE_DIMENSION);
 			_graphSquareImage.rectTransform.localScale = Vector3.one;
@@ -32,6 +36,7 @@ namespace UI
 
 		public void Update()
 		{
+			// if it's the most recent square then flash, otherwise don't
 			if (MostRecent)
 			{
 				if (Time.timeSinceLevelLoad%FLASH_TIME > FLASH_TIME/2) { _graphSquareImage.color = Color.red; } 

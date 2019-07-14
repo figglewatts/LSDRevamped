@@ -5,6 +5,9 @@ using Torii.Resource;
 
 namespace ResourceHandlers
 {
+    /// <summary>
+    /// Load a TIX texture archive from disk.
+    /// </summary>
     public class TIXHandler : IResourceHandler
     {
         public Type HandlerType => typeof(TIX);

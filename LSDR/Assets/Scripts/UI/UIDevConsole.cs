@@ -12,6 +12,7 @@ using Util;
 
 namespace UI
 {
+	// TODO: refactor UIDevConsole in DevConsole refactor
 	public class UIDevConsole : MonoBehaviour
 	{
 		public Color LogMessageColor;

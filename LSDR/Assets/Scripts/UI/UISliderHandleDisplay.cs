@@ -5,7 +5,10 @@ using Torii.UI;
 
 namespace UI
 {
-	public class UISliderHandleDisplay : MonoBehaviour
+	/// <summary>
+	/// Display a value on the handle of a UI slider.
+	/// </summary>
+    public class UISliderHandleDisplay : MonoBehaviour
     {
         private Slider _slider;
 

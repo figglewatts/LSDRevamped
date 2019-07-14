@@ -6,6 +6,8 @@ using UnityEngine;
 
 namespace Types
 {
+	// TODO: TOBJ might be obsolete now
+	
 	[Serializable]
 	public struct TOBJ
 	{

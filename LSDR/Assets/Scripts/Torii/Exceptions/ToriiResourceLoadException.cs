@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace Torii.Exceptions
 {
+    /// <summary>
+    /// An exception that is thrown when there is an error loading a resource.
+    /// </summary>
     public class ToriiResourceLoadException : Exception
     {
         public Type ResourceType { get; private set; }

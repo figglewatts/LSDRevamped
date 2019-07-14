@@ -6,6 +6,7 @@ namespace IO
 {
 	public static class ToriiObjectReader
 	{
+		// TODO: ToriiObjectReader is probably obsolete
 		public static bool Read(string location, ref TOBJ tobj)
 		{
 			using (BinaryReader reader = new BinaryReader(File.Open(location, FileMode.Open)))

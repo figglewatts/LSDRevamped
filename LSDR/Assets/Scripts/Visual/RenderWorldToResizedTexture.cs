@@ -4,9 +4,10 @@ using UnityEngine.UI;
 
 namespace Visual
 {
+	// TODO: is RenderWorldToResizedTexture used?
 	public class RenderWorldToResizedTexture : MonoBehaviour
 	{
-		//how chunky to make the screen
+		// how chunky to make the screen
 		public int PixelSize = 4;
 		public FilterMode FilterMode = FilterMode.Point;
 		public Camera[] ImageCameras;

@@ -7,6 +7,7 @@ namespace IO
 {
 	public static class ToriiMapReader
 	{
+		// TODO: ToriiMapReader is probably obsolete
 		public static TMAP ReadFromFile(string filePath)
 		{
 			if (!File.Exists(filePath)) throw new FileNotFoundException("Could not find TMAP file!");

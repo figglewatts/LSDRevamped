@@ -8,6 +8,9 @@ using UnityEngine.UI;
 
 namespace UI
 {
+    /// <summary>
+    /// Creates a UI view with 'tabs' enabling different content game objects.
+    /// </summary>
     public class UITabView : MonoBehaviour
     {
         public List<Button> TabButtons = new List<Button>();
@@ -53,7 +56,11 @@ namespace UI
             }
         }
 
-        public void SetAllButtonsEnabled(bool state)
+        /// <summary>
+        /// Set all of the tab buttons to a state.
+        /// </summary>
+        /// <param name="state">The state to set.</param>
+        public void SetAllButtonsInteractable(bool state)
         {
             TabButtons.ForEach(button => button.interactable = state);
         }

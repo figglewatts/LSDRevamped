@@ -3,6 +3,9 @@ using UnityEngine.UI;
 
 namespace UI
 {
+	/// <summary>
+	/// An output row in the console.
+	/// </summary>
 	public class UIConsoleOutputRow : MonoBehaviour
 	{
 		public Image IconImage;

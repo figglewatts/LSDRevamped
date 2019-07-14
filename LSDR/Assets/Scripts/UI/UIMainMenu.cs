@@ -3,6 +3,9 @@ using System.Collections;
 
 namespace UI
 {
+	/// <summary>
+	/// The main menu of the game.
+	/// </summary>
 	public class UIMainMenu : MonoBehaviour
 	{
 		public enum MenuState
@@ -23,6 +26,10 @@ namespace UI
 
 		public void ChangeMenuState(int state) { ChangeMenuState((MenuState) state); }
 
+		/// <summary>
+		/// Change the menu state, setting game objects and playing animations.
+		/// </summary>
+		/// <param name="state">The state to change to.</param>
 		public void ChangeMenuState(MenuState state)
 		{
 			switch (state)

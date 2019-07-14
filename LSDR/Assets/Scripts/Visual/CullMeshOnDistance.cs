@@ -2,6 +2,9 @@ using UnityEngine;
 
 namespace Visual
 {
+    /// <summary>
+    /// When attached to a GameObject, will disable the renderer when the camera is a certain distance away.
+    /// </summary>
     [RequireComponent(typeof(MeshRenderer))]
     public class CullMeshOnDistance : MonoBehaviour
     {

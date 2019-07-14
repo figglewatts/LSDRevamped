@@ -2,10 +2,24 @@ using UnityEngine;
 
 namespace Visual
 {
+    /// <summary>
+    /// Handles culling and fog of all tiles within an LBD.
+    /// </summary>
     public class LBDSlab : MonoBehaviour
     {
+        /// <summary>
+        /// Array of MeshFog scripts in each of the tiles of the LBD.
+        /// </summary>
         public MeshFog[] MeshFog;
+        
+        /// <summary>
+        /// Array of CullMeshOnDistance scripts in each of the tiles of the LBD.
+        /// </summary>
         public CullMeshOnDistance[] CullMesh;
+        
+        /// <summary>
+        /// Array of MeshRenderers in each of the tiles of the LBD.
+        /// </summary>
         public MeshRenderer[] MeshRenderers;
 
         private Transform _mainCamera;

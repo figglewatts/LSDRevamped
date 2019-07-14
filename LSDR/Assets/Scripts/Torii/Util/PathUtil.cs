@@ -6,6 +6,9 @@ using System.Text;
 
 namespace Torii.Util
 {
+    /// <summary>
+    /// Various utility methods for paths.
+    /// </summary>
     public static class PathUtil
     {
         /// <summary>

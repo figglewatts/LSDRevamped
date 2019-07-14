@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 namespace UI
 {
+	// TODO: refactor UICurrentDayDisplay in DreamDirector refactor
 	public class UICurrentDayDisplay : MonoBehaviour
 	{
 		public Text DayTextElement;

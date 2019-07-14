@@ -19,8 +19,7 @@ public class GameScript : MonoBehaviour
 		// do game startup stuff here
 
         GameSettings.Initialize();
-        
-        ResourceManager.Initialize();
+
         ResourceManager.RegisterHandler(new LBDHandler());
         ResourceManager.RegisterHandler(new TIXHandler());
         ResourceManager.RegisterHandler(new Texture2DHandler());

@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace Torii.UI
 {
+    /// <summary>
+    /// Populate a dropdown component with some strings.
+    /// </summary>
     [RequireComponent(typeof(Dropdown))]
     public class DropdownPopulator : MonoBehaviour, IPopulator<string>
     {

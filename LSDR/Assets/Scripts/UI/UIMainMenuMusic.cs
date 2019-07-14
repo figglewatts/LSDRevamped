@@ -6,7 +6,8 @@ using Util;
 namespace UI
 {
 	/// <summary>
-	/// Randomly plays a song from the title screen music folder
+	/// Randomly plays a song from the title screen music folder.
+	/// TODO: refactor UIMainMenuMusic to define these songs somewhere? Instead of just having them in a folder
 	/// </summary>
 	public class UIMainMenuMusic : MonoBehaviour
 	{

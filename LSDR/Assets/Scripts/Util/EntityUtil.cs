@@ -8,6 +8,7 @@ using UnityEngine;
 
 namespace Util
 {
+	// TODO: EntityUtil might be obsolete now
 	public static class EntityUtil
     {
         public static CultureInfo Culture = CultureInfo.InvariantCulture;

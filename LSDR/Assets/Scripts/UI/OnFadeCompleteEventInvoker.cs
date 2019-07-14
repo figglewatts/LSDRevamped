@@ -7,7 +7,7 @@ using UnityEngine;
 namespace UI
 {
 	/// <summary>
-	/// Used by animation events to invoke post-fade delegates
+	/// Used by animation events to invoke post-fade delegates.
 	/// </summary>
 	public class OnFadeCompleteEventInvoker : MonoBehaviour
 	{

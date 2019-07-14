@@ -10,28 +10,54 @@ using ProtoBufSerializer = ProtoBuf.Serializer;
 
 namespace Torii.Serialization
 {
+    /// <summary>
+    /// ToriiSerializer is used to serialize/deserialize data to/from both JSON and protobuf.
+    /// </summary>
     public class ToriiSerializer
     {
-        private readonly JsonSerializer _json;
+        private readonly JsonSerializer _json; // reference to JSON serializer
+        
+        // map types to serializer settings
         private readonly Dictionary<Type, JsonSerializerSettings> _serializationSettingsTypeMap;
 
+        /// <summary>
+        /// Create a new Serializer
+        /// </summary>
         public ToriiSerializer()
         {
             _json = new JsonSerializer();
             _serializationSettingsTypeMap = new Dictionary<Type, JsonSerializerSettings>();
         }
 
+        /// <summary>
+        /// Register JSON serialization settings for a given type.
+        /// </summary>
+        /// <param name="t">The type.</param>
+        /// <param name="settings">The settings.</param>
         public void RegisterJsonSerializationSettings(Type t, JsonSerializerSettings settings)
         {
             _serializationSettingsTypeMap[t] = settings;
         }
 
+        /// <summary>
+        /// Deserialize a JSON file to a given type.
+        /// </summary>
+        /// <param name="filePath">The path to the JSON file.</param>
+        /// <typeparam name="T">The type to deserialize to.</typeparam>
+        /// <returns>The deserialized data.</returns>
         public T JsonDeserialize<T>(string filePath) where T : class { return jsonDeserialize<T>(filePath); }
 
+        /// <summary>
+        /// Deserialize a data file. If file has .json extension, then JSON is deserialized, otherwise protobuf.
+        /// </summary>
+        /// <param name="filePath">The path to the data.</param>
+        /// <typeparam name="T">The type to deserialize to.</typeparam>
+        /// <returns>The deserialized data.</returns>
         public T Deserialize<T>(string filePath) where T : class
         {
             string ext = Path.GetExtension(filePath);
 
+            // check to see if we should deserialize from JSON or protobuf
             if (ext != null && ext.Equals(".json"))
             {
                 return jsonDeserialize<T>(filePath);
@@ -42,14 +68,17 @@ namespace Torii.Serialization
             }
         }
 
+        // deserialize from JSON
         private T jsonDeserialize<T>(string filePath) where T : class
         {
+            // apply settings to the serializer
             JsonSerializerSettings settings;
             if (_serializationSettingsTypeMap.TryGetValue(typeof(T), out settings))
             {
                 applyJsonSettings(settings);
             }
 
+            // try to deserialize, and log any errors that occur
             try
             {
                 using (StreamReader sr = new StreamReader(filePath))
@@ -84,8 +113,10 @@ namespace Torii.Serialization
             }
         }
 
+        // deserialize from protobuf
         private T protoBufDeserialize<T>(string filePath) where T : class
         {
+            // try to deserialize from protobuf, and log any errors that occur
             try
             {
                 using (var file = File.OpenRead(filePath))
@@ -134,6 +165,14 @@ namespace Torii.Serialization
             }
         }
 
+        /// <summary>
+        /// Serialize some data to a file. If the data object has attribute JsonObjectAttribute, then it's serialized
+        /// to JSON, and if it has ProtoContractAttribute then it's serialized to protobuf.
+        /// </summary>
+        /// <param name="obj">The object to serialize.</param>
+        /// <param name="filePath">The file to serialize to.</param>
+        /// <typeparam name="T">The type of the object.</typeparam>
+        /// <returns>True of successfully serialized, false otherwise.</returns>
         public bool Serialize<T>(T obj, string filePath)
             where T : class
         {
@@ -150,14 +189,17 @@ namespace Torii.Serialization
             return false;
         }
 
+        // serialize an object to JSON
         private bool jsonSerialize<T>(T obj, string filePath) where T : class
         {
+            // apply serializer settings
             JsonSerializerSettings settings;
             if (_serializationSettingsTypeMap.TryGetValue(typeof(T), out settings))
             {
                 applyJsonSettings(settings);
             }
 
+            // try to serialize, log any errors if they occurred
             try
             {
                 using (StreamWriter sw = new StreamWriter(filePath))
@@ -203,8 +245,10 @@ namespace Torii.Serialization
 
         }
 
+        // serialize an object to protobuf
         private bool protoBufSerialize<T>(T obj, string filePath) where T : class
         {
+            // try to serialize, log any errors if they occurred
             try
             {
                 using (var file = File.Create(filePath))
@@ -242,6 +286,7 @@ namespace Torii.Serialization
             return true;
         }
 
+        // apply JSON serializer settings
         private void applyJsonSettings(JsonSerializerSettings settings)
         {
             _json.CheckAdditionalContent = settings.CheckAdditionalContent;

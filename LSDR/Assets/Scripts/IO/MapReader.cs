@@ -11,6 +11,7 @@ using Util;
 
 namespace IO
 {
+	// TODO: MapReader is now obsolete
 	public static class MapReader
 	{
 		public static float MapScaleFactor = 0.025F;

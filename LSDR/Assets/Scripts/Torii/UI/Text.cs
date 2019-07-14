@@ -6,6 +6,9 @@ using UnityEngine;
 
 namespace Torii.UI
 {
+    /// <summary>
+    /// Specialized instance of UnityEngine.UI.Text with bindable text.
+    /// </summary>
     public class Text : UnityEngine.UI.Text, IPropertyWatcher
     {
         public new string text

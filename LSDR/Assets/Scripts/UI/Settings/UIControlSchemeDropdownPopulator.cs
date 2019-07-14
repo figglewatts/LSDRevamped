@@ -5,6 +5,9 @@ using InputManagement;
 using Torii.UI;
 using UnityEngine;
 
+/// <summary>
+/// Populates the control scheme selector dropdown menu.
+/// </summary>
 public class UIControlSchemeDropdownPopulator : DropdownPopulator 
 {
 	protected override void Awake () 

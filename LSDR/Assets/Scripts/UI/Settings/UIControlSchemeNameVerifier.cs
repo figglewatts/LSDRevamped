@@ -5,6 +5,9 @@ using InputManagement;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Verifies a control scheme name.
+/// </summary>
 [RequireComponent(typeof(InputField))]
 public class UIControlSchemeNameVerifier : MonoBehaviour
 {
@@ -29,6 +32,11 @@ public class UIControlSchemeNameVerifier : MonoBehaviour
         Button.interactable = false;
     }
 
+    /// <summary>
+    /// Validate this control scheme name.
+    /// </summary>
+    /// <param name="input">The control scheme name.</param>
+    /// <returns>False if invalid, true otherwise.</returns>
     public bool Validate(string input)
     {
         // scheme can't be empty
@@ -48,6 +56,7 @@ public class UIControlSchemeNameVerifier : MonoBehaviour
 
     private void validateInput(string input)
     {
+        // set the button's state when the text changes
         Button.interactable = Validate(input);
     }
 }

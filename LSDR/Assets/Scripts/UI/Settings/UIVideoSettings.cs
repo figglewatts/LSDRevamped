@@ -5,6 +5,9 @@ using Torii.UI;
 
 namespace UI
 {
+	/// <summary>
+	/// Script for video settings.
+	/// </summary>
 	public class UIVideoSettings : MonoBehaviour
 	{
 		public Toggle UseClassicShadersToggle;

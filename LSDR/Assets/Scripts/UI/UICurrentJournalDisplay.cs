@@ -8,6 +8,7 @@ using UnityEngine.UI;
 
 namespace UI
 {
+	// TODO: refactor UICurrentJournalDisplay in DreamDirector refactor
 	public class UICurrentJournalDisplay : MonoBehaviour
 	{
 		public Text JournalDisplayElement;

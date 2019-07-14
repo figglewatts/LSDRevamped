@@ -6,6 +6,9 @@ using Torii.Binding;
 using Torii.UI;
 using UnityEngine;
 
+/// <summary>
+/// Menu for setting control scheme settings.
+/// </summary>
 public class UIControlSettings : MonoBehaviour
 {
     public Dropdown CurrentSchemeDropdown;

@@ -6,6 +6,9 @@ using UnityEngine;
 
 namespace Torii.UI
 {
+    /// <summary>
+    /// Specialized instancy of UnityEngine.UI.Dropdown with bindable value.
+    /// </summary>
     public class Dropdown : UnityEngine.UI.Dropdown, IPropertyWatcher
     {
 

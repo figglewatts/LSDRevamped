@@ -3,6 +3,10 @@ using UnityEngine;
 
 namespace Visual
 {
+    /// <summary>
+    /// When attached to a GameObject, will set its fog color based on distance from camera, and render settings.
+    /// TODO: clean MeshFog up a bit
+    /// </summary>
     [RequireComponent(typeof(MeshRenderer))]
     public class MeshFog : MonoBehaviour
     {
@@ -19,7 +23,7 @@ namespace Visual
 
         private void Update()
         {
-            if (!_renderer.enabled) return;
+            if (!_renderer.enabled) return; // if the renderer is disabled, we don't want to do anything
             
             _renderer.GetPropertyBlock(_propertyBlock);
             
@@ -30,6 +34,7 @@ namespace Visual
             Vector3 camPos = new Vector3(camPosition.x, 0, camPosition.z);
             float distance = Vector3.Distance(thisPos, camPos);
 
+            // calculate fog amount
             float fogAmt = (RenderSettings.fogEndDistance - distance) /
                            (RenderSettings.fogEndDistance - RenderSettings.fogStartDistance);
             fogAmt = Mathf.Clamp(fogAmt, 0, 1);
@@ -40,12 +45,14 @@ namespace Visual
             Color fogCol = RenderSettings.fogColor * (1 - fogAmt);
             fogCol.a = 0;
 
+            // handle subtractive fog
             if (GameSettings.SubtractiveFog)
             {
                 fogCol *= -1;
             }
-            _propertyBlock.SetColor("_FogAddition", fogCol);
             
+            // set the fog color
+            _propertyBlock.SetColor("_FogAddition", fogCol);
             _renderer.SetPropertyBlock(_propertyBlock);
         }
     }

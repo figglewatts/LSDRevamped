@@ -6,6 +6,9 @@ using UnityEngine;
 
 namespace Torii.UI
 {
+    /// <summary>
+    /// Specialized instance of UnityEngine.UI.Slider with bindable value.
+    /// </summary>
     public class Slider : UnityEngine.UI.Slider, IPropertyWatcher
     {
         public new float value

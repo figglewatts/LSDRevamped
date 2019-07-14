@@ -2,6 +2,10 @@
 
 namespace Util
 {
+	/// <summary>
+	/// If attached to a GameObject, won't destroy it on scene load. Also ensures that there isn't an existing
+	/// instance of the GameObject already in the newly loaded scene.
+	/// </summary>
 	public class DontDestroy : MonoBehaviour
 	{
 		void Awake()

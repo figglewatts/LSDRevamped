@@ -5,6 +5,9 @@ using System.Text;
 
 namespace Torii.Util
 {
+    /// <summary>
+    /// Various utility methods for Enums.
+    /// </summary>
     public static class EnumUtil
     {
         /// <summary>

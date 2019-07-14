@@ -7,8 +7,11 @@ using InputManagement;
 using Torii.Binding;
 using Torii.UI;
 
-namespace UI
+namespace LSDR.UI.Settings
 {
+	/// <summary>
+	/// Menu used for creating a control scheme.
+	/// </summary>
 	public class UIControlSchemeCreator : MonoBehaviour
 	{
 	    public UnityEngine.UI.Button SubmitSchemeButton;
@@ -56,9 +59,13 @@ namespace UI
             CancelSchemeButton.onClick.AddListener(Hide);
 	    }
 
+	    /// <summary>
+	    /// Show the control scheme creator in a certain mode.
+	    /// </summary>
+	    /// <param name="mode">Whether we're creating or editing.</param>
 	    public void Show(ControlSchemeCreatorMode mode)
 	    {
-            CreatorObject.SetActive(true);
+		    CreatorObject.SetActive(true);
             SelectorObject.SetActive(false);
 	        Mode = mode;
 	        switch (mode)
@@ -92,6 +99,9 @@ namespace UI
 	        SettingsBackButton.interactable = false;
 	    }
 
+	    /// <summary>
+	    /// Submit a control scheme to the ControlSchemeManager.
+	    /// </summary>
 	    public void SubmitScheme()
 	    {
 	        switch (Mode)
@@ -115,6 +125,9 @@ namespace UI
 	        Hide();
 	    }
 
+	    /// <summary>
+	    /// Hide the creator menu and show the selector menu.
+	    /// </summary>
 	    public void Hide()
 	    {
 	        CreatorObject.SetActive(false);
@@ -133,7 +146,9 @@ namespace UI
 
 	    private void useFpsControlsOnValueChanged(bool fpsControls)
 	    {
-	        _currentlyEditingScheme.FpsControls = fpsControls;
+	        // based on whether we're using FPS controls or not, we want the bindings to be different
+	        // to support mouselook and strafing etc.
+		    _currentlyEditingScheme.FpsControls = fpsControls;
 	        if (fpsControls)
 	        {
 	            _currentlyEditingScheme.Actions.LookUp.ClearBindings();

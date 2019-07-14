@@ -4,8 +4,11 @@ using Game;
 using Torii.Binding;
 using Torii.UI;
 
-namespace UI
+namespace UI.Settings
 {
+	/// <summary>
+	/// Menu for setting gameplay settings.
+	/// </summary>
 	public class UIGameplaySettings : MonoBehaviour
 	{
 		public Toggle EnableHeadBobToggle;

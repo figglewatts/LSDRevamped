@@ -3,6 +3,7 @@ using IO;
 
 namespace Types
 {
+	// TODO: TMAP might be obsolete now
 	[Serializable]
 	public struct TMAP
 	{

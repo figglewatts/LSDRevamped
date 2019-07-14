@@ -7,10 +7,18 @@ using UnityEngine;
 
 namespace ResourceHandlers
 {
+    /// <summary>
+    /// A ResourceHandler to handle loading LBD files.
+    /// </summary>
     public class LBDHandler : IResourceHandler
     {
         public Type HandlerType => typeof(LBD);
 
+        /// <summary>
+        /// Load an LBD file from disk.
+        /// </summary>
+        /// <param name="path">The path to the LBD file.</param>
+        /// <param name="span">The span ID for how long this resource should be cached.</param>
         public void Load(string path, int span)
         {
             LBD lbd;

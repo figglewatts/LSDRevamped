@@ -4,6 +4,9 @@ using System.Reflection;
 
 namespace Torii.Util
 {
+    /// <summary>
+    /// Various utility methods for checking attributes on types.
+    /// </summary>
     public static class AttributeUtil
     {
         /// <summary>

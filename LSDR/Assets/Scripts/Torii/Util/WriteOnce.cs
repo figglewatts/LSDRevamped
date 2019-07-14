@@ -2,6 +2,10 @@
 
 namespace Torii.Util
 {
+    /// <summary>
+    /// Only write to a value once.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public sealed class WriteOnce<T>
     {
         private bool _hasBeenSet = false;

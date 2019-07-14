@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using Torii.UI;
 
-namespace UI
+namespace UI.Settings
 {
+	/// <summary>
+	/// Populate the resolution dropdown menu.
+	/// </summary>
 	public class UIResolutionDropdownPopulator : DropdownPopulator
 	{
 	    protected override void Awake()
