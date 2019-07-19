@@ -3,6 +3,7 @@ using UnityEngine;
 using libLSD.Formats;
 using libLSD.Types;
 using LSDR.Visual;
+using UnityEngine.Profiling;
 
 namespace LSDR.IO
 {
@@ -47,6 +48,7 @@ namespace LSDR.IO
         /// <returns>The Mesh created from the object.</returns>
         public static Mesh MeshFromTMDObject(TMDObject obj)
         {   
+            Profiler.BeginSample("MeshFromTMDObject");
             // create the mesh, and lists of vertices, normals, colors, uvs, and indices
             Mesh result = new Mesh();
             List<Vector3> verts = new List<Vector3>();
@@ -197,6 +199,8 @@ namespace LSDR.IO
                 result.subMeshCount = 2;
                 result.SetTriangles(alphaBlendIndices, 1, false, 0);
             }
+
+            Profiler.EndSample();
 
             return result;
         }

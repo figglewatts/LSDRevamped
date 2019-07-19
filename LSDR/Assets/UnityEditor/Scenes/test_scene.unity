@@ -209,6 +209,31 @@ Prefab:
       propertyPath: m_RootOrder
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 114093436451678466, guid: 063cfe8f9712d4d44b862477f80d0dfa,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 20610254309811964, guid: 063cfe8f9712d4d44b862477f80d0dfa,
+        type: 2}
+      propertyPath: m_BackGroundColor.r
+      value: 0.227451
+      objectReference: {fileID: 0}
+    - target: {fileID: 20610254309811964, guid: 063cfe8f9712d4d44b862477f80d0dfa,
+        type: 2}
+      propertyPath: m_BackGroundColor.g
+      value: 0.6156863
+      objectReference: {fileID: 0}
+    - target: {fileID: 20610254309811964, guid: 063cfe8f9712d4d44b862477f80d0dfa,
+        type: 2}
+      propertyPath: m_BackGroundColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 54282313490851046, guid: 063cfe8f9712d4d44b862477f80d0dfa,
+        type: 2}
+      propertyPath: m_Constraints
+      value: 84
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 063cfe8f9712d4d44b862477f80d0dfa, type: 2}
   m_IsPrefabParent: 0
@@ -447,10 +472,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8071d5b307b84ca8958ed23294939a9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LBDFolder: original/STG05
-  TIXFile: original/STG05/TEXA.TIX
+  LBDFolder: original/STG02
+  TIXFile: original/STG02/TEXA.TIX
   Mode: 1
-  LBDWidth: 5
+  LBDWidth: 6
 --- !u!4 &1511745313
 Transform:
   m_ObjectHideFlags: 0
