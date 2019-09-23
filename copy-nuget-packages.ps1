@@ -8,10 +8,10 @@ process {
         "SharpZipLib.1.1.0/lib/net45/ICSharpCode.SharpZipLib.dll"
     )
     $outputPath = "LSDR/Assets/UnityEditor/Dep/External/"
+    New-Item -ItemType Directory -Force -Path $outputPath
 
     foreach ($package in $packages) {
         Copy-Item -Path $(Join-Path $packagesPath $package) `
             -Destination $outputPath
-            
     }
 }
