@@ -39,10 +39,12 @@ namespace LSDR.IO
 
             foreach (var obj in tmd.ObjectTable)
             {
-                Mesh objMesh = createTMDObject(obj, ref mesh);
+                //Mesh objMesh = createTMDObject(obj, ref mesh);
             }
             
             clearCachedLists();
+
+            return null;
         }
 
         private Mesh createTMDObjectMesh(TMDObject obj)
@@ -73,6 +75,8 @@ namespace LSDR.IO
 
                 _packetIndices.Clear();
             }
+
+            return null;
         }
 
         private void initializeCachedLists(int defaultCapacity)
