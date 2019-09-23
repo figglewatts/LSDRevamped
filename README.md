@@ -7,6 +7,8 @@ A remake of the cult-classic game LSD: Dream Emulator.
 - C# IDE (I use JetBrains Rider, but Visual Studio will work too...)
 - Windows (this may change soon... watch this space)
 - InControl (Unity Asset Store, paid asset)
+- Python 3.7
+- Pipenv
 
 ## Quick start
 1. Ensure you've prepared the prerequisites as above.
@@ -24,3 +26,14 @@ $ git submodule update
 6. A folder called 'packages' in the LSDR folder has been created. Inside are the required NuGet packages. Execute the script `copy-nuget-packages.ps1` or `copy-nuget-packages.sh` depending on your shell.
 7. Back in Unity, go to the Asset Store and add 'InControl' to the project.
 8. All done!
+
+## Building the game
+1. Get a pipenv shell in the root of the repo:
+```terminal
+$ pipenv shell
+```
+2. Ensure you modify `buildconf.yaml` to have the correct values for `unity_location` and `project_path`.
+3. Run the build script
+```terminal
+$ python build.py
+```
