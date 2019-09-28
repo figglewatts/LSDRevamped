@@ -73,7 +73,7 @@ Shader "LSDR/ClassicDiffuseAlphaBlend" {
                 output *= _Tint;
                 
                 // apply fog
-                output += _FogAddition;
+                output += half4(_FogAddition.r, _FogAddition.g, _FogAddition.b, 0);
                 
                 return output;
             }

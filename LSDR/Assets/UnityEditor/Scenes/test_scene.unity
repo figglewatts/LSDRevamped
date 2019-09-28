@@ -234,6 +234,21 @@ Prefab:
       propertyPath: m_Constraints
       value: 84
       objectReference: {fileID: 0}
+    - target: {fileID: 82443878547602202, guid: 063cfe8f9712d4d44b862477f80d0dfa,
+        type: 2}
+      propertyPath: panLevelCustomCurve.m_RotationOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 82443878547602202, guid: 063cfe8f9712d4d44b862477f80d0dfa,
+        type: 2}
+      propertyPath: reverbZoneMixCustomCurve.m_RotationOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114447734073296280, guid: 063cfe8f9712d4d44b862477f80d0dfa,
+        type: 2}
+      propertyPath: GravityMultiplier
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 063cfe8f9712d4d44b862477f80d0dfa, type: 2}
   m_IsPrefabParent: 0
@@ -472,8 +487,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8071d5b307b84ca8958ed23294939a9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LBDFolder: original/STG02
-  TIXFile: original/STG02/TEXA.TIX
+  LBDFolder: original/STG03
+  TIXFile: original/STG03/TEXA.TIX
   Mode: 1
   LBDWidth: 6
 --- !u!4 &1511745313

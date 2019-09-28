@@ -66,6 +66,7 @@ Shader "LSDR/ClassicDiffuseSet" {
             sampler2D _MainTexD;
             fixed4 _Tint;
             uniform int _TextureSet;
+            fixed4 _FogAddition;
             
             float4 frag(classicV2F input) : COLOR
             {
@@ -85,6 +86,9 @@ Shader "LSDR/ClassicDiffuseSet" {
                 
                 // apply tint
                 output *= _Tint;
+                
+                // apply fog
+                output += half4(_FogAddition.r, _FogAddition.g, _FogAddition.b, 0);
                 
                 return output;
             }
