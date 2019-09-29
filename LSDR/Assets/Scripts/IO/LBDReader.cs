@@ -9,6 +9,8 @@ namespace LSDR.IO
 {
     public class LBDReader
     {
+        public const int MAX_POSSIBLE_TILES = 54930;
+        
         private readonly TMDReader _tmdReader;
         private PrefabPool _tilePool;
 

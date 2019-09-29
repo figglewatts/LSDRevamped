@@ -12,10 +12,15 @@ namespace LSDR.Game
 	public class ScreenshotKeypressListener : MonoBehaviour
 	{
 		// the path to the directory where screenshots are saved
-		private readonly string SCREENSHOT_PATH = IOUtil.PathCombine(Application.persistentDataPath, "screenshots");
+		private string _screenshotPath;
 
 		// the key to use to take a screenshot
 		private readonly KeyCode SCREENSHOT_KEY = KeyCode.F9;
+
+		public void Awake()
+		{
+			_screenshotPath = IOUtil.PathCombine(Application.persistentDataPath, "screenshots");
+		}
 	
 		void Update()
 		{
@@ -28,7 +33,7 @@ namespace LSDR.Game
 		private void TakeScreenshot()
 		{
 			// first check if the screenshot directory exists, and create it if it doesn't
-			if (!Directory.Exists(SCREENSHOT_PATH)) Directory.CreateDirectory(SCREENSHOT_PATH);
+			if (!Directory.Exists(_screenshotPath)) Directory.CreateDirectory(_screenshotPath);
 
 			// put the time in the screenshot name so we don't overwrite
 			string screenshotName = "Screenshot_" + DateTime.Now.ToString("MM/dd/yyy HH:mm:ss tt") + ".png";
@@ -36,7 +41,7 @@ namespace LSDR.Game
 			// take the screenshot
 			Debug.Log("Taking screenshot");
             ScreenCapture.CaptureScreenshot(
-	            IOUtil.PathCombine(SCREENSHOT_PATH, screenshotName)
+	            IOUtil.PathCombine(_screenshotPath, screenshotName)
 	        );
 		}
 	}

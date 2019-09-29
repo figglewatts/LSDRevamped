@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Torii.Coroutine;
 using UnityEngine;
 
 namespace Torii.Pooling
@@ -20,7 +21,8 @@ namespace Torii.Pooling
         
         private bool _populated = false;
 
-        public static GameObject Create(string poolName, PoolItem prefab, int size, bool destroyOnLoad = false)
+        public static GameObject Create(string poolName, PoolItem prefab, int size, 
+            bool destroyOnLoad = false)
         {
             GameObject pool = new GameObject(poolName);
             var poolScript = pool.AddComponent<PrefabPool>();
@@ -29,6 +31,17 @@ namespace Torii.Pooling
             poolScript.DestroyOnLoad = destroyOnLoad;
             poolScript.populate();
             return pool;
+        }
+
+        public static IEnumerator CreateCoroutine(string poolName, PoolItem prefab, int size,
+            bool destroyOnLoad = false)
+        {
+            GameObject pool = new GameObject(poolName);
+            var poolScript = pool.AddComponent<PrefabPool>();
+            poolScript.Prefab = prefab;
+            poolScript.Size = size;
+            poolScript.DestroyOnLoad = destroyOnLoad;
+            yield return poolScript.populateAsync();
         }
 
         public void Awake()
@@ -90,6 +103,35 @@ namespace Torii.Pooling
             {
                 PoolItem obj = create();
                 _pool.Push(obj);
+            }
+
+            _populated = true;
+        }
+
+        private IEnumerator populateAsync()
+        {
+            if (_populated)
+            {
+                Debug.LogWarning("Attempting to populate an already populated PrefabPool!");
+                yield break;
+            }
+            
+            using (Marathon m = new Marathon(10))
+            {
+                bool lastYield = false;
+                for (int i = 0; i < Size; i++)
+                {
+                    lastYield = m.Run(() =>
+                    {
+                        PoolItem obj = create();
+                        _pool.Push(obj);
+                    }, lastYield);
+
+                    if (lastYield)
+                    {
+                        yield return null;
+                    }
+                }
             }
 
             _populated = true;

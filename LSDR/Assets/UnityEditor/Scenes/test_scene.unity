@@ -209,31 +209,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 10
       objectReference: {fileID: 0}
-    - target: {fileID: 114093436451678466, guid: 063cfe8f9712d4d44b862477f80d0dfa,
-        type: 2}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 20610254309811964, guid: 063cfe8f9712d4d44b862477f80d0dfa,
-        type: 2}
-      propertyPath: m_BackGroundColor.r
-      value: 0.227451
-      objectReference: {fileID: 0}
-    - target: {fileID: 20610254309811964, guid: 063cfe8f9712d4d44b862477f80d0dfa,
-        type: 2}
-      propertyPath: m_BackGroundColor.g
-      value: 0.6156863
-      objectReference: {fileID: 0}
-    - target: {fileID: 20610254309811964, guid: 063cfe8f9712d4d44b862477f80d0dfa,
-        type: 2}
-      propertyPath: m_BackGroundColor.b
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 54282313490851046, guid: 063cfe8f9712d4d44b862477f80d0dfa,
-        type: 2}
-      propertyPath: m_Constraints
-      value: 84
-      objectReference: {fileID: 0}
     - target: {fileID: 82443878547602202, guid: 063cfe8f9712d4d44b862477f80d0dfa,
         type: 2}
       propertyPath: panLevelCustomCurve.m_RotationOrder
@@ -242,11 +217,6 @@ Prefab:
     - target: {fileID: 82443878547602202, guid: 063cfe8f9712d4d44b862477f80d0dfa,
         type: 2}
       propertyPath: reverbZoneMixCustomCurve.m_RotationOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114447734073296280, guid: 063cfe8f9712d4d44b862477f80d0dfa,
-        type: 2}
-      propertyPath: GravityMultiplier
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -487,10 +457,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8071d5b307b84ca8958ed23294939a9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LBDFolder: original/STG03
-  TIXFile: original/STG03/TEXA.TIX
-  Mode: 1
-  LBDWidth: 6
+  LBDFolder: original/STG00
+  TIXFile: original/STG00/TEXA.TIX
+  Mode: 0
+  LBDWidth: 16
 --- !u!4 &1511745313
 Transform:
   m_ObjectHideFlags: 0
@@ -666,7 +636,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1576360722}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -5.65}
+  m_LocalPosition: {x: 0, y: 0, z: -4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -834,7 +804,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1697165231}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -3.88}
+  m_LocalPosition: {x: 0, y: 0, z: -5.912}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
