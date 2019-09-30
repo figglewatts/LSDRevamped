@@ -2,62 +2,43 @@
 using System.Collections;
 using System.Collections.Generic;
 using Torii.Coroutine;
+using UnityEditor;
 using UnityEngine;
 
 namespace Torii.Pooling
 {
-    public class PrefabPool : MonoBehaviour, IObjectPool
+    [CreateAssetMenu(menuName="Torii/PrefabPool")]
+    public class PrefabPool : ScriptableObject, IObjectPool
     {
         public PoolItem Prefab;
 
         public int Size;
 
-        public bool DestroyOnLoad;
+        public bool Persistent;
 
+        public string Name;
+
+        [NonSerialized]
+        public GameObject PoolObject;
+        
         public int Active => _activeItems.Count;
 
         private Stack<PoolItem> _pool;
         private List<PoolItem> _activeItems;
         
+        [NonSerialized]
         private bool _populated = false;
 
-        public static GameObject Create(string poolName, PoolItem prefab, int size, 
-            bool destroyOnLoad = false)
+        public void Initialise()
         {
-            GameObject pool = new GameObject(poolName);
-            var poolScript = pool.AddComponent<PrefabPool>();
-            poolScript.Prefab = prefab;
-            poolScript.Size = size;
-            poolScript.DestroyOnLoad = destroyOnLoad;
-            poolScript.populate();
-            return pool;
+            commonInitialise();
+            populate();
         }
 
-        public static IEnumerator CreateCoroutine(string poolName, PoolItem prefab, int size,
-            bool destroyOnLoad = false)
+        public IEnumerator InitialiseCoroutine()
         {
-            GameObject pool = new GameObject(poolName);
-            var poolScript = pool.AddComponent<PrefabPool>();
-            poolScript.Prefab = prefab;
-            poolScript.Size = size;
-            poolScript.DestroyOnLoad = destroyOnLoad;
-            yield return poolScript.populateAsync();
-        }
-
-        public void Awake()
-        {
-            _pool = new Stack<PoolItem>(Size);
-            _activeItems = new List<PoolItem>();
-
-            if (!DestroyOnLoad)
-            {
-                DontDestroyOnLoad(this);
-            }
-
-            if (Size > 0)
-            {
-                populate();
-            }
+            commonInitialise();
+            yield return populateAsync();
         }
 
         public GameObject Summon(Vector3 pos, Quaternion rot, Transform parent = null)
@@ -79,7 +60,18 @@ namespace Torii.Pooling
             item.ActiveState(false);
             _activeItems.Remove(item);
             _pool.Push(item);
-            item.transform.SetParent(transform);
+            item.transform.SetParent(PoolObject.transform);
+        }
+
+        private void commonInitialise()
+        {
+            PoolObject = new GameObject(Name);
+            if (Persistent)
+            {
+                DontDestroyOnLoad(PoolObject);
+            }
+            _pool = new Stack<PoolItem>(Size);
+            _activeItems = new List<PoolItem>();
         }
 
         private PoolItem create(bool activeState = false)
@@ -87,7 +79,7 @@ namespace Torii.Pooling
             PoolItem obj = Instantiate(Prefab, Vector3.zero, Quaternion.identity);
             obj.ParentPool = this;
             obj.ActiveState(activeState);
-            obj.transform.SetParent(this.transform, false);
+            obj.transform.SetParent(PoolObject.transform, false);
             return obj;
         }
 

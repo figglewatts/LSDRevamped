@@ -52,7 +52,7 @@ namespace LSDR.Editor.BuildSystem
         /// <param name="def">The build definition we're using.</param>
         private static void writeBuildNumber(BuildDefinition def)
         {
-            var buildNumber = typeof(GameScript).Assembly.GetName().Version.ToString();
+            var buildNumber = typeof(GameLoadSystem).Assembly.GetName().Version.ToString();
             var buildNumberFilePath = IOUtil.PathCombine(Path.GetDirectoryName(def.ExecutablePath), "buildnumber.txt");
             File.WriteAllText(buildNumberFilePath, buildNumber);
         }

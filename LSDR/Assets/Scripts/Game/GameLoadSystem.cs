@@ -1,10 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Reflection;
 using UnityEngine;
 using LSDR.InputManagement;
 using LSDR.IO;
 using LSDR.IO.ResourceHandlers;
 using LSDR.Visual;
+using Torii.Event;
 using Torii.Pooling;
 using TResourceManager = Torii.Resource.ResourceManager; // TODO: change when old ResourceManager removed
 
@@ -12,12 +14,15 @@ using TResourceManager = Torii.Resource.ResourceManager; // TODO: change when ol
 namespace LSDR.Game
 {
 	/// <summary>
-	/// GameScript is essentially the entrypoint to the game. All initialisation stuff is done here.
-	/// It will be executed before MOST scripts.
+	/// GameInitSystem is a system that contains code for initialising the game.
 	/// </summary>
-	public class GameScript : MonoBehaviour
+	[CreateAssetMenu]
+	public class GameLoadSystem : ScriptableObject
 	{
-		public static IEnumerator InitializeGame()
+		public ToriiEvent OnGameDataLoaded;
+		public PrefabPool LBDTilePool;
+		
+		public IEnumerator LoadGameCoroutine()
 		{
 			// do game startup stuff here
 			
@@ -46,12 +51,13 @@ namespace LSDR.Game
 				// if we're running inside the editor, we want to have the mouse!
 				GameSettings.SetCursorViewState(true);
 			}
-			
-			var lbdTilePrefab = Resources.Load<GameObject>("Prefabs/Entities/LBDTile").GetComponent<PoolItem>();
-			yield return PrefabPool.CreateCoroutine("LBDTilePool", lbdTilePrefab, LBDReader.MAX_POSSIBLE_TILES, true);
+
+			yield return LBDTilePool.InitialiseCoroutine();
 
 			// TODO
 			//SaveGameManager.LoadGame();
+			
+			OnGameDataLoaded.Raise();
 		}
 	}
 }

@@ -60,9 +60,8 @@ namespace LSDR.Entities.Original
         private Dictionary<TMDObject, Mesh> _cache;
 
         private const string TILE_PREFAB_PATH = "Prefabs/Entities/LBDTile";
-        private PoolItem _tilePrefab;
-        private PrefabPool _tilePool;
 
+        // the biggest level in the game, STG03 Natural World, uses 54930 individual tiles
         private const int MAX_POSSIBLE_TILES = 54930;
 
         private void Start()
@@ -72,10 +71,7 @@ namespace LSDR.Entities.Original
 
             _cache = new Dictionary<TMDObject, Mesh>(new TMDObjectEqualityComparer());
 
-            _tilePrefab = Resources.Load<GameObject>(TILE_PREFAB_PATH).GetComponent<PoolItem>();
-            _tilePool = PrefabPool.Create("LBDTilePool", _tilePrefab, MAX_POSSIBLE_TILES, false)
-                .GetComponent<PrefabPool>();
-            _lbdReader = new LBDReader(_tilePool);
+            _lbdReader = new LBDReader(null);
             
             loadLBD();
         }
@@ -122,9 +118,6 @@ namespace LSDR.Entities.Original
 
             _loaded = true;
             var end = DateTime.Now;
-                
-            Debug.Log(end - start + " seconds");
-            Debug.Log(_tilePool.Active + " tiles in use");
         }
 
         /*
