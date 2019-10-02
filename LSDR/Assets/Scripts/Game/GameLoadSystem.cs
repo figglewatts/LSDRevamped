@@ -16,7 +16,7 @@ namespace LSDR.Game
 	/// <summary>
 	/// GameInitSystem is a system that contains code for initialising the game.
 	/// </summary>
-	[CreateAssetMenu]
+	[CreateAssetMenu(menuName="System/GameLoadSystem")]
 	public class GameLoadSystem : ScriptableObject
 	{
 		public ToriiEvent OnGameDataLoaded;
