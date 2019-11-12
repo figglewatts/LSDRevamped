@@ -33,6 +33,7 @@ namespace Torii.Event
             GameObjectUtility.SetParentAndAlign(eventListenerObject, menuCommand.context as GameObject);
             Undo.RegisterCreatedObjectUndo(eventListenerObject, "Create " + eventListenerObject.name);
             Selection.activeObject = eventListenerObject;
+            eventListenerObject.AddComponent<ToriiEventListener>();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 using LSDR.Entities.Dream;
 using LSDR.Game;
@@ -29,9 +30,7 @@ namespace LSDR.UI
 
 		private bool _consoleVisible;
 
-		void Awake() { DevConsole.ConsoleUI = this; }
-
-		void Start()
+		public void Start()
 		{
 			_consoleVisible = gameObject.activeSelf;
 
@@ -39,6 +38,13 @@ namespace LSDR.UI
 			{
 				if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)) CommandSubmit(val);
 			});
+			
+			Application.logMessageReceived += handleLog;
+		}
+
+		public void OnDestroy()
+		{
+			Application.logMessageReceived -= handleLog;
 		}
 
 		public void ToggleConsoleState() { SetConsoleState(!_consoleVisible); }
@@ -135,6 +141,12 @@ namespace LSDR.UI
 		{
 			yield return new WaitForEndOfFrame();
 			ContentScrollRect.verticalNormalizedPosition = 0;
+		}
+		
+		private void handleLog(string logString, string stackTrace, LogType type)
+		{
+			InstantiateOutputRow(logString, type);
+			StartCoroutine(UpdateScrollRect());
 		}
 	}
 }

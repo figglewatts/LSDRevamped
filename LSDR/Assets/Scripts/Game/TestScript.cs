@@ -1,0 +1,61 @@
+﻿using System;
+using Torii.Console;
+using UnityEngine;
+
+namespace LSDR.Game
+{
+    public class TestScript : MonoBehaviour
+    {
+        public DevConsoleSystem Console;
+
+        [Console]
+        public string TestProperty { get; set; }
+
+        [Console]
+        public int TestVar;
+
+        public void Start()
+        {
+            Console.Init();
+            Console.Register(this);
+            
+            executeStatement("TestScript.PrintTest Hello world!");
+            executeStatement("TestScript.TestVar 20");
+            executeStatement("TestScript.TestProperty Testing");
+
+            foreach (var v in Console.Completions("Tes"))
+            {
+                Debug.Log($"Obj: {v}");
+            }
+
+            foreach (var v in Console.Completions("TestScript", "Te"))
+            {
+                Debug.Log($"Spec: {v}");
+            }
+            
+            foreach (var v in Console.Completions(""))
+            {
+                Debug.Log($"All: {v}");
+            }
+        }
+
+        [Console]
+        public void PrintTest(string arg)
+        {
+            Debug.Log(arg);
+        }
+
+        private void executeStatement(string statement)
+        {
+            var result = Console.Execute(statement);
+            if (result.Failed)
+            {
+                Debug.LogException(result.Error);
+            }
+            else if (!String.IsNullOrEmpty(result.Message))
+            {
+                Debug.Log(result.Message);
+            }
+        }
+    }
+}

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -77,6 +78,24 @@ namespace Torii.Util
         public static bool HasAttribute<T>(PropertyInfo property)
         {
             return property.GetCustomAttributes(typeof(T), true).Length > 0;
+        }
+
+        public static IEnumerable<FieldInfo> GetFieldsWithAttribute<T>(Type t)
+        {
+            return t.GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static)
+                .Where(field => Attribute.IsDefined(field, typeof(T)));
+        }
+
+        public static IEnumerable<PropertyInfo> GetPropertiesWithAttribute<T>(Type t)
+        {
+            return t.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static)
+                .Where(prop => Attribute.IsDefined(prop, typeof(T)));
+        }
+
+        public static IEnumerable<MethodInfo> GetMethodsWithAttribute<T>(Type t)
+        {
+            return t.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static)
+                .Where(method => Attribute.IsDefined(method, typeof(T)));
         }
     }
 }
