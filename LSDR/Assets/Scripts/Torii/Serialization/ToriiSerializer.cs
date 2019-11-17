@@ -4,6 +4,7 @@ using System.IO;
 using System.Security;
 using ProtoBuf;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Torii.Util;
 using UnityEngine;
 using ProtoBufSerializer = ProtoBuf.Serializer;
@@ -26,6 +27,12 @@ namespace Torii.Serialization
         public ToriiSerializer()
         {
             _json = new JsonSerializer();
+            
+            // add some converters for common Unity3D types
+            _json.Converters.Add(new JsonVector3Converter());
+            _json.Converters.Add(new JsonColorConverter());
+            _json.Converters.Add(new StringEnumConverter());
+            
             _serializationSettingsTypeMap = new Dictionary<Type, JsonSerializerSettings>();
         }
 
@@ -101,13 +108,21 @@ namespace Torii.Serialization
             }
             catch (DirectoryNotFoundException e)
             {
-                Debug.LogError($"Deserialization error: Could not deserialize from \"{filePath}\", directory not found or path invalid");
+                Debug.LogError(
+                    $"Deserialization error: Could not deserialize from \"{filePath}\", directory not found or path invalid");
                 Debug.LogException(e);
                 return null;
             }
             catch (IOException e)
             {
-                Debug.LogError($"Deserialization error: Could not deserialize from \"{filePath}\", invalid path syntax");
+                Debug.LogError(
+                    $"Deserialization error: Could not deserialize from \"{filePath}\", invalid path syntax");
+                Debug.LogException(e);
+                return null;
+            }
+            catch (JsonException e)
+            {
+                Debug.LogError($"Deserialization error: Could not deserialize from \"{filePath}\", JSON was in unexpected format: {e.Message}");
                 Debug.LogException(e);
                 return null;
             }
