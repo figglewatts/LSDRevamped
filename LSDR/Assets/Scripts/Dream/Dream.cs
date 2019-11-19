@@ -18,11 +18,11 @@ namespace LSDR.Dream
         /// The author of this Dream.
         /// </summary>
         public string Author { get; set; }
-        
+
         /// <summary>
         /// The type of this Dream. Used to determine how to load the Dream.
         /// </summary>
-        public DreamType Type { get; set; }
+        public DreamType Type { get; set; } = DreamType.Revamped;
         
         /// <summary>
         /// What effect this dream has on the 'upper' axis of the graph, when visited.
@@ -53,11 +53,16 @@ namespace LSDR.Dream
         /// The tiling mode of this dream if it's a legacy dream.
         /// </summary>
         public LegacyTileMode LegacyTileMode { get; set; }
-        
+
         /// <summary>
         /// The width of the tilemap if it's a legacy dream and the tiling mode is horizontal.
         /// </summary>
-        public int TileWidth { get; set; }
+        public int TileWidth { get; set; } = 1;
+
+        public Dream()
+        {
+            Environments = new List<DreamEnvironment>();
+        }
     }
 
     /// <summary>
