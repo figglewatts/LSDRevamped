@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using LSDR.IO;
 using libLSD.Formats;
+using LSDR.Dream;
 using Torii.Resource;
 using UnityEngine;
 using LSDR.Util;
@@ -34,18 +35,14 @@ namespace LSDR.Entities.Original
         private TIX _tix;
 
         /// <summary>
-        /// The LBD tiling mode.
-        /// </summary>
-        public enum LBDTiling
-        {
-            None,
-            Regular
-        }
-
-        /// <summary>
         /// How the loaded LBD should be tiled. Set in inspector.
         /// </summary>
-        public LBDTiling Mode;
+        public LegacyTileMode Mode;
+
+        /// <summary>
+        /// The PrefabPool to use for LBD tiles.
+        /// </summary>
+        public PrefabPool LBDTilePool;
         
         /// <summary>
         /// The width of the LBD tiling. LBD 'slabs' will be placed along the X-axis until the counter exceeds this
@@ -64,15 +61,18 @@ namespace LSDR.Entities.Original
         // the biggest level in the game, STG03 Natural World, uses 54930 individual tiles
         private const int MAX_POSSIBLE_TILES = 54930;
 
-        private void Start()
+        private void Awake()
         {
             /*StartCoroutine(loadLbd());*/
             // load the TIX into memory, then put it into the virtual PSX VRAM
 
             _cache = new Dictionary<TMDObject, Mesh>(new TMDObjectEqualityComparer());
 
-            _lbdReader = new LBDReader(null);
-            
+            _lbdReader = new LBDReader(LBDTilePool);
+        }
+
+        public void Spawn()
+        {
             loadLBD();
         }
 
@@ -100,7 +100,7 @@ namespace LSDR.Entities.Original
                 Debug.Log($"Cache entries: {_cache.Count}");
 
                 // position the LBD 'slab' based on its tiling mode
-                if (Mode == LBDTiling.Regular)
+                if (Mode == LegacyTileMode.Horizontal)
                 {
                     int xPos = i % LBDWidth;
                     int yPos = i / LBDWidth;

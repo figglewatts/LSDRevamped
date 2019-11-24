@@ -367,7 +367,7 @@ AudioSource:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-    m_RotationOrder: 4
+    m_RotationOrder: 0
   spreadCustomCurve:
     serializedVersion: 2
     m_Curve:
@@ -391,7 +391,7 @@ AudioSource:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-    m_RotationOrder: 4
+    m_RotationOrder: 0
 --- !u!114 &114059146247394154
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -442,7 +442,6 @@ MonoBehaviour:
   RotationSpeed: 60
   MaxPositiveRotation: 40
   MaxNegativeRotation: 320
-  CanRotate: 1
   TargetCameras:
   - {fileID: 20610254309811964}
   MouseLookRotationMultiplier: 50
@@ -500,7 +499,6 @@ MonoBehaviour:
   BobbingAmount: 0.01
   Midpoint: 0.3
   TargetCamera: {fileID: 20610254309811964}
-  FootstepAudioSource: {fileID: 82443878547602202}
 --- !u!114 &114679908197199712
 MonoBehaviour:
   m_ObjectHideFlags: 1

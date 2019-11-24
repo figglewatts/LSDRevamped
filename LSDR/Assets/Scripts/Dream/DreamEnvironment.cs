@@ -55,5 +55,10 @@ namespace LSDR.Dream
         /// Do the clouds in this environment move around?
         /// </summary>
         public bool CloudMotion { get; set; } = false;
+
+        /// <summary>
+        /// Is the fog in this environment additive or subtractive?
+        /// </summary>
+        public bool SubtractiveFog { get; set; } = false;
     }
 }

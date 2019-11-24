@@ -20,6 +20,7 @@ namespace LSDR.SDK
         private readonly ToriiSerializer _serializer = new ToriiSerializer();
         private readonly List<bool> _dreamEnvironmentFoldoutStates = new List<bool>();
         private readonly Stack<int> _dreamEnvironmentsToRemove = new Stack<int>();
+        private bool showEntireMenu = true;
         
         [MenuItem("LSDR/Create dream")]
         public static void Init()
@@ -45,88 +46,122 @@ namespace LSDR.SDK
 
         public void OnGUI()
         {
-            _scrollPos = EditorGUILayout.BeginScrollView(_scrollPos);
-            EditorGUILayout.LabelField("Metadata", EditorStyles.boldLabel);
-            _dream.Name = EditorGUILayout.TextField(new GUIContent("Name", "The name of this dream"), 
-                _dream.Name);
-            _dream.Author = EditorGUILayout.TextField(new GUIContent("Author", "The author of this dream"),
-                _dream.Author);
-            _dream.Type = (DreamType)EditorGUILayout.EnumPopup(
-                new GUIContent("Type", "The type of this dream, used to determine how to load the dream"),
-                _dream.Type);
-            if (_dream.Type == DreamType.Legacy)
-            {
-                _dream.LegacyTileMode = (LegacyTileMode)EditorGUILayout.EnumPopup(
-                    new GUIContent("Tile mode", "The tiling mode of this dream"), _dream.LegacyTileMode);
-            }
-            if (_dream.LegacyTileMode == LegacyTileMode.Horizontal)
-            {
-                _dream.TileWidth = EditorGUILayout.IntField(new GUIContent("Tile width", "The width of the tile map"),
-                    _dream.TileWidth);
-            }
-            EditorGUILayout.Separator();
-
-            EditorGUILayout.LabelField("Graph", EditorStyles.boldLabel);
-            _dream.Upperness = EditorGUILayout.IntSlider(
-                new GUIContent("Upperness",
-                    "What effect this dream has on the 'upper' axis of the graph, when visited"), _dream.Upperness, -9,
-                9);
-
-            _dream.Dynamicness = EditorGUILayout.IntSlider(
-                new GUIContent("Dynamicness",
-                    "What effect this dream has on the 'dynamic' axis of the graph, when visited"), _dream.Dynamicness,
-                -9,
-                9);
-            EditorGUILayout.Separator();
-
-            EditorGUILayout.LabelField("Data", EditorStyles.boldLabel);
+            
             EditorGUILayout.BeginHorizontal();
-            _dream.Level = EditorGUILayout.TextField(
-                new GUIContent("Level",
-                    "The path to the raw level file within the game's data to load for this dream. " +
-                    "Can be an LBD directory or a TMAP."),
-                _dream.Level);
-            if (GUILayout.Button("Browse"))
-            {
-                _dream.Level = browseForDreamLevelFile();
-            }
-            EditorGUILayout.EndHorizontal();
-            EditorGUILayout.Separator();
-
-            EditorGUILayout.LabelField("Gameplay", EditorStyles.boldLabel);
-            _dream.GreyMan =
-                EditorGUILayout.Toggle(new GUIContent("Grey man", "Whether or not this dream can spawn the grey man"),
-                    _dream.GreyMan);
-            EditorGUILayout.Separator();
-
-            EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField("Environment", EditorStyles.boldLabel);
+            showEntireMenu = EditorGUILayout.Foldout(showEntireMenu, "Create a dream",
+                new GUIStyle("foldout") {fontStyle = FontStyle.Bold});
             GUILayout.FlexibleSpace();
-            if (GUILayout.Button("Add"))
+            if (GUILayout.Button("Import", GUILayout.Width(100)))
             {
-                addNewDreamEnvironment();
+                importExistingDream();
             }
-            EditorGUILayout.EndHorizontal();
-
-            EditorGUI.indentLevel++;
-            for (int i = 0; i < _dream.Environments.Count; i++)
-            {
-                drawDreamEnvironmentGUI(i);
-            }
-            EditorGUI.indentLevel--;
-
-            EditorGUILayout.Separator();
-            EditorGUILayout.EndScrollView();
-
-            EditorGUILayout.BeginHorizontal();
-            GUILayout.FlexibleSpace();
-            if (GUILayout.Button("Export"))
+            if (GUILayout.Button("Export", GUILayout.Width(100)))
             {
                 var path = EditorUtility.SaveFilePanel("Export dream", "", _dream.Name + ".json", "json");
                 _serializer.Serialize(_dream, path);
             }
             EditorGUILayout.EndHorizontal();
+
+            _scrollPos = EditorGUILayout.BeginScrollView(_scrollPos);
+            if (showEntireMenu)
+            {
+                EditorGUILayout.LabelField("Metadata", EditorStyles.boldLabel);
+                _dream.Name = EditorGUILayout.TextField(new GUIContent("Name", "The name of this dream"),
+                    _dream.Name);
+                _dream.Author = EditorGUILayout.TextField(new GUIContent("Author", "The author of this dream"),
+                    _dream.Author);
+                _dream.Type = (DreamType)EditorGUILayout.EnumPopup(
+                    new GUIContent("Type", "The type of this dream, used to determine how to load the dream"),
+                    _dream.Type);
+                if (_dream.Type == DreamType.Legacy)
+                {
+                    _dream.LegacyTileMode = (LegacyTileMode)EditorGUILayout.EnumPopup(
+                        new GUIContent("Tile mode", "The tiling mode of this dream"), _dream.LegacyTileMode);
+                }
+
+                if (_dream.LegacyTileMode == LegacyTileMode.Horizontal)
+                {
+                    _dream.TileWidth = EditorGUILayout.IntField(
+                        new GUIContent("Tile width", "The width of the tile map"),
+                        _dream.TileWidth);
+                }
+
+                EditorGUILayout.Separator();
+
+                EditorGUILayout.LabelField("Graph", EditorStyles.boldLabel);
+                _dream.Upperness = EditorGUILayout.IntSlider(
+                    new GUIContent("Upperness",
+                        "What effect this dream has on the 'upper' axis of the graph, when visited"), _dream.Upperness,
+                    -9,
+                    9);
+
+                _dream.Dynamicness = EditorGUILayout.IntSlider(
+                    new GUIContent("Dynamicness",
+                        "What effect this dream has on the 'dynamic' axis of the graph, when visited"),
+                    _dream.Dynamicness,
+                    -9,
+                    9);
+                EditorGUILayout.Separator();
+
+                EditorGUILayout.LabelField("Data", EditorStyles.boldLabel);
+                EditorGUILayout.BeginHorizontal();
+                _dream.Level = EditorGUILayout.TextField(
+                    new GUIContent("Level",
+                        "The path to the raw level file within the game's data to load for this dream. " +
+                        "Can be an LBD directory or a TMAP."),
+                    _dream.Level);
+                if (GUILayout.Button("Browse", GUILayout.Width(60)))
+                {
+                    _dream.Level = browseForDreamLevelFile();
+                }
+
+                EditorGUILayout.EndHorizontal();
+                EditorGUILayout.Separator();
+
+                EditorGUILayout.LabelField("Gameplay", EditorStyles.boldLabel);
+                _dream.GreyMan =
+                    EditorGUILayout.Toggle(
+                        new GUIContent("Grey man", "Whether or not this dream can spawn the grey man"),
+                        _dream.GreyMan);
+                EditorGUILayout.Separator();
+
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField("Environment", EditorStyles.boldLabel);
+                GUILayout.FlexibleSpace();
+                if (GUILayout.Button("Add"))
+                {
+                    addNewDreamEnvironment();
+                }
+
+                EditorGUILayout.EndHorizontal();
+
+                EditorGUI.indentLevel++;
+                for (int i = 0; i < _dream.Environments.Count; i++)
+                {
+                    drawDreamEnvironmentGUI(i);
+                }
+
+                EditorGUI.indentLevel--;
+
+            }
+            EditorGUILayout.EndScrollView();
+
+            EditorGUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+            
+            EditorGUILayout.EndHorizontal();
         }
+        
+        public static void DrawUILine(Color color, int thickness = 2, int padding = 10)
+        {
+            Rect r = EditorGUILayout.GetControlRect(GUILayout.Height(padding+thickness));
+            r.height = thickness;
+            r.y+=padding/2;
+            r.x-=2;
+            r.width +=6;
+            EditorGUI.DrawRect(r, color);
+        }
+
 
         private string browseForDreamLevelFile()
         {
@@ -156,6 +191,11 @@ namespace LSDR.SDK
             // now remove everything before StreamingAssets path
             var indexOf = levelPath.IndexOf("StreamingAssets", StringComparison.Ordinal) + "StreamingAssets".Length;
             return levelPath.Substring(indexOf);
+        }
+
+        private void importExistingDream()
+        {
+            
         }
 
         private void addNewDreamEnvironment()
@@ -218,6 +258,11 @@ namespace LSDR.SDK
                         new GUIContent("Cloud motion", "Do the clouds in this environment move around?"),
                         env.CloudMotion);
                 }
+
+                env.SubtractiveFog =
+                    EditorGUILayout.Toggle(
+                        new GUIContent("Subtractive fog", "Is the fog in this environment additive or subtractive?"),
+                        env.SubtractiveFog);
 
                 EditorGUI.indentLevel--;
             }

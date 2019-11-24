@@ -33,6 +33,7 @@ namespace Torii.Util
 
                 // if the object doesn't exist, create it
                 _instance = new GameObject(typeof(T).ToString(), typeof(T)).GetComponent<T>();
+                DontDestroyOnLoad(_instance);
                 return _instance;
             }
         }
