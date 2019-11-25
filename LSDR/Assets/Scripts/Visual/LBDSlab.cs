@@ -52,9 +52,11 @@ namespace LSDR.Visual
             }
         }
 
-        private void Awake() { _mainCamera = Camera.main.transform; }
-
-        private void Start() { active = false; }
+        private void Start()
+        {
+            active = false;
+            _mainCamera = Camera.main.transform;
+        }
 
         private void Update()
         {

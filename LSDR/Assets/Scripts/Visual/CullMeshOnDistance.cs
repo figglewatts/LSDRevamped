@@ -11,7 +11,7 @@ namespace LSDR.Visual
         private MeshRenderer _renderer;
         private Transform _mainCamera;
 
-        private void Awake()
+        private void Start()
         {
             _renderer = GetComponent<MeshRenderer>();
             _mainCamera = Camera.main.transform;

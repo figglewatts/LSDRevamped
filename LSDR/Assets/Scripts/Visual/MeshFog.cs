@@ -14,7 +14,7 @@ namespace LSDR.Visual
         private MaterialPropertyBlock _propertyBlock;
         private Transform _mainCamera;
 
-        private void Awake()
+        private void Start()
         {
             _renderer = GetComponent<MeshRenderer>();
             _propertyBlock = new MaterialPropertyBlock();
