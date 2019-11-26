@@ -11,8 +11,6 @@ namespace LSDR.SDK
 {
     public class DreamEditor : EditorWindow
     {
-        // TODO: import dreams
-        
         // TODO: environment preview
         
         private Dream.Dream _dream;
@@ -20,8 +18,8 @@ namespace LSDR.SDK
         private readonly ToriiSerializer _serializer = new ToriiSerializer();
         private readonly List<bool> _dreamEnvironmentFoldoutStates = new List<bool>();
         private readonly Stack<int> _dreamEnvironmentsToRemove = new Stack<int>();
-        private bool showEntireMenu = true;
-        
+        private bool _showEntireMenu = true;
+
         [MenuItem("LSDR/Create dream")]
         public static void Init()
         {
@@ -46,9 +44,8 @@ namespace LSDR.SDK
 
         public void OnGUI()
         {
-            
             EditorGUILayout.BeginHorizontal();
-            showEntireMenu = EditorGUILayout.Foldout(showEntireMenu, "Create a dream",
+            _showEntireMenu = EditorGUILayout.Foldout(_showEntireMenu, "Create a dream",
                 new GUIStyle("foldout") {fontStyle = FontStyle.Bold});
             GUILayout.FlexibleSpace();
             if (GUILayout.Button("Import", GUILayout.Width(100)))
@@ -58,14 +55,21 @@ namespace LSDR.SDK
             if (GUILayout.Button("Export", GUILayout.Width(100)))
             {
                 var path = EditorUtility.SaveFilePanel("Export dream", "", _dream.Name + ".json", "json");
-                _serializer.Serialize(_dream, path);
+
+                if (!string.IsNullOrEmpty(path))
+                {
+                    _serializer.Serialize(_dream, path);
+                }
             }
             EditorGUILayout.EndHorizontal();
 
+            EditorGUI.indentLevel++;
+
             _scrollPos = EditorGUILayout.BeginScrollView(_scrollPos);
-            if (showEntireMenu)
+            if (_showEntireMenu)
             {
                 EditorGUILayout.LabelField("Metadata", EditorStyles.boldLabel);
+                EditorGUI.indentLevel++;
                 _dream.Name = EditorGUILayout.TextField(new GUIContent("Name", "The name of this dream"),
                     _dream.Name);
                 _dream.Author = EditorGUILayout.TextField(new GUIContent("Author", "The author of this dream"),
@@ -86,9 +90,11 @@ namespace LSDR.SDK
                         _dream.TileWidth);
                 }
 
+                EditorGUI.indentLevel--;
                 EditorGUILayout.Separator();
 
                 EditorGUILayout.LabelField("Graph", EditorStyles.boldLabel);
+                EditorGUI.indentLevel++;
                 _dream.Upperness = EditorGUILayout.IntSlider(
                     new GUIContent("Upperness",
                         "What effect this dream has on the 'upper' axis of the graph, when visited"), _dream.Upperness,
@@ -101,9 +107,11 @@ namespace LSDR.SDK
                     _dream.Dynamicness,
                     -9,
                     9);
+                EditorGUI.indentLevel--;
                 EditorGUILayout.Separator();
 
                 EditorGUILayout.LabelField("Data", EditorStyles.boldLabel);
+                EditorGUI.indentLevel++;
                 EditorGUILayout.BeginHorizontal();
                 _dream.Level = EditorGUILayout.TextField(
                     new GUIContent("Level",
@@ -116,13 +124,16 @@ namespace LSDR.SDK
                 }
 
                 EditorGUILayout.EndHorizontal();
+                EditorGUI.indentLevel--;
                 EditorGUILayout.Separator();
 
                 EditorGUILayout.LabelField("Gameplay", EditorStyles.boldLabel);
+                EditorGUI.indentLevel++;
                 _dream.GreyMan =
                     EditorGUILayout.Toggle(
                         new GUIContent("Grey man", "Whether or not this dream can spawn the grey man"),
                         _dream.GreyMan);
+                EditorGUI.indentLevel--;
                 EditorGUILayout.Separator();
 
                 EditorGUILayout.BeginHorizontal();
@@ -142,14 +153,10 @@ namespace LSDR.SDK
                 }
 
                 EditorGUI.indentLevel--;
-
             }
             EditorGUILayout.EndScrollView();
 
-            EditorGUILayout.BeginHorizontal();
-            GUILayout.FlexibleSpace();
-            
-            EditorGUILayout.EndHorizontal();
+            EditorGUI.indentLevel--;
         }
         
         public static void DrawUILine(Color color, int thickness = 2, int padding = 10)
@@ -195,7 +202,18 @@ namespace LSDR.SDK
 
         private void importExistingDream()
         {
-            
+            var dreamPath =
+                EditorUtility.OpenFilePanelWithFilters("Open dream JSON...", "", new[] {"Dream JSON file", "json"});
+
+            if (!string.IsNullOrEmpty(dreamPath))
+            {
+                _dream = _serializer.Deserialize<Dream.Dream>(dreamPath);
+                _dreamEnvironmentFoldoutStates.Clear();
+                foreach (var env in _dream.Environments)
+                {
+                    _dreamEnvironmentFoldoutStates.Add(false);
+                }
+            }
         }
 
         private void addNewDreamEnvironment()
