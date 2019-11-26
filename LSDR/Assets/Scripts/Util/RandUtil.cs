@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 using Random = System.Random;
 
@@ -112,5 +114,13 @@ namespace LSDR.Util
 		/// <typeparam name="T">The type of the object contained within the array.</typeparam>
 		/// <returns>The random choice.</returns>
 		public static T RandomArrayElement<T>(T[] array) { return array[Int(array.Length)]; }
+
+		/// <summary>
+		/// Choose a random element from a list.
+		/// </summary>
+		/// <param name="list">The list.</param>
+		/// <typeparam name="T">The type opf the objects contained within the list.</typeparam>
+		/// <returns>The random choice.</returns>
+		public static T RandomListElement<T>(List<T> list) { return list[Int(list.Count)]; }
 	}
 }

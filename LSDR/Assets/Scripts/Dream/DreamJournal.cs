@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using LSDR.Util;
 using Newtonsoft.Json;
 
 namespace LSDR.Dream
@@ -30,6 +31,12 @@ namespace LSDR.Dream
         /// If multiple, then a random choice from the dreams given.
         /// </summary>
         public List<string> FirstDream { get; set; }
+
+        /// <summary>
+        /// Get a random linkable dream from the pool of linkable dreams.
+        /// </summary>
+        /// <returns>The random dream.</returns>
+        public string GetLinkableDream() { return RandUtil.RandomListElement(LinkableDreams); }
 
         public DreamJournal()
         {

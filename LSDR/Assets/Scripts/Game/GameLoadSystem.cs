@@ -14,7 +14,7 @@ using TResourceManager = Torii.Resource.ResourceManager; // TODO: change when ol
 namespace LSDR.Game
 {
 	/// <summary>
-	/// GameInitSystem is a system that contains code for initialising the game.
+	/// GameLoadSystem is a system that contains code for initialising the game.
 	/// </summary>
 	[CreateAssetMenu(menuName="System/GameLoadSystem")]
 	public class GameLoadSystem : ScriptableObject

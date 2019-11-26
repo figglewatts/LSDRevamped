@@ -18,13 +18,17 @@ namespace LSDR.Dream
         public ScenePicker DreamScene;
         public GameObject LBDObjectPrefab;
         public Material SkyBackground;
+        public JournalLoaderSystem JournalLoader;
         
         private readonly ToriiSerializer _serializer = new ToriiSerializer();
 
         public void BeginDream()
         {
+            // TODO: spawn in first dream if it's the first day
+            
+            var randomDream = JournalLoader.CurrentJournal.GetLinkableDream();
             Dream dream = _serializer.Deserialize<Dream>(IOUtil.PathCombine(Application.streamingAssetsPath,
-                "levels/Original Dreams/Bright Moon Cottage.json"));
+                randomDream));
             BeginDream(dream);
         }
 
@@ -35,7 +39,7 @@ namespace LSDR.Dream
 
         public void ApplyEnvironment(DreamEnvironment environment)
         {
-            RenderSettings.fogColor = Color.red;
+            RenderSettings.fogColor = environment.FogColor;
             SkyBackground.SetColor("_FogColor", environment.FogColor);
             if (Camera.main != null) Camera.main.backgroundColor = environment.SkyColor;
             SkyBackground.SetColor("_SkyColor", environment.SkyColor);
@@ -62,7 +66,7 @@ namespace LSDR.Dream
             tileMap.TIXFile = dream.Level + "/TEXA.TIX";
             tileMap.Spawn();
             
-            ApplyEnvironment(dream.Environments[0]);
+            ApplyEnvironment(dream.RandomEnvironment());
             
             Fader.FadeOut(3);
         }

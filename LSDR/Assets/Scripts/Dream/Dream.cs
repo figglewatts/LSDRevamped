@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using LSDR.Util;
 using Newtonsoft.Json;
 
 namespace LSDR.Dream
@@ -63,6 +64,12 @@ namespace LSDR.Dream
         {
             Environments = new List<DreamEnvironment>();
         }
+
+        /// <summary>
+        /// Get a random environment from this dream.
+        /// </summary>
+        /// <returns>The random environment.</returns>
+        public DreamEnvironment RandomEnvironment() { return RandUtil.RandomListElement(Environments); }
     }
 
     /// <summary>
