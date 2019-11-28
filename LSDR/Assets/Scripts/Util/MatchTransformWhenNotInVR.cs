@@ -10,13 +10,15 @@ namespace LSDR.Util
 	/// </summary>
 	public class MatchTransformWhenNotInVR : MonoBehaviour
 	{
+		public SettingsSystem Settings;
+		
 		public Transform Target;
 		public bool WhenInVR = false;
 		public bool MatchPosition = true;
 
 		void Update()
 		{
-			if (WhenInVR && !GameSettings.VR) return;
+			if (WhenInVR && !Settings.VR) return;
 
 			if (MatchPosition) transform.position = Target.position;
 			transform.rotation = Target.rotation;

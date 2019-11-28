@@ -27,18 +27,19 @@ namespace LSDR.Entities.Dream
 
 		private IEnumerator RollForGreyman()
 		{
-			while (true)
-			{
-				if (DreamDirector.CanSpawnGreyman)
-				{
-					int chance = RandUtil.Int(GameSettings.CHANCE_FOR_GREYMAN);
-
-					Debug.Log(chance);
-					if (chance == 0) SpawnGreyman();
-				}
-
-				yield return new WaitForSeconds(RandUtil.Float(_minWaitTime, _maxWaitTime));
-			}
+			// while (true)
+			// {
+			// 	if (DreamDirector.CanSpawnGreyman)
+			// 	{
+			// 		int chance = RandUtil.Int(GameSettings.CHANCE_FOR_GREYMAN);
+			//
+			// 		Debug.Log(chance);
+			// 		if (chance == 0) SpawnGreyman();
+			// 	}
+			//
+			// 	yield return new WaitForSeconds(RandUtil.Float(_minWaitTime, _maxWaitTime));
+			// }
+			yield return null;
 		}
 	}
 }

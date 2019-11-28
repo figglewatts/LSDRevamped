@@ -11,18 +11,20 @@ namespace LSDR.UI.Settings
     /// </summary>
     public class UIControlSettings : MonoBehaviour
     {
+        public SettingsSystem Settings;
+        
         public Dropdown CurrentSchemeDropdown;
 
         public void Start()
         {
-            GameSettings.SettingsBindBroker.RegisterData(CurrentSchemeDropdown);
+            Settings.SettingsBindBroker.RegisterData(CurrentSchemeDropdown);
 
-            CurrentSchemeDropdown.value = GameSettings.CurrentSettings.CurrentControlSchemeIndex;
+            CurrentSchemeDropdown.value = Settings.Settings.CurrentControlSchemeIndex;
 
             CurrentSchemeDropdown.onValueChanged.AddListener(ControlSchemeManager.UseScheme);
 
-            GameSettings.SettingsBindBroker.Bind(() => CurrentSchemeDropdown.value,
-                () => GameSettings.CurrentSettings.CurrentControlSchemeIndex, BindingType.TwoWay);
+            Settings.SettingsBindBroker.Bind(() => CurrentSchemeDropdown.value,
+                () => Settings.Settings.CurrentControlSchemeIndex, BindingType.TwoWay);
         }
     }
 }

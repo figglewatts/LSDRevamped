@@ -11,6 +11,8 @@ namespace LSDR.Entities.Player
 	public class PlayerFallDetector : MonoBehaviour
 	{
 		// TODO: refactor PlayerFallDetector to fix falling, as well as during DreamDirector refactor
+
+		public SettingsSystem Settings;
 		
 		[SerializeField]
 		private Camera _targetCamera;
@@ -43,7 +45,7 @@ namespace LSDR.Entities.Player
 			_fallTimer += Time.deltaTime;
 			if (!_canRotateCamera && _fallTimer > MAX_FALLING_TIME)
 			{
-				GameSettings.CanControlPlayer = false;
+				Settings.CanControlPlayer = false;
 				_lookUpRotation = Quaternion.Euler(MAX_X_ROTATION, _targetCamera.transform.rotation.eulerAngles.y,
 					_targetCamera.transform.rotation.eulerAngles.z);
 				DreamDirector.EndDreamFall();

@@ -19,6 +19,7 @@ namespace LSDR.Dream
         public GameObject LBDObjectPrefab;
         public Material SkyBackground;
         public JournalLoaderSystem JournalLoader;
+        public SettingsSystem SettingsSystem;
         
         private readonly ToriiSerializer _serializer = new ToriiSerializer();
 
@@ -43,7 +44,7 @@ namespace LSDR.Dream
             SkyBackground.SetColor("_FogColor", environment.FogColor);
             if (Camera.main != null) Camera.main.backgroundColor = environment.SkyColor;
             SkyBackground.SetColor("_SkyColor", environment.SkyColor);
-            GameSettings.SubtractiveFog = environment.SubtractiveFog;
+            SettingsSystem.SubtractiveFog = environment.SubtractiveFog;
             
             // TODO: apply the rest of the environment
         }

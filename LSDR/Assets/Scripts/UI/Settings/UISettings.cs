@@ -11,8 +11,9 @@ namespace LSDR.UI.Settings
     {
         public void ApplySettings()
         {
-            GameSettings.ApplySettings(GameSettings.CurrentSettings);
-            GameSettings.SaveSettings(GameSettings.CurrentSettings);
+            // TODO: apply settings via events
+            //GameSettings.ApplySettings(GameSettings.CurrentSettings);
+            //GameSettings.SaveSettings(GameSettings.CurrentSettings);
         }
     }
 }

@@ -147,7 +147,7 @@ namespace LSDR.Entities.Dream
 			Fader.FadeIn(Color.black, fadeInSpeed, () =>
 			{
 				SceneManager.LoadScene("titlescreen");
-				GameSettings.SetCursorViewState(true);
+				//GameSettings.SetCursorViewState(true);
 			});
 		}
 
@@ -165,9 +165,9 @@ namespace LSDR.Entities.Dream
 
 			Payload.ClearPayload();
 
-			GameSettings.PauseGame(false);
+			//GameSettings.PauseGame(false);
 
-			GameSettings.SetCursorViewState(true);
+			//GameSettings.SetCursorViewState(true);
 
 			Fader.FadeIn(Color.black, 1F, () =>
 			{

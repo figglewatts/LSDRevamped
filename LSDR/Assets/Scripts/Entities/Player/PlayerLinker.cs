@@ -11,6 +11,8 @@ namespace LSDR.Entities.Player
 	// TODO: refactor PlayerLinker in DreamDirector refactor
 	public class PlayerLinker : MonoBehaviour
 	{
+		public SettingsSystem Settings;
+		
 		public float LinkDelay = 0.7F;
 
 		private bool _canLink = true;
@@ -72,7 +74,7 @@ namespace LSDR.Entities.Player
 
 		public void Link(string dreamFilePath, Color color, bool playSound = true, string spawnName = "")
 		{
-			GameSettings.CanControlPlayer = false;
+			Settings.CanControlPlayer = false;
 			_canLink = false;
 
 			int shouldChangeTextureSetChance = RandUtil.Int(100);
@@ -83,7 +85,7 @@ namespace LSDR.Entities.Player
 			{
 				DreamDirector.SwitchDreamLevel(dreamFilePath, spawnName);
 				if (shouldChangeTextureSet) DreamDirector.RefreshTextureSet(false);
-				GameSettings.CanControlPlayer = true;
+				Settings.CanControlPlayer = true;
 				Fader.FadeOut(color, 1F, () =>
 				{
 					_canLink = true;

@@ -10,26 +10,28 @@ namespace LSDR.UI.Settings
 	/// </summary>
 	public class UIGameplaySettings : MonoBehaviour
 	{
+		public SettingsSystem Settings;
+		
 		public Toggle EnableHeadBobToggle;
 		public Toggle EnableFootstepSoundsToggle;
 		public Dropdown CurrentJournalDropdown;
 
-		public void OnEnable()
+		public void Start()
 		{
-            GameSettings.SettingsBindBroker.RegisterData(EnableHeadBobToggle);
-            GameSettings.SettingsBindBroker.RegisterData(EnableFootstepSoundsToggle);
-            GameSettings.SettingsBindBroker.RegisterData(CurrentJournalDropdown);
+			Settings.SettingsBindBroker.RegisterData(EnableHeadBobToggle);
+			Settings.SettingsBindBroker.RegisterData(EnableFootstepSoundsToggle);
+			Settings.SettingsBindBroker.RegisterData(CurrentJournalDropdown);
 
-            EnableHeadBobToggle.isOn = GameSettings.CurrentSettings.HeadBobEnabled;
-			EnableFootstepSoundsToggle.isOn = GameSettings.CurrentSettings.EnableFootstepSounds;
-			CurrentJournalDropdown.value = GameSettings.CurrentSettings.CurrentJournalIndex;
+            EnableHeadBobToggle.isOn = Settings.Settings.HeadBobEnabled;
+			EnableFootstepSoundsToggle.isOn = Settings.Settings.EnableFootstepSounds;
+			CurrentJournalDropdown.value = Settings.Settings.CurrentJournalIndex;
 
-            GameSettings.SettingsBindBroker.Bind(() => EnableHeadBobToggle.isOn,
-                () => GameSettings.CurrentSettings.HeadBobEnabled, BindingType.TwoWay);
-            GameSettings.SettingsBindBroker.Bind(() => EnableFootstepSoundsToggle.isOn,
-                () => GameSettings.CurrentSettings.EnableFootstepSounds, BindingType.TwoWay);
-            GameSettings.SettingsBindBroker.Bind(() => CurrentJournalDropdown.value,
-                () => GameSettings.CurrentSettings.CurrentJournalIndex, BindingType.TwoWay);
+			Settings.SettingsBindBroker.Bind(() => EnableHeadBobToggle.isOn,
+                () => Settings.Settings.HeadBobEnabled, BindingType.TwoWay);
+			Settings.SettingsBindBroker.Bind(() => EnableFootstepSoundsToggle.isOn,
+                () => Settings.Settings.EnableFootstepSounds, BindingType.TwoWay);
+			Settings.SettingsBindBroker.Bind(() => CurrentJournalDropdown.value,
+                () => Settings.Settings.CurrentJournalIndex, BindingType.TwoWay);
         }
 	}
 }

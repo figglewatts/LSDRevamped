@@ -47,13 +47,15 @@ namespace LSDR.Entities.Player
 		/// </summary>
 		public float MinY = -70F;
 
+		public SettingsSystem Settings;
+
 		// used to store how much we need to rotate on X axis (for lerping)
 		private float _rotationX;
 
 		void Update()
 		{
 			// if we can't control the player, or we're in VR, then we don't want to affect camera rotation
-			if (!GameSettings.CanControlPlayer || GameSettings.VR) return;
+			if (!Settings.CanControlPlayer || Settings.VR) return;
 
 			foreach (Camera c in TargetCameras)
 			{
@@ -77,7 +79,7 @@ namespace LSDR.Entities.Player
 		private void handleFpsCameraRotation(Camera target)
 		{
 			// if mouselook is disabled, we don't want to handle rotation this way
-			if (!GameSettings.CanMouseLook) return;
+			if (!Settings.CanMouseLook) return;
 
 			// rotate the camera around the Y axis based on mouse horizontal movement
 			transform.Rotate(0,

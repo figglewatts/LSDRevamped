@@ -25,8 +25,6 @@ namespace LSDR.Game
 		public IEnumerator LoadGameCoroutine()
 		{
 			// do game startup stuff here
-			
-			GameSettings.Initialize();
 
 			TResourceManager.RegisterHandler(new LBDHandler());
 			TResourceManager.RegisterHandler(new TIXHandler());
@@ -35,11 +33,7 @@ namespace LSDR.Game
 
 			ControlSchemeManager.Initialize();
 
-			DreamJournalManager.Initialize();
-
 			MapReader.MapScaleFactor = 1F;
-
-			GameSettings.LoadSettings();
 
 			Shader.SetGlobalFloat("_FogStep", 0.08F);
 			Shader.SetGlobalFloat("AffineIntensity", 0.5F);
@@ -49,7 +43,7 @@ namespace LSDR.Game
 			if (Application.isEditor)
 			{
 				// if we're running inside the editor, we want to have the mouse!
-				GameSettings.SetCursorViewState(true);
+				//GameSettings.SetCursorViewState(true);
 			}
 
 			yield return LBDTilePool.InitialiseCoroutine();

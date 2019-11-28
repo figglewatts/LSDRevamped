@@ -10,7 +10,9 @@ namespace LSDR.Entities.Player
 	[RequireComponent(typeof (CharacterController))]
     public class PlayerMovement : MonoBehaviour
     {
-		/// <summary>
+	    public SettingsSystem Settings;
+	    
+	    /// <summary>
 		/// The speed at which to move. Set in editor.
 		/// </summary>
         public float MovementSpeed;
@@ -83,7 +85,7 @@ namespace LSDR.Entities.Player
         private Vector2 getInput()
         {
 			// if we can't control the player return zero for input direction
-	        if (!GameSettings.CanControlPlayer) return Vector2.zero;
+	        if (!Settings.CanControlPlayer) return Vector2.zero;
 
 	        // get vector axes from input system
             float moveDirFrontBack = ControlSchemeManager.Current.Actions.MoveY;

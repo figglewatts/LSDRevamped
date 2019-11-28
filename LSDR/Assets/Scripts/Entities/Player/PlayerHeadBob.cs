@@ -12,6 +12,8 @@ namespace LSDR.Entities.Player
 	/// </summary>
 	public class PlayerHeadBob : MonoBehaviour
 	{
+		public SettingsSystem Settings;
+		
 		/// <summary>
 		/// The speed at which to bob the player's head. Set in editor.
 		/// </summary>
@@ -70,7 +72,7 @@ namespace LSDR.Entities.Player
 		void Update()
 		{
 			// if we can't control the player, we don't want to bob the head
-			if (!GameSettings.CanControlPlayer) return;
+			if (!Settings.CanControlPlayer) return;
 
 			// headbobbing uses a sine wave, this is the initial value of it
 			float sineWave = 0F;
@@ -97,7 +99,7 @@ namespace LSDR.Entities.Player
 				}
 
 				// check to see if we're at the bottom of the curve (3Pi / 2)
-				if (GameSettings.CurrentSettings.EnableFootstepSounds && _timer > (Mathf.PI * 3f) / 2f)
+				if (Settings.Settings.EnableFootstepSounds && _timer > (Mathf.PI * 3f) / 2f)
 				{
 					// and play a footstep sound if we're able to
 					if (_canPlayFootstepSound)
@@ -113,7 +115,7 @@ namespace LSDR.Entities.Player
 			{
 				float translateChange = sineWave * BobbingAmount;
 				Vector3 pos = _targetCamTransform.localPosition;
-				pos.y = Midpoint + (GameSettings.CurrentSettings.HeadBobEnabled ? translateChange : 0);
+				pos.y = Midpoint + (Settings.Settings.HeadBobEnabled ? translateChange : 0);
 				_targetCamTransform.localPosition = pos;
 			}
 			else

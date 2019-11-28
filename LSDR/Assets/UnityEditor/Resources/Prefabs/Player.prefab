@@ -403,6 +403,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f59ed85a9c144140b341e7b2832560f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Settings: {fileID: 11400000, guid: 12ecd5989d3bcc549bcacf027048a5bd, type: 2}
   _targetCamera: {fileID: 20610254309811964}
 --- !u!114 &114093436451678466
 MonoBehaviour:
@@ -410,7 +411,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1137826101587610}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: afa1697d44904f08bbbb66db7cccd58e, type: 3}
   m_Name: 
@@ -427,6 +428,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01703651aa41baa49ad7a62793f960f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Settings: {fileID: 11400000, guid: 12ecd5989d3bcc549bcacf027048a5bd, type: 2}
   RotationSpeed: 120
 --- !u!114 &114219709262752180
 MonoBehaviour:
@@ -447,6 +449,7 @@ MonoBehaviour:
   MouseLookRotationMultiplier: 50
   MaxY: 70
   MinY: -70
+  Settings: {fileID: 11400000, guid: 12ecd5989d3bcc549bcacf027048a5bd, type: 2}
 --- !u!114 &114371286810715588
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -459,6 +462,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Camera: {fileID: 20610254309811964}
+  PixelateImageEffect: {fileID: 114093436451678466}
+  Settings: {fileID: 11400000, guid: 12ecd5989d3bcc549bcacf027048a5bd, type: 2}
 --- !u!114 &114447734073296280
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -470,6 +475,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7de4d85a36878e4987d207c7da50a56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Settings: {fileID: 11400000, guid: 12ecd5989d3bcc549bcacf027048a5bd, type: 2}
   MovementSpeed: 4
   GravityMultiplier: 2
 --- !u!114 &114600731734888272
@@ -483,6 +489,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8c27d331cfec8646ad63f76d065da4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Settings: {fileID: 11400000, guid: 12ecd5989d3bcc549bcacf027048a5bd, type: 2}
   LinkDelay: 0.7
 --- !u!114 &114625393104351510
 MonoBehaviour:
@@ -495,6 +502,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ee4c07b573708a488d04b703cf37ac7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Settings: {fileID: 11400000, guid: 12ecd5989d3bcc549bcacf027048a5bd, type: 2}
   BobbingSpeed: 20
   BobbingAmount: 0.01
   Midpoint: 0.3

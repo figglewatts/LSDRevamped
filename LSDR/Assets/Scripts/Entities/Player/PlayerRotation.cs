@@ -9,6 +9,8 @@ namespace LSDR.Entities.Player
 	/// </summary>
 	public class PlayerRotation : MonoBehaviour
 	{
+		public SettingsSystem Settings;
+		
 		/// <summary>
 		/// The speed at which to rotate the player. Set in editor.
 		/// </summary>
@@ -17,7 +19,7 @@ namespace LSDR.Entities.Player
 		void Update()
 		{
 			// if we can control the player and we're not currently in FPS control mode
-			if (GameSettings.CanControlPlayer && !ControlSchemeManager.Current.FpsControls)
+			if (Settings.CanControlPlayer && !ControlSchemeManager.Current.FpsControls)
             {
                 // apply a rotation equal to the current move amount
 	            float rotAmount = ControlSchemeManager.Current.Actions.MoveX;

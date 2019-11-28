@@ -43,7 +43,7 @@ namespace LSDR.Game
         {
             _currentJournalHandle = i;
             Debug.Log("Journal switched to " + CurrentJournal);
-            GameSettings.CurrentSettings.CurrentJournalIndex = i;
+            //GameSettings.CurrentSettings.CurrentJournalIndex = i;
         }
 
         /// <summary>

@@ -10,6 +10,8 @@ namespace LSDR.Visual
     [RequireComponent(typeof(MeshRenderer))]
     public class MeshFog : MonoBehaviour
     {
+        public SettingsSystem Settings;
+        
         private MeshRenderer _renderer;
         private MaterialPropertyBlock _propertyBlock;
         private Transform _mainCamera;
@@ -46,7 +48,7 @@ namespace LSDR.Visual
             fogCol.a = 0;
 
             // handle subtractive fog
-            if (GameSettings.SubtractiveFog)
+            if (Settings.SubtractiveFog)
             {
                 fogCol *= -1;
             }

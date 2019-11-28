@@ -39,11 +39,8 @@ namespace LSDR.Entities.Original
         /// </summary>
         public LegacyTileMode Mode;
 
-        /// <summary>
-        /// The PrefabPool to use for LBD tiles.
-        /// </summary>
-        public PrefabPool LBDTilePool;
-        
+        public LBDReaderSystem LBDReader;
+
         /// <summary>
         /// The width of the LBD tiling. LBD 'slabs' will be placed along the X-axis until the counter exceeds this
         /// value, after which they will be placed along the X-axis on the next Z increment. Set in inspector.
@@ -52,8 +49,6 @@ namespace LSDR.Entities.Original
 
         private bool _loaded = false;
 
-        private LBDReader _lbdReader;
-        
         private Dictionary<TMDObject, Mesh> _cache;
 
         private const string TILE_PREFAB_PATH = "Prefabs/Entities/LBDTile";
@@ -67,8 +62,6 @@ namespace LSDR.Entities.Original
             // load the TIX into memory, then put it into the virtual PSX VRAM
 
             _cache = new Dictionary<TMDObject, Mesh>(new TMDObjectEqualityComparer());
-
-            _lbdReader = new LBDReader(LBDTilePool);
         }
 
         public void Spawn()
@@ -82,7 +75,7 @@ namespace LSDR.Entities.Original
             Profiler.BeginSample("LBD");
             
             _tix = ResourceManager.Load<TIX>(IOUtil.PathCombine(Application.streamingAssetsPath, TIXFile));
-            PsxVram.LoadVramTix(_tix);
+            LBDReader.UseTIX(_tix);
 
             // get an array of all of the LBD files in the given directory
             // TODO: error checking for LBD path
@@ -96,7 +89,7 @@ namespace LSDR.Entities.Original
             {
                 // load the LBD and create GameObjects for its tiles
                 var lbd = ResourceManager.Load<LBD>(file);
-                GameObject lbdObj = _lbdReader.CreateLBDTileMap(lbd, _cache);
+                GameObject lbdObj = LBDReader.CreateLBDTileMap(lbd, _cache);
                 Debug.Log($"Cache entries: {_cache.Count}");
 
                 // position the LBD 'slab' based on its tiling mode

@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a511a01e5914beabda5ff019d8436bc, type: 3}
+  m_Name: SettingsSystem
+  m_EditorClassIdentifier: 
+  MasterMixer: {fileID: 24100000, guid: 2a87d561db1fcd44c95b88e77fd8b37f, type: 2}
+  CanControlPlayer: 1
+  CanMouseLook: 1
+  SubtractiveFog: 0
+  IsPaused: 0
+  VR: 1
+  ClassicDiffuse: {fileID: 4800000, guid: fe8e4f4161764dc78aa58349a000520d, type: 3}
+  ClassicAlpha: {fileID: 4800000, guid: 1fc0454db12b4d5886f533893f6c1ad2, type: 3}
+  RevampedDiffuse: {fileID: 4800000, guid: fa599da3674b45b997aac6d674d44f16, type: 3}
+  RevampedAlpha: {fileID: 4800000, guid: 4447576b287640c49f0579700f3daf19, type: 3}
+  LBDDiffuse: {fileID: 2100000, guid: 9365a00b372fa14469f270d76849acf6, type: 2}
+  LBDAlpha: {fileID: 2100000, guid: 145c94de3064bd540a197b3c2fc7110a, type: 2}

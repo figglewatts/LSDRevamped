@@ -8,6 +8,10 @@ namespace LSDR.Entities.WorldObject
 	// TODO: refactor GraymanScript
 	public class GreymanScript : MonoBehaviour
 	{
+		// TODO: refactor
+
+		public SettingsSystem Settings;
+		
 		public Color GreymanColor;
 		public GameObject GreymanMesh;
 
@@ -22,7 +26,7 @@ namespace LSDR.Entities.WorldObject
 		void Start()
 		{
 			_greymanMaterial =
-				new Material(Shader.Find(GameSettings.CurrentSettings.UseClassicShaders
+				new Material(Shader.Find(Settings.Settings.UseClassicShaders
 					? "LSD/PSX/Diffuse"
 					: "LSD/Diffuse"));
 			_greymanMaterial.SetColor("_Tint", GreymanColor);

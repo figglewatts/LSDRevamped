@@ -53,7 +53,7 @@ namespace LSDR.UI
 		{
 			CommandInputField.text = string.Empty;
 
-			GameSettings.CanMouseLook = !state; // set it so we can't look while dev console is active
+			//GameSettings.CanMouseLook = !state; // set it so we can't look while dev console is active
 			
 			_consoleVisible = state;
 			gameObject.SetActive(state);
@@ -64,7 +64,7 @@ namespace LSDR.UI
 			}
 			else TextFieldSelected(false);
 
-			GameSettings.SetCursorViewState(state || !DreamDirector.CurrentlyInDream);
+			//GameSettings.SetCursorViewState(state || !DreamDirector.CurrentlyInDream);
 		}
 
 		public void ClearConsole()
@@ -76,7 +76,10 @@ namespace LSDR.UI
 		}
 
 		// used to make the player not able to move when we're typing
-		public void TextFieldSelected(bool selected) { GameSettings.CanControlPlayer = !selected; }
+		public void TextFieldSelected(bool selected)
+		{
+			//GameSettings.CanControlPlayer = !selected;
+		}
 
 		private void CommandSubmit(string command)
 		{

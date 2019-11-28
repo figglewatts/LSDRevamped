@@ -77,9 +77,9 @@ namespace LSDR.Game
 						break;
 					}
 
-					resource.Resource = MapReader.LoadMap(normalizedPath, IOUtil.PathCombine(Application.streamingAssetsPath, "textures", "wad"),
-						Shader.Find(GameSettings.CurrentSettings.UseClassicShaders ? "LSD/PSX/DiffuseSetNoAffine" : "LSD/DiffuseSet"),
-						Shader.Find(GameSettings.CurrentSettings.UseClassicShaders ? "LSD/PSX/TransparentSetNoAffine" : "LSD/TransparentSet"));
+					//resource.Resource = MapReader.LoadMap(normalizedPath, IOUtil.PathCombine(Application.streamingAssetsPath, "textures", "wad"),
+					//	Shader.Find(GameSettings.CurrentSettings.UseClassicShaders ? "LSD/PSX/DiffuseSetNoAffine" : "LSD/DiffuseSet"),
+					//	Shader.Find(GameSettings.CurrentSettings.UseClassicShaders ? "LSD/PSX/TransparentSetNoAffine" : "LSD/TransparentSet"));
 					resource.Resource.transform.SetParent(_resourceManagerGameObject.transform);
 					resource.Resource.SetActive(false);
 					resource.Lifespan = lifespan;

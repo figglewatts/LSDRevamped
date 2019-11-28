@@ -8,8 +8,9 @@ namespace LSDR.UI
 	public class UICurrentJournalDisplay : MonoBehaviour
 	{
 		public Text JournalDisplayElement;
+		public JournalLoaderSystem JournalLoader;
 
-		public void Start() { JournalDisplayElement.text = DreamJournalManager.CurrentJournal; }
-		public void OnEnable() { JournalDisplayElement.text = DreamJournalManager.CurrentJournal; }
+		public void Start() { JournalDisplayElement.text = JournalLoader.CurrentJournal.Name; }
+		public void OnEnable() { JournalDisplayElement.text = JournalLoader.CurrentJournal.Name; }
 	}
 }

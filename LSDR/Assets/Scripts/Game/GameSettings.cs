@@ -249,90 +249,14 @@ namespace LSDR.Game
 
 #endregion
 
-		#region Global Gameplay Settings (not serialized)
-
-		/// <summary>
-		/// Used to disable player motion, i.e. when linking.
-		/// </summary>
-        [JsonIgnore]
-		public static bool CanControlPlayer = true;
-
-		/// <summary>
-		/// Used to disable mouse looking, i.e. when paused. Please use SetCursorViewState().
-		/// </summary>
-        [JsonIgnore]
-		public static bool CanMouseLook = true;
-
-		/// <summary>
-		/// Whether or not the game is currently paused.
-		/// </summary>
-        [JsonIgnore]
-		public static bool IsPaused = false;
-
-		/// <summary>
-		/// Whether or not we're in VR mode.
-		/// </summary>
-        [JsonIgnore]
-		public static bool VR = !UnityEngine.XR.XRSettings.loadedDeviceName.Equals(string.Empty);
-
-		/// <summary>
-		/// Should the fog be additive or subtractive.
-		/// TODO: move subtractive fog into dream environment?
-		/// </summary>
-		[JsonIgnore] public static bool SubtractiveFog = false;
-
-		#endregion
-
-		#region Gameplay Constants (not serialized)
-
-		/// <summary>
-		/// The framerate of the PS1. Used when framerate limiting is enabled.
-		/// </summary>
-        [JsonIgnore]
-		public const int FRAMERATE_LIMIT = 25;
-
-		/// <summary>
-		/// Grey man will spawn approx 1 in every CHANCE_FOR_GREYMAN-1 times.
-		/// TODO: put chance_for_greyman in dream data?
-		/// </summary>
-        [JsonIgnore]
-		public const int CHANCE_FOR_GREYMAN = 100;
-
-		#endregion
-
-		// reference to master audio mixer used for volume controls
-	    private static AudioMixer _masterMixer;
-
-	    // reference to serializer used for loading/saving data
-        private static readonly ToriiSerializer _serializer = new ToriiSerializer();
-
-        // the path to the settings serialized file
-	    private static string SettingsPath => PathUtil.Combine(Application.persistentDataPath, "settings.json");
-	    
-	    // the currently loaded settings
-	    private static GameSettings _currentSettings;
-
-	    #region BindBroker fields
+		#region BindBroker fields
         public event Action<string, IPropertyWatcher> OnPropertyChange;
 
         [JsonIgnore]
         public Guid GUID { get; }
-
-        public static BindBroker SettingsBindBroker = new BindBroker();
-        #endregion
-
-		/// <summary>
-		/// Get the currently loaded GameSettings, to access deserialized settings.
-		/// </summary>
-	    public static GameSettings CurrentSettings
-	    {
-	        get { return _currentSettings; }
-	        set
-	        {
-	            _currentSettings = value;
-                ApplySettings(value);
-	        }
-	    }
+        
+		#endregion
+		
 
 		/// <summary>
 		/// Create a new instance of the settings object with default values.
@@ -341,7 +265,6 @@ namespace LSDR.Game
 	    {
 	        HeadBobEnabled = true;
 	        CurrentControlSchemeIndex = 0;
-	        CanControlPlayer = true;
 	        UseClassicShaders = true;
 	        UsePixelationShader = true;
 	        CurrentResolutionIndex = FindResolutionIndex();
@@ -357,132 +280,6 @@ namespace LSDR.Game
 	        GUID = Guid.NewGuid();
 	    }
 
-		/// <summary>
-		/// Static constructor to initialise the serializer.
-		/// </summary>
-        static GameSettings()
-        {
-            _serializer.RegisterJsonSerializationSettings(typeof(GameSettings), new JsonSerializerSettings()
-            {
-                Formatting = Formatting.Indented,
-                SerializationBinder = new DefaultSerializationBinder()
-            });
-        }
-
-		/// <summary>
-		/// Set the cursor view state. True sets the cursor to visible and unlocks it, false does the inverse.
-		/// </summary>
-		/// <param name="state">Cursor state to set.</param>
-		public static void SetCursorViewState(bool state)
-		{
-			Cursor.visible = state;
-			Cursor.lockState = state ? CursorLockMode.None : CursorLockMode.Locked;
-		}
-
-		/// <summary>
-		/// Change the game's pause state. Pausing the game will enable the mouse pointer.
-		/// </summary>
-		/// <param name="pauseState">The pause state to set.</param>
-		public static void PauseGame(bool pauseState)
-		{
-			IsPaused = pauseState;
-			SetCursorViewState(pauseState);
-			Time.timeScale = pauseState ? 0 : 1;
-		}
-
-		/// <summary>
-		/// Apply the game settings. This function propagates the given settings to all game systems that need them.
-		/// </summary>
-		/// <param name="settings">The settings to apply.</param>
-		public static void ApplySettings(GameSettings settings)
-		{
-            // TODO: try and catch exceptions for erroneous loaded values (i.e. array idx) and reset to default if error
-		    
-            // set the control scheme
-		    ControlSchemeManager.UseScheme(settings.CurrentControlSchemeIndex);
-
-		    // set the resolution
-			if (settings.CurrentResolutionIndex > Screen.resolutions.Length)
-			{
-			    // if the resolution is invalid, set it to the lowest resolution
-				Screen.SetResolution(Screen.resolutions[0].width, Screen.resolutions[0].height, settings.Fullscreen);
-			}
-			else
-			{
-			    Screen.SetResolution(Screen.resolutions[settings.CurrentResolutionIndex].width,
-			        Screen.resolutions[settings.CurrentResolutionIndex].height, settings.Fullscreen);
-			}
-			
-			// set framerate to limit or not
-			Application.targetFrameRate = settings.LimitFramerate ? FRAMERATE_LIMIT : -1;
-			
-			// set retro shader affine intensity
-			Shader.SetGlobalFloat("AffineIntensity", settings.AffineIntensity);
-			
-			// set the current dream journal
-			DreamJournalManager.SetJournal(settings.CurrentJournalIndex);
-			
-			// set volumes
-			SetMusicVolume(settings.MusicVolume);
-            SetSFXVolume(settings.SFXVolume);
-            
-            // set the graphics quality
-            QualitySettings.SetQualityLevel(settings.CurrentQualityIndex, true);
-
-            Debug.Log("Applying game settings...");
-            Debug.Log("Affine intensity: " + settings.AffineIntensity);
-		}
-
-		/// <summary>
-		/// Load the saved settings from the file.
-		/// </summary>
-		public static void LoadSettings()
-		{
-		    Debug.Log("Loading game settings...");
-		    
-		    // check to see if the settings file exists
-		    if (File.Exists(SettingsPath))
-		    {
-		        CurrentSettings = _serializer.Deserialize<GameSettings>(SettingsPath);
-		    }
-		    else
-		    {
-		        // create the default settings
-                Debug.Log("Settings.json not found, creating default settings");
-                CurrentSettings = new GameSettings();
-                SaveSettings(CurrentSettings);
-		    }
-		}
-
-		/// <summary>
-		/// Save the given settings to the settings file.
-		/// </summary>
-		/// <param name="settings">The settings to save.</param>
-		public static void SaveSettings(GameSettings settings)
-		{
-            Debug.Log("Saving game settings...");
-
-		    _serializer.Serialize(settings, SettingsPath);
-		}
-
-		/// <summary>
-		/// Set the music volume.
-		/// </summary>
-		/// <param name="val">Music volume in percentage.</param>
-        public static void SetMusicVolume(float val)
-        {
-            _masterMixer.SetFloat("MusicVolume", volumeToDb(val));
-        }
-
-		/// <summary>
-		/// Set the SFX volume.
-		/// </summary>
-		/// <param name="val">SFX volume in percentage.</param>
-        public static void SetSFXVolume(float val)
-        {
-            _masterMixer.SetFloat("SFXVolume", volumeToDb(val));
-        }
-
 		// find the current resolution index
         private static int FindResolutionIndex()
 		{
@@ -494,21 +291,6 @@ namespace LSDR.Game
 			Debug.LogWarning("Could not find screen resolution!");
 			return 0;
 		}
-
-        // convert a volume percentage into decibels
-        private static float volumeToDb(float volume)
-        {
-            if (volume <= 0) return -80;
-            return 20 * Mathf.Log10(volume);
-        }
-
-        /// <summary>
-        /// Initialize settings. Should be called on game startup.
-        /// </summary>
-	    public static void Initialize()
-	    {
-	        _masterMixer = Resources.Load<AudioMixer>("Mixers/MasterMixer");
-	    }
 
         // used for BindBrokers
 	    public void NotifyPropertyChange(string propertyName) { OnPropertyChange?.Invoke(propertyName, this); }

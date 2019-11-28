@@ -83,7 +83,7 @@ namespace LSDR.UI
 					SettingsObject.SetActive(false);
 					PauseMenuObject.SetActive(true);
 					PauseScreenBackgroundObject.SetActive(true);
-					GameSettings.PauseGame(true);
+					//GameSettings.PauseGame(true);
 					break;
 				}
 				case PauseState.NOT_PAUSED:
@@ -91,7 +91,7 @@ namespace LSDR.UI
 					PauseScreenBackgroundObject.SetActive(false);
 					PauseMenuObject.SetActive(false);
 					SettingsObject.SetActive(false);
-					GameSettings.PauseGame(false);
+					//GameSettings.PauseGame(false);
 					break;
 				}
 				case PauseState.SETTINGS:

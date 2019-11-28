@@ -1,4 +1,5 @@
-﻿using LSDR.Game;
+﻿using System;
+using LSDR.Game;
 using Torii.Binding;
 using UnityEngine;
 using Torii.UI;
@@ -10,6 +11,8 @@ namespace LSDR.UI.Settings
 	/// </summary>
 	public class UIAudioSettings : MonoBehaviour
 	{
+		public SettingsSystem Settings;
+		
 		/// <summary>
 		/// Reference to the music volume slider. Set in inspector.
 		/// </summary>
@@ -23,24 +26,22 @@ namespace LSDR.UI.Settings
 		public void Start()
 		{
 			// register data with the settings bind broker
-			GameSettings.SettingsBindBroker.RegisterData(MusicVolumeSlider);
-			GameSettings.SettingsBindBroker.RegisterData(SFXVolumeSlider);
+			Settings.SettingsBindBroker.RegisterData(MusicVolumeSlider);
+			Settings.SettingsBindBroker.RegisterData(SFXVolumeSlider);
 
 			// set to initial values from currently loaded settings
-			MusicVolumeSlider.value = GameSettings.CurrentSettings.MusicVolume;
-			SFXVolumeSlider.value = GameSettings.CurrentSettings.SFXVolume;
-			GameSettings.SetMusicVolume(GameSettings.CurrentSettings.MusicVolume);
-			GameSettings.SetSFXVolume(GameSettings.CurrentSettings.SFXVolume);
+			MusicVolumeSlider.value = Settings.Settings.MusicVolume;
+			SFXVolumeSlider.value = Settings.Settings.SFXVolume;
 
 			// add value change listeners
-			MusicVolumeSlider.onValueChanged.AddListener(GameSettings.SetMusicVolume);
-			SFXVolumeSlider.onValueChanged.AddListener(GameSettings.SetSFXVolume);
+			MusicVolumeSlider.onValueChanged.AddListener(Settings.SetMusicVolume);
+			SFXVolumeSlider.onValueChanged.AddListener(Settings.SetSFXVolume);
 
 			// bind the data
-			GameSettings.SettingsBindBroker.Bind(() => MusicVolumeSlider.value,
-				() => GameSettings.CurrentSettings.MusicVolume, BindingType.TwoWay);
-			GameSettings.SettingsBindBroker.Bind(() => SFXVolumeSlider.value,
-				() => GameSettings.CurrentSettings.SFXVolume, BindingType.TwoWay);
+			Settings.SettingsBindBroker.Bind(() => MusicVolumeSlider.value,
+				() => Settings.Settings.MusicVolume, BindingType.TwoWay);
+			Settings.SettingsBindBroker.Bind(() => SFXVolumeSlider.value,
+				() => Settings.Settings.SFXVolume, BindingType.TwoWay);
 		}
 	}
 }
