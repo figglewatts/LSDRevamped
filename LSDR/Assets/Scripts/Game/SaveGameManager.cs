@@ -14,7 +14,8 @@ namespace LSDR.Game
 		{
 			get
 			{
-				return IOUtil.PathCombine(Application.persistentDataPath, "saves", DreamJournalManager.CurrentJournal + ".json");
+				//return IOUtil.PathCombine(Application.persistentDataPath, "saves", DreamJournalManager.CurrentJournal + ".json");
+				return "";
 			}
 		}
 

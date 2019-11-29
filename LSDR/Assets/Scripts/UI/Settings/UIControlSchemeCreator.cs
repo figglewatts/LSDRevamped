@@ -33,6 +33,8 @@ namespace LSDR.UI.Settings
 
 	    public UIControlSchemeDropdownPopulator ControlSchemeDropdownPopulator;
 
+	    public ControlSchemeLoaderSystem ControlSchemeLoader;
+
 	    private ControlScheme _currentlyEditingScheme;
 
 	    public enum ControlSchemeCreatorMode
@@ -78,11 +80,11 @@ namespace LSDR.UI.Settings
 	            }
 	            case ControlSchemeCreatorMode.Edit:
 	            {
-	                _currentlyEditingScheme = ControlSchemeManager.Current;
+	                _currentlyEditingScheme = ControlSchemeLoader.Current;
 	                SubmitSchemeButtonText.text = "Edit";
 	                SubmitSchemeButton.interactable = true;
 	                SchemeNameField.interactable = false;
-	                SchemeNameField.text = ControlSchemeManager.Current.Name;
+	                SchemeNameField.text = ControlSchemeLoader.Current.Name;
 	                NameVerifier.CanHaveSameName = true;
 	                break;
 	            }
@@ -104,20 +106,19 @@ namespace LSDR.UI.Settings
 	        {
 	            case ControlSchemeCreatorMode.Create:
 	            {
-	                ControlSchemeManager.Schemes.Add(_currentlyEditingScheme);
-                    ControlSchemeManager.UseScheme(ControlSchemeManager.Schemes.Count - 1);
+	                ControlSchemeLoader.Schemes.Add(_currentlyEditingScheme);
+                    ControlSchemeLoader.SelectScheme(ControlSchemeLoader.Schemes.Count - 1);
 	                break;
 	                
 	            }
 	            case ControlSchemeCreatorMode.Edit:
 	            {
-	                ControlSchemeManager.Schemes[ControlSchemeManager.CurrentSchemeIndex] = _currentlyEditingScheme;
+	                ControlSchemeLoader.Schemes[ControlSchemeLoader.CurrentSchemeIndex] = _currentlyEditingScheme;
 	                break;
 	            }
 	        }
-	        ControlSchemeManager.SerializeControlSchemes(ControlSchemeManager.Schemes);
-            ControlSchemeManager.ReloadSchemes();
-            ControlSchemeDropdownPopulator.PopulateDropdown();
+	        ControlSchemeLoader.SaveSchemes();
+	        ControlSchemeDropdownPopulator.PopulateDropdown();
 	        Hide();
 	    }
 

@@ -9,6 +9,8 @@ namespace LSDR.UI.Settings
 	/// </summary>
 	public class UIControlSchemeDropdownPopulator : DropdownPopulator
 	{
+		public ControlSchemeLoaderSystem ControlSchemeLoader;
+		
 		protected override void Awake()
 		{
 			base.Awake();
@@ -17,7 +19,7 @@ namespace LSDR.UI.Settings
 
 		public void PopulateDropdown()
 		{
-			var list = ControlSchemeManager.Schemes.Select(scheme => scheme.Name).ToList();
+			var list = ControlSchemeLoader.Schemes.Select(scheme => scheme.Name).ToList();
 			list.Sort();
 			Populate(list);
 		}

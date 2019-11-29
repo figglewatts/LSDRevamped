@@ -89,7 +89,7 @@ namespace LSDR.Entities.Dream
 					return;
 				}
 			}
-			BeginDream(RandUtil.RandomLevelFromDir(DreamJournalManager.CurrentJournal));
+			//BeginDream(RandUtil.RandomLevelFromDir(DreamJournalManager.CurrentJournal));
 		}
 
 		public static void BeginDream(string level)
@@ -278,14 +278,14 @@ namespace LSDR.Entities.Dream
 
 			try
 			{
-				Texture2D graphTexMap =
-					ResourceManager.Load<Texture2D>(IOUtil.PathCombine("levels", DreamJournalManager.CurrentJournal + ".png"),
-						ResourceLifespan.MENU);
-				int levelIndex = graphTexMap.GetPixels32()[textureArrayIndex].a;
+				//Texture2D graphTexMap =
+				//	ResourceManager.Load<Texture2D>(IOUtil.PathCombine("levels", DreamJournalManager.CurrentJournal + ".png"),
+				//		ResourceLifespan.MENU);
+				//int levelIndex = graphTexMap.GetPixels32()[textureArrayIndex].a;
 
-				level = IOUtil.GetLevelFromIndex(levelIndex, DreamJournalManager.CurrentJournal);
+				//level = IOUtil.GetLevelFromIndex(levelIndex, DreamJournalManager.CurrentJournal);
 
-				return true;
+				//return true;
 			}
 			catch (ResourceManager.ResourceLoadException e)
 			{

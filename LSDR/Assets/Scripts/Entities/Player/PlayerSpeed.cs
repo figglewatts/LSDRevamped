@@ -54,6 +54,8 @@ namespace LSDR.Entities.Player
 		/// </summary>
 		public float SprintFastBobAmount;
 
+		public ControlSchemeLoaderSystem ControlScheme;
+
 		// timer used to figure out how long we've been sprinting for
 		private float _sprintingTimer;
 
@@ -75,7 +77,7 @@ namespace LSDR.Entities.Player
 		void Update()
 		{
 			// if the sprint button is pressed, we're sprinting
-			if (ControlSchemeManager.Current.Actions.Run.IsPressed)
+			if (ControlScheme.Current.Actions.Run.IsPressed)
 			{
 				_isSprinting = true;
 			}
@@ -109,8 +111,8 @@ namespace LSDR.Entities.Player
 			}
 
 			// if space is not pressed and no movement keys are pressed
-			if (!ControlSchemeManager.Current.Actions.Run.IsPressed
-			    && !ControlSchemeManager.Current.Actions.MoveY.IsPressed)
+			if (!ControlScheme.Current.Actions.Run.IsPressed
+			    && !ControlScheme.Current.Actions.MoveY.IsPressed)
 			{
 				_isSprinting = false;
 				_isSprintingFast = false;

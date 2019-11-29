@@ -13,6 +13,7 @@ namespace LSDR.Entities.Player
 	public class PlayerHeadBob : MonoBehaviour
 	{
 		public SettingsSystem Settings;
+		public ControlSchemeLoaderSystem ControlScheme;
 		
 		/// <summary>
 		/// The speed at which to bob the player's head. Set in editor.
@@ -78,7 +79,7 @@ namespace LSDR.Entities.Player
 			float sineWave = 0F;
 			
 			// get the forward movement vector
-			float forwardMovement = ControlSchemeManager.Current.Actions.MoveY.Value;
+			float forwardMovement = ControlScheme.Current.Actions.MoveY.Value;
 
 			// if the forward movement vector is zero, reset the timer
 			if (Mathf.Abs(forwardMovement) < float.Epsilon)

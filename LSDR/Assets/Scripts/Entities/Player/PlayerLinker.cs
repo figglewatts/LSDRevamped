@@ -2,6 +2,7 @@
 using LSDR.Entities.Dream;
 using LSDR.Entities.WorldObject;
 using LSDR.Game;
+using LSDR.InputManagement;
 using LSDR.UI;
 using UnityEngine.Audio;
 using LSDR.Util;
@@ -12,7 +13,7 @@ namespace LSDR.Entities.Player
 	public class PlayerLinker : MonoBehaviour
 	{
 		public SettingsSystem Settings;
-		
+
 		public float LinkDelay = 0.7F;
 
 		private bool _canLink = true;
@@ -65,7 +66,7 @@ namespace LSDR.Entities.Player
 				LinkableObject o = hit.gameObject.transform.parent.transform.parent.GetComponent<LinkableObject>();
 
 				Color linkCol = o.ForceFadeColor ? o.FadeColor : RandUtil.RandColor();
-				string linkLevel = o.LinkToSpecificLevel ? IOUtil.PathCombine("levels", o.LinkedLevel) : RandUtil.RandomLevelFromDir(DreamJournalManager.CurrentJournal);
+				string linkLevel = "";//o.LinkToSpecificLevel ? IOUtil.PathCombine("levels", o.LinkedLevel) : RandUtil.RandomLevelFromDir(DreamJournalManager.CurrentJournal);
 
 				_linkTimer = 0;
 				Link(linkLevel, linkCol);
@@ -97,7 +98,7 @@ namespace LSDR.Entities.Player
 
 		public void Link(bool playSound = true)
 		{
-			Link(RandUtil.RandomLevelFromDir(DreamJournalManager.CurrentJournal), RandUtil.RandColor(), playSound);
+			//Link(RandUtil.RandomLevelFromDir(DreamJournalManager.CurrentJournal), RandUtil.RandColor(), playSound);
 		}
 	}
 }

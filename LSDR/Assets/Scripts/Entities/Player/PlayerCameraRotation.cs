@@ -49,6 +49,8 @@ namespace LSDR.Entities.Player
 
 		public SettingsSystem Settings;
 
+		public ControlSchemeLoaderSystem ControlScheme;
+
 		// used to store how much we need to rotate on X axis (for lerping)
 		private float _rotationX;
 
@@ -61,7 +63,7 @@ namespace LSDR.Entities.Player
 			{
 				// handle the controls differently depending on whether or not the current
 				// control scheme has FPS controls (mouselook) enabled
-				if (ControlSchemeManager.Current.FpsControls)
+				if (ControlScheme.Current.FpsControls)
 				{
 					handleFpsCameraRotation(c);
 				}
@@ -83,14 +85,14 @@ namespace LSDR.Entities.Player
 
 			// rotate the camera around the Y axis based on mouse horizontal movement
 			transform.Rotate(0,
-				ControlSchemeManager.Current.Actions.LookX * ControlSchemeManager.Current.MouseSensitivity *
+				ControlScheme.Current.Actions.LookX * ControlScheme.Current.MouseSensitivity *
 				Time.smoothDeltaTime * MouseLookRotationMultiplier,
 				0, Space.Self);
 
 			// rotate the camera around the X axis based on mouse vertical movement
 			Transform temp = target.transform;
-			_rotationX += -ControlSchemeManager.Current.Actions.LookY *
-			              ControlSchemeManager.Current.MouseSensitivity * Time.smoothDeltaTime *
+			_rotationX += -ControlScheme.Current.Actions.LookY *
+			              ControlScheme.Current.MouseSensitivity * Time.smoothDeltaTime *
 			              MouseLookRotationMultiplier;
 			
 			// make sure this angle is clamped between the min and max Y values
@@ -122,22 +124,22 @@ namespace LSDR.Entities.Player
 			Quaternion originalOrientation = Quaternion.Euler(0, transformRotation.eulerAngles.y,
 				transformRotation.eulerAngles.z);
 
-			if (ControlSchemeManager.Current.Actions.LookUp.IsPressed)
+			if (ControlScheme.Current.Actions.LookUp.IsPressed)
 			{
 				// rotate towards the max negative rotation if we're looking up
 				target.transform.rotation = Quaternion.RotateTowards(transformRotation, maxNegative,
 					RotationSpeed * Time.deltaTime);
 			}
 			
-			if (ControlSchemeManager.Current.Actions.LookDown.IsPressed)
+			if (ControlScheme.Current.Actions.LookDown.IsPressed)
 			{
 				// rotate towards the max positive rotation if we're looking down
 				target.transform.rotation = Quaternion.RotateTowards(transformRotation, maxPositive,
 					RotationSpeed * Time.deltaTime);
 			}
 			
-			if (!ControlSchemeManager.Current.Actions.LookUp.IsPressed &&
-			    !ControlSchemeManager.Current.Actions.LookDown.IsPressed)
+			if (!ControlScheme.Current.Actions.LookUp.IsPressed &&
+			    !ControlScheme.Current.Actions.LookDown.IsPressed)
 			{
 				// rotate towards the neutral rotation orientation if we neither looking up nor down
 				target.transform.rotation = Quaternion.RotateTowards(transformRotation, originalOrientation,

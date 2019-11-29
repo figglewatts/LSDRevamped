@@ -57,6 +57,9 @@ namespace LSDR.Game
         public Material LBDDiffuse;
         public Material LBDAlpha;
 
+        public JournalLoaderSystem JournalLoader;
+        public ControlSchemeLoaderSystem ControlSchemeLoader;
+
         // reference to serializer used for loading/saving data
         private readonly ToriiSerializer _serializer = new ToriiSerializer();
 
@@ -118,7 +121,7 @@ namespace LSDR.Game
             // TODO: try and catch exceptions for erroneous loaded values (i.e. array idx) and reset to default if error
 		    
             // set the control scheme
-            ControlSchemeManager.UseScheme(Settings.CurrentControlSchemeIndex);
+            ControlSchemeLoader.SelectScheme(Settings.CurrentControlSchemeIndex);
 
             // set the resolution
             if (Settings.CurrentResolutionIndex > Screen.resolutions.Length)
@@ -139,7 +142,7 @@ namespace LSDR.Game
             Shader.SetGlobalFloat("AffineIntensity", Settings.AffineIntensity);
 			
             // set the current dream journal
-            DreamJournalManager.SetJournal(Settings.CurrentJournalIndex);
+            JournalLoader.SelectJournal(Settings.CurrentJournalIndex);
 			
             // set volumes
             SetMusicVolume(Settings.MusicVolume);

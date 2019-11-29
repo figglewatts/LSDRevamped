@@ -11,6 +11,8 @@ namespace LSDR.UI.Settings
     [RequireComponent(typeof(InputField))]
     public class UIControlSchemeNameVerifier : MonoBehaviour
     {
+        public ControlSchemeLoaderSystem ControlSchemeLoader;
+        
         public Button Button;
 
         public bool CanHaveSameName { get { return _canHaveSameName; } set { _canHaveSameName = value; } }
@@ -40,7 +42,7 @@ namespace LSDR.UI.Settings
             }
 
             // scheme can't overwrite another scheme
-            if (!CanHaveSameName && ControlSchemeManager.Schemes.Count(scheme => scheme.Name == input) > 0)
+            if (!CanHaveSameName && ControlSchemeLoader.Schemes.Count(scheme => scheme.Name == input) > 0)
             {
                 return false;
             }

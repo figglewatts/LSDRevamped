@@ -11,6 +11,7 @@ namespace LSDR.Entities.Player
     public class PlayerMovement : MonoBehaviour
     {
 	    public SettingsSystem Settings;
+	    public ControlSchemeLoaderSystem ControlScheme;
 	    
 	    /// <summary>
 		/// The speed at which to move. Set in editor.
@@ -88,8 +89,8 @@ namespace LSDR.Entities.Player
 	        if (!Settings.CanControlPlayer) return Vector2.zero;
 
 	        // get vector axes from input system
-            float moveDirFrontBack = ControlSchemeManager.Current.Actions.MoveY;
-	        float moveDirLeftRight = ControlSchemeManager.Current.FpsControls ? ControlSchemeManager.Current.Actions.MoveX : 0f;
+            float moveDirFrontBack = ControlScheme.Current.Actions.MoveY;
+	        float moveDirLeftRight = ControlScheme.Current.FpsControls ? ControlScheme.Current.Actions.MoveX : 0f;
             Vector2 input = new Vector2(moveDirLeftRight, moveDirFrontBack);
 
             // normalize input if it exceeds 1 in combined length (for diagonal movement):

@@ -21,43 +21,6 @@ namespace LSDR.Game
 
 			switch (commandFragments[0].ToLowerInvariant())
 			{
-				case "switchjournal":
-				{
-					DreamJournalManager.SwitchJournal(commandFragments[1]);
-					break;
-				}
-
-				case "loadlevel":
-				{
-					string levelName = commandFragments[1];
-
-					// if there is a journal specified switch to it
-					if (commandFragments.Count > 2) DreamJournalManager.SwitchJournal(commandFragments[2]);
-
-					string levelPath = IOUtil.PathCombine(Application.streamingAssetsPath, "levels", DreamJournalManager.CurrentJournal, levelName + ".tmap");
-
-					// check if the level exists before doing anything
-					if (!File.Exists(levelPath))
-					{
-						Debug.LogError("Level " + levelName + " does not exist");
-						break;
-					}
-
-					// if we're not in a dream begin one with the specified level
-					if (!DreamDirector.CurrentlyInDream)
-					{
-						DreamDirector.BeginDream(levelPath);
-						ConsoleUI.SetConsoleState(false);
-						break;
-					}
-					else
-					{
-						// otherwise just swap out the level for the specified one
-						DreamDirector.SwitchDreamLevel(levelPath);
-						break;
-					}
-				}
-
 				case "textureset":
 				{
 					int set = int.Parse(commandFragments[1], CultureInfo.InvariantCulture);

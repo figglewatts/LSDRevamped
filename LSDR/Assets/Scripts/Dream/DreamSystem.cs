@@ -27,7 +27,7 @@ namespace LSDR.Dream
         {
             // TODO: spawn in first dream if it's the first day
             
-            var randomDream = JournalLoader.CurrentJournal.GetLinkableDream();
+            var randomDream = JournalLoader.Current.GetLinkableDream();
             Dream dream = _serializer.Deserialize<Dream>(IOUtil.PathCombine(Application.streamingAssetsPath,
                 randomDream));
             BeginDream(dream);

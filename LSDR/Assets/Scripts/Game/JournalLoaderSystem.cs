@@ -13,7 +13,7 @@ namespace LSDR.Game
         public string PathToJournals;
         public List<DreamJournal> Journals;
 
-        public DreamJournal CurrentJournal => Journals[_currentJournalHandle];
+        public DreamJournal Current => Journals[_currentJournalHandle];
 
         private readonly ToriiSerializer _serializer = new ToriiSerializer();
         private int _currentJournalHandle = 0;

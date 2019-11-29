@@ -12,6 +12,7 @@ namespace LSDR.UI.Settings
     public class UIControlSettings : MonoBehaviour
     {
         public SettingsSystem Settings;
+        public ControlSchemeLoaderSystem ControlSchemeLoader;
         
         public Dropdown CurrentSchemeDropdown;
 
@@ -21,7 +22,7 @@ namespace LSDR.UI.Settings
 
             CurrentSchemeDropdown.value = Settings.Settings.CurrentControlSchemeIndex;
 
-            CurrentSchemeDropdown.onValueChanged.AddListener(ControlSchemeManager.UseScheme);
+            CurrentSchemeDropdown.onValueChanged.AddListener(ControlSchemeLoader.SelectScheme);
 
             Settings.SettingsBindBroker.Bind(() => CurrentSchemeDropdown.value,
                 () => Settings.Settings.CurrentControlSchemeIndex, BindingType.TwoWay);

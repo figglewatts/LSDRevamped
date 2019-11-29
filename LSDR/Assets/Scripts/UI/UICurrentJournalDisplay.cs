@@ -10,7 +10,7 @@ namespace LSDR.UI
 		public Text JournalDisplayElement;
 		public JournalLoaderSystem JournalLoader;
 
-		public void Start() { JournalDisplayElement.text = JournalLoader.CurrentJournal.Name; }
-		public void OnEnable() { JournalDisplayElement.text = JournalLoader.CurrentJournal.Name; }
+		public void Start() { JournalDisplayElement.text = JournalLoader.Current.Name; }
+		public void OnEnable() { JournalDisplayElement.text = JournalLoader.Current.Name; }
 	}
 }

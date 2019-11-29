@@ -31,14 +31,8 @@ namespace LSDR.Game
 			TResourceManager.RegisterHandler(new Texture2DHandler());
 			TResourceManager.RegisterHandler(new MaterialHandler());
 
-			ControlSchemeManager.Initialize();
-
-			MapReader.MapScaleFactor = 1F;
-
 			Shader.SetGlobalFloat("_FogStep", 0.08F);
 			Shader.SetGlobalFloat("AffineIntensity", 0.5F);
-
-			PsxVram.Initialize();
 
 			if (Application.isEditor)
 			{
