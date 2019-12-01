@@ -71,12 +71,6 @@ namespace LSDR.IO
             MeshCollider mc = lbdTilemap.AddComponent<MeshCollider>();
             mc.sharedMesh = combined;
 
-            // add LBDSlab component for controlling fog/culling
-            LBDSlab slab = lbdTilemap.AddComponent<LBDSlab>();
-            slab.MeshFog = lbdTilemap.GetComponentsInChildren<MeshFog>();
-            slab.CullMesh = lbdTilemap.GetComponentsInChildren<CullMeshOnDistance>();
-            slab.MeshRenderers = lbdTilemap.GetComponentsInChildren<MeshRenderer>();
-            
             Profiler.EndSample();
 
             return lbdTilemap;

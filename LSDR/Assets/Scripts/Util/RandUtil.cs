@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
+using Torii.Util;
 using UnityEngine;
 using Random = System.Random;
 
@@ -103,8 +104,8 @@ namespace LSDR.Util
 		public static string RandomLevelFromDir(string levelDir)
 		{
 			// TODO: refactor RandUtil.RandomLevelFromDir in DreamDirector refactor
-			string[] filesInDir = Directory.GetFiles(IOUtil.PathCombine(Application.streamingAssetsPath, "levels", levelDir), "*.tmap");
-			return IOUtil.PathCombine("levels", levelDir, filesInDir[Int(filesInDir.Length)]);
+			string[] filesInDir = Directory.GetFiles(PathUtil.Combine(Application.streamingAssetsPath, "levels", levelDir), "*.tmap");
+			return PathUtil.Combine("levels", levelDir, filesInDir[Int(filesInDir.Length)]);
 		}
 
 		/// <summary>

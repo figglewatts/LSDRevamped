@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using Torii.Coroutine;
-using UnityEditor;
 using UnityEngine;
 
 namespace Torii.Pooling
@@ -22,8 +21,11 @@ namespace Torii.Pooling
         public GameObject PoolObject;
         
         public int Active => _activeItems.Count;
-
+        
+        [SerializeField]
         private Stack<PoolItem> _pool;
+        
+        [SerializeField]
         private List<PoolItem> _activeItems;
         
         [NonSerialized]
@@ -31,13 +33,13 @@ namespace Torii.Pooling
 
         public void Initialise()
         {
-            commonInitialise();
+            CommonInitialise();
             populate();
         }
 
         public IEnumerator InitialiseCoroutine()
         {
-            commonInitialise();
+            CommonInitialise();
             yield return populateAsync();
         }
 
@@ -63,7 +65,15 @@ namespace Torii.Pooling
             item.transform.SetParent(PoolObject.transform);
         }
 
-        private void commonInitialise()
+        public void ReturnAll()
+        {
+            foreach (var item in _activeItems)
+            {
+                Return(item);
+            }
+        }
+        
+        public void CommonInitialise()
         {
             PoolObject = new GameObject(Name);
             if (Persistent)

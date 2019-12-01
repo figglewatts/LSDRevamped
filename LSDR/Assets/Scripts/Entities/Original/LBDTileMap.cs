@@ -91,6 +91,12 @@ namespace LSDR.Entities.Original
                 var lbd = ResourceManager.Load<LBD>(file);
                 GameObject lbdObj = LBDReader.CreateLBDTileMap(lbd, _cache);
                 Debug.Log($"Cache entries: {_cache.Count}");
+                
+                // add LBDSlab component for controlling fog/culling
+                LBDSlab slab = lbdObj.AddComponent<LBDSlab>();
+                slab.MeshFog = lbdObj.GetComponentsInChildren<MeshFog>();
+                slab.CullMesh = lbdObj.GetComponentsInChildren<CullMeshOnDistance>();
+                slab.MeshRenderers = lbdObj.GetComponentsInChildren<MeshRenderer>();
 
                 // position the LBD 'slab' based on its tiling mode
                 if (Mode == LegacyTileMode.Horizontal)

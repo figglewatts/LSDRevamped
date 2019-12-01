@@ -127,7 +127,8 @@ namespace LSDR.SDK
                 _journal.LinkableDreams[i]);
             if (GUILayout.Button("Browse", GUILayout.Width(60)))
             {
-                _journal.LinkableDreams[i] = browseForFile("Browse for dream", new[] {"Dream JSON file", "json"}, _journal.LinkableDreams[i]);
+                _journal.LinkableDreams[i] = CommonGUI.BrowseForFile("Browse for dream", 
+                    new[] {"Dream JSON file", "json"}, _journal.LinkableDreams[i]);
             }
 
             if (GUILayout.Button("Remove", GUILayout.Width(60)))
@@ -146,7 +147,8 @@ namespace LSDR.SDK
                 _journal.FirstDream[i]);
             if (GUILayout.Button("Browse", GUILayout.Width(60)))
             {
-                _journal.FirstDream[i] = browseForFile("Browse for dream", new[] {"Dream JSON file", "json"}, _journal.FirstDream[i]);
+                _journal.FirstDream[i] = CommonGUI.BrowseForFile("Browse for dream", new[] {"Dream JSON file", "json"}, 
+                    _journal.FirstDream[i]);
             }
 
             if (GUILayout.Button("Remove", GUILayout.Width(60)))
@@ -157,28 +159,6 @@ namespace LSDR.SDK
             EditorGUILayout.EndHorizontal();
         }
 
-        private string browseForFile(string dialogTitle, string[] filters, string existingValue)
-        {
-            GUI.FocusControl(null);
-            string filePath = EditorUtility.OpenFilePanelWithFilters(dialogTitle, "", filters);
-
-            if (string.IsNullOrEmpty(filePath))
-            {
-                return existingValue;
-            }
-
-            if (!filePath.Contains("StreamingAssets"))
-            {
-                EditorUtility.DisplayDialog("File error", "Your file must be in the 'StreamingAssets' directory!",
-                    "Ok");
-                return existingValue;
-            }
-        
-            // now remove everything before StreamingAssets path
-            var indexOf = filePath.IndexOf("StreamingAssets", StringComparison.Ordinal) + "StreamingAssets".Length;
-            return filePath.Substring(indexOf);
-        }
-        
         private void importExistingJournal()
         {
             var journalPath =

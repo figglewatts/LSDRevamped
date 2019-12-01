@@ -238,12 +238,6 @@ namespace LSDR.IO
             MeshCollider mc = lbdTilemap.AddComponent<MeshCollider>();
             mc.sharedMesh = combined;
 
-            // add LBDSlab component for controlling fog/culling
-            LBDSlab slab = lbdTilemap.AddComponent<LBDSlab>();
-            slab.MeshFog = lbdTilemap.GetComponentsInChildren<MeshFog>();
-            slab.CullMesh = lbdTilemap.GetComponentsInChildren<CullMeshOnDistance>();
-            slab.MeshRenderers = lbdTilemap.GetComponentsInChildren<MeshRenderer>();
-
             return lbdTilemap;
         }
 
@@ -277,14 +271,12 @@ namespace LSDR.IO
             GameObject lbdTile = new GameObject($"Tile {tile.TileType}");
             MeshFilter mf = lbdTile.AddComponent<MeshFilter>();
             MeshRenderer mr = lbdTile.AddComponent<MeshRenderer>();
-            lbdTile.AddComponent<CullMeshOnDistance>();
-            lbdTile.AddComponent<MeshFog>();
             TMDObject tileObj = tilesTmd.ObjectTable[tile.TileType];
             Mesh tileMesh = MeshFromTMDObject(tileObj);
             mf.mesh = tileMesh;
             
             // the renderer needs to use virtual PSX Vram as its materials
-            mr.sharedMaterials = new[] {PsxVram.VramMaterial, PsxVram.VramAlphaBlendMaterial};
+            //mr.sharedMaterials = new[] {PsxVram.VramMaterial, PsxVram.VramAlphaBlendMaterial};
 
             // rotate the tile based on its direction
             switch (tile.TileDirection)
