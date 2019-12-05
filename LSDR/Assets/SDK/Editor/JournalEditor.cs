@@ -46,7 +46,7 @@ namespace LSDR.SDK
         public void OnGUI()
         {
             EditorGUILayout.BeginHorizontal();
-            _showEntireMenu = EditorGUILayout.Foldout(_showEntireMenu, "Create a journal",
+            _showEntireMenu = EditorGUILayout.Foldout(_showEntireMenu, "LSDR Journal Editor",
                 new GUIStyle("foldout") {fontStyle = FontStyle.Bold});
             GUILayout.FlexibleSpace();
             if (GUILayout.Button("Import", GUILayout.Width(100)))

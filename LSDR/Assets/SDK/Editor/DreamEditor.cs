@@ -45,7 +45,7 @@ namespace LSDR.SDK
         public void OnGUI()
         {
             EditorGUILayout.BeginHorizontal();
-            _showEntireMenu = EditorGUILayout.Foldout(_showEntireMenu, "Create a dream",
+            _showEntireMenu = EditorGUILayout.Foldout(_showEntireMenu, "LSDR Dream Editor",
                 new GUIStyle("foldout") {fontStyle = FontStyle.Bold});
             GUILayout.FlexibleSpace();
             if (GUILayout.Button("Import", GUILayout.Width(100)))

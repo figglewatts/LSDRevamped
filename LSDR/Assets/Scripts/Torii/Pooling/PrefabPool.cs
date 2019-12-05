@@ -16,20 +16,13 @@ namespace Torii.Pooling
         public bool Persistent;
 
         public string Name;
-
-        [NonSerialized]
-        public GameObject PoolObject;
         
+        public GameObject PoolObject { get; private set; }
+
         public int Active => _activeItems.Count;
         
-        [SerializeField]
         private Stack<PoolItem> _pool;
-        
-        [SerializeField]
         private List<PoolItem> _activeItems;
-        
-        [NonSerialized]
-        private bool _populated = false;
 
         public void Initialise()
         {
@@ -76,12 +69,24 @@ namespace Torii.Pooling
         public void CommonInitialise()
         {
             PoolObject = new GameObject(Name);
+            PoolObject poolObjectScript = PoolObject.AddComponent<PoolObject>();
+            poolObjectScript.ParentPool = this;
             if (Persistent)
             {
                 DontDestroyOnLoad(PoolObject);
             }
             _pool = new Stack<PoolItem>(Size);
             _activeItems = new List<PoolItem>();
+        }
+
+        public void ActivePoolItemDestroyed(PoolItem item)
+        {
+            // remove the item from the list of active items
+            _activeItems.Remove(item);
+            
+            // make sure we create a new one in the pool to replace
+            // the deleted one
+            _pool.Push(create());
         }
 
         private PoolItem create(bool activeState = false)
@@ -95,29 +100,15 @@ namespace Torii.Pooling
 
         private void populate()
         {
-            if (_populated)
-            {
-                Debug.LogWarning("Attempting to populate an already populated PrefabPool!");
-                return;
-            }
-            
             for (int i = 0; i < Size; i++)
             {
                 PoolItem obj = create();
                 _pool.Push(obj);
             }
-
-            _populated = true;
         }
 
         private IEnumerator populateAsync()
         {
-            if (_populated)
-            {
-                Debug.LogWarning("Attempting to populate an already populated PrefabPool!");
-                yield break;
-            }
-            
             using (Marathon m = new Marathon(10))
             {
                 bool lastYield = false;
@@ -135,8 +126,6 @@ namespace Torii.Pooling
                     }
                 }
             }
-
-            _populated = true;
         }
     }
 }

@@ -28,7 +28,7 @@ namespace LSDR.SDK
             return filePath.Substring(indexOf);
         }
 
-        public static string BrowseForFolder(string dialogTitle, string[] filters, string existingValue)
+        public static string BrowseForFolder(string dialogTitle, string existingValue)
         {
             GUI.FocusControl(null);
             string folderPath = EditorUtility.OpenFolderPanel(dialogTitle, "", "");
