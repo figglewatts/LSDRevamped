@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using libLSD.Formats;
 using LSDR.Dream;
 using LSDR.Entities;
@@ -23,6 +25,11 @@ namespace LSDR.SDK
         private readonly ToriiSerializer _serializer = new ToriiSerializer();
         private bool _showEntireMenu = true;
         private Vector2 _scrollPos;
+        private IEnumerable<Type> _entityTypes;
+        private int _currentEntityType = 0;
+        private bool _placingEntities = false;
+
+        private const string ENTITY_NAMESPACE = "LSDR.Entities";
 
         [MenuItem("LSDR/Create level")]
         public static void Create()
@@ -33,6 +40,12 @@ namespace LSDR.SDK
 
             editor._tilePool = AssetDatabase.LoadAssetAtPath<PrefabPool>("Assets/SDK/LBDTilePool.asset");
             editor._lbdReader = AssetDatabase.LoadAssetAtPath<LBDReaderSystem>("Assets/SDK/LBDReader.asset");
+
+            editor._entityTypes = getClasses(ENTITY_NAMESPACE);
+            foreach (var entityType in editor._entityTypes)
+            {
+                Debug.Log(entityType);
+            }
 
             GameObject existingLevel = GameObject.Find("Level");
             if (existingLevel != null)
@@ -80,7 +93,10 @@ namespace LSDR.SDK
             _scrollPos = EditorGUILayout.BeginScrollView(_scrollPos);
             if (_showEntireMenu)
             {
-                
+                EditorGUILayout.LabelField("Entity placement", EditorStyles.boldLabel);
+                EditorGUI.indentLevel++;
+                drawEntityPanel();
+                EditorGUI.indentLevel--;
             }
             EditorGUILayout.EndScrollView();
 
@@ -92,7 +108,7 @@ namespace LSDR.SDK
 
         public void OnSceneGUI(SceneView sceneView)
         {
-            /*Handles.BeginGUI();
+            Handles.BeginGUI();
 
             Rect controlsArea = new Rect(POS_PADDING, POS_PADDING, 
                 CONTROLS_WIDTH, sceneView.position.height - (POS_PADDING * 10));
@@ -101,16 +117,22 @@ namespace LSDR.SDK
 
             GUILayout.BeginVertical();
 
-            if (GUILayout.Button("LBD", GUILayout.Height(CONTROLS_WIDTH)))
+            if (CommonGUI.ColorButton(new GUIContent("Entity"), _placingEntities ? Color.green : Color.grey, GUILayout.Height(50)))
             {
-                loadDream();
+                _placingEntities = !_placingEntities;
             }
 
             GUILayout.EndVertical();
 
             GUILayout.EndArea();
 
-            Handles.EndGUI();*/
+            Handles.EndGUI();
+        }
+
+        private void drawEntityPanel()
+        {
+            var displayedOptions = _entityTypes.Select(t => new GUIContent(t.Name)).ToArray();
+            _currentEntityType = EditorGUILayout.Popup(_currentEntityType, displayedOptions);
         }
 
         private void importDream()
@@ -188,6 +210,21 @@ namespace LSDR.SDK
             }
 
             _lbdReader.UseTIX(tix);
+        }
+        
+        private static IEnumerable<Type> getClasses(string ns)
+        {
+            var asm = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a =>
+                a.GetName().Name == "Assembly-CSharp" ||
+                a.GetName().Name == "LSDR.Common");
+            if (asm == null)
+            {
+                Debug.LogError("Unable to find assembly for LSDR entities!");
+                return null;
+            }
+            return asm.GetTypes()
+                      .Where(type => type.IsClass && type.IsPublic && type.IsSubclassOf(typeof(MonoBehaviour)) && 
+                                     type.Namespace != null && type.Namespace.StartsWith(ns));
         }
     }
 }

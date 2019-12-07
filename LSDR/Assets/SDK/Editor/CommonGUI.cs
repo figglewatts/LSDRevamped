@@ -49,5 +49,14 @@ namespace LSDR.SDK
             var indexOf = folderPath.IndexOf("StreamingAssets", StringComparison.Ordinal) + "StreamingAssets".Length;
             return folderPath.Substring(indexOf);
         }
+
+        public static bool ColorButton(GUIContent content, Color col, params GUILayoutOption[] options)
+        {
+            Color prevColor = GUI.backgroundColor;
+            GUI.backgroundColor = col;
+            bool res = GUILayout.Button(content, options);
+            GUI.backgroundColor = prevColor;
+            return res;
+        }
     }
 }
