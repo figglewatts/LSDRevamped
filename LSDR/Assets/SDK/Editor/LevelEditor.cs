@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -42,30 +43,20 @@ namespace LSDR.SDK
             editor._lbdReader = AssetDatabase.LoadAssetAtPath<LBDReaderSystem>("Assets/SDK/LBDReader.asset");
 
             editor._entityTypes = getClasses(ENTITY_NAMESPACE);
-
-            // TODO: use existing level instead of overwriting...
-            GameObject existingLevel = GameObject.Find("Level");
-            if (existingLevel != null)
-            {
-                // check to see if the user is cool with us destroying their existing level
-                bool response = EditorUtility.DisplayDialog("New level error",
-                    "Level already exists in scene, are you sure you want to create a new one? " +
-                    "The existing level will be lost if it's unsaved.", "Yes", "Cancel");
-                if (!response)
-                {
-                    // they said it's not cool -- abort!
-                    editor.Close();
-                    return;
-                }
-                
-                // yeet
-                DestroyImmediate(existingLevel);
-            }
             
-            GameObject levelObj = new GameObject("Level");
-            Level level = levelObj.AddComponent<Level>();
-            Selection.activeGameObject = levelObj;
-            editor._levelObj = levelObj;
+            GameObject existingLevel = GameObject.Find("Level");
+            if (existingLevel == null)
+            {
+                GameObject levelObj = new GameObject("Level");
+                Level level = levelObj.AddComponent<Level>();
+                Selection.activeGameObject = levelObj;
+                editor._levelObj = levelObj;
+            }
+            else
+            {
+                editor._levelObj = existingLevel;
+            }
+
             editor.Show();
         }
 
@@ -129,6 +120,27 @@ namespace LSDR.SDK
 
             GUILayout.EndArea();
 
+            Rect bottomArea = new Rect(POS_PADDING, sceneView.position.height - 50 - (POS_PADDING * 4),
+                sceneView.position.width - (POS_PADDING * 2), 50);
+            GUILayout.BeginArea(bottomArea);
+            GUILayout.BeginVertical();
+            GUILayout.FlexibleSpace();
+            GUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+            if (SnapToGrid.Enabled)
+            {
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button("-")) SnapToGrid.Resolution /= 2;
+                GUILayout.Label(SnapToGrid.Resolution.ToString(CultureInfo.InvariantCulture));
+                if (GUILayout.Button("+")) SnapToGrid.Resolution *= 2;
+                GUILayout.EndHorizontal();
+            }
+            SnapToGrid.Enabled = GUILayout.Toggle(SnapToGrid.Enabled, "Snap to grid");
+            
+            GUILayout.EndHorizontal();
+            GUILayout.EndVertical();
+            GUILayout.EndArea();
+
             Handles.EndGUI();
             
             sceneView.Repaint();
@@ -163,6 +175,7 @@ namespace LSDR.SDK
             entityObj.transform.position = pos;
             entityObj.transform.parent = _levelObj.transform;
             entityObj.AddComponent(entityType);
+            entityObj.AddComponent<SnapToGrid>();
             Undo.RegisterCreatedObjectUndo(entityObj, entityObj.name);
             Selection.activeGameObject = entityObj;
         }
