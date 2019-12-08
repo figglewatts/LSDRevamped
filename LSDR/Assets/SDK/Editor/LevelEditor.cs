@@ -25,7 +25,7 @@ namespace LSDR.SDK
         private readonly ToriiSerializer _serializer = new ToriiSerializer();
         private bool _showEntireMenu = true;
         private Vector2 _scrollPos;
-        private IEnumerable<Type> _entityTypes;
+        private List<Type> _entityTypes;
         private int _currentEntityType = 0;
         private bool _placingEntities = false;
 
@@ -42,11 +42,8 @@ namespace LSDR.SDK
             editor._lbdReader = AssetDatabase.LoadAssetAtPath<LBDReaderSystem>("Assets/SDK/LBDReader.asset");
 
             editor._entityTypes = getClasses(ENTITY_NAMESPACE);
-            foreach (var entityType in editor._entityTypes)
-            {
-                Debug.Log(entityType);
-            }
 
+            // TODO: use existing level instead of overwriting...
             GameObject existingLevel = GameObject.Find("Level");
             if (existingLevel != null)
             {
@@ -120,6 +117,12 @@ namespace LSDR.SDK
             if (CommonGUI.ColorButton(new GUIContent("Entity"), _placingEntities ? Color.green : Color.grey, GUILayout.Height(50)))
             {
                 _placingEntities = !_placingEntities;
+                Selection.activeGameObject = null;
+            }
+
+            if (_placingEntities)
+            {
+                handlePlaceEntity(sceneView);
             }
 
             GUILayout.EndVertical();
@@ -127,6 +130,41 @@ namespace LSDR.SDK
             GUILayout.EndArea();
 
             Handles.EndGUI();
+            
+            sceneView.Repaint();
+        }
+
+        private void handlePlaceEntity(SceneView sceneView)
+        {
+            var controlID = GUIUtility.GetControlID(GetHashCode(), FocusType.Passive);
+            HandleUtility.AddDefaultControl(controlID);
+            var curEvent = Event.current;
+
+            if (curEvent.rawType == EventType.MouseDown && curEvent.button == 0)
+            {
+                Vector3 mousePos = curEvent.mousePosition;
+                float ppp = EditorGUIUtility.pixelsPerPoint;
+                mousePos.y = sceneView.camera.pixelHeight - mousePos.y * ppp;
+                mousePos.x *= ppp;
+
+                Ray ray = sceneView.camera.ScreenPointToRay(mousePos);
+                RaycastHit hit;
+                if (Physics.Raycast(ray, out hit))
+                {
+                    createEntity(_entityTypes[_currentEntityType], hit.point);
+                }
+                Event.current.Use();
+            }
+        }
+
+        private void createEntity(Type entityType, Vector3 pos)
+        {
+            GameObject entityObj = new GameObject(entityType.Name);
+            entityObj.transform.position = pos;
+            entityObj.transform.parent = _levelObj.transform;
+            entityObj.AddComponent(entityType);
+            Undo.RegisterCreatedObjectUndo(entityObj, entityObj.name);
+            Selection.activeGameObject = entityObj;
         }
 
         private void drawEntityPanel()
@@ -165,6 +203,7 @@ namespace LSDR.SDK
             GameObject lbdObj = new GameObject("LBD");
             
             // check to see if it already existed, and if not create it
+            // TODO: delete existing and recreate if already existed
             GameObject tilePoolObj = GameObject.Find(_tilePool.Name);
             if (tilePoolObj == null)
             {
@@ -212,7 +251,7 @@ namespace LSDR.SDK
             _lbdReader.UseTIX(tix);
         }
         
-        private static IEnumerable<Type> getClasses(string ns)
+        private static List<Type> getClasses(string ns)
         {
             var asm = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a =>
                 a.GetName().Name == "Assembly-CSharp" ||
@@ -222,9 +261,10 @@ namespace LSDR.SDK
                 Debug.LogError("Unable to find assembly for LSDR entities!");
                 return null;
             }
+
             return asm.GetTypes()
-                      .Where(type => type.IsClass && type.IsPublic && type.IsSubclassOf(typeof(MonoBehaviour)) && 
-                                     type.Namespace != null && type.Namespace.StartsWith(ns));
+                      .Where(type => type.IsClass && type.IsPublic && type.IsSubclassOf(typeof(MonoBehaviour)) &&
+                                     type.Namespace != null && type.Namespace.StartsWith(ns)).ToList();
         }
     }
 }
