@@ -5,6 +5,7 @@ using System.Security;
 using ProtoBuf;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using ProtoBuf.Meta;
 using Torii.Util;
 using UnityEngine;
 using ProtoBufSerializer = ProtoBuf.Serializer;
@@ -27,13 +28,18 @@ namespace Torii.Serialization
         public ToriiSerializer()
         {
             _json = new JsonSerializer();
+            _serializationSettingsTypeMap = new Dictionary<Type, JsonSerializerSettings>();
             
-            // add some converters for common Unity3D types
+            // add some JSON converters for common Unity3D types
             _json.Converters.Add(new JsonVector3Converter());
+            _json.Converters.Add(new JsonQuaternionConverter());
             _json.Converters.Add(new JsonColorConverter());
             _json.Converters.Add(new StringEnumConverter());
-            
-            _serializationSettingsTypeMap = new Dictionary<Type, JsonSerializerSettings>();
+
+            // add some protobuf converters for common Unity3D types
+            RuntimeTypeModel.Default.Add(typeof(Vector3), true).Add("x").Add("y").Add("z");
+            RuntimeTypeModel.Default.Add(typeof(Quaternion), true).Add("x").Add("y").Add("z").Add("w");
+            RuntimeTypeModel.Default.Add(typeof(Color), true).Add("r").Add("g").Add("b").Add("a");
         }
 
         /// <summary>

@@ -7,6 +7,7 @@ using System.Reflection;
 using libLSD.Formats;
 using LSDR.Dream;
 using LSDR.Entities;
+using LSDR.Entities.Dream;
 using LSDR.IO;
 using Torii.Pooling;
 using Torii.Serialization;
@@ -48,7 +49,6 @@ namespace LSDR.SDK
             if (existingLevel == null)
             {
                 GameObject levelObj = new GameObject("Level");
-                Level level = levelObj.AddComponent<Level>();
                 Selection.activeGameObject = levelObj;
                 editor._levelObj = levelObj;
             }
@@ -72,7 +72,13 @@ namespace LSDR.SDK
             }
             if (GUILayout.Button("Export", GUILayout.Width(100)))
             {
-                // TODO: exporting levels
+                _serializer.Serialize(Level.FromScene(_levelObj), "test.bin");
+            }
+
+            if (GUILayout.Button("Import dat"))
+            {
+                Level l = _serializer.Deserialize<Level>("test.bin");
+                GameObject levelObj = l.ToScene();
             }
             EditorGUILayout.EndHorizontal();
 
@@ -276,8 +282,9 @@ namespace LSDR.SDK
             }
 
             return asm.GetTypes()
-                      .Where(type => type.IsClass && type.IsPublic && type.IsSubclassOf(typeof(MonoBehaviour)) &&
-                                     type.Namespace != null && type.Namespace.StartsWith(ns)).ToList();
+                      .Where(type => type.IsClass && type.IsPublic && type.IsSubclassOf(typeof(BaseEntity)) &&
+                                     type.Namespace != null && type.Namespace != ns && type.Namespace.StartsWith(ns))
+                      .ToList();
         }
     }
 }
