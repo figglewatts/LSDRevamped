@@ -16,11 +16,11 @@ namespace LSDR.Entities
 
         protected virtual Type EntityType => typeof(BaseEntity);
 
-        public GameObject CreateGameObject()
+        public GameObject CreateGameObject(LevelEntities entities)
         {
             GameObject entityObj = new GameObject(EntityType.Name);
             BaseEntity component = (BaseEntity)entityObj.AddComponent(EntityType);
-            component.Restore(this);
+            component.Restore(this, entities);
             return entityObj;
         }
 

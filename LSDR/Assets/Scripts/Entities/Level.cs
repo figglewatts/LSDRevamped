@@ -22,16 +22,17 @@ namespace LSDR.Entities
             return new Level(entities);
         }
 
-        public GameObject ToScene()
+        public LevelEntities ToScene()
         {
             _levelObject = new GameObject("Level");
+            LevelEntities levelEntities = _levelObject.AddComponent<LevelEntities>();
             foreach (var entity in Entities)
             {
-                GameObject entityObj = entity.CreateGameObject();
+                GameObject entityObj = entity.CreateGameObject(levelEntities);
                 entityObj.transform.SetParent(_levelObject.transform);
             }
 
-            return _levelObject;
+            return levelEntities;
         }
     }
 }

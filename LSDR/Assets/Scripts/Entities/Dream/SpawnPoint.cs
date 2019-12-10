@@ -1,6 +1,7 @@
 using System;
 using MapParse.Types;
 using ProtoBuf;
+using Torii.Resource;
 using UnityEngine;
 
 namespace LSDR.Entities.Dream
@@ -8,6 +9,14 @@ namespace LSDR.Entities.Dream
     public class SpawnPoint : BaseEntity
     {
         public bool DayOneSpawn;
+        public GameObject PlayerPrefab;
+
+        public void Awake() { PlayerPrefab = ResourceManager.UnityLoad<GameObject>("Prefabs/Player"); }
+
+        public void Spawn()
+        {
+            Instantiate(PlayerPrefab, transform.position + new Vector3(0, 0.5f, 0), transform.rotation); 
+        }
 
         public void OnDrawGizmos()
         {
@@ -18,12 +27,13 @@ namespace LSDR.Entities.Dream
 
         public override EntityMemento Save() { return new SpawnPointMemento(this); }
 
-        public override void Restore(EntityMemento memento)
+        public override void Restore(EntityMemento memento, LevelEntities entities)
         {
-            base.Restore(memento);
+            base.Restore(memento, entities);
 
             var spawnPointMemento = (SpawnPointMemento)memento;
             DayOneSpawn = spawnPointMemento.DayOneSpawn;
+            entities.Register(this);
         }
     }
 

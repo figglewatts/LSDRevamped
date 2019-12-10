@@ -268,7 +268,7 @@ namespace LSDR.SDK
 
         private void loadLevel(Level level)
         {
-            GameObject levelObj = level.ToScene();
+            GameObject levelObj = level.ToScene().gameObject;
             Selection.activeGameObject = levelObj;
             _levelObj = levelObj;
         }
@@ -343,7 +343,8 @@ namespace LSDR.SDK
             }
 
             return asm.GetTypes()
-                      .Where(type => type.IsClass && type.IsPublic && type.IsSubclassOf(typeof(BaseEntity)) &&
+                      .Where(type => !AttributeUtil.HasAttribute<EntityExcludeAttribute>(type) && type.IsClass &&
+                                     type.IsPublic && type.IsSubclassOf(typeof(BaseEntity)) &&
                                      type.Namespace != null && type.Namespace != ns && type.Namespace.StartsWith(ns))
                       .ToList();
         }

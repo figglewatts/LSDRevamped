@@ -1,4 +1,6 @@
 using System.Collections;
+using LSDR.Entities;
+using LSDR.Entities.Dream;
 using LSDR.Entities.Original;
 using LSDR.Game;
 using LSDR.UI;
@@ -9,6 +11,7 @@ using Torii.Serialization;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Torii.UI;
+using Torii.Util;
 
 namespace LSDR.Dream
 {
@@ -20,14 +23,14 @@ namespace LSDR.Dream
         public Material SkyBackground;
         public JournalLoaderSystem JournalLoader;
         public SettingsSystem SettingsSystem;
-        
+
         private readonly ToriiSerializer _serializer = new ToriiSerializer();
 
         public void BeginDream()
         {
             // TODO: spawn in first dream if it's the first day
             
-            var randomDream = JournalLoader.Current.GetLinkableDream();
+            var randomDream = JournalLoader.Current.GetFirstDream();
             Dream dream = _serializer.Deserialize<Dream>(IOUtil.PathCombine(Application.streamingAssetsPath,
                 randomDream));
             BeginDream(dream);
@@ -58,18 +61,34 @@ namespace LSDR.Dream
                 yield return null;
             }
 
-            // then instantiate the LBD
-            // TODO: regular level loading
-            var lbdObject = Instantiate(LBDObjectPrefab);
-            LBDTileMap tileMap = lbdObject.GetComponent<LBDTileMap>();
-            tileMap.LBDFolder = dream.LBDFolder;
-            tileMap.LBDWidth = dream.TileWidth;
-            tileMap.Mode = dream.LegacyTileMode;
-            tileMap.TIXFile = dream.LBDFolder + "/TEXA.TIX";
-            tileMap.Spawn();
-            
+            // then instantiate the LBD if it has one
+            if (dream.Type == DreamType.Legacy)
+            {
+                var lbdObject = Instantiate(LBDObjectPrefab);
+                LBDTileMap tileMap = lbdObject.GetComponent<LBDTileMap>();
+                tileMap.LBDFolder = dream.LBDFolder;
+                tileMap.LBDWidth = dream.TileWidth;
+                tileMap.Mode = dream.LegacyTileMode;
+                tileMap.TIXFile = dream.LBDFolder + "/TEXA.TIX"; // TODO: Texture sets for LBDs
+                tileMap.Spawn();
+            }
+
             ApplyEnvironment(dream.RandomEnvironment());
             
+            // load the manifest if it has one
+            if (!string.IsNullOrEmpty(dream.Level))
+            {
+                string levelPath = PathUtil.Combine(Application.streamingAssetsPath, dream.Level);
+                Level level = _serializer.Deserialize<Level>(levelPath);
+                LevelEntities entities = level.ToScene();
+                
+                // spawn the player
+                // TODO: how can we refactor this into something ideally event-driven?
+                // maybe add events to LevelEntities? or Level?
+                SpawnPoint toSpawn = RandUtil.RandomListElement(entities.OfType<SpawnPoint>());
+                toSpawn.Spawn();
+            }
+
             Fader.FadeOut(3);
         }
     }

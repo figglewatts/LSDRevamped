@@ -38,6 +38,12 @@ namespace LSDR.Dream
         /// <returns>The random dream.</returns>
         public string GetLinkableDream() { return RandUtil.RandomListElement(LinkableDreams); }
 
+        /// <summary>
+        /// Get a random dream from the pool of first day dreams.
+        /// </summary>
+        /// <returns>The random dream.</returns>
+        public string GetFirstDream() { return RandUtil.RandomListElement(FirstDream); }
+
         public DreamJournal()
         {
             LinkableDreams = new List<string>();
