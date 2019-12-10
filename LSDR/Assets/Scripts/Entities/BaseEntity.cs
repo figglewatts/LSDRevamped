@@ -7,7 +7,7 @@ namespace LSDR.Entities
 {
     public abstract class BaseEntity : MonoBehaviour
     {
-        public string EntityID { get; set; } = Guid.NewGuid().ToString();
+        public string EntityID = Guid.NewGuid().ToString();
 
         public abstract EntityMemento Save();
 

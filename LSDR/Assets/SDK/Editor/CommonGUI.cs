@@ -50,6 +50,34 @@ namespace LSDR.SDK
             return folderPath.Substring(indexOf);
         }
 
+        public static string BrowseFileField(GUIContent content, string existingValue, string dialogTitle, string[] filters = null)
+        {
+            EditorGUILayout.BeginHorizontal();
+            string result = EditorGUILayout.TextField(
+                content,
+                existingValue);
+            if (GUILayout.Button("Browse", GUILayout.Width(60)))
+            {
+                result = BrowseForFile(dialogTitle, filters, existingValue);
+            }
+            EditorGUILayout.EndHorizontal();
+            return result;
+        }
+
+        public static string BrowseFolderField(GUIContent content, string existingValue, string dialogTitle)
+        {
+            EditorGUILayout.BeginHorizontal();
+            string result = EditorGUILayout.TextField(
+                content,
+                existingValue);
+            if (GUILayout.Button("Browse", GUILayout.Width(60)))
+            {
+                result = BrowseForFolder(dialogTitle, existingValue);
+            }
+            EditorGUILayout.EndHorizontal();
+            return result;
+        }
+
         public static bool ColorButton(GUIContent content, Color col, params GUILayoutOption[] options)
         {
             Color prevColor = GUI.backgroundColor;

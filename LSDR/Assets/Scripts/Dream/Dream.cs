@@ -36,9 +36,14 @@ namespace LSDR.Dream
         public int Dynamicness { get; set; }
 
         /// <summary>
-        /// The path to the raw level file to load for this Dream. Can be an LBD or a TMAP.
+        /// The path to the raw level file to load for this Dream.
         /// </summary>
         public string Level { get; set; }
+
+        /// <summary>
+        /// The path to the LBD folder to load for this Dream.
+        /// </summary>
+        public string LBDFolder { get; set; }
         
         /// <summary>
         /// Whether or not this dream can spawn the grey man.

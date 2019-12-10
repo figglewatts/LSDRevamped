@@ -59,12 +59,13 @@ namespace LSDR.Dream
             }
 
             // then instantiate the LBD
+            // TODO: regular level loading
             var lbdObject = Instantiate(LBDObjectPrefab);
             LBDTileMap tileMap = lbdObject.GetComponent<LBDTileMap>();
-            tileMap.LBDFolder = dream.Level;
+            tileMap.LBDFolder = dream.LBDFolder;
             tileMap.LBDWidth = dream.TileWidth;
             tileMap.Mode = dream.LegacyTileMode;
-            tileMap.TIXFile = dream.Level + "/TEXA.TIX";
+            tileMap.TIXFile = dream.LBDFolder + "/TEXA.TIX";
             tileMap.Spawn();
             
             ApplyEnvironment(dream.RandomEnvironment());

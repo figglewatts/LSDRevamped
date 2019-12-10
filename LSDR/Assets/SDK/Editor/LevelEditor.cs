@@ -46,13 +46,7 @@ namespace LSDR.SDK
             editor._entityTypes = getClasses(ENTITY_NAMESPACE);
             
             GameObject existingLevel = GameObject.Find("Level");
-            if (existingLevel == null)
-            {
-                GameObject levelObj = new GameObject("Level");
-                Selection.activeGameObject = levelObj;
-                editor._levelObj = levelObj;
-            }
-            else
+            if (existingLevel != null)
             {
                 editor._levelObj = existingLevel;
             }
@@ -66,20 +60,19 @@ namespace LSDR.SDK
             _showEntireMenu = EditorGUILayout.Foldout(_showEntireMenu, "LSDR Level Editor",
                 new GUIStyle("foldout") {fontStyle = FontStyle.Bold});
             GUILayout.FlexibleSpace();
+            if (GUILayout.Button("New", GUILayout.Width(100)))
+            {
+                newLevel();
+            }
             if (GUILayout.Button("Import", GUILayout.Width(100)))
             {
-                importDream();
+                importLevel();
             }
             if (GUILayout.Button("Export", GUILayout.Width(100)))
             {
-                _serializer.Serialize(Level.FromScene(_levelObj), "test.bin");
+                exportLevel();
             }
 
-            if (GUILayout.Button("Import dat"))
-            {
-                Level l = _serializer.Deserialize<Level>("test.bin");
-                GameObject levelObj = l.ToScene();
-            }
             EditorGUILayout.EndHorizontal();
 
             EditorGUI.indentLevel++;
@@ -102,6 +95,8 @@ namespace LSDR.SDK
 
         public void OnSceneGUI(SceneView sceneView)
         {
+            if (_levelObj == null) return;
+            
             Handles.BeginGUI();
 
             Rect controlsArea = new Rect(POS_PADDING, POS_PADDING, 
@@ -192,23 +187,90 @@ namespace LSDR.SDK
             _currentEntityType = EditorGUILayout.Popup(_currentEntityType, displayedOptions);
         }
 
-        private void importDream()
+        private void newLevel()
         {
-            string dreamPath = CommonGUI.BrowseForFile("Import dream...", new[] {"Dream JSON", "json"}, null);
-            if (dreamPath == null) return;
-
-            dreamPath = PathUtil.Combine(Application.streamingAssetsPath, dreamPath);
-
-            Dream.Dream dream = _serializer.Deserialize<Dream.Dream>(dreamPath);
-
-            if (dream.Type != DreamType.Legacy)
+            // check to see if there was an existing level, as we'll have to overwrite it
+            GameObject existingLevel = GameObject.Find("Level");
+            if (existingLevel)
             {
-                EditorUtility.DisplayDialog("Error importing dream", "Currently only legacy dreams are supported.",
-                    "OK");
-                return;
+                bool yes = EditorUtility.DisplayDialog("Existing level",
+                    "There is an existing level loaded. Are you sure you " +
+                    "want to import another level? Any unsaved changes will " +
+                    "be lost.", "Yes", "Cancel");
+                if (!yes) return;
+                
+                DestroyImmediate(existingLevel);
             }
+            
+            GameObject levelObj = new GameObject("Level");
+            Selection.activeGameObject = levelObj;
+            _levelObj = levelObj;
+        }
 
-            loadLBD(dream);
+        private void exportLevel()
+        {
+            var path = EditorUtility.SaveFilePanel("Export level", "", ".tmap", "tmap");
+
+            if (!string.IsNullOrEmpty(path))
+            {
+                Level level = Level.FromScene(_levelObj);
+                _serializer.Serialize(level, path);
+            }
+        }
+
+        private void importLevel()
+        {
+            // check to see if there was an existing level, as we'll have to overwrite it
+            GameObject existingLevel = GameObject.Find("Level");
+            if (existingLevel)
+            {
+                bool yes = EditorUtility.DisplayDialog("Existing level",
+                    "There is an existing level loaded. Are you sure you " +
+                    "want to import another level? Any unsaved changes will " +
+                    "be lost.", "Yes", "Cancel");
+                if (!yes) return;
+            }
+            
+            string levelPath = CommonGUI.BrowseForFile("Import level...",
+                new[] {"Level files", "tmap,json"}, null);
+            if (levelPath == null) return;
+            
+            DestroyImmediate(existingLevel);
+
+            levelPath = PathUtil.Combine(Application.streamingAssetsPath, levelPath);
+
+            if (Path.GetExtension(levelPath) == ".json")
+            {
+                Dream.Dream dream = _serializer.Deserialize<Dream.Dream>(levelPath);
+                if (dream.Type == DreamType.Legacy)
+                {
+                    loadLBD(dream);
+                }
+
+                if (!string.IsNullOrEmpty(dream.Level))
+                {
+                    string tmapPath = PathUtil.Combine(Application.streamingAssetsPath, dream.Level);
+                    Level level = _serializer.Deserialize<Level>(tmapPath);
+                    loadLevel(level);
+                }
+                else
+                {
+                    newLevel();
+                }
+                
+            }
+            else
+            {
+                Level level = _serializer.Deserialize<Level>(levelPath);
+                loadLevel(level);
+            }
+        }
+
+        private void loadLevel(Level level)
+        {
+            GameObject levelObj = level.ToScene();
+            Selection.activeGameObject = levelObj;
+            _levelObj = levelObj;
         }
 
         private void loadLBD(Dream.Dream dream)
@@ -221,16 +283,15 @@ namespace LSDR.SDK
             }
             GameObject lbdObj = new GameObject("LBD");
             
-            // check to see if it already existed, and if not create it
-            // TODO: delete existing and recreate if already existed
+            // check to see if tile pool already existed
             GameObject tilePoolObj = GameObject.Find(_tilePool.Name);
-            if (tilePoolObj == null)
+            if (tilePoolObj != null)
             {
-                _tilePool.Initialise();
+                DestroyImmediate(tilePoolObj);
             }
-            _tilePool.ReturnAll();
+            _tilePool.Initialise();
 
-            string lbdPath = PathUtil.Combine(Application.streamingAssetsPath, dream.Level);
+            string lbdPath = PathUtil.Combine(Application.streamingAssetsPath, dream.LBDFolder);
             string[] lbdFiles = Directory.GetFiles(lbdPath, "*.LBD", SearchOption.AllDirectories);
             for (int i = 0; i < lbdFiles.Length; i++)
             {

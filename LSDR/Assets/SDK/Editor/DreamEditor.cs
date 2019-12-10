@@ -16,8 +16,8 @@ namespace LSDR.SDK
         private Dream.Dream _dream;
         private Vector2 _scrollPos;
         private readonly ToriiSerializer _serializer = new ToriiSerializer();
-        private readonly List<bool> _dreamEnvironmentFoldoutStates = new List<bool>();
-        private readonly Stack<int> _dreamEnvironmentsToRemove = new Stack<int>();
+        private List<bool> _dreamEnvironmentFoldoutStates = new List<bool>();
+        private Stack<int> _dreamEnvironmentsToRemove = new Stack<int>();
         private bool _showEntireMenu = true;
 
         [MenuItem("LSDR/Create dream")]
@@ -26,7 +26,9 @@ namespace LSDR.SDK
             DreamEditor editor = (DreamEditor)EditorWindow.GetWindow(typeof(DreamEditor));
             editor.titleContent = new GUIContent("Dream");
             editor.CenterOnMainWindow();
-            editor._dream = new Dream.Dream {Type = DreamType.Revamped};
+            editor._dream = new Dream.Dream();
+            editor._dreamEnvironmentFoldoutStates = new List<bool>();
+            editor._dreamEnvironmentsToRemove = new Stack<int>();
             editor.Show();
         }
 
@@ -112,18 +114,18 @@ namespace LSDR.SDK
 
                 EditorGUILayout.LabelField("Data", EditorStyles.boldLabel);
                 EditorGUI.indentLevel++;
-                EditorGUILayout.BeginHorizontal();
-                _dream.Level = EditorGUILayout.TextField(
-                    new GUIContent("Level",
-                        "The path to the raw level file within the game's data to load for this dream. " +
-                        "Can be an LBD directory or a TMAP."),
-                    _dream.Level);
-                if (GUILayout.Button("Browse", GUILayout.Width(60)))
+
+                _dream.Level = CommonGUI.BrowseFileField(new GUIContent("Level",
+                        "The path to the raw level file within the game's data to load for this dream."), _dream.Level,
+                    "Choose a level file", new[] {"Torii map files", "tmap"});
+
+                if (_dream.Type == DreamType.Legacy)
                 {
-                    _dream.Level = browseForDreamLevelFile();
+                    _dream.LBDFolder = CommonGUI.BrowseFolderField(
+                        new GUIContent("LBD folder", "The path to the LBD folder to load for this Dream."),
+                        _dream.LBDFolder, "Choose an LBD folder.");
                 }
 
-                EditorGUILayout.EndHorizontal();
                 EditorGUI.indentLevel--;
                 EditorGUILayout.Separator();
 
@@ -158,38 +160,7 @@ namespace LSDR.SDK
 
             EditorGUI.indentLevel--;
         }
-
-
-        private string browseForDreamLevelFile()
-        {
-            GUI.FocusControl(null);
-            string levelPath;
-            if (_dream.Type == DreamType.Legacy)
-            {
-                levelPath = EditorUtility.OpenFolderPanel("Open LBD directory...", "", "");
-            }
-            else
-            {
-                levelPath = EditorUtility.OpenFilePanelWithFilters("Open TMAP file...", "", new [] {"Torii map files", "tmap"});
-            }
-
-            if (string.IsNullOrEmpty(levelPath))
-            {
-                return _dream.Level;
-            }
-
-            if (!levelPath.Contains("StreamingAssets"))
-            {
-                EditorUtility.DisplayDialog("Level error", "Your level must be in the 'StreamingAssets' directory!",
-                    "Ok");
-                return _dream.Level;
-            }
-            
-            // now remove everything before StreamingAssets path
-            var indexOf = levelPath.IndexOf("StreamingAssets", StringComparison.Ordinal) + "StreamingAssets".Length;
-            return levelPath.Substring(indexOf);
-        }
-
+        
         private void importExistingDream()
         {
             var dreamPath =

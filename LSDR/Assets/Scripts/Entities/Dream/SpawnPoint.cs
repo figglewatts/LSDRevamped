@@ -7,7 +7,7 @@ namespace LSDR.Entities.Dream
 {
     public class SpawnPoint : BaseEntity
     {
-        public bool Test;
+        public bool DayOneSpawn;
 
         public void OnDrawGizmos()
         {
@@ -23,16 +23,16 @@ namespace LSDR.Entities.Dream
             base.Restore(memento);
 
             var spawnPointMemento = (SpawnPointMemento)memento;
-            Test = spawnPointMemento.Test;
+            DayOneSpawn = spawnPointMemento.DayOneSpawn;
         }
     }
 
     [ProtoContract(ImplicitFields = ImplicitFields.AllPublic, SkipConstructor = true)]
     public class SpawnPointMemento : EntityMemento
     {
-        public bool Test;
+        public bool DayOneSpawn;
 
         protected override Type EntityType => typeof(SpawnPoint);
-        public SpawnPointMemento(SpawnPoint state) : base(state) { Test = state.Test; }
+        public SpawnPointMemento(SpawnPoint state) : base(state) { DayOneSpawn = state.DayOneSpawn; }
     }
 }
