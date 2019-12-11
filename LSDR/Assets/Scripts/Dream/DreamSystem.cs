@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using LSDR.Entities;
 using LSDR.Entities.Dream;
@@ -22,9 +23,12 @@ namespace LSDR.Dream
         public GameObject LBDObjectPrefab;
         public Material SkyBackground;
         public JournalLoaderSystem JournalLoader;
+        public LevelLoaderSystem LevelLoader;
         public SettingsSystem SettingsSystem;
 
         private readonly ToriiSerializer _serializer = new ToriiSerializer();
+
+        public void OnEnable() { LevelLoader.OnLevelLoaded += spawnPlayerInDream; }
 
         public void BeginDream()
         {
@@ -73,23 +77,24 @@ namespace LSDR.Dream
                 tileMap.Spawn();
             }
 
-            ApplyEnvironment(dream.RandomEnvironment());
-            
             // load the manifest if it has one
             if (!string.IsNullOrEmpty(dream.Level))
             {
                 string levelPath = PathUtil.Combine(Application.streamingAssetsPath, dream.Level);
-                Level level = _serializer.Deserialize<Level>(levelPath);
-                LevelEntities entities = level.ToScene();
-                
-                // spawn the player
-                // TODO: how can we refactor this into something ideally event-driven?
-                // maybe add events to LevelEntities? or Level?
-                SpawnPoint toSpawn = RandUtil.RandomListElement(entities.OfType<SpawnPoint>());
-                toSpawn.Spawn();
+                LevelLoader.LoadLevel(levelPath);
             }
+            
+            ApplyEnvironment(dream.RandomEnvironment());
+            
+            Debug.Log(Camera.main);
 
             Fader.FadeOut(3);
+        }
+
+        private void spawnPlayerInDream(LevelEntities entities)
+        {
+            // TODO: if first day, spawn in first day spawn
+            RandUtil.RandomListElement(entities.OfType<SpawnPoint>()).Spawn();
         }
     }
 }

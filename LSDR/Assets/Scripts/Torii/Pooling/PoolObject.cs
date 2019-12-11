@@ -7,13 +7,11 @@ namespace Torii.Pooling
     public class PoolObject : MonoBehaviour
     {
         public IObjectPool ParentPool;
+        public bool IsDestroyed = false;
 
         public void OnDestroy()
         {
-            if (ParentPool.PoolObject != null)
-            {
-                ParentPool.ReturnAll();
-            }
+            IsDestroyed = true;
         }
     }
 }
