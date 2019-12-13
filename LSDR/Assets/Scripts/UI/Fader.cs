@@ -43,7 +43,15 @@ namespace LSDR.UI
 		public static void FadeIn(float duration)
 		{
 			_fadeAnimator.speed = 1 / duration;
-			_fadeAnimator.Play("FadeIn", -1, 0);
+			if (_currentlyFading)
+			{
+				_fadeAnimator.CrossFadeInFixedTime("FadeIn", 0.1f, -1);
+			}
+			else
+			{
+				_fadeAnimator.Play("FadeIn", -1, 0);
+			}
+			_currentlyFading = true;
 		}
 		
 		/// <summary>
@@ -76,7 +84,15 @@ namespace LSDR.UI
 		public static void FadeOut(float duration)
 		{
 			_fadeAnimator.speed = 1/duration;
-			_fadeAnimator.Play("FadeOut", -1, 0);
+			if (_currentlyFading)
+			{
+				_fadeAnimator.CrossFadeInFixedTime("FadeOut", 0.1f, -1);
+			}
+			else
+			{
+				_fadeAnimator.Play("FadeOut", -1, 0);
+			}
+			_currentlyFading = true;
 		}
 		
 		/// <summary>
@@ -99,10 +115,14 @@ namespace LSDR.UI
 		public static void FadeOut(Color c, float duration, FadeCompleteHandler callback)
 		{
 			AddHandler(callback);
-			FadeOut(c, duration);	
+			FadeOut(c, duration);
 		}
 
-		public static void InvokeOnFadeComplete() { if (_onFadeComplete != null) _onFadeComplete.Invoke(); }
+		public static void InvokeOnFadeComplete()
+		{
+			_onFadeComplete?.Invoke();
+			_currentlyFading = false;
+		}
 
 		public static void ClearHandler() { _onFadeComplete = null; }
 
