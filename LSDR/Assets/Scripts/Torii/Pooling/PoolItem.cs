@@ -7,6 +7,8 @@ namespace Torii.Pooling
     public class PoolItem : MonoBehaviour
     {
         public IObjectPool ParentPool { get; set; }
+
+        public bool InPool { get; set; } = true;
         
         public void ActiveState(bool state)
         {
@@ -22,9 +24,11 @@ namespace Torii.Pooling
         {
             // if we're active, then we need to make sure an inactive object still exists in the pool,
             // otherwise it might try to instantiate a deleted object in future
-            if (ParentPool.PoolObject != null && !ParentPool.PoolObject.GetComponent<PoolObject>().IsDestroyed)
+            if (!InPool && ParentPool.PoolObject != null &&
+                !ParentPool.PoolObject.GetComponent<PoolObject>().IsDestroyed)
             {
-                ParentPool.ActivePoolItemDestroyed(this);
+                //Debug.Log("ITEM DESTROYED");
+                //ParentPool.ActivePoolItemDestroyed(this);
             }
         }
     }

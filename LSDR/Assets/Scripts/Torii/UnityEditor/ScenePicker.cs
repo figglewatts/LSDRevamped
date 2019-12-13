@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Torii.UI
+namespace Torii.UnityEditor
 {
     [Serializable]
     public class ScenePicker

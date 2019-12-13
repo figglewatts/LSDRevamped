@@ -1,5 +1,4 @@
-﻿using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
 
 namespace Torii.Event
@@ -24,16 +23,6 @@ namespace Torii.Event
         public void OnEventRaised()
         {
             Response.Invoke();
-        }
-        
-        [MenuItem("GameObject/Torii/EventListener", false, 11)]
-        public static void Create(MenuCommand menuCommand)
-        {
-            GameObject eventListenerObject = new GameObject("ToriiEventListener");
-            GameObjectUtility.SetParentAndAlign(eventListenerObject, menuCommand.context as GameObject);
-            Undo.RegisterCreatedObjectUndo(eventListenerObject, "Create " + eventListenerObject.name);
-            Selection.activeObject = eventListenerObject;
-            eventListenerObject.AddComponent<ToriiEventListener>();
         }
     }
 }

@@ -47,6 +47,7 @@ namespace Torii.Pooling
 
             item.transform.SetPositionAndRotation(pos, rot);
             item.ActiveState(true);
+            item.InPool = false;
             return item.gameObject;
         }
 
@@ -55,16 +56,19 @@ namespace Torii.Pooling
             item.ActiveState(false);
             _activeItems.Remove(item);
             _pool.Push(item);
+            item.InPool = true;
             item.transform.SetParent(PoolObject.transform);
         }
 
         public void ReturnAll()
         {
-            foreach (var item in _activeItems)
+            for (int i = _activeItems.Count - 1; i >= 0; i--)
             {
-                Return(item);
+                Return(_activeItems[i]);
             }
         }
+
+        public IEnumerator ReturnAllCoroutine() { yield return returnAllAsync(); }
         
         public void CommonInitialise()
         {
@@ -93,6 +97,7 @@ namespace Torii.Pooling
         {
             PoolItem obj = Instantiate(Prefab, Vector3.zero, Quaternion.identity);
             obj.ParentPool = this;
+            obj.InPool = true;
             obj.ActiveState(activeState);
             obj.transform.SetParent(PoolObject.transform, false);
             return obj;
@@ -118,6 +123,27 @@ namespace Torii.Pooling
                     {
                         PoolItem obj = create();
                         _pool.Push(obj);
+                    }, lastYield);
+
+                    if (lastYield)
+                    {
+                        yield return null;
+                    }
+                }
+            }
+        }
+
+        private IEnumerator returnAllAsync()
+        {
+            using (Marathon m = new Marathon(10))
+            {
+                bool lastYield = false;
+                for (int i = _activeItems.Count - 1; i >= 0; i--)
+                {
+                    int i1 = i;
+                    lastYield = m.Run(() =>
+                    {
+                        Return(_activeItems[i1]);
                     }, lastYield);
 
                     if (lastYield)

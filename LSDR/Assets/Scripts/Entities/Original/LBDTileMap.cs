@@ -72,8 +72,7 @@ namespace LSDR.Entities.Original
         private void loadLBD()
         {
             var start = DateTime.Now;
-            Profiler.BeginSample("LBD");
-            
+
             _tix = ResourceManager.Load<TIX>(IOUtil.PathCombine(Application.streamingAssetsPath, TIXFile));
             LBDReader.UseTIX(_tix);
 
@@ -90,8 +89,7 @@ namespace LSDR.Entities.Original
                 // load the LBD and create GameObjects for its tiles
                 var lbd = ResourceManager.Load<LBD>(file);
                 GameObject lbdObj = LBDReader.CreateLBDTileMap(lbd, _cache);
-                Debug.Log($"Cache entries: {_cache.Count}");
-                
+
                 // add LBDSlab component for controlling fog/culling
                 LBDSlab slab = lbdObj.AddComponent<LBDSlab>();
                 slab.MeshFog = lbdObj.GetComponentsInChildren<MeshFog>();
@@ -112,8 +110,6 @@ namespace LSDR.Entities.Original
                     i++;
                 }
             }
-            
-            Profiler.EndSample();
 
             _loaded = true;
             var end = DateTime.Now;

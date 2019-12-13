@@ -1,9 +1,10 @@
 using System;
+using Torii.UI;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Torii.UI
+namespace Torii.UnityEditor
 {
     [CustomPropertyDrawer(typeof(ScenePicker))]
     public class ScenePickerPropertyDrawer : PropertyDrawer

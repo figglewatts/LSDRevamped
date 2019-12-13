@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using LSDR.Dream;
+using UnityEngine;
 using LSDR.Entities.Dream;
 using LSDR.Entities.WorldObject;
 using LSDR.Game;
@@ -9,10 +10,9 @@ using LSDR.Util;
 
 namespace LSDR.Entities.Player
 {
-	// TODO: refactor PlayerLinker in DreamDirector refactor
 	public class PlayerLinker : MonoBehaviour
 	{
-		public SettingsSystem Settings;
+		public DreamSystem DreamSystem;
 
 		public float LinkDelay = 0.7F;
 
@@ -20,32 +20,14 @@ namespace LSDR.Entities.Player
 
 		private float _linkTimer = 0F;
 
-		private AudioSource _source;
-		private AudioClip _linkSound;
-		private AudioMixer _masterMixer;
-
 		private bool _touchingFloor;
-
-		private const int ChangeTextureSetChance = 100;
-
-		// Use this for initialization
-		void Start()
-		{
-			_masterMixer = Resources.Load<AudioMixer>("Mixers/MasterMixer");
-			_source = GetComponent<AudioSource>();
-			_source.spatialBlend = 0; // 2D audio
-			_source.outputAudioMixerGroup = _masterMixer.FindMatchingGroups("SFX")[0];
-			_linkSound = Resources.Load<AudioClip>("Sound/Dream/linkSound");
-		}
-
-		void Update() { }
 
 		public void OnControllerColliderHit(ControllerColliderHit hit)
 		{
 			// TODO
 			//if (DreamDirector.Payload.DreamEnded) return;
 		
-			if (!hit.gameObject.tag.Equals("Linkable")) return;
+			if (!hit.gameObject.CompareTag("Linkable")) return;
 			
 			// if we're not touching a wall, reset the link delay timer
 			// (this works because when you touch a wall and the floor, the collisions alternate)
@@ -63,42 +45,9 @@ namespace LSDR.Entities.Player
 			_linkTimer += Time.deltaTime;
 			if (_linkTimer > LinkDelay)
 			{
-				LinkableObject o = hit.gameObject.transform.parent.transform.parent.GetComponent<LinkableObject>();
-
-				Color linkCol = o.ForceFadeColor ? o.FadeColor : RandUtil.RandColor();
-				string linkLevel = "";//o.LinkToSpecificLevel ? IOUtil.PathCombine("levels", o.LinkedLevel) : RandUtil.RandomLevelFromDir(DreamJournalManager.CurrentJournal);
-
-				_linkTimer = 0;
-				Link(linkLevel, linkCol);
+				_canLink = false;
+				DreamSystem.Transition(RandUtil.RandColor());
 			}
-		}
-
-		public void Link(string dreamFilePath, Color color, bool playSound = true, string spawnName = "")
-		{
-			Settings.CanControlPlayer = false;
-			_canLink = false;
-
-			int shouldChangeTextureSetChance = RandUtil.Int(100);
-			bool shouldChangeTextureSet = shouldChangeTextureSetChance < ChangeTextureSetChance;
-
-			if (playSound) _source.PlayOneShot(_linkSound);
-			Fader.FadeIn(color, 1F, () =>
-			{
-				DreamDirector.SwitchDreamLevel(dreamFilePath, spawnName);
-				if (shouldChangeTextureSet) DreamDirector.RefreshTextureSet(false);
-				Settings.CanControlPlayer = true;
-				Fader.FadeOut(color, 1F, () =>
-				{
-					_canLink = true;
-				});
-			});
-		}
-
-		public void Link(string dreamFilePath) { Link(dreamFilePath, RandUtil.RandColor()); }
-
-		public void Link(bool playSound = true)
-		{
-			//Link(RandUtil.RandomLevelFromDir(DreamJournalManager.CurrentJournal), RandUtil.RandColor(), playSound);
 		}
 	}
 }

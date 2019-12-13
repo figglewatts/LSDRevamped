@@ -2,7 +2,7 @@ using System;
 using UnityEditor;
 using UnityEngine;
 
-namespace LSDR.SDK
+namespace Torii.UnityEditor
 {
     public static class CommonGUI
     {

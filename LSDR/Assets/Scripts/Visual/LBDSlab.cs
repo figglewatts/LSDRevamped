@@ -70,12 +70,10 @@ namespace LSDR.Visual
 
             if (!active && distance < RenderSettings.fogEndDistance + 20)
             {
-                Debug.Log("Setting active");
                 active = true;
             }
             else if (active && distance >= RenderSettings.fogEndDistance + 20)
             {
-                Debug.Log("Setting inactive");
                 active = false;
             }
         }

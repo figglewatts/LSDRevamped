@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using LSDR.Dream;
+using LSDR.Game;
 using ProtoBuf;
 using UnityEngine;
 
@@ -22,10 +24,12 @@ namespace LSDR.Entities
             return new Level(entities);
         }
 
-        public LevelEntities ToScene()
+        public LevelEntities ToScene(DreamSystem dreamSystem = null, SettingsSystem settingsSystem = null)
         {
             _levelObject = new GameObject("Level");
             LevelEntities levelEntities = _levelObject.AddComponent<LevelEntities>();
+            levelEntities.DreamSystem = dreamSystem;
+            levelEntities.SettingsSystem = settingsSystem;
             foreach (var entity in Entities)
             {
                 GameObject entityObj = entity.CreateGameObject(levelEntities);

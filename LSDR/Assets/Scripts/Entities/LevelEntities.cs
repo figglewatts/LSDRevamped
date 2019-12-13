@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using LSDR.Dream;
+using LSDR.Game;
 using UnityEngine;
 
 namespace LSDR.Entities
@@ -8,6 +10,8 @@ namespace LSDR.Entities
     public class LevelEntities : MonoBehaviour
     {
         public Dictionary<Type, List<BaseEntity>> Entities;
+        public DreamSystem DreamSystem;
+        public SettingsSystem SettingsSystem;
 
         public void Awake()
         {
@@ -28,6 +32,8 @@ namespace LSDR.Entities
             Entities[entityType].Add(entity);
             entity.OnEntityDestroy += () => Deregister(entity);
             entity.LevelEntities = this;
+            entity.DreamSystem = DreamSystem;
+            entity.SettingsSystem = SettingsSystem;
         }
 
         public void Deregister<T>(T entity) where T : BaseEntity

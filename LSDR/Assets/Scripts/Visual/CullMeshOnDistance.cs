@@ -14,11 +14,25 @@ namespace LSDR.Visual
         private void Start()
         {
             _renderer = GetComponent<MeshRenderer>();
-            _mainCamera = Camera.main.transform;
+        }
+        
+        private bool lazyLoadCamera()
+        {
+            if (_mainCamera != null) return true;
+            
+            if (Camera.main != null)
+            {
+                _mainCamera = Camera.main.transform;
+                return true;
+            }
+
+            return false;
         }
 
         private void LateUpdate()
         {
+            if (!lazyLoadCamera()) return;
+            
             // don't consider height when looking to cull
             var position = transform.position;
             Vector3 thisPos = new Vector3(position.x, 0, position.z);

@@ -1,57 +1,83 @@
-﻿using LSDR.Entities.Player;
-using LSDR.Types;
-using UnityEngine;
+﻿using System;
+using LSDR.Entities.Dream;
 using LSDR.Util;
+using ProtoBuf;
+using UnityEngine;
+using Torii.UnityEditor;
 
 namespace LSDR.Entities.Trigger
 {
-	// TODO: TriggerLink is obsolete
-	public class TriggerLink : MonoBehaviour
+	public class TriggerLink : BaseEntity
 	{
+		[BrowseFileSystem(BrowseType.File, new [] { "Dream JSON", "json"}, "dream")]
 		public string LinkedLevel;
 		public Color ForcedLinkColor;
-		public string SpawnPointName;
+		public string SpawnPointEntityID;
 
 		public bool ForceFadeColor;
-		public bool LinkToSpecificLevel;
-		public bool ForceSpawnPoint;
 		public bool PlayLinkSound;
 
-		public static GameObject Instantiate(ENTITY e)
+		private BoxCollider _collider;
+
+		public void Start()
 		{
-			GameObject instantiated = new GameObject(e.Classname);
-			TriggerLink script = instantiated.AddComponent<TriggerLink>();
-
-			script.ForceFadeColor = e.GetSpawnflagValue(0, 4);
-			script.LinkToSpecificLevel = e.GetSpawnflagValue(1, 4);
-			script.ForceSpawnPoint = e.GetSpawnflagValue(2, 4);
-			script.PlayLinkSound = e.GetSpawnflagValue(3, 4);
-
-			if (script.LinkToSpecificLevel) script.LinkedLevel = IOUtil.PathCombine("levels", e.GetPropertyValue("Linked level"));
-			if (script.ForceFadeColor) script.ForcedLinkColor = EntityUtil.TryParseColor("Forced link color", e);
-			if (script.ForceSpawnPoint) script.SpawnPointName = e.GetPropertyValue("Spawn point name");
-
-			EntityUtil.SetInstantiatedObjectTransform(e, ref instantiated);
-
-			instantiated.AddComponent<BoxCollider>().isTrigger = true;
-
-			return instantiated;
+			// create the collider
+			_collider = gameObject.AddComponent<BoxCollider>();
+			_collider.size = transform.localScale;
+			_collider.isTrigger = true;
 		}
 
 		public void OnTriggerEnter(Collider other)
 		{
-			if (other.CompareTag("Player"))
+			if (!other.gameObject.CompareTag("Player")) return;
+
+			if (!ForceFadeColor)
 			{
-				PlayerLinker linker = other.GetComponent<PlayerLinker>();
-				if (LinkToSpecificLevel)
-				{
-					linker.Link(LinkedLevel, ForceFadeColor ? ForcedLinkColor : RandUtil.RandColor(), PlayLinkSound, ForceSpawnPoint ? SpawnPointName : "");
-				}
-				else
-				{
-					linker.Link(PlayLinkSound);
-				}
+				ForcedLinkColor = RandUtil.RandColor();
 			}
+			DreamSystem.Transition(ForcedLinkColor, LinkedLevel, PlayLinkSound, SpawnPointEntityID);
+		}
+
+		public void OnDrawGizmos()
+		{
+			
+		}
+
+		public override EntityMemento Save() { return new TriggerLinkMemento(this); }
+		
+		public override void Restore(EntityMemento memento, LevelEntities entities)
+		{
+			base.Restore(memento, entities);
+
+			var triggerLinkMemento = (TriggerLinkMemento)memento;
+			LinkedLevel = triggerLinkMemento.LinkedLevel;
+			ForcedLinkColor = triggerLinkMemento.ForcedLinkColor;
+			SpawnPointEntityID = triggerLinkMemento.SpawnPointEntityID;
+			ForceFadeColor = triggerLinkMemento.ForceFadeColor;
+			PlayLinkSound = triggerLinkMemento.PlayLinkSound;
+			entities.Register(this);
+		}
+	}
+	
+	[ProtoContract(ImplicitFields = ImplicitFields.AllPublic, SkipConstructor = true)]
+	public class TriggerLinkMemento : EntityMemento
+	{
+		public string LinkedLevel;
+		public Color ForcedLinkColor;
+		public string SpawnPointEntityID;
+
+		public bool ForceFadeColor;
+		public bool PlayLinkSound;
+
+		protected override Type EntityType => typeof(TriggerLink);
+
+		public TriggerLinkMemento(TriggerLink state) : base(state)
+		{
+			LinkedLevel = state.LinkedLevel;
+			ForcedLinkColor = state.ForcedLinkColor;
+			SpawnPointEntityID = state.SpawnPointEntityID;
+			ForceFadeColor = state.ForceFadeColor;
+			PlayLinkSound = state.PlayLinkSound;
 		}
 	}
 }

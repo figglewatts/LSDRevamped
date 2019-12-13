@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEditor;
 
 namespace Torii.Util
 {
@@ -54,7 +55,7 @@ namespace Torii.Util
                 "Can't find internal main window. Maybe something has changed inside Unity");
         }
 
-        public static void CenterOnMainWindow(this UnityEditor.EditorWindow aWin)
+        public static void CenterOnMainWindow(this EditorWindow aWin)
         {
             var main = GetEditorMainWindowPos();
             var pos = aWin.position;

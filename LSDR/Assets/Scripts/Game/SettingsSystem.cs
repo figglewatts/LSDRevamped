@@ -189,7 +189,6 @@ namespace LSDR.Game
         /// <param name="val">Music volume in percentage.</param>
         public void SetMusicVolume(float val)
         {
-            Debug.Log(volumeToDb(val));
             MasterMixer.SetFloat("MusicVolume", volumeToDb(val));
         }
 

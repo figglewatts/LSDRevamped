@@ -11,6 +11,7 @@ namespace Torii.Pooling
 
         public void OnDestroy()
         {
+            Debug.Log("POOL DESTROYED");
             IsDestroyed = true;
         }
     }

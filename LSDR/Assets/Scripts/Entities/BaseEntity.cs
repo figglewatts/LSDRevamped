@@ -1,5 +1,7 @@
 using System;
+using LSDR.Dream;
 using LSDR.Entities.Dream;
+using LSDR.Game;
 using ProtoBuf;
 using UnityEngine;
 
@@ -12,6 +14,12 @@ namespace LSDR.Entities
 
         [NonSerialized]
         public LevelEntities LevelEntities;
+
+        [NonSerialized]
+        public DreamSystem DreamSystem;
+
+        [NonSerialized]
+        public SettingsSystem SettingsSystem;
 
         public abstract EntityMemento Save();
 

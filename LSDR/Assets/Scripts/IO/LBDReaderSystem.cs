@@ -43,8 +43,6 @@ namespace LSDR.IO
         /// <returns>A GameObject containing loaded meshes for all tiles in their layout.</returns>
         public GameObject CreateLBDTileMap(LBD lbd, Dictionary<TMDObject, Mesh> cache)
         {
-            Profiler.BeginSample("AN LBD!!!");
-            
             GameObject lbdTilemap = new GameObject("LBD TileMap");
             List<CombineInstance> meshesCreated = new List<CombineInstance>(); // we're combining meshes into a collision mesh
 
@@ -71,7 +69,7 @@ namespace LSDR.IO
             MeshCollider mc = lbdTilemap.AddComponent<MeshCollider>();
             mc.sharedMesh = combined;
 
-            Profiler.EndSample();
+            lbdTilemap.tag = "Linkable";
 
             return lbdTilemap;
         }
