@@ -17,7 +17,7 @@ namespace LSDR.Visual
             _mainCamera = Camera.main.transform;
         }
 
-        private void Update()
+        private void LateUpdate()
         {
             // don't consider height when looking to cull
             var position = transform.position;

@@ -24,7 +24,7 @@ namespace LSDR.Visual
             _mainCamera = Camera.main.transform;
         }
 
-        private void Update()
+        private void LateUpdate()
         {
             if (!_renderer.enabled) return; // if the renderer is disabled, we don't want to do anything
             
