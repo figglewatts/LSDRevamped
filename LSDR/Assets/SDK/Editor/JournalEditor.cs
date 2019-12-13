@@ -13,9 +13,9 @@ namespace LSDR.SDK
         private DreamJournal _journal;
         private Vector2 _scrollPos;
         private bool _showEntireMenu = true;
-        private readonly ToriiSerializer _serializer = new ToriiSerializer();
-        private readonly Stack<int> _linkableDreamsToRemove = new Stack<int>();
-        private readonly Stack<int> _firstDreamsToRemove = new Stack<int>();
+        private ToriiSerializer _serializer;
+        private Stack<int> _linkableDreamsToRemove;
+        private Stack<int> _firstDreamsToRemove;
 
         [MenuItem("LSDR/Create journal")]
         public static void Init()
@@ -26,7 +26,14 @@ namespace LSDR.SDK
             editor._journal = new DreamJournal();
             editor.Show();
         }
-        
+
+        public void OnEnable()
+        {
+            _serializer = new ToriiSerializer();
+            _linkableDreamsToRemove = new Stack<int>();
+            _firstDreamsToRemove = new Stack<int>();
+        }
+
         public void Update()
         {
             // remove queued items, this has to be done so we don't

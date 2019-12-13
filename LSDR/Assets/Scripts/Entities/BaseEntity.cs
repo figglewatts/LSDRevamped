@@ -10,6 +10,7 @@ namespace LSDR.Entities
         public string EntityID = Guid.NewGuid().ToString();
         public System.Action OnEntityDestroy;
 
+        [NonSerialized]
         public LevelEntities LevelEntities;
 
         public abstract EntityMemento Save();

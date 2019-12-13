@@ -9,6 +9,8 @@ namespace LSDR.Entities.Dream
     public class SpawnPoint : BaseEntity
     {
         public bool DayOneSpawn;
+        
+        [NonSerialized]
         public GameObject PlayerPrefab;
 
         public void Awake() { PlayerPrefab = ResourceManager.UnityLoad<GameObject>("Prefabs/Player"); }

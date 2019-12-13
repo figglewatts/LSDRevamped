@@ -21,6 +21,14 @@ namespace Torii.Serialization
         
         // map types to serializer settings
         private readonly Dictionary<Type, JsonSerializerSettings> _serializationSettingsTypeMap;
+        
+        static ToriiSerializer()
+        {
+            // add some protobuf converters for common Unity3D types
+            RuntimeTypeModel.Default.Add(typeof(Vector3), true).Add("x").Add("y").Add("z");
+            RuntimeTypeModel.Default.Add(typeof(Quaternion), true).Add("x").Add("y").Add("z").Add("w");
+            RuntimeTypeModel.Default.Add(typeof(Color), true).Add("r").Add("g").Add("b").Add("a");
+        }
 
         /// <summary>
         /// Create a new Serializer
@@ -35,11 +43,6 @@ namespace Torii.Serialization
             _json.Converters.Add(new JsonQuaternionConverter());
             _json.Converters.Add(new JsonColorConverter());
             _json.Converters.Add(new StringEnumConverter());
-
-            // add some protobuf converters for common Unity3D types
-            RuntimeTypeModel.Default.Add(typeof(Vector3), true).Add("x").Add("y").Add("z");
-            RuntimeTypeModel.Default.Add(typeof(Quaternion), true).Add("x").Add("y").Add("z").Add("w");
-            RuntimeTypeModel.Default.Add(typeof(Color), true).Add("r").Add("g").Add("b").Add("a");
         }
 
         /// <summary>
