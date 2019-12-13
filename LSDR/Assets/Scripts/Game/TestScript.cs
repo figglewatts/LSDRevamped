@@ -16,6 +16,8 @@ namespace LSDR.Game
         [Console]
         public int TestVar;
 
+        public bool SubtractiveFog;
+
         public void Start()
         {
             Console.Init();
@@ -39,6 +41,11 @@ namespace LSDR.Game
             {
                 Debug.Log($"All: {v}");
             }
+        }
+
+        public void Update()
+        {
+            Shader.SetGlobalInt("_SubtractiveFog", SubtractiveFog ? 1 : 0);
         }
 
         [Console]

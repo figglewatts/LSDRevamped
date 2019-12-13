@@ -2,7 +2,7 @@ Shader "LSDR/RevampedDiffuseAlphaBlend" {
     Properties {
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
         _Tint ("Tint Color", Color) = (1, 1, 1, 1)
-        [PerRendererData]_FogAddition ("FogAddition", Color) = (0, 0, 0)
+        [PerRendererData]_FogAmount ("FogAmount", float) = 1
     }
     SubShader {
         Tags { "Queue" = "Transparent" "RenderType" = "Transparent" }
@@ -12,6 +12,7 @@ Shader "LSDR/RevampedDiffuseAlphaBlend" {
             #pragma vertex vert
             #pragma fragment frag
             #include "UnityCG.cginc"
+            #include "LSDRFog.cginc"
             
             // incoming vertices
             struct appdata
@@ -42,7 +43,7 @@ Shader "LSDR/RevampedDiffuseAlphaBlend" {
             
             sampler2D _MainTex;
             fixed4 _Tint;
-            fixed4 _FogAddition;
+            float _FogAmount;
             
             float4 frag(revampedV2F input) : COLOR
             {
@@ -55,7 +56,7 @@ Shader "LSDR/RevampedDiffuseAlphaBlend" {
                 output *= _Tint;
                 
                 // apply fog
-                output += half4(_FogAddition.r, _FogAddition.g, _FogAddition.b, 0);
+                output = ApplyFog(output, _FogAmount);
                 
                 return output;
             }

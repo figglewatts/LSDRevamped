@@ -34,7 +34,7 @@ namespace LSDR.Dream
         {
             // TODO: spawn in first dream if it's the first day
             
-            var randomDream = JournalLoader.Current.GetFirstDream();
+            var randomDream = JournalLoader.Current.GetLinkableDream();
             Dream dream = _serializer.Deserialize<Dream>(IOUtil.PathCombine(Application.streamingAssetsPath,
                 randomDream));
             BeginDream(dream);
@@ -51,7 +51,7 @@ namespace LSDR.Dream
             SkyBackground.SetColor("_FogColor", environment.FogColor);
             if (Camera.main != null) Camera.main.backgroundColor = environment.SkyColor;
             SkyBackground.SetColor("_SkyColor", environment.SkyColor);
-            SettingsSystem.SubtractiveFog = environment.SubtractiveFog;
+            Shader.SetGlobalInt("_SubtractiveFog", environment.SubtractiveFog ? 1 : 0);
             
             // TODO: apply the rest of the environment
         }

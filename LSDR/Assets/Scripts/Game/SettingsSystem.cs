@@ -29,8 +29,6 @@ namespace LSDR.Game
         /// </summary>
         public bool CanMouseLook = true;
 
-        public bool SubtractiveFog = false;
-        
         public BindBroker SettingsBindBroker = new BindBroker();
 
         /// <summary>

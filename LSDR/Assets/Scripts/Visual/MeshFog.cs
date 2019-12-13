@@ -11,10 +11,11 @@ namespace LSDR.Visual
     public class MeshFog : MonoBehaviour
     {
         public SettingsSystem Settings;
-        
+
         private MeshRenderer _renderer;
         private MaterialPropertyBlock _propertyBlock;
         private Transform _mainCamera;
+        private static readonly int _fogAmountID = Shader.PropertyToID("_FogAmount");
 
         private void Start()
         {
@@ -44,17 +45,8 @@ namespace LSDR.Visual
             // quantize fog amount
             fogAmt = Mathf.Round(fogAmt / 0.1f) * 0.1f;
 
-            Color fogCol = RenderSettings.fogColor * (1 - fogAmt);
-            fogCol.a = 0;
-
-            // handle subtractive fog
-            if (Settings.SubtractiveFog)
-            {
-                fogCol *= -1;
-            }
-            
-            // set the fog color
-            _propertyBlock.SetColor("_FogAddition", fogCol);
+            // set the fog amount
+            _propertyBlock.SetFloat(_fogAmountID, fogAmt);
             _renderer.SetPropertyBlock(_propertyBlock);
         }
     }

@@ -5,7 +5,7 @@ Shader "LSDR/ClassicDiffuseSet" {
         _MainTexC ("Albedo C (RGB)", 2D) = "white" {}
         _MainTexD ("Albedo D (RGB)", 2D) = "white" {}
         _Tint ("Tint Color", Color) = (1, 1, 1, 1)
-        [PerRendererData]_FogAddition ("FogAddition", Color) = (0, 0, 0)
+        [PerRendererData]_FogAmount ("FogAmount", float) = 1
     }
     SubShader {
         Tags { "RenderType" = "Opaque" }
@@ -14,6 +14,7 @@ Shader "LSDR/ClassicDiffuseSet" {
             #pragma vertex vert
             #pragma fragment frag
             #include "UnityCG.cginc"
+            #include "LSDRFog.cginc"
             
             // incoming vertices
             struct appdata
@@ -66,7 +67,7 @@ Shader "LSDR/ClassicDiffuseSet" {
             sampler2D _MainTexD;
             fixed4 _Tint;
             uniform int _TextureSet;
-            fixed4 _FogAddition;
+            float _FogAmount;
             
             float4 frag(classicV2F input) : COLOR
             {
@@ -88,7 +89,7 @@ Shader "LSDR/ClassicDiffuseSet" {
                 output *= _Tint;
                 
                 // apply fog
-                output += half4(_FogAddition.r, _FogAddition.g, _FogAddition.b, 0);
+                output = ApplyFog(output, _FogAmount);
                 
                 return output;
             }
