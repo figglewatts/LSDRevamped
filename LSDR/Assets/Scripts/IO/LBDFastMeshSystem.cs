@@ -21,10 +21,11 @@ namespace LSDR.IO
 
         [NonSerialized]
         public GameObject[] LBDColliders;
-
         
         private Material[] _materials;
         private static readonly int _mainTex = Shader.PropertyToID("_MainTex");
+
+        private static int num = 0;
 
         public void OnEnable()
         {
@@ -62,6 +63,11 @@ namespace LSDR.IO
                 lbdCollider.transform.SetParent(lbdColliders.transform);
                 LBDColliders[i] = lbdCollider;
             }
+
+            foreach (var m in tileMap.TileCache.Values)
+            {
+                m.Submit();
+            }
         }
         
         public void UseTIX(string tixPath)
@@ -84,8 +90,8 @@ namespace LSDR.IO
             int tileNo = 0;
             for (int i = 0; i < lbd.TileLayout.Length; i++)
             {
-                int x = tileNo / lbd.Header.TileWidth;
-                int y = tileNo % lbd.Header.TileWidth;
+                int x = tileNo % lbd.Header.TileWidth;
+                int y = tileNo / lbd.Header.TileWidth;
                 LBDTile tile = lbd.TileLayout[x, y];
                 
                 // create an LBD tile if we should draw it
@@ -133,7 +139,7 @@ namespace LSDR.IO
                             });
                         }
                         curTile = extraTile;
-                        i++;
+                        j++;
                     }
                 }
 
@@ -145,12 +151,13 @@ namespace LSDR.IO
 
         private GameObject createLBDCollider(List<CombineInstance> combineInstances, Vector3 position)
         {
-            GameObject colliderObject = new GameObject("LBD Collider");
+            GameObject colliderObject = new GameObject($"LBD Collider {num}");
             Mesh combined = new Mesh();
             combined.CombineMeshes(combineInstances.ToArray(), true);
             MeshCollider mc = colliderObject.AddComponent<MeshCollider>();
             mc.sharedMesh = combined;
             colliderObject.tag = "Linkable";
+            num++;
             return colliderObject;
         }
 

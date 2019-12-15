@@ -58,6 +58,8 @@ namespace LSDR.InputManagement
             LookY = CreateOneAxisPlayerAction(LookDown, LookUp);
             Move = CreateTwoAxisPlayerAction(Left, Right, Backward, Forward);
 
+            Move.StateThreshold = 0.5f;
+
             ListenOptions = DefaultListenOptions;
         }
 
@@ -71,15 +73,19 @@ namespace LSDR.InputManagement
 
             actions.Left.AddDefaultBinding(Key.A);
             actions.Left.AddDefaultBinding(InputControlType.LeftStickLeft);
+            actions.Left.AddDefaultBinding(InputControlType.DPadLeft);
 
             actions.Right.AddDefaultBinding(Key.D);
             actions.Right.AddDefaultBinding(InputControlType.LeftStickRight);
+            actions.Right.AddDefaultBinding(InputControlType.DPadRight);
 
             actions.Forward.AddDefaultBinding(Key.W);
             actions.Forward.AddDefaultBinding(InputControlType.LeftStickUp);
+            actions.Forward.AddDefaultBinding(InputControlType.DPadUp);
 
             actions.Backward.AddDefaultBinding(Key.S);
             actions.Backward.AddDefaultBinding(InputControlType.LeftStickDown);
+            actions.Backward.AddDefaultBinding(InputControlType.DPadDown);
 
             actions.LookUp.AddDefaultBinding(Key.E);
             actions.LookUp.AddDefaultBinding(InputControlType.Action4);
@@ -106,15 +112,19 @@ namespace LSDR.InputManagement
 
             actions.Left.AddDefaultBinding(Key.A);
             actions.Left.AddDefaultBinding(InputControlType.LeftStickLeft);
+            actions.Left.AddDefaultBinding(InputControlType.DPadLeft);
 
             actions.Right.AddDefaultBinding(Key.D);
             actions.Right.AddDefaultBinding(InputControlType.LeftStickRight);
+            actions.Right.AddDefaultBinding(InputControlType.DPadRight);
 
             actions.Forward.AddDefaultBinding(Key.W);
             actions.Forward.AddDefaultBinding(InputControlType.LeftStickUp);
+            actions.Forward.AddDefaultBinding(InputControlType.DPadUp);
 
             actions.Backward.AddDefaultBinding(Key.S);
             actions.Backward.AddDefaultBinding(InputControlType.LeftStickDown);
+            actions.Backward.AddDefaultBinding(InputControlType.DPadDown);
 
             actions.LookUp.AddDefaultBinding(Mouse.PositiveY);
             actions.LookUp.AddDefaultBinding(InputControlType.RightStickUp);

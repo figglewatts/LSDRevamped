@@ -24,7 +24,12 @@ namespace LSDR.Entities.Original
     {
         public Dictionary<TMDObject, FastMesh> TileCache { get; } =
             new Dictionary<TMDObject, FastMesh>(new TMDObjectEqualityComparer());
-        
+
+        public void Awake()
+        {
+            TileCache.Clear();
+        }
+
         public void Update()
         {
             foreach (var fm in TileCache.Values)
