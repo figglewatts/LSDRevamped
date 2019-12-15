@@ -18,14 +18,16 @@ namespace Torii.UnityEditor
                     : "file"
                 : attr.Name;
 
+            position = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), label);
+
             if (attr.Type == BrowseType.Directory)
             {
-                property.stringValue = CommonGUI.BrowseFolderField(label, property.stringValue, $"Choose {name}");
+                property.stringValue = CommonGUI.RawBrowseFolderField(position, property.stringValue, $"Choose {name}");
             }
             else if (attr.Type == BrowseType.File)
             {
                 property.stringValue =
-                    CommonGUI.BrowseFileField(label, property.stringValue, $"Choose {name}", attr.FileFilters);
+                    CommonGUI.RawBrowseFileField(position, property.stringValue, $"Choose {name}", attr.FileFilters);
             }
             
             EditorGUI.EndProperty();

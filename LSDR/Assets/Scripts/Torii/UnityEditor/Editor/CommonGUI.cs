@@ -78,6 +78,35 @@ namespace Torii.UnityEditor
             return result;
         }
 
+        public static string RawBrowseFileField(Rect position,
+            string existingValue,
+            string dialogTitle,
+            string[] filters = null)
+        {
+            Rect textFieldPosition = new Rect(position.x, position.y, position.width - 60, position.height);
+            string result = EditorGUI.TextField(textFieldPosition, existingValue);
+            Rect buttonPosition = new Rect(position.x + position.width - 60, position.y, 60, position.height);
+            if (GUI.Button(buttonPosition, "Browse"))
+            {
+                result = BrowseForFile(dialogTitle, filters, existingValue);
+            }
+
+            return result;
+        }
+
+        public static string RawBrowseFolderField(Rect position, string existingValue, string dialogTitle)
+        {
+            Rect textFieldPosition = new Rect(position.x, position.y, position.width - 60, position.height);
+            string result = EditorGUI.TextField(textFieldPosition, existingValue);
+            Rect buttonPosition = new Rect(position.x + position.width - 60, position.y, 60, position.height);
+            if (GUI.Button(buttonPosition, "Browse"))
+            {
+                result = BrowseForFolder(dialogTitle, existingValue);
+            }
+
+            return result;
+        }
+
         public static bool ColorButton(GUIContent content, Color col, params GUILayoutOption[] options)
         {
             Color prevColor = GUI.backgroundColor;

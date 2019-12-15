@@ -5,7 +5,6 @@ Shader "LSDR/RevampedDiffuseSetAlphaBlend" {
         _MainTexC ("Albedo C (RGB)", 2D) = "white" {}
         _MainTexD ("Albedo D (RGB)", 2D) = "white" {}
         _Tint ("Tint Color", Color) = (1, 1, 1, 1)
-        [PerRendererData]_FogAmount ("FogAmount", float) = 1
     }
     SubShader {
         Tags { "Queue" = "Transparent" "RenderType" = "Transparent" }
@@ -14,34 +13,14 @@ Shader "LSDR/RevampedDiffuseSetAlphaBlend" {
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
+            #pragma multi_compile_instancing
+            #pragma multi_compile_fog
             #include "UnityCG.cginc"
-            #include "LSDRFog.cginc"
-            
-            // incoming vertices
-            struct appdata
-            {
-                float4 position : POSITION;
-                float3 normal : NORMAL;
-                fixed4 color : COLOR;
-                float2 uv : TEXCOORD0;
-            };
-            
-            // data from vert to frag shader
-            struct revampedV2F
-            {
-                fixed4 pos : SV_POSITION;
-                half4 color : COLOR0;
-                float2 uv_MainTex : TEXCOORD0;
-            };
+            #include "LSDR.cginc"
 
-            revampedV2F vert(appdata v)
+            v2f vert(appdata v)
             {
-                revampedV2F output;
-                output.pos = UnityObjectToClipPos(v.position);
-                output.color = v.color;
-                output.uv_MainTex = v.uv;
-                
-                return output;
+                return revampedVert(v);
             }
             
             sampler2D _MainTexA;
@@ -49,29 +28,10 @@ Shader "LSDR/RevampedDiffuseSetAlphaBlend" {
             sampler2D _MainTexC;
             sampler2D _MainTexD;
             fixed4 _Tint;
-            uniform int _TextureSet;
-            float _FogAmount;
             
-            float4 frag(revampedV2F input) : COLOR
+            float4 frag(v2f input) : COLOR
             {
-                half4 output;
-                
-                // choose texture
-                if (_TextureSet == 2) output = tex2D(_MainTexB, input.uv_MainTex);
-                else if (_TextureSet == 3) output = tex2D(_MainTexC, input.uv_MainTex);
-                else if (_TextureSet == 4) output = tex2D(_MainTexD, input.uv_MainTex);
-                else output = tex2D(_MainTexA, input.uv_MainTex);
-                
-                // apply vertex color
-                output *= input.color;
-                
-                // apply tint
-                output *= _Tint;
-                
-                // apply fog
-                output = ApplyFog(output, _FogAmount);
-                
-                return output;
+                return revampedFragSet(input, _MainTexA, _MainTexB, _MainTexC, _MainTexD, _Tint);
             }
             ENDCG
         }
