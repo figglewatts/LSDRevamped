@@ -5,6 +5,7 @@ using LSDR.Entities;
 using LSDR.Entities.Dream;
 using LSDR.Entities.Original;
 using LSDR.Game;
+using LSDR.IO;
 using LSDR.UI;
 using LSDR.Util;
 using Torii.Audio;
@@ -28,6 +29,7 @@ namespace LSDR.Dream
         public Material SkyBackground;
         public JournalLoaderSystem JournalLoader;
         public LevelLoaderSystem LevelLoader;
+        public LBDFastMeshSystem LBDLoader;
         public SettingsSystem SettingsSystem;
         public AudioClip LinkSound;
         public PrefabPool LBDTilePool;
@@ -111,13 +113,8 @@ namespace LSDR.Dream
             // then instantiate the LBD if it has one
             if (dream.Type == DreamType.Legacy)
             {
-                var lbdObject = Instantiate(LBDObjectPrefab);
-                LBDTileMap tileMap = lbdObject.GetComponent<LBDTileMap>();
-                tileMap.LBDFolder = dream.LBDFolder;
-                tileMap.LBDWidth = dream.TileWidth;
-                tileMap.Mode = dream.LegacyTileMode;
-                tileMap.TIXFile = dream.LBDFolder + "/TEXA.TIX"; // TODO: Texture sets for LBDs
-                tileMap.Spawn();
+                LBDLoader.LoadLBD(dream.LBDFolder, dream.LegacyTileMode, dream.TileWidth);
+                LBDLoader.UseTIX(dream.LBDFolder + "/TEXA.TIX"); // TODO: Texture sets for LBDs
             }
 
             // load the manifest if it has one

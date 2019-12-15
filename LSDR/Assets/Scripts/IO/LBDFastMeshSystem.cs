@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using libLSD.Formats;
 using LSDR.Dream;
+using LSDR.Entities.Original;
 using LSDR.IO.ResourceHandlers;
 using Torii.Graphics;
 using Torii.Resource;
@@ -12,45 +13,28 @@ using UnityEngine;
 
 namespace LSDR.IO
 {
-    public class LBDFastMesh : MonoBehaviour
+    [CreateAssetMenu(menuName="System/LBDFastMeshSystem")]
+    public class LBDFastMeshSystem : ScriptableObject
     {
         public Material LBDDiffuse;
         public Material LBDAlpha;
 
+        [NonSerialized]
         public GameObject[] LBDColliders;
 
-        [BrowseFileSystem(BrowseType.Directory, name: "LBD")]
-        public string LBDDirectoryPath;
-
-        [BrowseFileSystem(BrowseType.File, new []{"TIX files", "TIX"}, "TIX")]
-        public string TIXFilePath;
         
-        public LegacyTileMode Mode;
-        public int LBDWidth = 1;
-
-        private Dictionary<TMDObject, FastMesh> _tileCache;
         private Material[] _materials;
         private static readonly int _mainTex = Shader.PropertyToID("_MainTex");
 
-        public void Awake()
+        public void OnEnable()
         {
-            _tileCache = new Dictionary<TMDObject, FastMesh>(new TMDObjectEqualityComparer());
             _materials = new[] {LBDDiffuse, LBDAlpha};
-            
-            ResourceManager.RegisterHandler(new LBDHandler());
-            ResourceManager.RegisterHandler(new TIXHandler());
         }
 
-        public void Start()
+        public void LoadLBD(string lbdFolder, LegacyTileMode tileMode, int lbdWidth)
         {
-            LoadLBD(LBDDirectoryPath);
-            
-            TIX tix = ResourceManager.Load<TIX>(PathUtil.Combine(Application.streamingAssetsPath, TIXFilePath));
-            UseTIX(tix);
-        }
-
-        public void LoadLBD(string lbdFolder)
-        {
+            GameObject lbdRenderer = new GameObject("LBD Renderer");
+            LBDTileMap tileMap = lbdRenderer.AddComponent<LBDTileMap>();
             GameObject lbdColliders = new GameObject("LBD Colliders");
 
             string[] lbdFiles = Directory.GetFiles(PathUtil.Combine(Application.streamingAssetsPath, lbdFolder),
@@ -61,10 +45,10 @@ namespace LSDR.IO
                 string lbdFile = lbdFiles[i];
                 
                 Vector3 posOffset = Vector3.zero;
-                if (Mode == LegacyTileMode.Horizontal)
+                if (tileMode == LegacyTileMode.Horizontal)
                 {
-                    int xPos = i % LBDWidth;
-                    int yPos = i / LBDWidth;
+                    int xPos = i % lbdWidth;
+                    int yPos = i / lbdWidth;
                     int xMod = 0;
                     if (yPos % 2 == 1)
                     {
@@ -74,25 +58,26 @@ namespace LSDR.IO
                 }
                 
                 LBD lbd = ResourceManager.Load<LBD>(lbdFile);
-                GameObject lbdCollider = CreateLBDTileMap(lbd, posOffset);
+                GameObject lbdCollider = createLBDTileMap(lbd, posOffset, tileMap.TileCache);
                 lbdCollider.transform.SetParent(lbdColliders.transform);
                 LBDColliders[i] = lbdCollider;
             }
         }
         
-        public void UseTIX(TIX tix)
+        public void UseTIX(string tixPath)
         {
+            var tix = ResourceManager.Load<TIX>(PathUtil.Combine(Application.streamingAssetsPath, tixPath));
             var tex = LibLSDUnity.GetTextureFromTIX(tix);
             LBDDiffuse.SetTexture(_mainTex, tex);
             LBDAlpha.SetTexture(_mainTex, tex);
         }
 
-        public void CreateLBDTileMap(LBD lbd)
+        private void createLBDTileMap(LBD lbd, Dictionary<TMDObject, FastMesh> tileCache)
         {
-            CreateLBDTileMap(lbd, Vector3.zero);
+            createLBDTileMap(lbd, Vector3.zero, tileCache);
         }
         
-        public GameObject CreateLBDTileMap(LBD lbd, Vector3 posOffset)
+        private GameObject createLBDTileMap(LBD lbd, Vector3 posOffset, Dictionary<TMDObject, FastMesh> tileCache)
         {
             List<CombineInstance> colliderMeshes = new List<CombineInstance>();
             
@@ -106,7 +91,7 @@ namespace LSDR.IO
                 // create an LBD tile if we should draw it
                 if (tile.DrawTile)
                 {
-                    FastMesh mesh = createTileMesh(tile, lbd.Tiles);
+                    FastMesh mesh = createTileMesh(tile, lbd.Tiles, tileCache);
                     var matrix = mesh.AddInstance(new Vector3(x, -tile.TileHeight, y) + posOffset, tileRotation(tile));
                     colliderMeshes.Add(new CombineInstance
                     {
@@ -130,7 +115,7 @@ namespace LSDR.IO
                     while (curTile.ExtraTileIndex >= 0 && j <= 1)
                     {
                         LBDTile extraTile = lbd.ExtraTiles[curTile.ExtraTileIndex];
-                        FastMesh extraTileMesh = createTileMesh(extraTile, lbd.Tiles);
+                        FastMesh extraTileMesh = createTileMesh(extraTile, lbd.Tiles, tileCache);
                         var extraMatrix = extraTileMesh.AddInstance(new Vector3(x, -extraTile.TileHeight, y) + posOffset, tileRotation(extraTile));
                         colliderMeshes.Add(new CombineInstance
                         {
@@ -195,26 +180,18 @@ namespace LSDR.IO
             }
         }
 
-        private FastMesh createTileMesh(LBDTile tile, TMD tilesTmd)
+        private FastMesh createTileMesh(LBDTile tile, TMD tilesTmd, Dictionary<TMDObject, FastMesh> tileCache)
         {
             TMDObject tileObj = tilesTmd.ObjectTable[tile.TileType];
-            if (_tileCache.ContainsKey(tileObj))
+            if (tileCache.ContainsKey(tileObj))
             {
-                return _tileCache[tileObj];
+                return tileCache[tileObj];
             }
 
             Mesh m = LibLSDUnity.MeshFromTMDObject(tileObj);
             FastMesh fm = new FastMesh(m, _materials);
-            _tileCache[tileObj] = fm;
+            tileCache[tileObj] = fm;
             return fm;
-        }
-
-        public void Update()
-        {
-            foreach (var fm in _tileCache.Values)
-            {
-                fm.Draw();
-            }
         }
     }
 }

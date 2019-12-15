@@ -9,6 +9,7 @@ using Torii.Resource;
 using UnityEngine;
 using LSDR.Util;
 using LSDR.Visual;
+using Torii.Graphics;
 using Torii.Pooling;
 using UnityEngine.Profiling;
 
@@ -21,136 +22,15 @@ namespace LSDR.Entities.Original
     /// </summary>
     public class LBDTileMap : MonoBehaviour
     {
-        /// <summary>
-        /// The folder to load LBD files from. Set in inspector.
-        /// </summary>
-        public string LBDFolder;
+        public Dictionary<TMDObject, FastMesh> TileCache { get; } =
+            new Dictionary<TMDObject, FastMesh>(new TMDObjectEqualityComparer());
         
-        /// <summary>
-        /// The TIX file to load into virtual PSX VRAM. Set in inspector.
-        /// </summary>
-        public string TIXFile;
-
-        // the loaded TIX file
-        private TIX _tix;
-
-        /// <summary>
-        /// How the loaded LBD should be tiled. Set in inspector.
-        /// </summary>
-        public LegacyTileMode Mode;
-
-        public LBDReaderSystem LBDReader;
-
-        /// <summary>
-        /// The width of the LBD tiling. LBD 'slabs' will be placed along the X-axis until the counter exceeds this
-        /// value, after which they will be placed along the X-axis on the next Z increment. Set in inspector.
-        /// </summary>
-        public int LBDWidth = 1;
-
-        private bool _loaded = false;
-
-        private Dictionary<TMDObject, Mesh> _cache;
-
-        private const string TILE_PREFAB_PATH = "Prefabs/Entities/LBDTile";
-
-        // the biggest level in the game, STG03 Natural World, uses 54930 individual tiles
-        private const int MAX_POSSIBLE_TILES = 54930;
-
-        private void Awake()
+        public void Update()
         {
-            /*StartCoroutine(loadLbd());*/
-            // load the TIX into memory, then put it into the virtual PSX VRAM
-
-            _cache = new Dictionary<TMDObject, Mesh>(new TMDObjectEqualityComparer());
-        }
-
-        public void Spawn()
-        {
-            loadLBD();
-        }
-
-        private void loadLBD()
-        {
-            var start = DateTime.Now;
-
-            _tix = ResourceManager.Load<TIX>(IOUtil.PathCombine(Application.streamingAssetsPath, TIXFile));
-            LBDReader.UseTIX(_tix);
-
-            // get an array of all of the LBD files in the given directory
-            // TODO: error checking for LBD path
-            string[] lbdFiles = Directory.GetFiles(IOUtil.PathCombine(Application.streamingAssetsPath, LBDFolder),
-                "*.LBD", SearchOption.AllDirectories);
-                
-            _cache.Clear();
-
-            int i = 0;
-            foreach (var file in lbdFiles)
+            foreach (var fm in TileCache.Values)
             {
-                // load the LBD and create GameObjects for its tiles
-                var lbd = ResourceManager.Load<LBD>(file);
-                GameObject lbdObj = LBDReader.CreateLBDTileMap(lbd, _cache);
-
-                // add LBDSlab component for controlling fog/culling
-                LBDSlab slab = lbdObj.AddComponent<LBDSlab>();
-                slab.MeshFog = lbdObj.GetComponentsInChildren<MeshFog>();
-                slab.CullMesh = lbdObj.GetComponentsInChildren<CullMeshOnDistance>();
-                slab.MeshRenderers = lbdObj.GetComponentsInChildren<MeshRenderer>();
-
-                // position the LBD 'slab' based on its tiling mode
-                if (Mode == LegacyTileMode.Horizontal)
-                {
-                    int xPos = i % LBDWidth;
-                    int yPos = i / LBDWidth;
-                    int xMod = 0;
-                    if (yPos % 2 == 1)
-                    {
-                        xMod = 10;
-                    }
-                    lbdObj.transform.position = new Vector3((xPos * 20) - xMod, 0, yPos * 20);
-                    i++;
-                }
-            }
-
-            _loaded = true;
-            var end = DateTime.Now;
-        }
-
-        /*
-        private IEnumerator loadLbd()
-        {
-            yield return new WaitForSeconds(1);
-            
-            // load the TIX into memory, then put it into the virtual PSX VRAM
-            _tix = ResourceManager.Load<TIX>(IOUtil.PathCombine(Application.streamingAssetsPath, TIXFile));
-            PsxVram.LoadVramTix(_tix);
-
-            // get an array of all of the LBD files in the given directory
-            // TODO: error checking for LBD path
-            string[] lbdFiles = Directory.GetFiles(IOUtil.PathCombine(Application.streamingAssetsPath, LBDFolder),
-                "*.LBD", SearchOption.AllDirectories);
-            
-            int i = 0;
-            foreach (var file in lbdFiles)
-            {
-                // load the LBD and create GameObjects for its tiles
-                var lbd = ResourceManager.Load<LBD>(file);
-                GameObject lbdObj = LibLSDUnity.CreateLBDTileMap(lbd);
-
-                // position the LBD 'slab' based on its tiling mode
-                if (Mode == LBDTiling.Regular)
-                {
-                    int xPos = i % LBDWidth;
-                    int yPos = i / LBDWidth;
-                    int xMod = 0;
-                    if (yPos % 2 == 1)
-                    {
-                        xMod = 10;
-                    }
-                    lbdObj.transform.position = new Vector3((xPos * 20) - xMod, 0, yPos * 20);
-                    i++;
-                }
+                fm.Draw();
             }
         }
-        */
     }
 }
