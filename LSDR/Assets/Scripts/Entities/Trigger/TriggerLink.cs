@@ -40,7 +40,13 @@ namespace LSDR.Entities.Trigger
 
 		public void OnDrawGizmos()
 		{
-			
+			var position = transform.position;
+			Gizmos.DrawIcon(position, "TriggerLink.png");
+			Gizmos.color = Color.green;
+			var localScale = transform.localScale;
+			Gizmos.DrawWireCube(position, localScale);
+			Gizmos.color = new Color(0, 1, 0, 0.5f);
+			Gizmos.DrawCube(position, localScale);
 		}
 
 		public override EntityMemento Save() { return new TriggerLinkMemento(this); }

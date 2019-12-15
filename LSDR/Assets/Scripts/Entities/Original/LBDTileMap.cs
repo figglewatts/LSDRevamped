@@ -20,15 +20,13 @@ namespace LSDR.Entities.Original
     /// When given an LBDFolder and a TIX file, it will load all of the LBD files in the folder,
     /// building GameObjects for each of them.
     /// </summary>
+    #if UNITY_EDITOR
+    [ExecuteInEditMode]
+    #endif
     public class LBDTileMap : MonoBehaviour
     {
         public Dictionary<TMDObject, FastMesh> TileCache { get; } =
             new Dictionary<TMDObject, FastMesh>(new TMDObjectEqualityComparer());
-
-        public void Awake()
-        {
-            TileCache.Clear();
-        }
 
         public void Update()
         {

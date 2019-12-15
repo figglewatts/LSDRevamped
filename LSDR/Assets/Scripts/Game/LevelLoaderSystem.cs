@@ -19,7 +19,7 @@ namespace LSDR.Game
         {
             Level level = _serializer.Deserialize<Level>(levelPath);
             LevelEntities entities = level.ToScene(DreamSystem, SettingsSystem);
-            OnLevelLoaded(entities);
+            OnLevelLoaded?.Invoke(entities);
             return entities.gameObject;
         }
     }

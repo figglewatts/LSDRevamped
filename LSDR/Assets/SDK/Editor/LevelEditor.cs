@@ -6,13 +6,16 @@ using System.Linq;
 using libLSD.Formats;
 using LSDR.Dream;
 using LSDR.Entities;
+using LSDR.Game;
 using LSDR.IO;
+using LSDR.IO.ResourceHandlers;
 using Torii.Pooling;
 using Torii.Serialization;
 using Torii.UnityEditor;
 using Torii.Util;
 using UnityEditor;
 using UnityEngine;
+using ResourceManager = Torii.Resource.ResourceManager;
 
 namespace LSDR.SDK
 {
@@ -21,8 +24,8 @@ namespace LSDR.SDK
         private const int POS_PADDING = 5;
         private const int CONTROLS_WIDTH = 50;
         private GameObject _levelObj;
-        private PrefabPool _tilePool;
-        private LBDReaderSystem _lbdReader;
+        private LBDFastMeshSystem _lbdReader;
+        private LevelLoaderSystem _levelLoader;
         private readonly ToriiSerializer _serializer = new ToriiSerializer();
         private bool _showEntireMenu = true;
         private Vector2 _scrollPos;
@@ -39,8 +42,8 @@ namespace LSDR.SDK
             editor.titleContent = new GUIContent("Level");
             editor.CenterOnMainWindow();
 
-            editor._tilePool = AssetDatabase.LoadAssetAtPath<PrefabPool>("Assets/SDK/LBDTilePool.asset");
-            editor._lbdReader = AssetDatabase.LoadAssetAtPath<LBDReaderSystem>("Assets/SDK/LBDReader.asset");
+            editor._lbdReader = AssetDatabase.LoadAssetAtPath<LBDFastMeshSystem>("Assets/SDK/LBDFastMesh.asset");
+            editor._levelLoader = AssetDatabase.LoadAssetAtPath<LevelLoaderSystem>("Assets/SDK/LevelLoader.asset");
 
             editor._entityTypes = getClasses(ENTITY_NAMESPACE);
             
@@ -90,7 +93,13 @@ namespace LSDR.SDK
         }
 
         private void OnDisable() { SceneView.onSceneGUIDelegate -= OnSceneGUI; }
-        private void OnEnable() { SceneView.onSceneGUIDelegate += OnSceneGUI; }
+
+        private void OnEnable()
+        {
+            SceneView.onSceneGUIDelegate += OnSceneGUI;
+            ResourceManager.RegisterHandler(new LBDHandler());
+            ResourceManager.RegisterHandler(new TIXHandler());
+        }
 
         public void OnSceneGUI(SceneView sceneView)
         {
@@ -249,8 +258,7 @@ namespace LSDR.SDK
                 if (!string.IsNullOrEmpty(dream.Level))
                 {
                     string tmapPath = PathUtil.Combine(Application.streamingAssetsPath, dream.Level);
-                    Level level = _serializer.Deserialize<Level>(tmapPath);
-                    loadLevel(level);
+                    _levelObj = _levelLoader.LoadLevel(tmapPath);
                 }
                 else
                 {
@@ -260,16 +268,8 @@ namespace LSDR.SDK
             }
             else
             {
-                Level level = _serializer.Deserialize<Level>(levelPath);
-                loadLevel(level);
+                _levelObj = _levelLoader.LoadLevel(levelPath);
             }
-        }
-
-        private void loadLevel(Level level)
-        {
-            GameObject levelObj = level.ToScene().gameObject;
-            Selection.activeGameObject = levelObj;
-            _levelObj = levelObj;
         }
 
         private void loadLBD(Dream.Dream dream)
@@ -281,53 +281,12 @@ namespace LSDR.SDK
                 DestroyImmediate(existingLBD);
             }
             GameObject lbdObj = new GameObject("LBD");
-            
-            // check to see if tile pool already existed
-            GameObject tilePoolObj = GameObject.Find(_tilePool.Name);
-            if (tilePoolObj != null)
-            {
-                DestroyImmediate(tilePoolObj);
-            }
-            _tilePool.Initialise();
 
             string lbdPath = PathUtil.Combine(Application.streamingAssetsPath, dream.LBDFolder);
-            string[] lbdFiles = Directory.GetFiles(lbdPath, "*.LBD", SearchOption.AllDirectories);
-            for (int i = 0; i < lbdFiles.Length; i++)
-            {
-                var lbdFile = lbdFiles[i];
-                
-                LBD lbd;
-                using (BinaryReader br = new BinaryReader(File.Open(lbdFile, FileMode.Open)))
-                {
-                    lbd = new LBD(br);
-                }
-
-                GameObject tileMap = _lbdReader.CreateLBDTileMap(lbd, new Dictionary<TMDObject, Mesh>());
-                
-                // position the LBD 'slab' based on its tiling mode
-                if (dream.LegacyTileMode == LegacyTileMode.Horizontal)
-                {
-                    int xPos = i % dream.TileWidth;
-                    int yPos = i / dream.TileWidth;
-                    int xMod = 0;
-                    if (yPos % 2 == 1)
-                    {
-                        xMod = 10;
-                    }
-                    tileMap.transform.position = new Vector3((xPos * 20) - xMod, 0, yPos * 20);
-                }
-                
-                tileMap.transform.SetParent(lbdObj.transform);
-            }
+            _lbdReader.LoadLBD(lbdPath, dream.LegacyTileMode, dream.TileWidth);
             
             string tixFilePath = PathUtil.Combine(lbdPath, "TEXA.TIX");
-            TIX tix;
-            using (BinaryReader br = new BinaryReader(File.Open(tixFilePath, FileMode.Open)))
-            {
-                tix = new TIX(br);
-            }
-
-            _lbdReader.UseTIX(tix);
+            _lbdReader.UseTIX(tixFilePath);
         }
         
         private static List<Type> getClasses(string ns)

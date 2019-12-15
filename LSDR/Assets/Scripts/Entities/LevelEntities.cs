@@ -7,6 +7,9 @@ using UnityEngine;
 
 namespace LSDR.Entities
 {
+    #if UNITY_EDITOR
+    [ExecuteInEditMode]
+    #endif
     public class LevelEntities : MonoBehaviour
     {
         public Dictionary<Type, List<BaseEntity>> Entities;

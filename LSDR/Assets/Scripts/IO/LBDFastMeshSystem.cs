@@ -21,16 +21,10 @@ namespace LSDR.IO
 
         [NonSerialized]
         public GameObject[] LBDColliders;
-        
-        private Material[] _materials;
+
         private static readonly int _mainTex = Shader.PropertyToID("_MainTex");
 
         private static int num = 0;
-
-        public void OnEnable()
-        {
-            _materials = new[] {LBDDiffuse, LBDAlpha};
-        }
 
         public void LoadLBD(string lbdFolder, LegacyTileMode tileMode, int lbdWidth)
         {
@@ -196,7 +190,7 @@ namespace LSDR.IO
             }
 
             Mesh m = LibLSDUnity.MeshFromTMDObject(tileObj);
-            FastMesh fm = new FastMesh(m, _materials);
+            FastMesh fm = new FastMesh(m, new [] {LBDDiffuse, LBDAlpha});
             tileCache[tileObj] = fm;
             return fm;
         }
