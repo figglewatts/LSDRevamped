@@ -17,7 +17,7 @@ namespace LSDR.Entities.Dream
 
         public void Spawn()
         {
-            Instantiate(PlayerPrefab, transform.position + new Vector3(0, 0.45f, 0), transform.rotation); 
+            Instantiate(PlayerPrefab, transform.position + new Vector3(0, 0.15f, 0), transform.rotation);
         }
 
         public void OnDrawGizmos()

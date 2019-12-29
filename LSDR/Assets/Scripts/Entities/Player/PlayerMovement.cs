@@ -28,7 +28,7 @@ namespace LSDR.Entities.Player
 		/// </summary>
 		public const float JOYSTICK_MOVE_THRESHOLD = 0.3F;
 
-        private Vector3 _moveDir = Vector3.zero;
+        private Vector3 _moveDir;
         private CharacterController _characterController;
         private CollisionFlags _collisionFlags;
         private bool _previouslyGrounded;
@@ -42,7 +42,9 @@ namespace LSDR.Entities.Player
         // Update is called once per frame
         private void Update()
         {
-            if (!_characterController.isGrounded && _previouslyGrounded)
+	        _moveDir = getInput();
+	        
+	        if (!_characterController.isGrounded && _previouslyGrounded)
             {
                 _moveDir.y = 0f;
             }
@@ -52,12 +54,9 @@ namespace LSDR.Entities.Player
 
         private void FixedUpdate()
         {
-            // get movement direction from input
-	        Vector2 moveDirection = getInput();
-            
-            // apply this movement direction to the forward and right vectors of the player
+	        // apply this movement direction to the forward and right vectors of the player
             var trans = transform;
-            Vector3 desiredMove = trans.forward*moveDirection.y + trans.right*moveDirection.x;
+            Vector3 desiredMove = trans.forward*_moveDir.y + trans.right*_moveDir.x;
 
             // get a normal for the surface that is being touched (if any) to move along it
             RaycastHit hitInfo;
@@ -66,17 +65,16 @@ namespace LSDR.Entities.Player
             desiredMove = Vector3.ProjectOnPlane(desiredMove, hitInfo.normal).normalized;
 
             // modify the current movement direction to include these new calculated values
-            _moveDir.x = desiredMove.x*MovementSpeed;
-            _moveDir.z = desiredMove.z*MovementSpeed;
+            Vector3 moveDirection = new Vector3(desiredMove.x*MovementSpeed, 0, desiredMove.z*MovementSpeed);
 
             // if we're not grounded we want to apply gravity to this movement direction, for falling
             if (!_characterController.isGrounded)
             {
-				_moveDir += Physics.gravity * GravityMultiplier * Time.fixedDeltaTime;
+				moveDirection += Physics.gravity * (GravityMultiplier * Time.fixedDeltaTime);
 			}
             
             // move the character controller
-            _collisionFlags = _characterController.Move(_moveDir*Time.fixedDeltaTime);
+            _collisionFlags = _characterController.Move(moveDirection*Time.fixedDeltaTime);
         }
 
         /// <summary>
@@ -87,13 +85,12 @@ namespace LSDR.Entities.Player
         {
 			// if we can't control the player return zero for input direction
 	        if (!Settings.CanControlPlayer) return Vector2.zero;
-
 	        // get vector axes from input system
             float moveDirFrontBack = ControlScheme.Current.Actions.MoveY;
 	        float moveDirLeftRight = ControlScheme.Current.FpsControls ? ControlScheme.Current.Actions.MoveX : 0f;
             Vector2 input = new Vector2(moveDirLeftRight, moveDirFrontBack);
 
-            // normalize input if it exceeds 1 in combined length (for diagonal movement):
+            // normalize input if it exceeds 1 in combined length (for diagonal movement)
             if (input.sqrMagnitude > 1)
             {
                 input.Normalize();

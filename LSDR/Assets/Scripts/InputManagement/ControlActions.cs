@@ -58,7 +58,8 @@ namespace LSDR.InputManagement
             LookY = CreateOneAxisPlayerAction(LookDown, LookUp);
             Move = CreateTwoAxisPlayerAction(Left, Right, Backward, Forward);
 
-            Move.StateThreshold = 0.5f;
+            MoveX.StateThreshold = 0.5f;
+            MoveY.StateThreshold = 0.5f;
 
             ListenOptions = DefaultListenOptions;
         }

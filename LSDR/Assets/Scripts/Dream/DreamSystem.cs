@@ -1,10 +1,12 @@
 using System;
 using System.Collections;
 using System.Linq;
+using InControl;
 using LSDR.Entities;
 using LSDR.Entities.Dream;
 using LSDR.Entities.Original;
 using LSDR.Game;
+using LSDR.InputManagement;
 using LSDR.IO;
 using LSDR.UI;
 using LSDR.Util;
@@ -30,23 +32,27 @@ namespace LSDR.Dream
         public JournalLoaderSystem JournalLoader;
         public LevelLoaderSystem LevelLoader;
         public LBDFastMeshSystem LBDLoader;
+        public ControlSchemeLoaderSystem Control;
         public SettingsSystem SettingsSystem;
         public AudioClip LinkSound;
         public PrefabPool LBDTilePool;
 
         private readonly ToriiSerializer _serializer = new ToriiSerializer();
+        
+        [NonSerialized]
         private string _forcedSpawnID;
 
         public void OnEnable() { LevelLoader.OnLevelLoaded += spawnPlayerInDream; }
 
         public void BeginDream()
         {
-            // TODO: spawn in first dream if it's the first day
             // TODO: spawn in first spawn point if it's the first day
-            
-            //var randomDream = JournalLoader.Current.GetLinkableDream();
+            _forcedSpawnID = null;
+
+            // TODO: spawn in dream based on graph if not first day
+            string dreamPath = true ? JournalLoader.Current.GetFirstDream() : JournalLoader.Current.GetLinkableDream();
             Dream dream = _serializer.Deserialize<Dream>(IOUtil.PathCombine(Application.streamingAssetsPath,
-                "levels/Original Dreams/Kyoto.json"));
+                dreamPath));
             BeginDream(dream);
         }
 
@@ -103,12 +109,25 @@ namespace LSDR.Dream
 
         public IEnumerator LoadDream(Dream dream)
         {
+            Debug.Log($"Loading dream '{dream.Name}'");
+
+            string currentScene = SceneManager.GetActiveScene().name;
+            
             // load the scene in the background and wait until it's done
-            var asyncLoad = SceneManager.LoadSceneAsync(DreamScene.ScenePath);
+            var asyncLoad = SceneManager.LoadSceneAsync(DreamScene.ScenePath, LoadSceneMode.Additive);
+            //asyncLoad.allowSceneActivation = false;
             while (!asyncLoad.isDone)
             {
                 yield return null;
             }
+
+            var asyncUnload = SceneManager.UnloadSceneAsync(currentScene);
+            while (!asyncUnload.isDone)
+            {
+                yield return null;
+            }
+
+            SceneManager.SetActiveScene(SceneManager.GetSceneByName(DreamScene.ScenePath));
 
             // then instantiate the LBD if it has one
             if (dream.Type == DreamType.Legacy)
@@ -123,7 +142,7 @@ namespace LSDR.Dream
                 string levelPath = PathUtil.Combine(Application.streamingAssetsPath, dream.Level);
                 LevelLoader.LoadLevel(levelPath);
             }
-            
+
             ApplyEnvironment(dream.RandomEnvironment());
 
             SettingsSystem.CanControlPlayer = true;
