@@ -172,7 +172,8 @@ namespace LSDR.Dream
             
             // TODO: handle the first day spawn
             
-            RandUtil.RandomListElement(entities.OfType<SpawnPoint>()).Spawn();
+            // make sure we choose a spawn point that isn't a tunnel entrance
+            RandUtil.RandomListElement(entities.OfType<SpawnPoint>().Where(s => !s.TunnelEntrance)).Spawn();
         }
     }
 }

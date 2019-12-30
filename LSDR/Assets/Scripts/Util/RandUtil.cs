@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using Torii.Util;
 using UnityEngine;
@@ -123,5 +124,11 @@ namespace LSDR.Util
 		/// <typeparam name="T">The type opf the objects contained within the list.</typeparam>
 		/// <returns>The random choice.</returns>
 		public static T RandomListElement<T>(List<T> list) { return list[Int(list.Count)]; }
+
+		public static T RandomListElement<T>(IEnumerable<T> list)
+		{
+			IEnumerable<T> enumerable = list.ToList();
+			return enumerable.ToList()[Int(enumerable.Count())];
+		}
 	}
 }

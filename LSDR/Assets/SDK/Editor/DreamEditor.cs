@@ -127,6 +127,23 @@ namespace LSDR.SDK
                         _dream.LBDFolder, "Choose an LBD folder.");
                 }
 
+                // only enable the button if the dream level has a value
+                using (new EditorGUI.DisabledScope(string.IsNullOrWhiteSpace(_dream.Level)))
+                {
+                    EditorGUILayout.BeginHorizontal();
+                    GUILayout.FlexibleSpace();
+                    if (GUILayout.Button("Edit level", GUILayout.Width(200)))
+                    {
+                        var editor = LevelEditor.Create();
+                        editor.EditLevel(_dream.Level);
+                        if (_dream.Type == DreamType.Legacy)
+                        {
+                            editor.LoadLBD(_dream);
+                        }
+                    }
+                    EditorGUILayout.EndHorizontal();
+                }
+
                 EditorGUI.indentLevel--;
                 EditorGUILayout.Separator();
 

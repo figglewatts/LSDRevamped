@@ -2,6 +2,7 @@ using System;
 using LSDR.Dream;
 using LSDR.Entities.Dream;
 using LSDR.Game;
+using LSDR.SDK;
 using ProtoBuf;
 using UnityEngine;
 
@@ -29,6 +30,7 @@ namespace LSDR.Entities
             transform.position = memento.Position;
             transform.rotation = memento.Rotation;
             transform.localScale = memento.Scale;
+            gameObject.AddComponent<SnapToGrid>();
         }
 
         public void OnDrawGizmosSelected()

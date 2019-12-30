@@ -36,7 +36,7 @@ namespace LSDR.SDK
         private const string ENTITY_NAMESPACE = "LSDR.Entities";
 
         [MenuItem("LSDR/Create level")]
-        public static void Create()
+        public static LevelEditor Create()
         {
             LevelEditor editor = (LevelEditor)GetWindow(typeof(LevelEditor));
             editor.titleContent = new GUIContent("Level");
@@ -54,6 +54,7 @@ namespace LSDR.SDK
             }
 
             editor.Show();
+            return editor;
         }
 
         public void OnGUI()
@@ -155,6 +156,57 @@ namespace LSDR.SDK
             sceneView.Repaint();
         }
 
+        public void EditLevel(string levelPath)
+        {
+            GameObject existingLevel = GameObject.Find("Level");
+            if (existingLevel != null)
+            {
+                DestroyImmediate(existingLevel);
+            }
+
+            levelPath = PathUtil.Combine(Application.streamingAssetsPath, levelPath);
+
+            if (Path.GetExtension(levelPath) == ".json")
+            {
+                Dream.Dream dream = _serializer.Deserialize<Dream.Dream>(levelPath);
+                if (dream.Type == DreamType.Legacy)
+                {
+                    LoadLBD(dream);
+                }
+
+                if (!string.IsNullOrEmpty(dream.Level))
+                {
+                    string tmapPath = PathUtil.Combine(Application.streamingAssetsPath, dream.Level);
+                    _levelObj = _levelLoader.LoadLevel(tmapPath);
+                }
+                else
+                {
+                    newLevel();
+                }
+            }
+            else
+            {
+                _levelObj = _levelLoader.LoadLevel(levelPath);
+            }
+        }
+        
+        public void LoadLBD(Dream.Dream dream)
+        {
+            // check to see if there is already an LBD loaded
+            GameObject existingLBD = GameObject.Find("LBD Renderer");
+            if (existingLBD != null)
+            {
+                DestroyImmediate(existingLBD);
+                DestroyImmediate(GameObject.Find("LBD Colliders"));
+            }
+
+            string lbdPath = PathUtil.Combine(Application.streamingAssetsPath, dream.LBDFolder);
+            _lbdReader.LoadLBD(lbdPath, dream.LegacyTileMode, dream.TileWidth);
+            
+            string tixFilePath = PathUtil.Combine(lbdPath, "TEXA.TIX");
+            _lbdReader.UseTIX(tixFilePath);
+        }
+
         private void handlePlaceEntity(SceneView sceneView)
         {
             var controlID = GUIUtility.GetControlID(GetHashCode(), FocusType.Passive);
@@ -243,52 +295,9 @@ namespace LSDR.SDK
                 new[] {"Level files", "tmap,json"}, null);
             if (levelPath == null) return;
             
-            DestroyImmediate(existingLevel);
-
-            levelPath = PathUtil.Combine(Application.streamingAssetsPath, levelPath);
-
-            if (Path.GetExtension(levelPath) == ".json")
-            {
-                Dream.Dream dream = _serializer.Deserialize<Dream.Dream>(levelPath);
-                if (dream.Type == DreamType.Legacy)
-                {
-                    loadLBD(dream);
-                }
-
-                if (!string.IsNullOrEmpty(dream.Level))
-                {
-                    string tmapPath = PathUtil.Combine(Application.streamingAssetsPath, dream.Level);
-                    _levelObj = _levelLoader.LoadLevel(tmapPath);
-                }
-                else
-                {
-                    newLevel();
-                }
-                
-            }
-            else
-            {
-                _levelObj = _levelLoader.LoadLevel(levelPath);
-            }
+            EditLevel(levelPath);
         }
 
-        private void loadLBD(Dream.Dream dream)
-        {
-            // create a parent object for the LBD map -- destroy one if it already existed
-            GameObject existingLBD = GameObject.Find("LBD");
-            if (existingLBD != null)
-            {
-                DestroyImmediate(existingLBD);
-            }
-            GameObject lbdObj = new GameObject("LBD");
-
-            string lbdPath = PathUtil.Combine(Application.streamingAssetsPath, dream.LBDFolder);
-            _lbdReader.LoadLBD(lbdPath, dream.LegacyTileMode, dream.TileWidth);
-            
-            string tixFilePath = PathUtil.Combine(lbdPath, "TEXA.TIX");
-            _lbdReader.UseTIX(tixFilePath);
-        }
-        
         private static List<Type> getClasses(string ns)
         {
             var asm = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a =>

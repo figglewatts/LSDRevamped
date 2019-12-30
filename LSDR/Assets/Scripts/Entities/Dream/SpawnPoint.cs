@@ -9,6 +9,7 @@ namespace LSDR.Entities.Dream
     public class SpawnPoint : BaseEntity
     {
         public bool DayOneSpawn;
+        public bool TunnelEntrance;
         
         [NonSerialized]
         public GameObject PlayerPrefab;
@@ -35,6 +36,7 @@ namespace LSDR.Entities.Dream
 
             var spawnPointMemento = (SpawnPointMemento)memento;
             DayOneSpawn = spawnPointMemento.DayOneSpawn;
+            TunnelEntrance = spawnPointMemento.TunnelEntrance;
             entities.Register(this);
         }
     }
@@ -43,8 +45,14 @@ namespace LSDR.Entities.Dream
     public class SpawnPointMemento : EntityMemento
     {
         public bool DayOneSpawn;
+        public bool TunnelEntrance;
 
         protected override Type EntityType => typeof(SpawnPoint);
-        public SpawnPointMemento(SpawnPoint state) : base(state) { DayOneSpawn = state.DayOneSpawn; }
+
+        public SpawnPointMemento(SpawnPoint state) : base(state)
+        {
+            DayOneSpawn = state.DayOneSpawn;
+            TunnelEntrance = state.TunnelEntrance;
+        }
     }
 }
