@@ -11,7 +11,7 @@ namespace LSDR.SDK
 {
     public class JournalEditor : EditorWindow
     {
-        private DreamJournal _journal;
+        public DreamJournal _journal;
         private Vector2 _scrollPos;
         private bool _showEntireMenu = true;
         private ToriiSerializer _serializer;
@@ -87,6 +87,12 @@ namespace LSDR.SDK
                 
                 EditorGUILayout.LabelField("Journal", EditorStyles.boldLabel);
                 EditorGUI.indentLevel++;
+
+                Rect graphSpawnMapRect = EditorGUI.IndentedRect(EditorGUILayout.GetControlRect(true));
+                GraphSpawnMapDrawer.OnGUI(graphSpawnMapRect, _journal.GraphSpawnMap,
+                    new GUIContent("Graph spawn map",
+                        "The mapping of which graph squares spawn the player into what dreams."));
+                
                 EditorGUILayout.BeginHorizontal();
                 EditorGUILayout.LabelField(new GUIContent("Linkable dreams", 
                     "The pool of dreams we can get to when randomly linking"));
