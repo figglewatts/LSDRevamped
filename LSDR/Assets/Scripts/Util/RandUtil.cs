@@ -12,6 +12,7 @@ namespace LSDR.Util
 	/// <summary>
 	/// Utility functions for generating random numbers.
 	/// TODO: Refactor RandUtil to not be static, as will help for determinism of random numbers?
+	/// TODO: Put in Torii
 	/// </summary>
 	public static class RandUtil
 	{
@@ -129,6 +130,12 @@ namespace LSDR.Util
 		{
 			IEnumerable<T> enumerable = list.ToList();
 			return enumerable.ToList()[Int(enumerable.Count())];
+		}
+
+		public static T RandomEnum<T>()
+		{
+			var v = Enum.GetValues(typeof(T));
+			return (T)v.GetValue(_rand.Next(v.Length));
 		}
 	}
 }

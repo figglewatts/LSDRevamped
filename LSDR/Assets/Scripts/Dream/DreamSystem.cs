@@ -36,8 +36,21 @@ namespace LSDR.Dream
         public SettingsSystem SettingsSystem;
         public AudioClip LinkSound;
         public PrefabPool LBDTilePool;
+        public Dream CurrentDream { get; private set; }
+
+        public TextureSet TextureSet
+        {
+            get { return _textureSet; }
+            set
+            {
+                _textureSet = value;
+                ChangeTextureSet(value);
+            }
+        }
 
         private readonly ToriiSerializer _serializer = new ToriiSerializer();
+
+        private TextureSet _textureSet;
         
         [NonSerialized]
         private string _forcedSpawnID;
@@ -48,6 +61,9 @@ namespace LSDR.Dream
         {
             // TODO: spawn in first spawn point if it's the first day
             _forcedSpawnID = null;
+            
+            // TODO: choose texture set randomly based on which day we're on
+            TextureSet = RandUtil.RandomEnum<TextureSet>();
 
             // TODO: spawn in dream based on graph if not first day
             string dreamPath = true ? JournalLoader.Current.GetFirstDream() : JournalLoader.Current.GetLinkableDream();
@@ -59,6 +75,13 @@ namespace LSDR.Dream
         public void BeginDream(Dream dream)
         {
             Fader.FadeIn(Color.black, 3, () => Coroutines.Instance.StartCoroutine(LoadDream(dream)));
+            CurrentDream = dream;
+        }
+
+        public void EndDream()
+        {
+            // TODO: only set to null when fade completes
+            CurrentDream = null;
         }
 
         public void ApplyEnvironment(DreamEnvironment environment)
@@ -85,6 +108,8 @@ namespace LSDR.Dream
             }
 
             LBDTilePool.ReturnAll();
+            
+            // TODO: occasionally switch texture sets when transitioning
 
             Fader.FadeIn(fadeCol, 1F, () =>
             {
@@ -133,7 +158,7 @@ namespace LSDR.Dream
             if (dream.Type == DreamType.Legacy)
             {
                 LBDLoader.LoadLBD(dream.LBDFolder, dream.LegacyTileMode, dream.TileWidth);
-                LBDLoader.UseTIX(dream.LBDFolder + "/TEXA.TIX"); // TODO: Texture sets for LBDs
+                LBDLoader.UseTIX(getTIXPathFromTextureSet(dream, TextureSet));
             }
 
             // load the manifest if it has one
@@ -150,6 +175,45 @@ namespace LSDR.Dream
             // TODO: disable/reenable pausing when transitioning
 
             Fader.FadeOut(1F);
+        }
+
+        public void ChangeTextureSet(TextureSet textureSet)
+        {
+            // TODO: change texture set on non LBD materials
+            // TODO: glitch texture set
+            if (CurrentDream != null)
+            {
+                LBDLoader.UseTIX(getTIXPathFromTextureSet(CurrentDream, textureSet));
+            }
+        }
+
+        private string getTIXPathFromTextureSet(Dream dream, TextureSet textureSet)
+        {
+            if (string.IsNullOrWhiteSpace(dream.LBDFolder))
+            {
+                Debug.LogError("Could not get TIX path from dream, dream did not have LBD folder");
+                return null;
+            }
+            
+            switch (textureSet)
+            {
+                case TextureSet.Kanji:
+                {
+                    return PathUtil.Combine(dream.LBDFolder, "TEXB.TIX");
+                }
+                case TextureSet.Downer:
+                {
+                    return PathUtil.Combine(dream.LBDFolder, "TEXC.TIX");
+                }
+                case TextureSet.Upper:
+                {
+                    return PathUtil.Combine(dream.LBDFolder, "TEXD.TIX");
+                }
+                default:
+                {
+                    return PathUtil.Combine(dream.LBDFolder, "TEXA.TIX");
+                }
+            }
         }
 
         private void spawnPlayerInDream(LevelEntities entities)
