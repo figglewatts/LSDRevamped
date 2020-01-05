@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using LSDR.Dream;
 using Torii.Console;
 using Torii.Serialization;
@@ -8,21 +9,15 @@ namespace LSDR.Game
 {
     public class TestScript : MonoBehaviour
     {
-        [Console]
-        public string TestProperty { get; set; }
+        public DreamSystem DreamSystem;
 
-        [Console]
-        public int TestVar;
+        public void Start() { StartCoroutine(EndAfterTime()); }
 
-        public bool SubtractiveFog;
-
-        public int TextureSet;
-
-
-        public void Update()
+        private IEnumerator EndAfterTime()
         {
-            Shader.SetGlobalInt("_SubtractiveFog", SubtractiveFog ? 1 : 0);
-            Shader.SetGlobalInt("_TextureSet", TextureSet);
+            yield return new WaitForSeconds(15f);
+            
+            DreamSystem.EndDream();
         }
     }
 }

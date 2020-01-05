@@ -39,6 +39,17 @@ namespace LSDR.UI
             _views.Push(view);
         }
 
+        public void PushWithoutTransition(GameObject view)
+        {
+            if (_views.Count >= MaxViews)
+            {
+                return;
+            }
+            Current.SetActive(false);
+            view.SetActive(true);
+            _views.Push(view);
+        }
+
         public void Pop()
         {
             if (_views.Count == 1)

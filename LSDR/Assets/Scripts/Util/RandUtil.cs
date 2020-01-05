@@ -137,5 +137,9 @@ namespace LSDR.Util
 			var v = Enum.GetValues(typeof(T));
 			return (T)v.GetValue(_rand.Next(v.Length));
 		}
+
+		public static T From<T>(params T[] list) { return RandomArrayElement(list); }
+
+		public static bool OneIn(float chance) { return Float(chance) < 1f / chance; }
 	}
 }

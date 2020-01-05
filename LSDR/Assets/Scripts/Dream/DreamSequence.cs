@@ -13,16 +13,18 @@ namespace LSDR.Dream
         /// <summary>
         /// The list of visited dreams this day.
         /// </summary>
-        public List<Dream> Visited = new List<Dream>();
+        public readonly List<Dream> Visited = new List<Dream>();
 
         /// <summary>
         /// The total upper score across all of the visited dreams.
         /// </summary>
+        [ProtoIgnore]
         public int UpperScore { get { return Visited.Sum(d => d.Upperness); } }
         
         /// <summary>
         /// The total dynamic score across all of the visited dreams.
         /// </summary>
+        [ProtoIgnore]
         public int DynamicScore { get { return Visited.Sum(d => d.Dynamicness); } }
     }
 }

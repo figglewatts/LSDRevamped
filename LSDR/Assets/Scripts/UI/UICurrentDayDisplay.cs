@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using LSDR.Entities.Dream;
+using LSDR.Game;
 
 namespace LSDR.UI
 {
@@ -8,20 +9,18 @@ namespace LSDR.UI
 	public class UICurrentDayDisplay : MonoBehaviour
 	{
 		public Text DayTextElement;
+		public GameSaveSystem GameSave;
 
 		public void Start()
 		{
-			SetDayText(DreamDirector.CurrentDay);
+			SetDayText(GameSave.CurrentJournalSave.DayNumber);
 		}
 
 		public void OnEnable()
 		{
-			SetDayText(DreamDirector.CurrentDay);
+			SetDayText(GameSave.CurrentJournalSave.DayNumber);
 		}
 
-		private void SetDayText(int dayNumber)
-		{
-			DayTextElement.text = "Day " + dayNumber;
-		}
+		private void SetDayText(int dayNumber) { DayTextElement.text = $"Day {dayNumber:000}"; }
 	}
 }
