@@ -7222,7 +7222,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1020737224}
-  - component: {fileID: 1020737225}
   m_Layer: 5
   m_Name: GraphSquareContainer
   m_TagString: Untagged
@@ -7248,26 +7247,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!223 &1020737225
-Canvas:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1020737223}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 2
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 1
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 0
-  m_OverridePixelPerfect: 1
-  m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 25
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
-  m_TargetDisplay: 0
 --- !u!1 &1032191495
 GameObject:
   m_ObjectHideFlags: 0
@@ -10032,6 +10011,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DayTextElement: {fileID: 1229652000}
   GameSave: {fileID: 11400000, guid: dc1612e2640a30c4491ae5d369fea962, type: 2}
+  TextColA: {r: 0.78, g: 0.553, b: 0.635, a: 1}
+  TextColB: {r: 0.533, g: 0.498, b: 0.773, a: 1}
+  TextColC: {r: 0.431, g: 0.8, b: 0.518, a: 1}
+  TextColD: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &1229652003
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17276,8 +17259,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc716b2d055a6404b837f8bba0409d65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MainMenu: {fileID: 2096262376}
-  GraphSquareContainer: {fileID: 1020737224}
+  GraphSquareContainer: {fileID: 539627181}
+  GameSave: {fileID: 11400000, guid: dc1612e2640a30c4491ae5d369fea962, type: 2}
 --- !u!1 &1975570820
 GameObject:
   m_ObjectHideFlags: 0
@@ -18254,7 +18237,7 @@ Canvas:
   m_RenderMode: 1
   m_Camera: {fileID: 1060181005}
   m_PlaneDistance: 100
-  m_PixelPerfect: 1
+  m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0

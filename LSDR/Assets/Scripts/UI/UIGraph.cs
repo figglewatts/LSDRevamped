@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using LSDR.Dream;
 using LSDR.Entities.Dream;
+using LSDR.Game;
 using UnityEngine;
 
 namespace LSDR.UI
@@ -10,8 +12,8 @@ namespace LSDR.UI
 	/// </summary>
 	public class UIGraph : MonoBehaviour
 	{
-		public UIMainMenu MainMenu;
 		public Transform GraphSquareContainer;
+		public GameSaveSystem GameSave;
 
 		private GameObject _graphSquarePrefab;
 		private List<Vector2> _squaresAlreadyInstantiated;
@@ -32,21 +34,25 @@ namespace LSDR.UI
 			_instantiatedObjects.Clear();
 		
 			_squaresAlreadyInstantiated.Clear();
-			for (int i = 0; i < DreamDirector.GraphSquares.Count; i++)
+			var coords = getGraphCoords();
+			for (int i = 0; i < coords.Length; i++)
 			{
-				Vector2 square = DreamDirector.GraphSquares[i];
-				InstantiateGraphSquare(square, i == DreamDirector.GraphSquares.Count - 1);
-				_squaresAlreadyInstantiated.Add(square);
+				bool mostRecent = i == coords.Length - 1;
+				InstantiateGraphSquare(coords[i], mostRecent);
+				_squaresAlreadyInstantiated.Add(coords[i]);
 			}
 		}
 
-		public void GoBackButtonPressed()
+		private Vector2[] getGraphCoords()
 		{
-			Fader.FadeIn(Color.black, 0.5F, () =>
+			Vector2[] coords = new Vector2[GameSave.CurrentJournalSave.SequenceData.Count];
+			for(int i = 0; i < GameSave.CurrentJournalSave.SequenceData.Count; i++)
 			{
-				MainMenu.ChangeMenuState(UIMainMenu.MenuState.MAIN);
-				Fader.FadeOut(0.5F);
-			});
+				var seq = GameSave.CurrentJournalSave.SequenceData[i];
+				coords[i] = new Vector2(seq.DynamicScore, seq.UpperScore);
+			}
+
+			return coords;
 		}
 
 		private void InstantiateGraphSquare(Vector2 pos, bool mostRecent)
