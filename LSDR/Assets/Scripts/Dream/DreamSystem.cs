@@ -37,6 +37,7 @@ namespace LSDR.Dream
         public AudioClip LinkSound;
         public PrefabPool LBDTilePool;
         public Dream CurrentDream { get; private set; }
+        public DreamSequence CurrentSequence { get; private set; }
 
         public TextureSet TextureSet
         {
@@ -76,6 +77,8 @@ namespace LSDR.Dream
         {
             Fader.FadeIn(Color.black, 3, () => Coroutines.Instance.StartCoroutine(LoadDream(dream)));
             CurrentDream = dream;
+            CurrentSequence = new DreamSequence();
+            CurrentSequence.Visited.Add(dream);
         }
 
         public void EndDream()
@@ -108,6 +111,8 @@ namespace LSDR.Dream
             }
 
             LBDTilePool.ReturnAll();
+            
+            CurrentSequence.Visited.Add(dream);
             
             // TODO: occasionally switch texture sets when transitioning
 
