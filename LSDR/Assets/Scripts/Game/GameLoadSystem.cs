@@ -31,6 +31,8 @@ namespace LSDR.Game
 			TResourceManager.RegisterHandler(new Texture2DHandler());
 			TResourceManager.RegisterHandler(new MaterialHandler());
 
+			Screenshotter.Instance.Init();
+
 			Shader.SetGlobalFloat("_FogStep", 0.08F);
 			Shader.SetGlobalFloat("AffineIntensity", 0.5F);
 
