@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using LSDR.Entities.Dream;
+﻿using LSDR.Dream;
+using UnityEngine;
 using LSDR.Game;
 
 namespace LSDR.Entities.Player
@@ -10,9 +10,8 @@ namespace LSDR.Entities.Player
 	[RequireComponent(typeof(CharacterController))]
 	public class PlayerFallDetector : MonoBehaviour
 	{
-		// TODO: refactor PlayerFallDetector to fix falling, as well as during DreamDirector refactor
-
 		public SettingsSystem Settings;
+		public DreamSystem DreamSystem;
 		
 		[SerializeField]
 		private Camera _targetCamera;
@@ -48,7 +47,7 @@ namespace LSDR.Entities.Player
 				Settings.CanControlPlayer = false;
 				_lookUpRotation = Quaternion.Euler(MAX_X_ROTATION, _targetCamera.transform.rotation.eulerAngles.y,
 					_targetCamera.transform.rotation.eulerAngles.z);
-				DreamDirector.EndDreamFall();
+				DreamSystem.EndDream(fromFall: true);
 				_canRotateCamera = true;
 			}
 

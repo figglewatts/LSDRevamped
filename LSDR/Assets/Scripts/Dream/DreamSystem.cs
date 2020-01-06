@@ -59,6 +59,9 @@ namespace LSDR.Dream
         private const float CHANCE_TO_SWITCH_TEXTURES_WHEN_LINKING = 6;
         private const float MIN_SECONDS_IN_DREAM = 300;
         private const float MAX_SECONDS_IN_DREAM = 600;
+        private const int FALLING_UPPER_PENALTY = -3;
+        private const float FADE_OUT_SECS_REGULAR = 5;
+        private const float FADE_OUT_SECS_FALL = 2.5f;
 
         public TextureSet TextureSet
         {
@@ -107,8 +110,10 @@ namespace LSDR.Dream
             CurrentSequence.Visited.Add(dream);
         }
 
-        public void EndDream()
+        public void EndDream(bool fromFall = false)
         {
+            if (_dreamIsEnding) return;
+            
             _dreamIsEnding = true;
             _canTransition = false;
             
@@ -121,7 +126,13 @@ namespace LSDR.Dream
                 _endDreamTimer = null;
             }
 
-            Fader.FadeIn(Color.black, 5f, () =>
+            // penalise upper score if ending dream from falling
+            if (fromFall)
+            {
+                CurrentSequence.UpperModifier += FALLING_UPPER_PENALTY;
+            }
+
+            Fader.FadeIn(Color.black, fromFall ? FADE_OUT_SECS_FALL : FADE_OUT_SECS_REGULAR, () =>
             {
                 CurrentDream = null;
                 GameSave.CurrentJournalSave.SequenceData.Add(CurrentSequence);
