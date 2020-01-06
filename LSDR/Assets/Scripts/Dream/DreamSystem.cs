@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using InControl;
 using LSDR.Entities;
@@ -42,11 +43,22 @@ namespace LSDR.Dream
         public DreamSequence CurrentSequence { get; private set; }
         public ToriiEvent OnReturnToTitle;
 
+        [NonSerialized]
         private bool _dreamIsEnding = false;
+        
+        [NonSerialized]
         private bool _canTransition = true;
+        
+        [NonSerialized]
+        private bool _currentlyTransitioning = false;
+        
+        [NonSerialized]
+        private Coroutine _endDreamTimer;
 
         // one in every 6 links switches texture sets
         private const float CHANCE_TO_SWITCH_TEXTURES_WHEN_LINKING = 6;
+        private const float MIN_SECONDS_IN_DREAM = 300;
+        private const float MAX_SECONDS_IN_DREAM = 600;
 
         public TextureSet TextureSet
         {
@@ -69,14 +81,12 @@ namespace LSDR.Dream
 
         public void BeginDream()
         {
-            _forcedSpawnID = null;
-            _canTransition = true;
-            
             TextureSet = randomTextureSetFromDayNumber(GameSave.CurrentJournalSave.DayNumber);
-            
+
             string dreamPath = GameSave.CurrentJournalSave.DayNumber == 1
                 ? JournalLoader.Current.GetFirstDream()
-                : JournalLoader.Current.GetLinkableDream();
+                : JournalLoader.Current.GetDreamFromGraph(GameSave.CurrentJournalSave.LastGraphX,
+                    GameSave.CurrentJournalSave.LastGraphY);
             Dream dream = _serializer.Deserialize<Dream>(IOUtil.PathCombine(Application.streamingAssetsPath,
                 dreamPath));
             BeginDream(dream);
@@ -84,6 +94,13 @@ namespace LSDR.Dream
 
         public void BeginDream(Dream dream)
         {
+            _forcedSpawnID = null;
+            _canTransition = true;
+
+            // start a timer to end the dream
+            float secondsInDream = RandUtil.Float(MIN_SECONDS_IN_DREAM, MAX_SECONDS_IN_DREAM);
+            _endDreamTimer = Coroutines.Instance.StartCoroutine(EndDreamAfterSeconds(secondsInDream));
+
             Fader.FadeIn(Color.black, 3, () => Coroutines.Instance.StartCoroutine(LoadDream(dream)));
             CurrentDream = dream;
             CurrentSequence = new DreamSequence();
@@ -95,6 +112,15 @@ namespace LSDR.Dream
             _dreamIsEnding = true;
             _canTransition = false;
             
+            Debug.Log("Ending dream");
+
+            // make sure the dream end timer stops
+            if (_endDreamTimer != null)
+            {
+                Coroutines.Instance.StopCoroutine(_endDreamTimer);
+                _endDreamTimer = null;
+            }
+
             Fader.FadeIn(Color.black, 5f, () =>
             {
                 CurrentDream = null;
@@ -103,6 +129,25 @@ namespace LSDR.Dream
                 _dreamIsEnding = false;
                 Coroutines.Instance.StartCoroutine(ReturnToTitle());
             });
+        }
+
+        public IEnumerator EndDreamAfterSeconds(float seconds)
+        {
+            yield return new WaitForSeconds(seconds);
+
+            // don't end the dream if we happen to be linking when the timer expires
+            while (_currentlyTransitioning)
+            {
+                yield return null;
+            }
+
+            // if the dream is already ending (perhaps we fell) then don't end it again
+            if (_dreamIsEnding)
+            {
+                yield break;
+            }
+            
+            EndDream();
         }
 
         public void ApplyEnvironment(DreamEnvironment environment)
@@ -119,6 +164,10 @@ namespace LSDR.Dream
         public void Transition(Color fadeCol, Dream dream, bool playSound = true, string spawnPointID = null)
         {
             if (!_canTransition) return;
+            
+            Debug.Log($"Linking to {dream.Name}");
+
+            _currentlyTransitioning = true;
             
             SettingsSystem.CanControlPlayer = false;
             _forcedSpawnID = spawnPointID;
@@ -220,7 +269,7 @@ namespace LSDR.Dream
             
             // TODO: disable/reenable pausing when transitioning
 
-            Fader.FadeOut(1F);
+            Fader.FadeOut(Color.black, 1F, () => _currentlyTransitioning = false);
         }
 
         public void ApplyTextureSet(TextureSet textureSet)
@@ -296,12 +345,19 @@ namespace LSDR.Dream
 
         private void spawnPlayerInDream(LevelEntities entities)
         {
+            var allSpawns = entities.OfType<SpawnPoint>();
+            if (!allSpawns.Any())
+            {
+                Debug.LogError("No spawn points in dream! Unable to spawn player.");
+                return;
+            }
+            
             // handle a designated SpawnPoint being used
             if (!string.IsNullOrEmpty(_forcedSpawnID))
             {
                 try
                 {
-                    SpawnPoint spawn = entities.OfType<SpawnPoint>().First(e => e.EntityID == _forcedSpawnID);
+                    SpawnPoint spawn = allSpawns.First(e => e.EntityID == _forcedSpawnID);
                     spawn.Spawn();
                     return;
                 }
@@ -311,20 +367,30 @@ namespace LSDR.Dream
                     throw;
                 }
             }
-            
+
             // spawn in a first day-designated spawn if it's the first day
             if (GameSave.CurrentJournalSave.DayNumber == 1)
             {
-                var firstDaySpawns = entities.OfType<SpawnPoint>().Where(s => s.DayOneSpawn);
+                var firstDaySpawns = allSpawns.Where(s => s.DayOneSpawn).ToList();
                 if (firstDaySpawns.Any())
                 {
                     RandUtil.RandomListElement(firstDaySpawns).Spawn();
                     return;
                 }
             }
-            
+
             // make sure we choose a spawn point that isn't a tunnel entrance
-            RandUtil.RandomListElement(entities.OfType<SpawnPoint>().Where(s => !s.TunnelEntrance)).Spawn();
+            var spawnPoints = allSpawns.Where(s => !s.TunnelEntrance).ToList();
+            if (spawnPoints.Any())
+            {
+                RandUtil.RandomListElement(spawnPoints).Spawn();
+                return;
+            }
+            
+            // otherwise we'll have to spawn on a tunnel entrance... this shouldn't happen so warn the player
+            Debug.LogWarning(
+                "Unable to find a spawn point that isn't a tunnel entrance -- using a tunnel entrance instead.");
+            RandUtil.RandomListElement(allSpawns).Spawn();
         }
     }
 }

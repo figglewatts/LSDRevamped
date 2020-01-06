@@ -49,6 +49,23 @@ namespace LSDR.Dream
         /// <returns>The random dream.</returns>
         public string GetFirstDream() { return RandUtil.RandomListElement(FirstDream); }
 
+        /// <summary>
+        /// Use coordinates on the graph spawn map to get a dream to load.
+        /// </summary>
+        /// <param name="x">X coord on the graph.</param>
+        /// <param name="y">Y coord on the graph.</param>
+        /// <returns>The dream from the graph.</returns>
+        public string GetDreamFromGraph(int x, int y)
+        {
+            string graphDreamPath = GraphSpawnMap.Get(x, y);
+            if (string.IsNullOrWhiteSpace(graphDreamPath))
+            {
+                return GetLinkableDream();
+            }
+
+            return graphDreamPath;
+        }
+
         public DreamJournal()
         {
             LinkableDreams = new List<string>();

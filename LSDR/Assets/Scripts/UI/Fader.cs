@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace LSDR.UI
@@ -128,8 +129,16 @@ namespace LSDR.UI
 
 		private static void AddHandler(FadeCompleteHandler h)
 		{
-			_onFadeComplete += h;
-			_onFadeComplete += () => { _onFadeComplete -= h; }; // remove it after first execution
+			FadeCompleteHandler handler = null;
+			// wrap it up in another handler so we can remove it after it's done
+			handler = () =>
+			{
+				h.Invoke();
+				
+				// remove it after first execution
+				_onFadeComplete -= handler;
+			};
+			_onFadeComplete += handler;
 		}
 	}
 }

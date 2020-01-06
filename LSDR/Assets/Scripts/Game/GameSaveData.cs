@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using LSDR.Dream;
 using ProtoBuf;
 
@@ -27,10 +28,16 @@ namespace LSDR.Game
         [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
         public class JournalSaveData
         {
-            public List<DreamSequence> SequenceData = new List<DreamSequence>();
+            public readonly List<DreamSequence> SequenceData = new List<DreamSequence>();
 
             [ProtoIgnore]
             public int DayNumber => SequenceData.Count + 1;
+
+            [ProtoIgnore]
+            public int LastGraphX => SequenceData.Last().DynamicScore + 9;
+
+            [ProtoIgnore]
+            public int LastGraphY => SequenceData.Last().UpperScore + 9;
         }
     }
 }

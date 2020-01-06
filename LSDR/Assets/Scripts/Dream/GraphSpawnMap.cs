@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Torii.Serialization;
 using UnityEngine;
 
 namespace LSDR.Dream
@@ -28,6 +29,7 @@ namespace LSDR.Dream
         private Texture2D _createdTexture;
         private float _createdOpacity;
         private bool _dirty = true;
+        private ToriiSerializer _serializer = new ToriiSerializer();
 
         public GraphSpawnMap()
         {
@@ -41,6 +43,12 @@ namespace LSDR.Dream
                 }
             }
         }
+
+        public string Get(int x, int y)
+        {
+            int graphIdx = _graph[x, y];
+            return graphIdx == -1 ? null : Dreams[graphIdx].Path;
+;        }
 
         public void Set(int x, int y, int dreamIdx)
         {
