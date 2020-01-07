@@ -16,10 +16,12 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 4000012800558798}
-  - 114: {fileID: 114000011933578244}
+  - component: {fileID: 4000012800558798}
+  - component: {fileID: 23015164890640050}
+  - component: {fileID: 33671796184166968}
+  - component: {fileID: 114172780208297790}
   m_Layer: 0
   m_Name: Greyman
   m_TagString: Untagged
@@ -27,65 +29,37 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!1 &1000010223097660
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 4000011135269974}
-  - 33: {fileID: 33000010524855324}
-  - 23: {fileID: 23000011483842592}
-  m_Layer: 0
-  m_Name: default
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4000011135269974
-Transform:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000010223097660}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: -0.5, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_Children: []
-  m_Father: {fileID: 4000012800558798}
-  m_RootOrder: 0
 --- !u!4 &4000012800558798
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000010086982720}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.8729267, y: 2.12107, z: -3.6184907}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_Children:
-  - {fileID: 4000011135269974}
+  m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!23 &23000011483842592
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!23 &23015164890640050
 MeshRenderer:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000010223097660}
+  m_GameObject: {fileID: 1000010086982720}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: fba0b909e77c3844da8f22add8e4ce0e, type: 2}
-  m_SubsetIndices: 
+  - {fileID: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
   m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
@@ -93,21 +67,23 @@ MeshRenderer:
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_SelectedWireframeHidden: 0
+  m_StitchLightmapSeams: 0
+  m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
+  m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!33 &33000010524855324
+--- !u!33 &33671796184166968
 MeshFilter:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000010223097660}
-  m_Mesh: {fileID: 4300000, guid: 9d423be7db567764297c162d8df1831e, type: 3}
---- !u!114 &114000011933578244
+  m_GameObject: {fileID: 1000010086982720}
+  m_Mesh: {fileID: 0}
+--- !u!114 &114172780208297790
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -115,10 +91,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1000010086982720}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c7a5164e8faa8904ea1288920f6a362e, type: 3}
+  m_Script: {fileID: 11500000, guid: 59cc2324a982497b82fb3facb1d37922, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GreymanColor: {r: 0.19215688, g: 0.20000002, b: 0.25882354, a: 0}
-  GreymanMesh: {fileID: 1000010223097660}
-  _moveSpeed: 0.5
-  _flashDistance: 4
+  GreymanMaterial: {fileID: 2100000, guid: b23087ebf423c274d9376622bf424883, type: 2}
+  MoveSpeed: 0.5
+  FlashDistance: 4
+  DreamSystem: {fileID: 11400000, guid: 7980ba7eb97e9a54a9e6fd65c8a8d2a3, type: 2}

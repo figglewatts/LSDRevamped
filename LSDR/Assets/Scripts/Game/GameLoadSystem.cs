@@ -30,6 +30,7 @@ namespace LSDR.Game
 			TResourceManager.RegisterHandler(new TIXHandler());
 			TResourceManager.RegisterHandler(new Texture2DHandler());
 			TResourceManager.RegisterHandler(new MaterialHandler());
+			TResourceManager.RegisterHandler(new MOMHandler());
 
 			Screenshotter.Instance.Init();
 

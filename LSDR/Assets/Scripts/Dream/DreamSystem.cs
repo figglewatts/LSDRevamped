@@ -42,18 +42,13 @@ namespace LSDR.Dream
         public Dream CurrentDream { get; private set; }
         public DreamSequence CurrentSequence { get; private set; }
         public ToriiEvent OnReturnToTitle;
-
-        [NonSerialized]
-        private bool _dreamIsEnding = false;
+        public ToriiEvent OnLevelLoad;
+        [NonSerialized] public Transform Player;
         
-        [NonSerialized]
-        private bool _canTransition = true;
-        
-        [NonSerialized]
-        private bool _currentlyTransitioning = false;
-        
-        [NonSerialized]
-        private Coroutine _endDreamTimer;
+        [NonSerialized] private bool _dreamIsEnding = false;
+        [NonSerialized] private bool _canTransition = true;
+        [NonSerialized] private bool _currentlyTransitioning = false;
+        [NonSerialized] private Coroutine _endDreamTimer;
 
         // one in every 6 links switches texture sets
         private const float CHANCE_TO_SWITCH_TEXTURES_WHEN_LINKING = 6;
@@ -105,7 +100,6 @@ namespace LSDR.Dream
             _endDreamTimer = Coroutines.Instance.StartCoroutine(EndDreamAfterSeconds(secondsInDream));
 
             Fader.FadeIn(Color.black, 3, () => Coroutines.Instance.StartCoroutine(LoadDream(dream)));
-            CurrentDream = dream;
             CurrentSequence = new DreamSequence();
             CurrentSequence.Visited.Add(dream);
         }
@@ -260,6 +254,8 @@ namespace LSDR.Dream
 
             SceneManager.SetActiveScene(SceneManager.GetSceneByName(DreamScene.ScenePath));
 
+            CurrentDream = dream;
+            
             // then instantiate the LBD if it has one
             if (dream.Type == DreamType.Legacy)
             {
@@ -277,6 +273,8 @@ namespace LSDR.Dream
             ApplyEnvironment(dream.RandomEnvironment());
 
             SettingsSystem.CanControlPlayer = true;
+            
+            OnLevelLoad.Raise();
             
             // TODO: disable/reenable pausing when transitioning
 

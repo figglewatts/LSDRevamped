@@ -52,8 +52,8 @@ namespace LSDR.Game
         public Shader RevampedDiffuse;
         public Shader RevampedAlpha;
 
-        public Material LBDDiffuse;
-        public Material LBDAlpha;
+        public Material[] DiffuseMaterialsInUse;
+        public Material[] AlphaMaterialsInUse;
 
         public JournalLoaderSystem JournalLoader;
         public ControlSchemeLoaderSystem ControlSchemeLoader;
@@ -150,15 +150,13 @@ namespace LSDR.Game
             QualitySettings.SetQualityLevel(Settings.CurrentQualityIndex, true);
 
             // update any shaders
-            if (Settings.UseClassicShaders)
+            foreach (var mat in DiffuseMaterialsInUse)
             {
-                LBDDiffuse.shader = ClassicDiffuse;
-                LBDAlpha.shader = ClassicAlpha;
+                mat.shader = Settings.UseClassicShaders ? ClassicDiffuse : RevampedDiffuse;
             }
-            else
+            foreach (var mat in AlphaMaterialsInUse)
             {
-                LBDDiffuse.shader = RevampedDiffuse;
-                LBDAlpha.shader = RevampedAlpha;
+                mat.shader = Settings.UseClassicShaders ? ClassicAlpha : RevampedAlpha;
             }
         }
         
