@@ -49,6 +49,7 @@ namespace LSDR.Dream
         [NonSerialized] private bool _canTransition = true;
         [NonSerialized] private bool _currentlyTransitioning = false;
         [NonSerialized] private Coroutine _endDreamTimer;
+        [NonSerialized] private string _currentDreamPath;
 
         // one in every 6 links switches texture sets
         private const float CHANCE_TO_SWITCH_TEXTURES_WHEN_LINKING = 6;
@@ -85,6 +86,7 @@ namespace LSDR.Dream
                 ? JournalLoader.Current.GetFirstDream()
                 : JournalLoader.Current.GetDreamFromGraph(GameSave.CurrentJournalSave.LastGraphX,
                     GameSave.CurrentJournalSave.LastGraphY);
+            _currentDreamPath = dreamPath;
             Dream dream = _serializer.Deserialize<Dream>(IOUtil.PathCombine(Application.streamingAssetsPath,
                 dreamPath));
             BeginDream(dream);
@@ -110,7 +112,7 @@ namespace LSDR.Dream
             
             _dreamIsEnding = true;
             _canTransition = false;
-            
+
             Debug.Log("Ending dream");
 
             // make sure the dream end timer stops
@@ -129,6 +131,7 @@ namespace LSDR.Dream
             Fader.FadeIn(Color.black, fromFall ? FADE_OUT_SECS_FALL : FADE_OUT_SECS_REGULAR, () =>
             {
                 CurrentDream = null;
+                _currentDreamPath = null;
                 GameSave.CurrentJournalSave.SequenceData.Add(CurrentSequence);
                 GameSave.Save();
                 _dreamIsEnding = false;
@@ -207,9 +210,12 @@ namespace LSDR.Dream
         {
             if (string.IsNullOrEmpty(dreamPath))
             {
-                dreamPath = JournalLoader.Current.GetLinkableDream();
+                // choose a random dream that isn't the current dream
+                dreamPath = RandUtil.RandomListElement(
+                    JournalLoader.Current.LinkableDreams.Where(d => !d.Equals(_currentDreamPath)));
             }
 
+            _currentDreamPath = dreamPath;
             Dream dream =
                 _serializer.Deserialize<Dream>(IOUtil.PathCombine(Application.streamingAssetsPath, dreamPath));
             Transition(fadeCol, dream, playSound, spawnPointID);

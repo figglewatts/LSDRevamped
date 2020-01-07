@@ -28,11 +28,9 @@ namespace LSDR.Entities.Dream
             
             if (_rollForGreymanCoroutine != null) StopCoroutine(_rollForGreymanCoroutine);
 
-            //_rollForGreymanCoroutine = StartCoroutine(RollForGreyman());
+            _rollForGreymanCoroutine = StartCoroutine(RollForGreyman());
 
             _playerTransform = transform;
-            
-            Spawn();
         }
 
         [ContextMenu("Spawn")]
