@@ -8,7 +8,7 @@ using UnityEngine.Audio;
 
 namespace Torii.Audio
 {
-    public class Audio : MonoSingleton<Audio>
+    public class AudioPlayer : MonoSingleton<AudioPlayer>
     {
         private AudioSource _source;
 

@@ -184,7 +184,7 @@ namespace LSDR.Dream
 
             if (playSound)
             {
-                Audio.Instance.PlayClip(LinkSound, "SFX");
+                AudioPlayer.Instance.PlayClip(LinkSound, "SFX");
             }
 
             LBDTilePool.ReturnAll();
