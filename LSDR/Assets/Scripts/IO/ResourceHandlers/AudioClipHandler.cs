@@ -25,17 +25,12 @@ namespace LSDR.IO.ResourceHandlers
                 AudioClip clip = AudioClip.Create(path, (int)vorbis.TotalSamples, vorbis.Channels, vorbis.SampleRate,
                     false);
                 var readBuffer = new float[vorbis.Channels * vorbis.SampleRate / 5]; // 200ms
-                
-                Debug.Log("Total: " + vorbis.TotalSamples);
-                Debug.Log(vorbis.Channels);
-                Debug.Log(vorbis.SampleRate);
 
-                int cnt;
+                int count;
                 int total = 0;
-                while ((cnt = vorbis.ReadSamples(readBuffer, 0, readBuffer.Length)) > 0)
+                while ((count = vorbis.ReadSamples(readBuffer, 0, readBuffer.Length)) > 0)
                 {
-                    total += cnt;
-                    Debug.Log(total / vorbis.Channels - 1);
+                    total += count;
                     clip.SetData(readBuffer, total / vorbis.Channels - 1);
                 }
                 

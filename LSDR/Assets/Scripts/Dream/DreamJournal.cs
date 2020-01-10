@@ -38,6 +38,11 @@ namespace LSDR.Dream
         public GraphSpawnMap GraphSpawnMap { get; set; }
 
         /// <summary>
+        /// The folder to shuffle music from.
+        /// </summary>
+        public string MusicFolder { get; set; }
+
+        /// <summary>
         /// Get a random linkable dream from the pool of linkable dreams.
         /// </summary>
         /// <returns>The random dream.</returns>
@@ -71,6 +76,7 @@ namespace LSDR.Dream
             LinkableDreams = new List<string>();
             FirstDream = new List<string>();
             GraphSpawnMap = new GraphSpawnMap();
+            MusicFolder = "music/lsdr";
         }
     }
 }

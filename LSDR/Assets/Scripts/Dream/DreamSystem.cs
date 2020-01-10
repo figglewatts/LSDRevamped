@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using InControl;
+using LSDR.Audio;
 using LSDR.Entities;
 using LSDR.Entities.Dream;
 using LSDR.Entities.Original;
@@ -37,12 +38,14 @@ namespace LSDR.Dream
         public GameSaveSystem GameSave;
         public ControlSchemeLoaderSystem Control;
         public SettingsSystem SettingsSystem;
+        public MusicSystem MusicSystem;
         public AudioClip LinkSound;
         public PrefabPool LBDTilePool;
         public Dream CurrentDream { get; private set; }
         public DreamSequence CurrentSequence { get; private set; }
         public ToriiEvent OnReturnToTitle;
         public ToriiEvent OnLevelLoad;
+        [NonSerialized] public AudioSource MusicSource;
         [NonSerialized] public Transform Player;
         
         [NonSerialized] private bool _dreamIsEnding = false;
@@ -184,7 +187,7 @@ namespace LSDR.Dream
 
             if (playSound)
             {
-                AudioPlayer.Instance.PlayClip(LinkSound, "SFX");
+                AudioPlayer.Instance.PlayClip(LinkSound, false, "SFX");
             }
 
             LBDTilePool.ReturnAll();
@@ -224,6 +227,11 @@ namespace LSDR.Dream
         public IEnumerator ReturnToTitle()
         {
             Debug.Log("Loading title screen");
+            
+            if (MusicSource != null && MusicSource.isPlaying)
+            {
+                MusicSource.Stop();
+            }
 
             var asyncLoad = SceneManager.LoadSceneAsync(TitleScene.ScenePath);
             while (!asyncLoad.isDone)
@@ -241,6 +249,11 @@ namespace LSDR.Dream
         public IEnumerator LoadDream(Dream dream)
         {
             Debug.Log($"Loading dream '{dream.Name}'");
+
+            if (MusicSource != null && MusicSource.isPlaying)
+            {
+                MusicSource.Stop();
+            }
 
             string currentScene = SceneManager.GetActiveScene().name;
             
@@ -281,6 +294,9 @@ namespace LSDR.Dream
             SettingsSystem.CanControlPlayer = true;
             
             OnLevelLoad.Raise();
+
+            MusicSource = MusicSystem.PlayRandomSongFromDirectory(PathUtil.Combine(Application.streamingAssetsPath,
+                JournalLoader.Current.MusicFolder));
             
             // TODO: disable/reenable pausing when transitioning
 
@@ -294,6 +310,12 @@ namespace LSDR.Dream
             {
                 LBDLoader.UseTIX(getTIXPathFromTextureSet(CurrentDream, textureSet));
             }
+        }
+
+        public void SkipSong()
+        {
+            MusicSystem.PlayRandomSongFromDirectory(MusicSource,
+                PathUtil.Combine(Application.streamingAssetsPath, JournalLoader.Current.MusicFolder));
         }
 
         private string getTIXPathFromTextureSet(Dream dream, TextureSet textureSet)

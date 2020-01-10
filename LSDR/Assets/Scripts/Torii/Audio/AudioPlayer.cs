@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Torii.Exceptions;
 using Torii.Resource;
@@ -10,22 +11,27 @@ namespace Torii.Audio
 {
     public class AudioPlayer : MonoSingleton<AudioPlayer>
     {
-        private AudioSource _source;
-
+        public int MaxChannels = 10;
+        public int _channelsAvailable => _channels.Count(c => !c.isPlaying);
+        public AudioSource FreeChannel => _channels.First(c => !c.isPlaying);
+        
+        private List<AudioSource> _channels;
+        
         private const string MIXER_PATH = "Mixers/MasterMixer";
 
         public override void Init()
         {
-            ensureAudioSource();
+            _channels = new List<AudioSource>();
+            addChannel();
         }
 
-        public void SetMixerGroup(string mixerGroup)
+        private void setMixerGroup(AudioSource channel, string mixerGroup)
         {
             try
             {
                 AudioMixer mixer = ResourceManager.UnityLoad<AudioMixer>(MIXER_PATH);
                 AudioMixerGroup group = mixer.FindMatchingGroups(mixerGroup).First();
-                _source.outputAudioMixerGroup = group;
+                channel.outputAudioMixerGroup = group;
             }
             catch (ToriiResourceLoadException)
             {
@@ -39,21 +45,45 @@ namespace Torii.Audio
             }
         }
 
-        public void PlayClip(AudioClip clip, string mixerGroup = null)
+        public AudioSource PlayClip(AudioClip clip, bool loop = false, string mixerGroup = null)
         {
-            ensureAudioSource();
-            
-            if (!string.IsNullOrEmpty(mixerGroup))
+            var channel = _channelsAvailable == 0 ? addChannel() : FreeChannel;
+            if (channel == null)
             {
-                SetMixerGroup(mixerGroup);
+                Debug.LogError($"Unable to play clip '{clip.name}', no channels available");
+                return null;
             }
 
-            _source.PlayOneShot(clip);
+            if (!string.IsNullOrEmpty(mixerGroup))
+            {
+                setMixerGroup(channel, mixerGroup);
+            }
+
+            channel.loop = loop;
+
+            if (loop)
+            {
+                channel.clip = clip;
+                channel.Play();
+            }
+            else
+            {
+                channel.PlayOneShot(clip);
+            }
+
+            return channel;
         }
 
-        private void ensureAudioSource()
+        private AudioSource addChannel()
         {
-            _source = gameObject.AddComponent<AudioSource>();
+            if (_channels.Count + 1 > MaxChannels)
+            {
+                return null;
+            }
+
+            AudioSource channel = gameObject.AddComponent<AudioSource>();
+            _channels.Add(channel);
+            return channel;
         }
     }
 }
