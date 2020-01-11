@@ -18,6 +18,7 @@ namespace LSDR.InputManagement
         public PlayerAction LookRight;
         public PlayerAction LookBehind;
         public PlayerAction Run;
+        public PlayerAction Start;
         public PlayerOneAxisAction MoveX;
         public PlayerOneAxisAction MoveY;
         public PlayerOneAxisAction LookX;
@@ -52,6 +53,7 @@ namespace LSDR.InputManagement
             LookRight = CreatePlayerAction("Look right");
             LookBehind = CreatePlayerAction("Look behind / UI Return");
             Run = CreatePlayerAction("Run / UI Select");
+            Start = CreatePlayerAction("Start");
             MoveX = CreateOneAxisPlayerAction(Left, Right);
             MoveY = CreateOneAxisPlayerAction(Backward, Forward);
             LookX = CreateOneAxisPlayerAction(LookLeft, LookRight);
@@ -99,6 +101,9 @@ namespace LSDR.InputManagement
 
             actions.Run.AddDefaultBinding(Key.Space);
             actions.Run.AddDefaultBinding(InputControlType.Action1);
+            
+            actions.Start.AddDefaultBinding(Key.Escape);
+            actions.Start.AddDefaultBinding(InputControlType.Start);
 
             return actions;
         }
@@ -144,6 +149,9 @@ namespace LSDR.InputManagement
 
             actions.Run.AddDefaultBinding(Key.Space);
             actions.Run.AddDefaultBinding(InputControlType.Action1);
+            
+            actions.Start.AddDefaultBinding(Key.Escape);
+            actions.Start.AddDefaultBinding(InputControlType.Start);
 
             return actions;
         }

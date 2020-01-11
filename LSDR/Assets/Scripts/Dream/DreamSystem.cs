@@ -45,6 +45,7 @@ namespace LSDR.Dream
         public DreamSequence CurrentSequence { get; private set; }
         public ToriiEvent OnReturnToTitle;
         public ToriiEvent OnLevelLoad;
+        public ToriiEvent OnSongChange;
         [NonSerialized] public AudioSource MusicSource;
         [NonSerialized] public Transform Player;
         
@@ -61,6 +62,7 @@ namespace LSDR.Dream
         private const int FALLING_UPPER_PENALTY = -3;
         private const float FADE_OUT_SECS_REGULAR = 5;
         private const float FADE_OUT_SECS_FALL = 2.5f;
+        private const float FADE_OUT_SECS_FORCE = 1;
 
         public TextureSet TextureSet
         {
@@ -99,6 +101,9 @@ namespace LSDR.Dream
         {
             _forcedSpawnID = null;
             _canTransition = true;
+            
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
 
             // start a timer to end the dream
             float secondsInDream = RandUtil.Float(MIN_SECONDS_IN_DREAM, MAX_SECONDS_IN_DREAM);
@@ -113,17 +118,7 @@ namespace LSDR.Dream
         {
             if (_dreamIsEnding) return;
             
-            _dreamIsEnding = true;
-            _canTransition = false;
-
-            Debug.Log("Ending dream");
-
-            // make sure the dream end timer stops
-            if (_endDreamTimer != null)
-            {
-                Coroutines.Instance.StopCoroutine(_endDreamTimer);
-                _endDreamTimer = null;
-            }
+            commonEndDream();
 
             // penalise upper score if ending dream from falling
             if (fromFall)
@@ -137,6 +132,24 @@ namespace LSDR.Dream
                 _currentDreamPath = null;
                 GameSave.CurrentJournalSave.SequenceData.Add(CurrentSequence);
                 GameSave.Save();
+                _dreamIsEnding = false;
+                Coroutines.Instance.StartCoroutine(ReturnToTitle());
+            });
+        }
+
+        /// <summary>
+        /// End dream without advancing the day number or adding progress.
+        /// </summary>
+        public void ForceEndDream()
+        {
+            if (_dreamIsEnding) return;
+
+            commonEndDream();
+            
+            Fader.FadeIn(Color.black, FADE_OUT_SECS_FORCE, () =>
+            {
+                CurrentDream = null;
+                _currentDreamPath = null;
                 _dreamIsEnding = false;
                 Coroutines.Instance.StartCoroutine(ReturnToTitle());
             });
@@ -243,6 +256,9 @@ namespace LSDR.Dream
 
             yield return null;
             
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+            
             Fader.FadeOut(1F);
         }
 
@@ -297,6 +313,7 @@ namespace LSDR.Dream
 
             MusicSource = MusicSystem.PlayRandomSongFromDirectory(PathUtil.Combine(Application.streamingAssetsPath,
                 JournalLoader.Current.MusicFolder));
+            OnSongChange.Raise();
             
             // TODO: disable/reenable pausing when transitioning
 
@@ -316,6 +333,22 @@ namespace LSDR.Dream
         {
             MusicSystem.PlayRandomSongFromDirectory(MusicSource,
                 PathUtil.Combine(Application.streamingAssetsPath, JournalLoader.Current.MusicFolder));
+            OnSongChange.Raise();
+        }
+
+        private void commonEndDream()
+        {
+            _dreamIsEnding = true;
+            _canTransition = false;
+
+            Debug.Log("Ending dream");
+
+            // make sure the dream end timer stops
+            if (_endDreamTimer != null)
+            {
+                Coroutines.Instance.StopCoroutine(_endDreamTimer);
+                _endDreamTimer = null;
+            }
         }
 
         private string getTIXPathFromTextureSet(Dream dream, TextureSet textureSet)

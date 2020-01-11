@@ -1,5 +1,6 @@
 ﻿using System;
 using LSDR.Game;
+using Torii.Audio;
 using Torii.Binding;
 using UnityEngine;
 using Torii.UI;
@@ -23,6 +24,8 @@ namespace LSDR.UI.Settings
 		/// </summary>
 		public Slider SFXVolumeSlider;
 
+		public AudioClip SoundTestClip;
+
 		public void Start()
 		{
 			// register data with the settings bind broker
@@ -43,5 +46,7 @@ namespace LSDR.UI.Settings
 			Settings.SettingsBindBroker.Bind(() => SFXVolumeSlider.value,
 				() => Settings.Settings.SFXVolume, BindingType.TwoWay);
 		}
+
+		public void SoundTest() { AudioPlayer.Instance.PlayClip(SoundTestClip, mixerGroup: "SFX"); }
 	}
 }

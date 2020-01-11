@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -50,6 +51,12 @@ namespace LSDR.UI
                 var iCopy = i;
                 TabButtons[i].onClick.AddListener(() => onTabButtonClick(iCopy));
             }
+        }
+
+        public void OnEnable()
+        {
+            TabViews[StartOnTab].gameObject.SetActive(true);
+            disableAllExcept(StartOnTab);
         }
 
         /// <summary>

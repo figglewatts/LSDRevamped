@@ -62,6 +62,19 @@ namespace LSDR.UI
             transitionBetween(top, Current);
         }
 
+        public void PopWithoutTransition()
+        {
+            if (_views.Count == 1)
+            {
+                Debug.LogWarning("Attempting to pop the initial view in the stack!");
+                return;
+            }
+
+            GameObject top = _views.Pop();
+            top.SetActive(false);
+            Current.SetActive(true);
+        }
+
         private void transitionBetween(GameObject from, GameObject to)
         {
             Fader.FadeIn(Color.black, FadeDuration, () =>

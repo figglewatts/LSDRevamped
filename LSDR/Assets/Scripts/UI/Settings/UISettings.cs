@@ -9,11 +9,6 @@ namespace LSDR.UI.Settings
     /// </summary>
     public class UISettings : MonoBehaviour
     {
-        public void ApplySettings()
-        {
-            // TODO: apply settings via events
-            //GameSettings.ApplySettings(GameSettings.CurrentSettings);
-            //GameSettings.SaveSettings(GameSettings.CurrentSettings);
-        }
+        
     }
 }
