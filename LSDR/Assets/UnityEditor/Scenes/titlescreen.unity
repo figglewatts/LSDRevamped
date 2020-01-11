@@ -3972,7 +3972,7 @@ GameObject:
   - component: {fileID: 537702653}
   - component: {fileID: 537702652}
   - component: {fileID: 537702651}
-  - component: {fileID: 537702655}
+  - component: {fileID: 537702654}
   m_Layer: 5
   m_Name: ExitButton
   m_TagString: Untagged
@@ -4057,18 +4057,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: PlayOneShot
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 8300000, guid: 05ab8ef7b32f51c41a5f67f99868c84c,
-            type: 3}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 11400000, guid: d49bbeb13fceccf4db48e93fdca027e4, type: 2}
         m_MethodName: Raise
         m_Mode: 1
@@ -4088,7 +4076,7 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 537702649}
---- !u!114 &537702655
+--- !u!114 &537702654
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -4096,40 +4084,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 537702649}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -1862395651, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Script: {fileID: 11500000, guid: 6c09e5629b29463fb74d3ed9af263b63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Delegates:
-  - eventID: 0
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 0}
-          m_MethodName: Stop
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 0}
-          m_MethodName: PlayOneShot
-          m_Mode: 2
-          m_Arguments:
-            m_ObjectArgument: {fileID: 8300000, guid: 30627d2ebc5c0eb4d9ffdf51dc01e319,
-              type: 3}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
-        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  delegates: []
+  OnHover: {fileID: 8300000, guid: 30627d2ebc5c0eb4d9ffdf51dc01e319, type: 3}
+  OnPress: {fileID: 8300000, guid: 05ab8ef7b32f51c41a5f67f99868c84c, type: 3}
 --- !u!1 &539627180
 GameObject:
   m_ObjectHideFlags: 0
@@ -8101,8 +8060,8 @@ GameObject:
   - component: {fileID: 1106723487}
   - component: {fileID: 1106723485}
   - component: {fileID: 1106723484}
-  - component: {fileID: 1106723486}
   - component: {fileID: 1106723488}
+  - component: {fileID: 1106723486}
   m_Layer: 5
   m_Name: StartButton
   m_TagString: Untagged
@@ -8187,18 +8146,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: PlayOneShot
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 8300000, guid: 05ab8ef7b32f51c41a5f67f99868c84c,
-            type: 3}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 11400000, guid: 1b0be28b5d5290e41a6e2156107b0e8a, type: 2}
         m_MethodName: Raise
         m_Mode: 1
@@ -8220,40 +8167,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1106723482}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -1862395651, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Script: {fileID: 11500000, guid: 6c09e5629b29463fb74d3ed9af263b63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Delegates:
-  - eventID: 0
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 0}
-          m_MethodName: Stop
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 0}
-          m_MethodName: PlayOneShot
-          m_Mode: 2
-          m_Arguments:
-            m_ObjectArgument: {fileID: 8300000, guid: 30627d2ebc5c0eb4d9ffdf51dc01e319,
-              type: 3}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
-        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  delegates: []
+  OnHover: {fileID: 8300000, guid: 30627d2ebc5c0eb4d9ffdf51dc01e319, type: 3}
+  OnPress: {fileID: 8300000, guid: 05ab8ef7b32f51c41a5f67f99868c84c, type: 3}
 --- !u!222 &1106723487
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -10166,18 +10084,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: PlayOneShot
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 8300000, guid: 05ab8ef7b32f51c41a5f67f99868c84c,
-            type: 3}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 11400000, guid: da0e460001586f64588c9a51d813a5a1, type: 2}
         m_MethodName: Raise
         m_Mode: 1
@@ -10205,40 +10111,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1298670688}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -1862395651, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Script: {fileID: 11500000, guid: 6c09e5629b29463fb74d3ed9af263b63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Delegates:
-  - eventID: 0
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 0}
-          m_MethodName: Stop
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 0}
-          m_MethodName: PlayOneShot
-          m_Mode: 2
-          m_Arguments:
-            m_ObjectArgument: {fileID: 8300000, guid: 30627d2ebc5c0eb4d9ffdf51dc01e319,
-              type: 3}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
-        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  delegates: []
+  OnHover: {fileID: 8300000, guid: 30627d2ebc5c0eb4d9ffdf51dc01e319, type: 3}
+  OnPress: {fileID: 8300000, guid: 05ab8ef7b32f51c41a5f67f99868c84c, type: 3}
 --- !u!1 &1301329013
 GameObject:
   m_ObjectHideFlags: 0
@@ -11364,8 +11241,8 @@ GameObject:
   - component: {fileID: 1384250692}
   - component: {fileID: 1384250691}
   - component: {fileID: 1384250690}
-  - component: {fileID: 1384250689}
   - component: {fileID: 1384250693}
+  - component: {fileID: 1384250689}
   m_Layer: 5
   m_Name: BackButton
   m_TagString: Untagged
@@ -11400,40 +11277,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1384250687}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -1862395651, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Script: {fileID: 11500000, guid: 6c09e5629b29463fb74d3ed9af263b63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Delegates:
-  - eventID: 0
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 0}
-          m_MethodName: Stop
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 0}
-          m_MethodName: PlayOneShot
-          m_Mode: 2
-          m_Arguments:
-            m_ObjectArgument: {fileID: 8300000, guid: 30627d2ebc5c0eb4d9ffdf51dc01e319,
-              type: 3}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
-        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  delegates: []
+  OnHover: {fileID: 8300000, guid: 30627d2ebc5c0eb4d9ffdf51dc01e319, type: 3}
+  OnPress: {fileID: 8300000, guid: 05ab8ef7b32f51c41a5f67f99868c84c, type: 3}
 --- !u!114 &1384250690
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11492,18 +11340,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: PlayOneShot
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 8300000, guid: 05ab8ef7b32f51c41a5f67f99868c84c,
-            type: 3}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 11400000, guid: 580b75586e9e56d43b4d4000aa0c01e5, type: 2}
         m_MethodName: Raise
         m_Mode: 1
@@ -13558,19 +13394,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 38091000}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: PlayOneShot
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 8300000, guid: 05ab8ef7b32f51c41a5f67f99868c84c,
-            type: 3}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!222 &1612392210
@@ -13587,17 +13411,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1612392206}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -1862395651, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Script: {fileID: 11500000, guid: 6c09e5629b29463fb74d3ed9af263b63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Delegates:
-  - eventID: 0
-    callback:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
-        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  delegates: []
+  OnHover: {fileID: 8300000, guid: 30627d2ebc5c0eb4d9ffdf51dc01e319, type: 3}
+  OnPress: {fileID: 8300000, guid: 05ab8ef7b32f51c41a5f67f99868c84c, type: 3}
 --- !u!1 &1629779684
 GameObject:
   m_ObjectHideFlags: 0
@@ -13916,18 +13734,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: PlayOneShot
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 8300000, guid: 05ab8ef7b32f51c41a5f67f99868c84c,
-            type: 3}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 11400000, guid: c4183a16321fdd940a44f36d8b9132b6, type: 2}
         m_MethodName: Raise
         m_Mode: 1
@@ -13955,40 +13761,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1667246979}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -1862395651, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Script: {fileID: 11500000, guid: 6c09e5629b29463fb74d3ed9af263b63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Delegates:
-  - eventID: 0
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 0}
-          m_MethodName: Stop
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 0}
-          m_MethodName: PlayOneShot
-          m_Mode: 2
-          m_Arguments:
-            m_ObjectArgument: {fileID: 8300000, guid: 30627d2ebc5c0eb4d9ffdf51dc01e319,
-              type: 3}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
-        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  delegates: []
+  OnHover: {fileID: 8300000, guid: 30627d2ebc5c0eb4d9ffdf51dc01e319, type: 3}
+  OnPress: {fileID: 8300000, guid: 05ab8ef7b32f51c41a5f67f99868c84c, type: 3}
 --- !u!1 &1677572574
 GameObject:
   m_ObjectHideFlags: 0
@@ -14127,6 +13904,11 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 2096262375}
     m_Modifications:
+    - target: {fileID: 114606713492516308, guid: d5436855d16f0bd4fb2c477b395f46a2,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 224000013661487168, guid: d5436855d16f0bd4fb2c477b395f46a2,
         type: 2}
       propertyPath: m_LocalPosition.x
@@ -14217,21 +13999,6 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 114502673175948528, guid: d5436855d16f0bd4fb2c477b395f46a2,
-        type: 2}
-      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 114502673175948528, guid: d5436855d16f0bd4fb2c477b395f46a2,
-        type: 2}
-      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[1].m_Target
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 114606713492516308, guid: d5436855d16f0bd4fb2c477b395f46a2,
-        type: 2}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 114606713492516308, guid: d5436855d16f0bd4fb2c477b395f46a2,
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Target
@@ -14241,7 +14008,68 @@ Prefab:
       propertyPath: m_Name
       value: Settings
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 114606713492516308, guid: d5436855d16f0bd4fb2c477b395f46a2,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 762128522}
+    - target: {fileID: 114606713492516308, guid: d5436855d16f0bd4fb2c477b395f46a2,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SetActive
+      objectReference: {fileID: 0}
+    - target: {fileID: 114606713492516308, guid: d5436855d16f0bd4fb2c477b395f46a2,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 114606713492516308, guid: d5436855d16f0bd4fb2c477b395f46a2,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 114606713492516308, guid: d5436855d16f0bd4fb2c477b395f46a2,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 114606713492516308, guid: d5436855d16f0bd4fb2c477b395f46a2,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 950049036}
+    - target: {fileID: 114606713492516308, guid: d5436855d16f0bd4fb2c477b395f46a2,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_BoolArgument
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114606713492516308, guid: d5436855d16f0bd4fb2c477b395f46a2,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
+      value: SetActive
+      objectReference: {fileID: 0}
+    - target: {fileID: 114606713492516308, guid: d5436855d16f0bd4fb2c477b395f46a2,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Mode
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 114606713492516308, guid: d5436855d16f0bd4fb2c477b395f46a2,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 114606713492516308, guid: d5436855d16f0bd4fb2c477b395f46a2,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_BoolArgument
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114606713492516308, guid: d5436855d16f0bd4fb2c477b395f46a2,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 114502673175948528, guid: d5436855d16f0bd4fb2c477b395f46a2, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: d5436855d16f0bd4fb2c477b395f46a2, type: 2}
   m_IsPrefabParent: 0
 --- !u!1 &1698929379

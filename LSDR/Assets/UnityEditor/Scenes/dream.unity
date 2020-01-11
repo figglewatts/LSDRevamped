@@ -356,6 +356,7 @@ GameObject:
   - component: {fileID: 417395661}
   - component: {fileID: 417395660}
   - component: {fileID: 417395659}
+  - component: {fileID: 417395663}
   m_Layer: 5
   m_Name: QuitGameButton
   m_TagString: Untagged
@@ -486,6 +487,19 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 417395657}
+--- !u!114 &417395663
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 417395657}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c09e5629b29463fb74d3ed9af263b63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnHover: {fileID: 8300000, guid: 30627d2ebc5c0eb4d9ffdf51dc01e319, type: 3}
+  OnPress: {fileID: 8300000, guid: 05ab8ef7b32f51c41a5f67f99868c84c, type: 3}
 --- !u!1 &434100460
 GameObject:
   m_ObjectHideFlags: 0
@@ -641,6 +655,7 @@ GameObject:
   - component: {fileID: 481015827}
   - component: {fileID: 481015826}
   - component: {fileID: 481015830}
+  - component: {fileID: 481015831}
   m_Layer: 5
   m_Name: ResumeButton
   m_TagString: Untagged
@@ -782,6 +797,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40f476b341cd56646831b54634e3a29b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &481015831
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 481015824}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c09e5629b29463fb74d3ed9af263b63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnHover: {fileID: 8300000, guid: 30627d2ebc5c0eb4d9ffdf51dc01e319, type: 3}
+  OnPress: {fileID: 8300000, guid: 05ab8ef7b32f51c41a5f67f99868c84c, type: 3}
 --- !u!1 &534533896
 GameObject:
   m_ObjectHideFlags: 0
@@ -1112,6 +1140,7 @@ GameObject:
   - component: {fileID: 1004328083}
   - component: {fileID: 1004328082}
   - component: {fileID: 1004328081}
+  - component: {fileID: 1004328085}
   m_Layer: 5
   m_Name: QuitDreamButton
   m_TagString: Untagged
@@ -1242,6 +1271,19 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1004328079}
+--- !u!114 &1004328085
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1004328079}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c09e5629b29463fb74d3ed9af263b63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnHover: {fileID: 8300000, guid: 30627d2ebc5c0eb4d9ffdf51dc01e319, type: 3}
+  OnPress: {fileID: 8300000, guid: 05ab8ef7b32f51c41a5f67f99868c84c, type: 3}
 --- !u!1 &1104230075
 GameObject:
   m_ObjectHideFlags: 0
@@ -2389,6 +2431,7 @@ GameObject:
   - component: {fileID: 2042453596}
   - component: {fileID: 2042453595}
   - component: {fileID: 2042453594}
+  - component: {fileID: 2042453598}
   m_Layer: 5
   m_Name: OptionsButton
   m_TagString: Untagged
@@ -2519,3 +2562,16 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2042453592}
+--- !u!114 &2042453598
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2042453592}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c09e5629b29463fb74d3ed9af263b63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnHover: {fileID: 8300000, guid: 30627d2ebc5c0eb4d9ffdf51dc01e319, type: 3}
+  OnPress: {fileID: 8300000, guid: 05ab8ef7b32f51c41a5f67f99868c84c, type: 3}
