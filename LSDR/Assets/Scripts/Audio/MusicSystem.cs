@@ -3,6 +3,7 @@ using System.IO;
 using LSDR.Util;
 using Torii.Audio;
 using Torii.Resource;
+using Torii.Util;
 using UnityEngine;
 
 namespace LSDR.Audio

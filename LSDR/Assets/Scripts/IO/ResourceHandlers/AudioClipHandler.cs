@@ -24,14 +24,14 @@ namespace LSDR.IO.ResourceHandlers
             {
                 AudioClip clip = AudioClip.Create(path, (int)vorbis.TotalSamples, vorbis.Channels, vorbis.SampleRate,
                     false);
-                var readBuffer = new float[vorbis.Channels * vorbis.SampleRate / 5]; // 200ms
+                var readBuffer = new float[512];
 
                 int count;
                 int total = 0;
                 while ((count = vorbis.ReadSamples(readBuffer, 0, readBuffer.Length)) > 0)
                 {
-                    total += count;
-                    clip.SetData(readBuffer, total / vorbis.Channels - 1);
+                    total += (count / vorbis.Channels) - 1;
+                    clip.SetData(readBuffer, total);
                 }
                 
                 Resource<AudioClip> resource = new Resource<AudioClip>(clip, span);
