@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using libLSD.Formats;
 using libLSD.Types;
@@ -125,19 +126,10 @@ namespace LSDR.IO
                         int uvIndex = i * 2;
                         int vramXPos = texPageXPos + texturedPrimitivePacket.UVs[uvIndex];
                         int vramYPos = texPageYPos + (256 - texturedPrimitivePacket.UVs[uvIndex + 1]);
-                        float uCoord = vramXPos / (float)PsxVram.VRAM_WIDTH;
-                        float vCoord = vramYPos / (float)PsxVram.VRAM_HEIGHT;
+                        float uCoord = (vramXPos + 0.5f) / PsxVram.VRAM_WIDTH; // half-texel correction to prevent bleeding
+                        float vCoord = (vramYPos - 0.5f) / PsxVram.VRAM_HEIGHT; // half-texel correction to prevent bleeding
                         
                         vertUV = new Vector2(uCoord, vCoord);
-                        
-                        // check for overlapping UVs and fix them slightly
-                        foreach (var uv in uvs)
-                        {
-                            if (uv.Equals(vertUV))
-                            {
-                                vertUV += new Vector2(0.0001f, 0.0001f);    
-                            }
-                        }
                     }
 
                     // add all computed aspects of vertex to lists
@@ -333,7 +325,7 @@ namespace LSDR.IO
             // create a texture 2D with the required format
             Texture2D tex = new Texture2D(PsxVram.VRAM_WIDTH, PsxVram.VRAM_HEIGHT, TextureFormat.ARGB32, false)
             {
-                wrapMode = TextureWrapMode.Clamp, filterMode = FilterMode.Point
+                wrapMode = TextureWrapMode.Clamp, filterMode = FilterMode.Point, mipMapBias = -0.5f, anisoLevel = 2
             };
             
             // fill the texture with a white colour

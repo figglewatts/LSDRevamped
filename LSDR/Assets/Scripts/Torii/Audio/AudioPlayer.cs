@@ -50,7 +50,7 @@ namespace Torii.Audio
             var channel = _channelsAvailable == 0 ? addChannel() : FreeChannel;
             if (channel == null)
             {
-                Debug.LogError($"Unable to play clip '{clip.name}', no channels available");
+                Debug.LogWarning($"Unable to play audio clip '{clip.name}', no channels available");
                 return null;
             }
 

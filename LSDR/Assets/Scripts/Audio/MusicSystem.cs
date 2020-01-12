@@ -16,14 +16,12 @@ namespace LSDR.Audio
         public AudioSource PlayRandomSongFromDirectory(string dir)
         {
             var clip = getRandomSongFromDirectory(dir);
-            Debug.Log($"Now playing: {CurrentSong} by {CurrentArtist}");
             return AudioPlayer.Instance.PlayClip(clip, loop: true, mixerGroup: "Music");
         }
 
         public AudioSource PlayRandomSongFromDirectory(AudioSource source, string dir)
         {
             var clip = getRandomSongFromDirectory(dir);
-            Debug.Log($"Now playing: {CurrentSong} by {CurrentArtist}");
             source.clip = clip;
             source.Play();
             return source;
@@ -34,6 +32,7 @@ namespace LSDR.Audio
             var files = Directory.GetFiles(dir, "*.ogg", SearchOption.AllDirectories);
             var randomFile = RandUtil.From(files);
             setMetadataFromFilePath(randomFile);
+            Debug.Log($"Now playing: {CurrentSong} by {CurrentArtist}");
             return ResourceManager.Load<AudioClip>(randomFile);
         }
 
