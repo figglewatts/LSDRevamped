@@ -10,9 +10,12 @@ namespace LSDR.Game
         public bool Paused => Math.Abs(Time.timeScale) < float.Epsilon;
         public ToriiEvent OnGamePaused;
         public ToriiEvent OnGameUnpaused;
+        public bool CanPause = true;
 
         public void TogglePause()
         {
+            if (!CanPause) return;
+            
             if (Paused)
             {
                 Unpause();
@@ -25,6 +28,8 @@ namespace LSDR.Game
 
         public void Pause()
         {
+            if (!CanPause) return;
+            
             Time.timeScale = 0;
             OnGamePaused.Raise();
             Cursor.visible = true;

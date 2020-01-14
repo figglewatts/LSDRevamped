@@ -32,12 +32,6 @@ namespace LSDR.Game
         public BindBroker SettingsBindBroker = new BindBroker();
 
         /// <summary>
-        /// Whether or not the game is currently paused.
-        /// TODO: move to separate scriptableobject and event system
-        /// </summary>
-        public bool IsPaused = false;
-
-        /// <summary>
         /// Whether or not we're in VR mode.
         /// </summary>
         public bool VR;
@@ -159,28 +153,7 @@ namespace LSDR.Game
                 mat.shader = Settings.UseClassicShaders ? ClassicAlpha : RevampedAlpha;
             }
         }
-        
-        /// <summary>
-        /// Set the cursor view state. True sets the cursor to visible and unlocks it, false does the inverse.
-        /// </summary>
-        /// <param name="state">Cursor state to set.</param>
-        public void SetCursorViewState(bool state)
-        {
-            Cursor.visible = state;
-            Cursor.lockState = state ? CursorLockMode.None : CursorLockMode.Locked;
-        }
 
-        /// <summary>
-        /// Change the game's pause state. Pausing the game will enable the mouse pointer.
-        /// </summary>
-        /// <param name="pauseState">The pause state to set.</param>
-        public void PauseGame(bool pauseState)
-        {
-            IsPaused = pauseState;
-            SetCursorViewState(pauseState);
-            Time.timeScale = pauseState ? 0 : 1;
-        }
-        
         /// <summary>
         /// Set the music volume.
         /// </summary>

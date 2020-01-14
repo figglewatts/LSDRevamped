@@ -98,7 +98,6 @@ namespace LSDR.Util
 
 		/// <summary>
 		/// Generate a random color.
-		/// TODO: refactor RandUtil.RandColor() when making colors better
 		/// </summary>
 		/// <returns>A random color.</returns>
 		public static Color RandColor() { return _randomColors[Int(_randomColors.Length)]; }

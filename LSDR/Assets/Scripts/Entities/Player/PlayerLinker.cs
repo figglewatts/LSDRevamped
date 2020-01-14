@@ -24,9 +24,6 @@ namespace LSDR.Entities.Player
 
 		public void OnControllerColliderHit(ControllerColliderHit hit)
 		{
-			// TODO
-			//if (DreamDirector.Payload.DreamEnded) return;
-		
 			if (!hit.gameObject.CompareTag("Linkable")) return;
 			
 			// if we're not touching a wall, reset the link delay timer

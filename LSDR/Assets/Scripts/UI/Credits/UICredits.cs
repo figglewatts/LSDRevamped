@@ -26,8 +26,6 @@ namespace LSDR.UI.Credits
         public void Start()
         {
             load();
-            
-            Debug.Log(UISectionContainer.rect.height);
         }
 
         public void OnEnable()

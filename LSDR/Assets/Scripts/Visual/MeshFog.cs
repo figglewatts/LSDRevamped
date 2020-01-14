@@ -5,7 +5,7 @@ namespace LSDR.Visual
 {
     /// <summary>
     /// When attached to a GameObject, will set its fog color based on distance from camera, and render settings.
-    /// TODO: clean MeshFog up a bit
+    /// TODO: MeshFog is now obsolete
     /// </summary>
     [RequireComponent(typeof(MeshRenderer))]
     public class MeshFog : MonoBehaviour

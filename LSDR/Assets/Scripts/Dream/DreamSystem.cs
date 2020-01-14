@@ -39,6 +39,7 @@ namespace LSDR.Dream
         public ControlSchemeLoaderSystem Control;
         public SettingsSystem SettingsSystem;
         public MusicSystem MusicSystem;
+        public PauseSystem PauseSystem;
         public AudioClip LinkSound;
         public PrefabPool LBDTilePool;
         public Dream CurrentDream { get; private set; }
@@ -195,8 +196,9 @@ namespace LSDR.Dream
             
             SettingsSystem.CanControlPlayer = false;
             _forcedSpawnID = spawnPointID;
-            
-            // TODO: disable/reenable pausing when transitioning
+
+            // disable pausing to prevent throwing off timers etc
+            PauseSystem.CanPause = false;
 
             if (playSound)
             {
@@ -314,8 +316,9 @@ namespace LSDR.Dream
             MusicSource = MusicSystem.PlayRandomSongFromDirectory(PathUtil.Combine(Application.streamingAssetsPath,
                 JournalLoader.Current.MusicFolder));
             OnSongChange.Raise();
-            
-            // TODO: disable/reenable pausing when transitioning
+
+            // reenable pausing
+            PauseSystem.CanPause = true;
 
             Fader.FadeOut(Color.black, 1F, () => _currentlyTransitioning = false);
         }

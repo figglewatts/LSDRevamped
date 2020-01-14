@@ -8,7 +8,6 @@ namespace LSDR.UI
 {
 	/// <summary>
 	/// The dream graph.
-	/// TODO: refactor UIGraph with DreamDirector refactor
 	/// </summary>
 	public class UIGraph : MonoBehaviour
 	{

@@ -4,6 +4,7 @@ namespace LSDR.Visual
 {
     /// <summary>
     /// Handles culling and fog of all tiles within an LBD.
+    /// // TODO: obsolete
     /// </summary>
     public class LBDSlab : MonoBehaviour
     {

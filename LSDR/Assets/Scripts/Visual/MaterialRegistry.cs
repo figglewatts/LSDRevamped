@@ -6,6 +6,7 @@ namespace LSDR.Visual
     /// <summary>
     /// MaterialRegistry is used to keep track of which Materials are used in a scene, so that properties/shaders
     /// can be swapped out at runtime.
+    /// TODO: obsolete
     /// </summary>
     public static class MaterialRegistry
     {

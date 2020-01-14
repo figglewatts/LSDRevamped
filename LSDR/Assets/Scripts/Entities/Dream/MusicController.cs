@@ -6,7 +6,7 @@ using LSDR.Util;
 
 namespace LSDR.Entities.Dream
 {
-	// TODO: refactor MusicController to be more reliable
+	// TODO: obsolete
 	public class MusicController : MonoBehaviour
 	{
 		public string MusicDirectory;

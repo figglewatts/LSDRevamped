@@ -8,6 +8,7 @@ namespace LSDR.Visual
 {
     /// <summary>
     /// A MaterialManifest is a JSON object that defines how to generate a Material.
+    /// // TODO: obsolete
     /// </summary>
     [JsonObject]
     public class MaterialManifest

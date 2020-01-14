@@ -11,7 +11,6 @@ namespace LSDR.UI
 {
 	/// <summary>
 	/// The pause menu of the game.
-	/// TODO: refactor music display in UIPauseMenu
 	/// </summary>
 	public class UIPauseMenu : MonoBehaviour
 	{

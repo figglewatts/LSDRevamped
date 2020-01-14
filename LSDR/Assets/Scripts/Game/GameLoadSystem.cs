@@ -38,17 +38,8 @@ namespace LSDR.Game
 			Shader.SetGlobalFloat("_FogStep", 0.08F);
 			Shader.SetGlobalFloat("AffineIntensity", 0.5F);
 
-			if (Application.isEditor)
-			{
-				// if we're running inside the editor, we want to have the mouse!
-				//GameSettings.SetCursorViewState(true);
-			}
-
 			yield return LBDTilePool.InitialiseCoroutine();
 
-			// TODO
-			//SaveGameManager.LoadGame();
-			
 			OnGameDataLoaded.Raise();
 		}
 	}
