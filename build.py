@@ -2,6 +2,13 @@
 """build.py
 
 Used for building Unity projects.
+
+Expects 'storageconf.py' for uploading builds to S3 storage:
+region_name: storage region
+endpoint_url: storage endpoint
+access_key: snip
+secret_key: snip
+bucket_name: lsdr
 """
 
 import argparse

@@ -28,12 +28,12 @@ $ git submodule update
 8. All done!
 
 ## Building the game
-1. Get a pipenv shell in the root of the repo:
+1. Setup pipenv in the root of the repo:
 ```terminal
-$ pipenv shell
+$ pipenv install
 ```
 2. Ensure you modify `buildconf.yaml` to have the correct values for `unity_location` and `project_path`.
 3. Run the build script
 ```terminal
-$ python build.py
+$ pipenv run python build.py -d
 ```
