@@ -1,6 +1,10 @@
 # LSD Revamped
 A remake of the cult-classic game LSD: Dream Emulator.
 
+## Screenshots
+![Ingame](/Screenshots/Game-1.png)
+![Menu](/Screenshots/Menu-1.png)
+
 ## Prerequisites
 - Git LFS (https://git-lfs.github.com/)
 - Unity 2017.4.31f1 LTS
