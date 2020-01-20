@@ -1,4 +1,6 @@
 ﻿using System.IO;
+using System.Reflection;
+using LSDR.Game;
 using LSDR.Util;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -40,9 +42,10 @@ namespace LSDR.Editor.BuildSystem
                 // determine if the path is absolute or relative
                 // if the path is relative, then make it relative to the project folder
                 bool isBuildFolderRooted = Path.IsPathRooted(BuildFolder);
+                string versionNumber = typeof(GameLoadSystem).Assembly.GetName().Version.ToString();
                 return isBuildFolderRooted
-                    ? IOUtil.PathCombine(BuildFolder, ExecutableName)
-                    : IOUtil.PathCombine(Application.dataPath, "../", BuildFolder, ExecutableName);
+                    ? IOUtil.PathCombine(BuildFolder, versionNumber, ExecutableName)
+                    : IOUtil.PathCombine(Application.dataPath, "../", BuildFolder, versionNumber, ExecutableName);
             }
         }
 

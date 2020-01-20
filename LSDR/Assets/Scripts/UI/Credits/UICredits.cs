@@ -42,13 +42,16 @@ namespace LSDR.UI.Credits
                 _creditsFinished = true;
             }
             
-            UISectionContainer.anchoredPosition += new Vector2(0, ScrollSpeed);
-
             if (!_creditsFinished && UISectionContainer.anchoredPosition.y > UISectionContainer.rect.height + 500)
             {
                 OnCreditsEnd.Raise();
                 _creditsFinished = true;
             }
+        }
+
+        public void FixedUpdate()
+        {
+            UISectionContainer.anchoredPosition += new Vector2(0, ScrollSpeed);
         }
 
         private void load()

@@ -22,6 +22,7 @@ using UnityEngine.SceneManagement;
 using Torii.UI;
 using Torii.UnityEditor;
 using Torii.Util;
+using ResourceManager = Torii.Resource.ResourceManager;
 
 namespace LSDR.Dream
 {
@@ -254,6 +255,8 @@ namespace LSDR.Dream
                 yield return null;
             }
             
+            ResourceManager.ClearLifespan("scene");
+            
             OnReturnToTitle.Raise();
 
             yield return null;
@@ -288,6 +291,8 @@ namespace LSDR.Dream
             {
                 yield return null;
             }
+            
+            ResourceManager.ClearLifespan("scene");
 
             SceneManager.SetActiveScene(SceneManager.GetSceneByName(DreamScene.ScenePath));
 

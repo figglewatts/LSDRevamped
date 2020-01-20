@@ -108,7 +108,7 @@ namespace LSDR.Game
         /// </summary>
         public void Apply()
         {
-            Debug.Log("Applying");
+            Debug.Log("Applying game settings");
             
             // TODO: try and catch exceptions for erroneous loaded values (i.e. array idx) and reset to default if error
 		    

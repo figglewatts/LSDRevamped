@@ -24,6 +24,7 @@ GameObject:
   - component: {fileID: 81057286758442096}
   - component: {fileID: 114093436451678466}
   - component: {fileID: 114371286810715588}
+  - component: {fileID: 114670244303012626}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -509,8 +510,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d93f3cecd4d8a694a8a5da3de5f9b1c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Camera: {fileID: 20610254309811964}
   PixelateImageEffect: {fileID: 114093436451678466}
+  Camera: {fileID: 20610254309811964}
   Settings: {fileID: 11400000, guid: 12ecd5989d3bcc549bcacf027048a5bd, type: 2}
 --- !u!114 &114447734073296280
 MonoBehaviour:
@@ -557,6 +558,34 @@ MonoBehaviour:
   BobbingAmount: 0.01
   Midpoint: 0.3
   TargetCamera: {fileID: 20610254309811964}
+--- !u!114 &114670244303012626
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1137826101587610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4855a35832945d5865aec599963246c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Event: {fileID: 11400000, guid: 3da0e1d21e753c9418b471d00f38f4e5, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 114371286810715588}
+        m_MethodName: OnSettingsApply
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
 --- !u!114 &114679908197199712
 MonoBehaviour:
   m_ObjectHideFlags: 1

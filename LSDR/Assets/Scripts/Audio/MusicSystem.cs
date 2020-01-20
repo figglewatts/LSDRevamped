@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using LSDR.IO;
 using LSDR.Util;
 using Torii.Audio;
 using Torii.Resource;
@@ -34,7 +35,7 @@ namespace LSDR.Audio
             var randomFile = RandUtil.From(files);
             setMetadataFromFilePath(randomFile);
             Debug.Log($"Now playing: {CurrentSong} by {CurrentArtist}");
-            return ResourceManager.Load<AudioClip>(randomFile);
+            return ResourceManager.Load<ToriiAudioClip>(randomFile, "scene");
         }
 
         private void setMetadataFromFilePath(string filePath)

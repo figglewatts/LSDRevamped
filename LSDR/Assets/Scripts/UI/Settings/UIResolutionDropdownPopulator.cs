@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 using Torii.UI;
 
 namespace LSDR.UI.Settings
@@ -18,9 +19,11 @@ namespace LSDR.UI.Settings
 	    private List<string> getResolutions()
 	    {
             List<string> resolutions = new List<string>();
-	        foreach (Resolution res in Screen.resolutions)
+            var screenResolutions = Screen.resolutions.Distinct().OrderBy(r => r.width).ThenBy(r => r.height)
+                                          .ThenBy(r => r.refreshRate);
+	        foreach (Resolution res in screenResolutions)
 	        {
-                resolutions.Add($"{res.width}x{res.height}");
+                resolutions.Add($"{res.width}x{res.height} {res.refreshRate}Hz");
 	        }
 	        return resolutions;
 	    }

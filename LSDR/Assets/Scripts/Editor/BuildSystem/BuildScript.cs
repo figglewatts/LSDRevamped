@@ -55,6 +55,10 @@ namespace LSDR.Editor.BuildSystem
             var buildNumber = typeof(GameLoadSystem).Assembly.GetName().Version.ToString();
             var buildNumberFilePath = IOUtil.PathCombine(Path.GetDirectoryName(def.ExecutablePath), "buildnumber.txt");
             File.WriteAllText(buildNumberFilePath, buildNumber);
+            
+            // we also want to write the build number to the project path so the build system can pick it up
+            var projectBuildNumberFilePath = IOUtil.PathCombine(Application.dataPath, "../", "lastbuildnumber.txt");
+            File.WriteAllText(projectBuildNumberFilePath, buildNumber);
         }
     }
 }
