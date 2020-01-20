@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace DefaultNamespace
+namespace Torii.Event
 {
     [CustomEditor(typeof(ToriiEvent))]
     public class ToriiEventEditor : Editor

@@ -255,7 +255,7 @@ def upload_build_to_storage(conn, build_number: str, release_path: str,
     build_package_path = join(release_path, build_target,
                               f"{build_number}.zip")
     env_folder = "prod" if prod else "dev"
-    object_name = f"{build_target}/{env_folder}/{build_number}.zip"
+    object_name = f"{env_folder}/{build_target}/{build_number}.zip"
     print(
         f"--> Uploading build package '{object_name}' to bucket '{bucket_name}'..."
     )

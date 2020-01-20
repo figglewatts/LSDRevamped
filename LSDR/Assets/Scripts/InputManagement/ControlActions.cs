@@ -103,6 +103,7 @@ namespace LSDR.InputManagement
             
             actions.Start.AddDefaultBinding(Key.Escape);
             actions.Start.AddDefaultBinding(InputControlType.Start);
+            actions.Start.AddDefaultBinding(InputControlType.Plus);
 
             return actions;
         }
@@ -151,6 +152,7 @@ namespace LSDR.InputManagement
             
             actions.Start.AddDefaultBinding(Key.Escape);
             actions.Start.AddDefaultBinding(InputControlType.Start);
+            actions.Start.AddDefaultBinding(InputControlType.Plus);
 
             return actions;
         }

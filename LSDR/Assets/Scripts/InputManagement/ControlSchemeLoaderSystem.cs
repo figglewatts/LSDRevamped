@@ -67,7 +67,7 @@ namespace LSDR.InputManagement
             if (!File.Exists(IOUtil.PathCombine(_controlSchemesPath, "Revamped.dat")))
             {
                 Debug.Log("Unable to find 'Revamped' control scheme - creating...");
-                Schemes.Add(new ControlScheme(ControlActions.CreateDefaultFps(), "Revamped", true, 5F));
+                Schemes.Add(new ControlScheme(ControlActions.CreateDefaultFps(), "Revamped", true, 2F));
             }
             
             SaveSchemes();

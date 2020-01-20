@@ -1,4 +1,5 @@
 using System;
+using InControl;
 using Torii.Event;
 using UnityEngine;
 
@@ -32,7 +33,7 @@ namespace LSDR.Game
             
             Time.timeScale = 0;
             OnGamePaused.Raise();
-            Cursor.visible = true;
+            Cursor.visible = !controllerConnected();
             Cursor.lockState = CursorLockMode.None;
         }
 
@@ -42,6 +43,11 @@ namespace LSDR.Game
             OnGameUnpaused.Raise();
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
+        }
+
+        private bool controllerConnected()
+        {
+            return !InputManager.ActiveDevice.Name.Equals("None", StringComparison.InvariantCulture);
         }
     }
 }

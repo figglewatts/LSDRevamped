@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace LSDR.UI
@@ -8,8 +9,14 @@ namespace LSDR.UI
 	/// </summary>
 	public class UISelectMe : MonoBehaviour
 	{
-		void Start() { GetComponent<Selectable>().Select(); }
-		
-		void OnEnable() { GetComponent<Selectable>().Select(); }
+		void Start() { StartCoroutine(waitFrameThenSelect()); }
+
+		void OnEnable() { StartCoroutine(waitFrameThenSelect()); }
+
+		private IEnumerator waitFrameThenSelect()
+		{
+			yield return null;
+			GetComponent<Selectable>().Select();
+		}
 	}
 }

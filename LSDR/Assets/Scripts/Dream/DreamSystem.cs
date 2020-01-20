@@ -260,8 +260,7 @@ namespace LSDR.Dream
             OnReturnToTitle.Raise();
 
             yield return null;
-            
-            Cursor.visible = true;
+
             Cursor.lockState = CursorLockMode.None;
             
             Fader.FadeOut(1F);
