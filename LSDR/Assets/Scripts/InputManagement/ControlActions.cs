@@ -33,7 +33,7 @@ namespace LSDR.InputManagement
         public static readonly BindingListenOptions DefaultListenOptions = new BindingListenOptions
         {
             IncludeMouseButtons = true,
-            MaxAllowedBindings = 2,
+            MaxAllowedBindings = 3,
             UnsetDuplicateBindingsOnSet = true,
             IncludeModifiersAsFirstClassKeys = true
         };
@@ -60,9 +60,8 @@ namespace LSDR.InputManagement
             LookY = CreateOneAxisPlayerAction(LookDown, LookUp);
             Move = CreateTwoAxisPlayerAction(Left, Right, Backward, Forward);
 
-            MoveX.StateThreshold = 0.5f;
-            MoveY.StateThreshold = 0.5f;
-
+            MoveX.StateThreshold = 0.8f;
+            
             ListenOptions = DefaultListenOptions;
         }
 

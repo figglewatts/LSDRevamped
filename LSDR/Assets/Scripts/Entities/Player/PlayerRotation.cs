@@ -23,7 +23,7 @@ namespace LSDR.Entities.Player
 			if (Settings.CanControlPlayer && !ControlScheme.Current.FpsControls)
             {
                 // apply a rotation equal to the current move amount
-	            float rotAmount = ControlScheme.Current.Actions.MoveX;
+                float rotAmount = ControlScheme.Current.Actions.MoveX.Value;
                 Vector3 transformRotation = transform.rotation.eulerAngles;
                 transformRotation.y += rotAmount * RotationSpeed * Time.deltaTime;
                 transform.rotation = Quaternion.Euler(transformRotation);

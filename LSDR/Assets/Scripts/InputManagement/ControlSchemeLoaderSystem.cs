@@ -23,6 +23,8 @@ namespace LSDR.InputManagement
         public void OnEnable()
         {
             _controlSchemesPath = IOUtil.PathCombine(Application.persistentDataPath, "input-schemes");
+
+            InputManager.OnDeviceAttached += initInputDevice;
         }
 
         public void LoadSchemes()
@@ -85,6 +87,12 @@ namespace LSDR.InputManagement
             }
 
             _currentSchemeHandle = idx;
+        }
+
+        private void initInputDevice(InputDevice device)
+        {
+            Debug.Log($"Setting initial input values for {device.Name}");
+            device.LeftStick.LowerDeadZone = 0.2f;
         }
     }
 }
