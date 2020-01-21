@@ -57,6 +57,13 @@ struct v2f
     float2 uv_MainTex : TEXCOORD0;
     half3 normal : TEXCOORD1;
     float fogAmount : FOG;
+    float depth : SV_Depth;
+};
+
+struct fragOut
+{
+    fixed4 color : SV_Target;
+    float depth : SV_Depth;
 };
 
 v2f classicVert(appdata v)
@@ -88,6 +95,13 @@ v2f classicVert(appdata v)
     float cameraDist = length(_WorldSpaceCameraPos - objPos);
     output.fogAmount = GetFogAmount(cameraDist);
     
+    // depth
+    // bit of a hack, we want the depth to be kinda different between tiles but also to have a
+    // gradient to prevent Z-fighting on self-occlusions, so we derive depth from both the distance
+    // from the camera as well as the vertex's viewspace position
+    float depth = ((cameraDist + distance) - _ProjectionParams.y) / (_ProjectionParams.z - _ProjectionParams.y);
+    output.depth = 1 - depth;
+    
     if (cameraDist > GetFogEnd())
     {
         output.pos = float4(0, 0, 0, 1);
@@ -107,10 +121,19 @@ v2f revampedVert(appdata v)
     output.uv_MainTex = v.uv;
     output.normal = 0;
     
+    float distance = length(UnityObjectToViewPos(v.position));
+    
     // fog amount
     float3 objPos = mul(unity_ObjectToWorld, float4(0, 0, 0, 1)).xyz;
     float cameraDist = length(_WorldSpaceCameraPos - objPos);
     output.fogAmount = GetFogAmount(cameraDist);
+    
+    // depth
+    // bit of a hack, we want the depth to be kinda different between tiles but also to have a
+    // gradient to prevent Z-fighting on self-occlusions, so we derive depth from both the distance
+    // from the camera as well as the vertex's viewspace position
+    float depth = ((cameraDist + distance) - _ProjectionParams.y) / (_ProjectionParams.z - _ProjectionParams.y);
+    output.depth = 1 - depth;
     
     if (cameraDist > GetFogEnd())
     {
@@ -120,72 +143,94 @@ v2f revampedVert(appdata v)
     return output;
 }
 
-float4 classicFragCutout(v2f input, sampler2D mainTex, fixed4 tint)
+fragOut classicFragCutout(v2f input, sampler2D mainTex, fixed4 tint)
 {
-    half4 output = tex2D(mainTex, input.uv_MainTex / input.normal.x);
+    fragOut output;
+    
+    half4 output_col = tex2D(mainTex, input.uv_MainTex / input.normal.x);
     
     // alpha cutout
-    if (output.a <= 0.1) discard;
+    if (output_col.a <= 0.1) discard;
     
     // apply vertex color
-    output *= input.color;
+    output_col *= input.color;
     
     // apply tint
-    output *= tint;
+    output_col *= tint;
     
     // apply fog
-    output = ApplyFog(output, input.fogAmount);
+    output_col = ApplyFog(output_col, input.fogAmount);
+    
+    output.color = output_col;
+    output.depth = input.depth;
     
     return output;
 }
 
-float4 classicFrag(v2f input, sampler2D mainTex, fixed4 tint)
+fragOut classicFrag(v2f input, sampler2D mainTex, fixed4 tint)
 {
-    half4 output = tex2D(mainTex, input.uv_MainTex / input.normal.x);
+    fragOut output;
+    
+    half4 output_col = tex2D(mainTex, input.uv_MainTex / input.normal.x);
+    
+    if (output_col.a == 0) discard;
     
     // apply vertex color
-    output *= input.color;
+    output_col *= input.color;
     
     // apply tint
-    output *= tint;
+    output_col *= tint;
     
     // apply fog
-    output = ApplyFog(output, input.fogAmount);
+    output_col = ApplyFog(output_col, input.fogAmount);
+    
+    output.color = output_col;
+    output.depth = input.depth;
     
     return output;
 }
 
-float4 revampedFragCutout(v2f input, sampler2D mainTex, fixed4 tint)
+fragOut revampedFragCutout(v2f input, sampler2D mainTex, fixed4 tint)
 {
-    half4 output = tex2D(mainTex, input.uv_MainTex);
+    fragOut output;
+    
+    half4 output_col = tex2D(mainTex, input.uv_MainTex);
                 
     // alpha cutout
-    if (output.a <= 0.1) discard;
+    if (output_col.a <= 0.1) discard;
     
     // apply vertex color
-    output *= input.color;
+    output_col *= input.color;
     
     // apply tint
-    output *= tint;
+    output_col *= tint;
     
     // apply fog
-    output = ApplyFog(output, input.fogAmount);
+    output_col = ApplyFog(output_col, input.fogAmount);
+    
+    output.color = output_col;
+    output.depth = input.depth;
     
     return output;
 }
 
-float4 revampedFrag(v2f input, sampler2D mainTex, fixed4 tint)
+fragOut revampedFrag(v2f input, sampler2D mainTex, fixed4 tint)
 {
-    half4 output = tex2D(mainTex, input.uv_MainTex);
+    fragOut output;
+    
+    half4 output_col = tex2D(mainTex, input.uv_MainTex);
     
     // apply vertex color
-    output *= input.color;
+    output_col *= input.color;
     
     // apply tint
-    output *= tint;
+    output_col *= tint;
     
     // apply fog
-    output = ApplyFog(output, input.fogAmount);
+    output_col = ApplyFog(output_col, input.fogAmount);
+    
+    output.color = output_col;
+    output.depth = input.depth;
     
     return output;
 }

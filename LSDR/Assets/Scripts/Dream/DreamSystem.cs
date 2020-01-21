@@ -232,6 +232,7 @@ namespace LSDR.Dream
                 // choose a random dream that isn't the current dream
                 dreamPath = RandUtil.RandomListElement(
                     JournalLoader.Current.LinkableDreams.Where(d => !d.Equals(_currentDreamPath)));
+                Debug.Log($"Dream path: {dreamPath}, Current dream path: {_currentDreamPath}");
             }
 
             _currentDreamPath = dreamPath;

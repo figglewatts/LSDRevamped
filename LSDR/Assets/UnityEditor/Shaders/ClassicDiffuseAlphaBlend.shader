@@ -7,7 +7,8 @@ Shader "LSDR/ClassicDiffuseAlphaBlend" {
         Tags { "Queue" = "Transparent" "RenderType" = "Transparent" }
         Pass {
             Blend SrcAlpha OneMinusSrcAlpha
-            ZWrite Off
+            ZWrite On
+            ZTest LEqual
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
@@ -24,7 +25,7 @@ Shader "LSDR/ClassicDiffuseAlphaBlend" {
             sampler2D _MainTex;
             fixed4 _Tint;
             
-            float4 frag(v2f input) : COLOR
+            fragOut frag(v2f input)
             {
                 return classicFrag(input, _MainTex, _Tint);
             }

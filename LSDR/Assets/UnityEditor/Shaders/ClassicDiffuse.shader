@@ -8,6 +8,7 @@ Shader "LSDR/ClassicDiffuse" {
     SubShader {
         Tags { "RenderType" = "Opaque" }
         Pass {
+            ZTest LEqual
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
@@ -24,7 +25,7 @@ Shader "LSDR/ClassicDiffuse" {
             sampler2D _MainTex;
             fixed4 _Tint;
             
-            float4 frag(v2f input) : COLOR
+            fragOut frag(v2f input)
             {
                 return classicFragCutout(input, _MainTex, _Tint);
             }

@@ -24,7 +24,7 @@ Shader "LSDR/RevampedDiffuseAlphaBlend" {
             sampler2D _MainTex;
             fixed4 _Tint;
             
-            float4 frag(v2f input) : COLOR
+            fragOut frag(v2f input)
             {
                 return revampedFrag(input, _MainTex, _Tint);
             }

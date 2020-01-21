@@ -18,6 +18,11 @@ namespace LSDR.Bindings
 
         public SettingsSystem Settings;
 
+        public void Start()
+        {
+            OnSettingsApply();
+        }
+
         public void OnSettingsApply()
         {
             PixelateImageEffect.enabled = Settings.Settings.UsePixelationShader;

@@ -22,7 +22,7 @@ Shader "LSDR/RevampedDiffuse" {
             sampler2D _MainTex;
             fixed4 _Tint;
             
-            float4 frag(v2f input) : COLOR
+            fragOut frag(v2f input)
             {
                 return revampedFragCutout(input, _MainTex, _Tint);
             }

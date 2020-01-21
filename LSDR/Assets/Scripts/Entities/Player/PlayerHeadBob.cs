@@ -78,11 +78,11 @@ namespace LSDR.Entities.Player
 			// headbobbing uses a sine wave, this is the initial value of it
 			float sineWave = 0F;
 			
-			// get the forward movement vector
-			float forwardMovement = ControlScheme.Current.Actions.MoveY.Value;
+			// get the movement magnitude
+			float movementMagnitude = ControlScheme.Current.Actions.Move.Value.sqrMagnitude;
 
 			// if the forward movement vector is zero, reset the timer
-			if (Mathf.Abs(forwardMovement) < float.Epsilon)
+			if (Mathf.Abs(movementMagnitude) < float.Epsilon)
 			{
 				_timer = 0;
 			}
