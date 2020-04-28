@@ -96,10 +96,7 @@ v2f classicVert(appdata v)
     output.fogAmount = GetFogAmount(cameraDist);
     
     // depth
-    // bit of a hack, we want the depth to be kinda different between tiles but also to have a
-    // gradient to prevent Z-fighting on self-occlusions, so we derive depth from both the distance
-    // from the camera as well as the vertex's viewspace position
-    float depth = ((cameraDist + distance) - _ProjectionParams.y) / (_ProjectionParams.z - _ProjectionParams.y);
+    float depth = (distance - _ProjectionParams.y) / (_ProjectionParams.z - _ProjectionParams.y);
     output.depth = 1 - depth;
     
     if (cameraDist > GetFogEnd())
@@ -121,18 +118,15 @@ v2f revampedVert(appdata v)
     output.uv_MainTex = v.uv;
     output.normal = 0;
     
-    float distance = length(UnityObjectToViewPos(v.position));
-    
     // fog amount
     float3 objPos = mul(unity_ObjectToWorld, float4(0, 0, 0, 1)).xyz;
-    float cameraDist = length(_WorldSpaceCameraPos - objPos);
+    float3 camPos = _WorldSpaceCameraPos;
+    float cameraDist = length(camPos - objPos);
     output.fogAmount = GetFogAmount(cameraDist);
     
     // depth
-    // bit of a hack, we want the depth to be kinda different between tiles but also to have a
-    // gradient to prevent Z-fighting on self-occlusions, so we derive depth from both the distance
-    // from the camera as well as the vertex's viewspace position
-    float depth = ((cameraDist + distance) - _ProjectionParams.y) / (_ProjectionParams.z - _ProjectionParams.y);
+    float distance = length(UnityObjectToViewPos(v.position));
+    float depth = (distance - _ProjectionParams.y) / (_ProjectionParams.z - _ProjectionParams.y);
     output.depth = 1 - depth;
     
     if (cameraDist > GetFogEnd())
@@ -219,6 +213,8 @@ fragOut revampedFrag(v2f input, sampler2D mainTex, fixed4 tint)
     fragOut output;
     
     half4 output_col = tex2D(mainTex, input.uv_MainTex);
+    
+    if (output_col.a == 0) discard;
     
     // apply vertex color
     output_col *= input.color;

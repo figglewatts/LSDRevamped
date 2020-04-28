@@ -158,6 +158,10 @@ namespace LSDR.SDK
 
             if (!string.IsNullOrEmpty(dreamPath))
             {
+                // now remove everything before StreamingAssets path
+                var indexOf = dreamPath.IndexOf("StreamingAssets", StringComparison.Ordinal) + "StreamingAssets".Length;
+                dreamPath = dreamPath.Substring(indexOf);
+                
                 Color displayCol = new Color(Random.value, Random.value, Random.value, 1);
                 GraphSpawnMap.Add(dreamPath, displayCol);
                 _selectedDream = GraphSpawnMap.Dreams.Count - 1;

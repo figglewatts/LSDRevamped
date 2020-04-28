@@ -9,6 +9,10 @@ endpoint_url: storage endpoint
 access_key: snip
 secret_key: snip
 bucket_name: lsdr
+
+Usage:
+    - To build the game, run:
+        pipenv run python build.py
 """
 
 import argparse

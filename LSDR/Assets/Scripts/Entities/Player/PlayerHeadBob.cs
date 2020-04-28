@@ -78,8 +78,11 @@ namespace LSDR.Entities.Player
 			// headbobbing uses a sine wave, this is the initial value of it
 			float sineWave = 0F;
 			
-			// get the movement magnitude
-			float movementMagnitude = ControlScheme.Current.Actions.Move.Value.sqrMagnitude;
+			// get the movement magnitude - if we're in FPS control mode then we want to include X axis movement
+			// (due to strafing), otherwise we only want Y movement as X will be rotational and shouldn't headbob
+			float movementMagnitude = ControlScheme.Current.FpsControls
+				? ControlScheme.Current.Actions.Move.Value.sqrMagnitude
+				: ControlScheme.Current.Actions.MoveY.Value;
 
 			// if the forward movement vector is zero, reset the timer
 			if (Mathf.Abs(movementMagnitude) < float.Epsilon)

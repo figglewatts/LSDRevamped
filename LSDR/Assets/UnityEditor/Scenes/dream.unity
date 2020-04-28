@@ -797,6 +797,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40f476b341cd56646831b54634e3a29b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SelectEvenWithMouse: 0
 --- !u!114 &481015831
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1512,11 +1513,11 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0, a: 1}
+    m_NormalColor: {r: 0.1988, g: 0.096559994, b: 0.284, a: 1}
+    m_HighlightedColor: {r: 0.58431375, g: 0.58431375, b: 0, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
-    m_ColorMultiplier: 2
+    m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
@@ -1557,7 +1558,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.22352943, g: 0.13725491, b: 0.3019608, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -1676,7 +1677,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: -103.78, y: 0}
-  m_SizeDelta: {x: 1, y: -12}
+  m_SizeDelta: {x: 1, y: -20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1406977950
 MonoBehaviour:

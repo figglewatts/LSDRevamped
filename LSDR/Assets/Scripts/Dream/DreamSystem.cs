@@ -210,14 +210,14 @@ namespace LSDR.Dream
             
             CurrentSequence.Visited.Add(dream);
 
-            // see if we should switch texture sets
-            if (RandUtil.OneIn(CHANCE_TO_SWITCH_TEXTURES_WHEN_LINKING))
-            {
-                TextureSet = randomTextureSetFromDayNumber(GameSave.CurrentJournalSave.DayNumber);
-            }
-
             Fader.FadeIn(fadeCol, 1F, () =>
             {
+                // see if we should switch texture sets
+                if (RandUtil.OneIn(CHANCE_TO_SWITCH_TEXTURES_WHEN_LINKING))
+                {
+                    TextureSet = randomTextureSetFromDayNumber(GameSave.CurrentJournalSave.DayNumber);
+                }
+                
                 Coroutines.Instance.StartCoroutine(LoadDream(dream));
             });
         }

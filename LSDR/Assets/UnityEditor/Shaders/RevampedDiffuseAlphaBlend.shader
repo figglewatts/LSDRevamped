@@ -7,7 +7,7 @@ Shader "LSDR/RevampedDiffuseAlphaBlend" {
         Tags { "Queue" = "Transparent" "RenderType" = "Transparent" }
         Pass {
             Blend SrcAlpha OneMinusSrcAlpha
-            ZWrite Off
+            ZWrite On
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
