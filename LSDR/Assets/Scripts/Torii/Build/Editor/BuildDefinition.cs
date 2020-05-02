@@ -7,7 +7,7 @@ using Newtonsoft.Json.Converters;
 using UnityEditor;
 using UnityEngine;
 
-namespace LSDR.Editor.BuildSystem
+namespace Torii.Build
 {
     /// <summary>
     /// BuildDefinition is used to define a build of the game to create.
@@ -32,7 +32,7 @@ namespace LSDR.Editor.BuildSystem
         public string BuildFolder { get; set; }
 
         /// <summary>
-        /// The full path to the executable that will be built. Created from ExecutableName and BuildFolder.
+        /// The full path to the executable that will be built. Created from ExecutableName, Target, and BuildFolder.
         /// </summary>
         [JsonIgnore]
         public string ExecutablePath
@@ -42,10 +42,9 @@ namespace LSDR.Editor.BuildSystem
                 // determine if the path is absolute or relative
                 // if the path is relative, then make it relative to the project folder
                 bool isBuildFolderRooted = Path.IsPathRooted(BuildFolder);
-                string versionNumber = typeof(GameLoadSystem).Assembly.GetName().Version.ToString();
                 return isBuildFolderRooted
-                    ? IOUtil.PathCombine(BuildFolder, versionNumber, ExecutableName)
-                    : IOUtil.PathCombine(Application.dataPath, "../", BuildFolder, versionNumber, ExecutableName);
+                    ? IOUtil.PathCombine(BuildFolder, Target.ToString(), ExecutableName)
+                    : IOUtil.PathCombine(Application.dataPath, "../", BuildFolder, Target.ToString(), ExecutableName);
             }
         }
 

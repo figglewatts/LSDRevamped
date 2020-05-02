@@ -7,7 +7,7 @@ using UnityEngine;
 using Torii.Serialization;
 using LSDR.Util;
 
-namespace LSDR.Editor.BuildSystem
+namespace Torii.Build
 {
     /// <summary>
     /// BuildScript is used to build the game when running Unity from the command line.

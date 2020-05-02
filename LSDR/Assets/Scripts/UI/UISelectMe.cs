@@ -38,7 +38,6 @@ namespace LSDR.UI
 		private IEnumerator waitFrameThenSelect(InputDevice device)
 		{
 			yield return null;
-			Debug.Log(device.Name);
 			if (!InputManager.ActiveDevice.Name.Equals("None") || SelectEvenWithMouse)
 			{
 				GetComponent<Selectable>().Select();

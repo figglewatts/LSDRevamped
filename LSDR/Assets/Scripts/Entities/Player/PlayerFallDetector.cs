@@ -33,7 +33,7 @@ namespace LSDR.Entities.Player
 			_playerController = GetComponent<CharacterController>();
 		}
 
-		public void Update()
+		public void FixedUpdate()
 		{
 			if (_playerController.isGrounded)
 			{

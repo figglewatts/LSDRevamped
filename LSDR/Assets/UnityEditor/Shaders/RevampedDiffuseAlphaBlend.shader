@@ -8,6 +8,7 @@ Shader "LSDR/RevampedDiffuseAlphaBlend" {
         Pass {
             Blend SrcAlpha OneMinusSrcAlpha
             ZWrite On
+            ZTest LEqual
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag

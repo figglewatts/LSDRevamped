@@ -6,6 +6,7 @@ Shader "LSDR/RevampedDiffuse" {
     SubShader {
         Tags { "RenderType" = "Opaque" }
         Pass {
+            ZTest LEqual
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
