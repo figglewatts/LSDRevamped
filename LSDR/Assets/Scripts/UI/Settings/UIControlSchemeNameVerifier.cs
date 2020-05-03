@@ -15,9 +15,20 @@ namespace LSDR.UI.Settings
         
         public Button Button;
 
-        public bool CanHaveSameName { get { return _canHaveSameName; } set { _canHaveSameName = value; } }
+        public bool CanHaveSameName
+        {
+            get
+            {
+                return _canHaveSameName;
+            }
+            set
+            {
+                _canHaveSameName = value;
+                if (_canHaveSameName) Button.interactable = true;
+            }
+        }
 
-        [SerializeField] private bool _canHaveSameName = false;
+        [SerializeField] private bool _canHaveSameName;
 
         [SerializeField] private InputField _inputField;
 
@@ -25,7 +36,7 @@ namespace LSDR.UI.Settings
         {
             _inputField = GetComponent<InputField>();
             _inputField.onValueChanged.AddListener(validateInput);
-            Button.interactable = false;
+            Button.interactable = true;
         }
 
         /// <summary>
@@ -44,8 +55,12 @@ namespace LSDR.UI.Settings
             // scheme can't overwrite another scheme
             if (!CanHaveSameName && ControlSchemeLoader.Schemes.Count(scheme => scheme.Name == input) > 0)
             {
+                Debug.Log("Invalid");
+                Debug.Log(CanHaveSameName);
                 return false;
             }
+            
+            Debug.Log("Valid");
 
             return true;
         }

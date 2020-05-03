@@ -114,6 +114,7 @@ namespace LSDR.Game
 		    
             // set the control scheme
             ControlSchemeLoader.SelectScheme(Settings.CurrentControlSchemeIndex);
+            ControlSchemeLoader.SaveSchemes();
 
             // set the resolution
             if (Settings.CurrentResolutionIndex > Screen.resolutions.Length)

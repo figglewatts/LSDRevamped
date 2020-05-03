@@ -37,11 +37,11 @@ namespace Torii.Build
             foreach (var buildDef in buildDefs)
             {
                 Debug.Log($"Building player for target '{buildDef.Target}'...");
-
-                var result = BuildPipeline.BuildPlayer(buildDef.ToBuildPlayerOptions());
                 
                 writeBuildNumber(buildDef);
-                
+
+                var result = BuildPipeline.BuildPlayer(buildDef.ToBuildPlayerOptions());
+
                 Debug.Log(result);
             }
         }

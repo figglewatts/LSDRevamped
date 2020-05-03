@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using InControl;
 using LSDR.InputManagement;
 using Torii.UI;
@@ -57,6 +58,11 @@ namespace LSDR.UI.Settings
             CancelSchemeButton.onClick.AddListener(Hide);
 	    }
 
+	    public void OnDisable()
+	    {
+		    Hide();
+	    }
+
 	    /// <summary>
 	    /// Show the control scheme creator in a certain mode.
 	    /// </summary>
@@ -71,7 +77,7 @@ namespace LSDR.UI.Settings
 	            case ControlSchemeCreatorMode.Create:
 	            {
 		            _currentlyEditingScheme = new ControlScheme(ControlActions.CreateDefaultTank(), "NewScheme", false);
-	                SubmitSchemeButtonText.text = "Create";
+	                SubmitSchemeButtonText.text = "Save";
 	                NameVerifier.CanHaveSameName = false;
 	                SubmitSchemeButton.interactable = NameVerifier.Validate(_currentlyEditingScheme.Name);
 	                SchemeNameField.interactable = true;
@@ -81,8 +87,11 @@ namespace LSDR.UI.Settings
 	            case ControlSchemeCreatorMode.Edit:
 	            {
 	                _currentlyEditingScheme = ControlSchemeLoader.Current;
-	                SubmitSchemeButtonText.text = "Edit";
+	                SubmitSchemeButtonText.text = "Save";
 	                SubmitSchemeButton.interactable = true;
+	                Debug.Log("Editing scheme...");
+	                Debug.Log(SubmitSchemeButton.interactable);
+	                NameVerifier.Button.interactable = true;
 	                SchemeNameField.interactable = false;
 	                SchemeNameField.text = ControlSchemeLoader.Current.Name;
 	                NameVerifier.CanHaveSameName = true;

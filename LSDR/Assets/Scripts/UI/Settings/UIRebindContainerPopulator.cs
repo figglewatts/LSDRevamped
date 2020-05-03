@@ -105,7 +105,7 @@ namespace LSDR.UI.Settings
             };
             action.ListenOptions.OnBindingFound += (playerAction, source) =>
             {
-                if (source == new KeyBindingSource(Key.Escape) ||
+                if (source == new KeyBindingSource(Key.Delete) ||
                     source == new DeviceBindingSource(InputControlType.Select))
                 {
                     playerAction.StopListeningForBinding();

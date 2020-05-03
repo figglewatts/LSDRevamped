@@ -82,6 +82,8 @@ namespace LSDR.Entities.Player
 		{
 			// if mouselook is disabled, we don't want to handle rotation this way
 			if (!Settings.CanMouseLook) return;
+			
+			Debug.Log(ControlScheme.Current.MouseSensitivity);
 
 			// rotate the camera around the Y axis based on mouse horizontal movement
 			transform.Rotate(0,
