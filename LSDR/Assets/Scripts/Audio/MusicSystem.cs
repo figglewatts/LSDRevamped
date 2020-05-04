@@ -42,10 +42,19 @@ namespace LSDR.Audio
         {
             var filename = Path.GetFileNameWithoutExtension(filePath);
             if (filename != null)
+            if (filename.Contains(" - "))
             {
-                var splitFilename = filename.Split(new[] {" - "}, 2, StringSplitOptions.RemoveEmptyEntries);
-                CurrentArtist = splitFilename[0];
-                CurrentSong = splitFilename[1];
+                {
+                   var splitFilename = filename.Split(new[] {" - "}, 2, StringSplitOptions.RemoveEmptyEntries);
+                   CurrentArtist = splitFilename[0];
+                   CurrentSong = splitFilename[1];
+                   return;
+                }
+            }
+            else
+            {
+                CurrentArtist = "UNKNOWN ARTIST";
+                CurrentSong = filename;
             }
         }
     }
