@@ -15,6 +15,7 @@ namespace LSDR.Audio
         public string CurrentSong { get; private set; }
         public string CurrentArtist { get; private set; }
         
+        //DEPRECATED: Torii implementation
         public AudioSource PlayRandomSongFromDirectory(string dir)
         {
             var clip = getRandomSongFromDirectory(dir);
@@ -24,6 +25,14 @@ namespace LSDR.Audio
         public AudioSource PlayRandomSongFromDirectory(AudioSource source, string dir)
         {
             var clip = getRandomSongFromDirectory(dir);
+            
+            if (clip == source.clip)
+			{
+				while (clip == source.clip)
+				{
+					clip = getRandomSongFromDirectory(dir);
+				}
+			}
             source.clip = clip;
             source.Play();
             return source;
@@ -42,10 +51,19 @@ namespace LSDR.Audio
         {
             var filename = Path.GetFileNameWithoutExtension(filePath);
             if (filename != null)
+            if (filename.Contains(" - "))
             {
-                var splitFilename = filename.Split(new[] {" - "}, 2, StringSplitOptions.RemoveEmptyEntries);
-                CurrentArtist = splitFilename[0];
-                CurrentSong = splitFilename[1];
+                {
+                   var splitFilename = filename.Split(new[] {" - "}, 2, StringSplitOptions.RemoveEmptyEntries);
+                   CurrentArtist = splitFilename[0];
+                   CurrentSong = splitFilename[1];
+                   return;
+                }
+            }
+            else
+            {
+                CurrentArtist = "UNKNOWN ARTIST";
+                CurrentSong = filename;
             }
         }
     }
