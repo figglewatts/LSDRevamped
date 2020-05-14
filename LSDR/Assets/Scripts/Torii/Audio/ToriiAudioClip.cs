@@ -3,7 +3,7 @@ using System.IO;
 using NVorbis;
 using UnityEngine;
 
-namespace LSDR.IO
+namespace Torii.Audio
 {
     public class ToriiAudioClip : IDisposable
     {

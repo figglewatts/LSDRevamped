@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using NVorbis;
+using Torii.Audio;
 using Torii.Resource;
 using UnityEngine;
 
