@@ -110,8 +110,8 @@ namespace LSDR.Dream
             // start a timer to end the dream
             float secondsInDream = RandUtil.Float(MIN_SECONDS_IN_DREAM, MAX_SECONDS_IN_DREAM);
             _endDreamTimer = Coroutines.Instance.StartCoroutine(EndDreamAfterSeconds(secondsInDream));
-
-            Fader.FadeIn(Color.black, 3, () => Coroutines.Instance.StartCoroutine(LoadDream(dream)));
+            
+            ToriiFader.Instance.FadeIn(Color.black, 3, () => Coroutines.Instance.StartCoroutine(LoadDream(dream)));
             CurrentSequence = new DreamSequence();
             CurrentSequence.Visited.Add(dream);
         }
@@ -128,7 +128,7 @@ namespace LSDR.Dream
                 CurrentSequence.UpperModifier += FALLING_UPPER_PENALTY;
             }
 
-            Fader.FadeIn(Color.black, fromFall ? FADE_OUT_SECS_FALL : FADE_OUT_SECS_REGULAR, () =>
+            ToriiFader.Instance.FadeIn(Color.black, fromFall ? FADE_OUT_SECS_FALL : FADE_OUT_SECS_REGULAR, () =>
             {
                 CurrentDream = null;
                 _currentDreamPath = null;
@@ -148,7 +148,7 @@ namespace LSDR.Dream
 
             commonEndDream();
             
-            Fader.FadeIn(Color.black, FADE_OUT_SECS_FORCE, () =>
+            ToriiFader.Instance.FadeIn(Color.black, FADE_OUT_SECS_FORCE, () =>
             {
                 CurrentDream = null;
                 _currentDreamPath = null;
@@ -210,7 +210,7 @@ namespace LSDR.Dream
             
             CurrentSequence.Visited.Add(dream);
 
-            Fader.FadeIn(fadeCol, 1F, () =>
+            ToriiFader.Instance.FadeIn(fadeCol, 1F, () =>
             {
                 // see if we should switch texture sets
                 if (RandUtil.OneIn(CHANCE_TO_SWITCH_TEXTURES_WHEN_LINKING))
@@ -264,7 +264,7 @@ namespace LSDR.Dream
 
             Cursor.lockState = CursorLockMode.None;
             
-            Fader.FadeOut(1F);
+            ToriiFader.Instance.FadeOut(1F);
         }
 
         public IEnumerator LoadDream(Dream dream)
@@ -315,6 +315,7 @@ namespace LSDR.Dream
             ApplyEnvironment(dream.RandomEnvironment());
 
             SettingsSystem.CanControlPlayer = true;
+            SettingsSystem.CanMouseLook = true;
             
             OnLevelLoad.Raise();
 
@@ -325,7 +326,7 @@ namespace LSDR.Dream
             // reenable pausing
             PauseSystem.CanPause = true;
 
-            Fader.FadeOut(Color.black, 1F, () => _currentlyTransitioning = false);
+            ToriiFader.Instance.FadeOut(1F, () => _currentlyTransitioning = false);
         }
 
         public void ApplyTextureSet(TextureSet textureSet)
@@ -369,6 +370,10 @@ namespace LSDR.Dream
             
             switch (textureSet)
             {
+                default:
+                {
+                    return PathUtil.Combine(dream.LBDFolder, "TEXA.TIX");
+                }
                 case TextureSet.Kanji:
                 {
                     return PathUtil.Combine(dream.LBDFolder, "TEXB.TIX");
@@ -380,10 +385,6 @@ namespace LSDR.Dream
                 case TextureSet.Upper:
                 {
                     return PathUtil.Combine(dream.LBDFolder, "TEXD.TIX");
-                }
-                default:
-                {
-                    return PathUtil.Combine(dream.LBDFolder, "TEXA.TIX");
                 }
             }
         }

@@ -5,6 +5,7 @@ using LSDR.Game;
 using LSDR.Types;
 using LSDR.UI;
 using LSDR.Util;
+using Torii.UI;
 
 namespace LSDR.Entities.Dream
 {
@@ -32,7 +33,7 @@ namespace LSDR.Entities.Dream
 
 			//GameSettings.CanControlPlayer = true;
 
-			Fader.FadeOut(1F);
+			ToriiFader.Instance.FadeOut(1F);
 		}
 	}
 }

@@ -3,6 +3,7 @@ using LSDR.Types;
 using LSDR.UI;
 using UnityEngine;
 using LSDR.Util;
+using Torii.UI;
 
 namespace LSDR.Entities.Trigger
 {
@@ -51,12 +52,12 @@ namespace LSDR.Entities.Trigger
 				Transform teleportTarget = Target.GetTargetTransform(TargetName);
 				if (FadeOnTeleport)
 				{
-					Fader.FadeIn(FadeColor, FadeInTime, () =>
+					ToriiFader.Instance.FadeIn(FadeColor, FadeInTime, () =>
 					{
 						other.transform.position = teleportTarget.position;
 						other.transform.rotation = Quaternion.Euler(other.transform.rotation.eulerAngles.x,
 							teleportTarget.transform.rotation.eulerAngles.y, other.transform.rotation.eulerAngles.z);
-						Fader.FadeOut(FadeOutTime);
+						ToriiFader.Instance.FadeOut(FadeOutTime);
 					});
 				}
 				else

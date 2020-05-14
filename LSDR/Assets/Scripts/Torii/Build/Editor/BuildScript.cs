@@ -1,11 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
-using System.Reflection;
+using System.Linq;
 using LSDR.Game;
 using UnityEditor;
 using UnityEngine;
 using Torii.Serialization;
 using LSDR.Util;
+using UnityEditor.Callbacks;
+using UnityEditor.Compilation;
+using Assembly = System.Reflection.Assembly;
+using Debug = UnityEngine.Debug;
 
 namespace Torii.Build
 {
@@ -38,27 +44,10 @@ namespace Torii.Build
             {
                 Debug.Log($"Building player for target '{buildDef.Target}'...");
                 
-                writeBuildNumber(buildDef);
-
                 var result = BuildPipeline.BuildPlayer(buildDef.ToBuildPlayerOptions());
 
                 Debug.Log(result);
             }
-        }
-
-        /// <summary>
-        /// Write the current build number to a txt file with the executable.
-        /// </summary>
-        /// <param name="def">The build definition we're using.</param>
-        private static void writeBuildNumber(BuildDefinition def)
-        {
-            var buildNumber = typeof(GameLoadSystem).Assembly.GetName().Version.ToString();
-            var buildNumberFilePath = IOUtil.PathCombine(Path.GetDirectoryName(def.ExecutablePath), "buildnumber.txt");
-            File.WriteAllText(buildNumberFilePath, buildNumber);
-            
-            // we also want to write the build number to the project path so the build system can pick it up
-            var projectBuildNumberFilePath = IOUtil.PathCombine(Application.dataPath, "../", "lastbuildnumber.txt");
-            File.WriteAllText(projectBuildNumberFilePath, buildNumber);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using LSDR.Game;
+using Torii.UI;
 using UnityEngine;
 
 namespace LSDR.UI.Title
@@ -16,7 +17,7 @@ namespace LSDR.UI.Title
             LoadingIcon.SetActive(false);
             Background.SetActive(false);
             MainMenu.SetActive(true);
-            Fader.FadeOut(Color.black, 5, () => gameObject.SetActive(false));
+            ToriiFader.Instance.FadeOut(Color.black, 5, () => gameObject.SetActive(false), 1);
         }
     }
 }

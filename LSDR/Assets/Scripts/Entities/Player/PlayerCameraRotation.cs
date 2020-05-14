@@ -1,7 +1,9 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using LSDR.Game;
 using LSDR.InputManagement;
 using System.Collections.Generic;
+using InControl;
 
 namespace LSDR.Entities.Player
 {
@@ -32,7 +34,7 @@ namespace LSDR.Entities.Player
 		public List<Camera> TargetCameras;
 		
 		/// <summary>
-		/// If using mouse look deltaTime makes things very slow -- so rotations will be multiplied by this factor.
+		/// Mouse look rotations will be multiplied by this factor.
 		/// Set in inspector.
 		/// </summary>
 		public float MouseLookRotationMultiplier;
@@ -82,21 +84,39 @@ namespace LSDR.Entities.Player
 		{
 			// if mouselook is disabled, we don't want to handle rotation this way
 			if (!Settings.CanMouseLook) return;
+
+			Vector2 controllerLookVec = new Vector2(ControlScheme.Current.Actions.LookX.Value,
+				ControlScheme.Current.Actions.LookY.Value);
+
+			if (!Settings.Settings.LimitFramerate)
+			{
+				controllerLookVec *= 0.2f;
+			}
 			
-			Debug.Log(ControlScheme.Current.MouseSensitivity);
+			Vector2 mouseLookVec = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+
+			Vector2 lookVec = controllerLookVec + mouseLookVec;
+
+			// if the framerate is limited and we're using a controller, scale the look vector a bit as otherwise
+			// it'll be pretty slow
+			if (Settings.Settings.LimitFramerate && InputManager.ActiveDevice.Name != "None")
+			{
+				lookVec *= 4;
+			}
+
 
 			// rotate the camera around the Y axis based on mouse horizontal movement
 			transform.Rotate(0,
-				ControlScheme.Current.Actions.LookX * ControlScheme.Current.MouseSensitivity *
-				Time.smoothDeltaTime * MouseLookRotationMultiplier,
+				lookVec.x * ControlScheme.Current.MouseSensitivity *
+				MouseLookRotationMultiplier,
 				0, Space.Self);
 
 			// rotate the camera around the X axis based on mouse vertical movement
 			Transform temp = target.transform;
-			_rotationX += -ControlScheme.Current.Actions.LookY *
-			              ControlScheme.Current.MouseSensitivity * Time.smoothDeltaTime *
+			_rotationX += -lookVec.y *
+			              ControlScheme.Current.MouseSensitivity *
 			              MouseLookRotationMultiplier;
-			
+
 			// make sure this angle is clamped between the min and max Y values
 			_rotationX = ClampAngle(_rotationX, MinY, MaxY);
 			
@@ -105,7 +125,7 @@ namespace LSDR.Entities.Player
 			temp.localEulerAngles = new Vector3(_rotationX, targetTransform.localEulerAngles.y, 0);
 			
 			// interpolate between the old rotation and the new rotation
-			Quaternion.Slerp(targetTransform.rotation, temp.rotation, Time.deltaTime);
+			target.transform.localEulerAngles = temp.localEulerAngles;
 		}
 
 		/// <summary>

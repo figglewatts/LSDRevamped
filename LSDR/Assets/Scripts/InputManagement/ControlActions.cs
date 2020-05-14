@@ -131,17 +131,13 @@ namespace LSDR.InputManagement
             actions.Backward.AddDefaultBinding(Key.S);
             actions.Backward.AddDefaultBinding(InputControlType.LeftStickDown);
             actions.Backward.AddDefaultBinding(InputControlType.DPadDown);
-
-            actions.LookUp.AddDefaultBinding(Mouse.PositiveY);
+            
             actions.LookUp.AddDefaultBinding(InputControlType.RightStickUp);
-
-            actions.LookDown.AddDefaultBinding(Mouse.NegativeY);
+            
             actions.LookDown.AddDefaultBinding(InputControlType.RightStickDown);
-
-            actions.LookLeft.AddDefaultBinding(Mouse.NegativeX);
+            
             actions.LookLeft.AddDefaultBinding(InputControlType.RightStickLeft);
-
-            actions.LookRight.AddDefaultBinding(Mouse.PositiveX);
+            
             actions.LookRight.AddDefaultBinding(InputControlType.RightStickRight);
 
             actions.LookBehind.AddDefaultBinding(Key.Z);

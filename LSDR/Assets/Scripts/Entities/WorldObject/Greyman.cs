@@ -7,6 +7,7 @@ using LSDR.IO;
 using LSDR.IO.ResourceHandlers;
 using LSDR.UI;
 using Torii.Resource;
+using Torii.UI;
 using Torii.Util;
 using UnityEngine;
 
@@ -63,10 +64,10 @@ namespace LSDR.Entities.WorldObject
         private void playerEncountered()
         {
             DreamSystem.CurrentSequence.UpperModifier += HAPPINESS_PENALTY;
-            Fader.FadeIn(Color.white, 0.1F, () =>
+            ToriiFader.Instance.FadeIn(Color.white, 0.1F, () =>
             {
                 _meshRenderer.enabled = false;
-                Fader.FadeOut(Color.white, 3F, () =>
+                ToriiFader.Instance.FadeOut(Color.white, 3F, () =>
                 {
                     if (gameObject != null) Destroy(gameObject);
                 });

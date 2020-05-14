@@ -2,6 +2,7 @@
 using LSDR.Entities.Dream;
 using LSDR.Game;
 using LSDR.UI;
+using Torii.UI;
 
 namespace LSDR.Entities.WorldObject
 {
@@ -48,10 +49,10 @@ namespace LSDR.Entities.WorldObject
 		{
 			_playerEncountered = true;
 			DreamDirector.HappinessAccumulator += DreamDirector.GREYMAN_HAPPINESS_PENALTY;
-			Fader.FadeIn(Color.white, 0.1F, () =>
+			ToriiFader.Instance.FadeIn(Color.white, 0.1F, () =>
 			{
 				GetComponentInChildren<Renderer>().enabled = false;
-				Fader.FadeOut(Color.white, 3F, () => { Destroy(gameObject); });
+				ToriiFader.Instance.FadeOut(Color.white, 3F, () => { Destroy(gameObject); });
 			});
 		}
 	}

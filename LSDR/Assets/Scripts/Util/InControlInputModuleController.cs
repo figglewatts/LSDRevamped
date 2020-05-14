@@ -24,7 +24,7 @@ namespace LSDR.Util
 
         private void checkActiveDeviceController(InputDevice device)
         {
-            _inputModule.allowMouseInput = !deviceIsController(InputManager.ActiveDevice);
+            //_inputModule.allowMouseInput = !deviceIsController(InputManager.ActiveDevice);
         }
 
         private void OnDestroy()

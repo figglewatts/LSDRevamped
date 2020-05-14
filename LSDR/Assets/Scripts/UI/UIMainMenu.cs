@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Torii.UI;
+using UnityEngine;
 
 namespace LSDR.UI
 {
@@ -60,10 +61,10 @@ namespace LSDR.UI
 
         public void ShowAfterFade()
         {
-            Fader.FadeIn(Color.black, 0.5F, () =>
+	        ToriiFader.Instance.FadeIn(Color.black, 0.5F, () =>
             {
                 ChangeMenuState(MenuState.MAIN);
-                Fader.FadeOut(0.5F);
+                ToriiFader.Instance.FadeOut(0.5F);
             });
         }
 	}

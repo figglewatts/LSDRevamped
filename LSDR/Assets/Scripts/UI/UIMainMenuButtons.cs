@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using LSDR.Entities.Dream;
+using Torii.UI;
 
 namespace LSDR.UI
 {
@@ -17,19 +18,19 @@ namespace LSDR.UI
 
 		public void GraphButtonPressed()
 		{
-			Fader.FadeIn(Color.black, 0.5F, () =>
+			ToriiFader.Instance.FadeIn(Color.black, 0.5F, () =>
 			{
 				MainMenu.ChangeMenuState(UIMainMenu.MenuState.GRAPH);
-				Fader.FadeOut(0.5F);
+				ToriiFader.Instance.FadeOut(0.5F);
 			});
 		}
 
 		public void SettingsButtonPressed()
 		{
-			Fader.FadeIn(Color.black, 0.5F, () =>
+			ToriiFader.Instance.FadeIn(Color.black, 0.5F, () =>
 			{
 				MainMenu.ChangeMenuState(UIMainMenu.MenuState.SETTINGS);
-				Fader.FadeOut(0.5F);
+				ToriiFader.Instance.FadeOut(0.5F);
 			});
 		}
 

@@ -11,6 +11,7 @@ namespace LSDR.Game
         public bool Paused => Math.Abs(Time.timeScale) < float.Epsilon;
         public ToriiEvent OnGamePaused;
         public ToriiEvent OnGameUnpaused;
+        public SettingsSystem Settings;
         public bool CanPause = true;
 
         public void TogglePause()
@@ -33,7 +34,8 @@ namespace LSDR.Game
             
             Time.timeScale = 0;
             OnGamePaused.Raise();
-            Cursor.visible = !controllerConnected();
+            Settings.CanMouseLook = false;
+            Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
         }
 
@@ -41,13 +43,9 @@ namespace LSDR.Game
         {
             Time.timeScale = 1;
             OnGameUnpaused.Raise();
+            Settings.CanMouseLook = true;
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
-        }
-
-        private bool controllerConnected()
-        {
-            return !InputManager.ActiveDevice.Name.Equals("None", StringComparison.InvariantCulture);
         }
     }
 }

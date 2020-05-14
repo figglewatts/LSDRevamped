@@ -74,7 +74,7 @@ namespace LSDR.Entities.Player
 			_playerMovement = GetComponent<PlayerMovement>();
 		}
 
-		void Update()
+		void FixedUpdate()
 		{
 			// if the sprint button is pressed, we're sprinting
 			if (ControlScheme.Current.Actions.Run.IsPressed)

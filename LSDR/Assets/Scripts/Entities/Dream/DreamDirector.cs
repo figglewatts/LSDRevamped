@@ -8,6 +8,7 @@ using LSDR.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using LSDR.Util;
+using Torii.UI;
 
 namespace LSDR.Entities.Dream
 {
@@ -115,7 +116,7 @@ namespace LSDR.Entities.Dream
 			ResourceManager.ClearLifespan(ResourceLifespan.MENU);
 
 			// load dream scene
-			Fader.FadeIn(Color.black, 1.5F, () => { SceneManager.LoadScene("dream"); });
+			ToriiFader.Instance.FadeIn(Color.black, 1.5F, () => { SceneManager.LoadScene("dream"); });
 		}
 
 		// TODO: write BeginFlashback method that sets the seed as well as starting a dream
@@ -144,7 +145,7 @@ namespace LSDR.Entities.Dream
 
 			AddGraphSquare(StaticityAccumulator, HappinessAccumulator);
 
-			Fader.FadeIn(Color.black, fadeInSpeed, () =>
+			ToriiFader.Instance.FadeIn(Color.black, fadeInSpeed, () =>
 			{
 				SceneManager.LoadScene("titlescreen");
 				//GameSettings.SetCursorViewState(true);
@@ -169,10 +170,10 @@ namespace LSDR.Entities.Dream
 
 			//GameSettings.SetCursorViewState(true);
 
-			Fader.FadeIn(Color.black, 1F, () =>
+			ToriiFader.Instance.FadeIn(Color.black, 1F, () =>
 			{
 				SceneManager.LoadScene("titlescreen");
-				Fader.FadeOut(0.5F);
+				ToriiFader.Instance.FadeOut(0.5F);
 			});
 		}
 

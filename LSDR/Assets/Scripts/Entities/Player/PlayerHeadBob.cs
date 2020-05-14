@@ -70,7 +70,7 @@ namespace LSDR.Entities.Player
 			_targetCamTransform = TargetCamera.transform;
 		}
 
-		void Update()
+		void FixedUpdate()
 		{
 			// if we can't control the player, we don't want to bob the head
 			if (!Settings.CanControlPlayer) return;

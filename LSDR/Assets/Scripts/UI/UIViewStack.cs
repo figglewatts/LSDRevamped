@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Torii.UI;
 using UnityEngine;
 
 namespace LSDR.UI
@@ -87,12 +88,12 @@ namespace LSDR.UI
         private void transitionBetween(GameObject from, GameObject to)
         {
             _currentlyTransitioning = true;
-            Fader.FadeIn(Color.black, FadeDuration, () =>
+            ToriiFader.Instance.FadeIn(Color.black, FadeDuration, () =>
             {
                 from.SetActive(false);
                 to.SetActive(true);
                 _currentlyTransitioning = false;
-                Fader.FadeOut(Color.black, FadeDuration);
+                ToriiFader.Instance.FadeOut(Color.black, FadeDuration);
             });
         }
     }

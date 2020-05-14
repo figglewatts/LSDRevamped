@@ -17,7 +17,7 @@ namespace LSDR.Entities.Player
 		/// </summary>
 		public float RotationSpeed;
 
-		void Update()
+		void FixedUpdate()
 		{
 			// if we can control the player and we're not currently in FPS control mode
 			if (Settings.CanControlPlayer && !ControlScheme.Current.FpsControls)

@@ -25,7 +25,7 @@ namespace LSDR.Game
         public bool CanControlPlayer = true;
 
         /// <summary>
-        /// Used to disable mouse looking, i.e. when paused. Please use SetCursorViewState().
+        /// Used to disable mouse looking, i.e. when paused.
         /// </summary>
         public bool CanMouseLook = true;
 
@@ -39,7 +39,7 @@ namespace LSDR.Game
         /// <summary>
         /// The framerate of the PS1. Used when framerate limiting is enabled.
         /// </summary>
-        public const int FRAMERATE_LIMIT = 25;
+        public const int FRAMERATE_LIMIT = 20;
 
         public Shader ClassicDiffuse;
         public Shader ClassicAlpha;

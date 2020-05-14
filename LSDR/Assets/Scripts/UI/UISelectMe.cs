@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
 using InControl;
+using LSDR.InputManagement;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace LSDR.UI
@@ -12,11 +14,21 @@ namespace LSDR.UI
 	public class UISelectMe : MonoBehaviour
 	{
 		public bool SelectEvenWithMouse;
+		public ControlSchemeLoaderSystem ControlScheme;
 		
 		void Start()
 		{
 			init();
 			StartCoroutine(waitFrameThenSelect(InputManager.ActiveDevice));
+		}
+
+		private void Update()
+		{
+			if (ControlScheme.Current.Actions.Move.Value.sqrMagnitude > 0 &&
+			    EventSystem.current.currentSelectedGameObject == null)
+			{
+				StartCoroutine(waitFrameThenSelect(InputManager.ActiveDevice));
+			}
 		}
 
 		void OnEnable() { StartCoroutine(waitFrameThenSelect(InputManager.ActiveDevice)); }
