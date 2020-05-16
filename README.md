@@ -3,22 +3,20 @@ A remake of the cult-classic game LSD: Dream Emulator.
 
 ## Prerequisites
 - Git LFS (https://git-lfs.github.com/)
-- Unity 2017.4.31f1 LTS
+- Unity 2017.4.30f1 installed via Unity Hub
 - C# IDE (I use JetBrains Rider, but Visual Studio will work too...)
 - Windows (this may change soon... watch this space)
 - InControl (Unity Asset Store, paid asset)
 - Python 3.7
-- Pipenv
 
 ## Quick start
 1. Ensure you've prepared the prerequisites as above.
 2. Clone and initialise this repo:
-
-```terminal
-$ git clone https://github.com/Figglewatts/LSDRevamped.git
-$ git submodule init
-$ git submodule update
-```
+   ```terminal
+   $ git clone https://github.com/Figglewatts/   LSDRevamped.git
+   $ git submodule init
+   $ git submodule update
+   ```
 
 3. Open the folder "LSDR" in Unity.
 4. Click on `Assets > Open C# Project`.
@@ -28,12 +26,16 @@ $ git submodule update
 8. All done!
 
 ## Building the game
-1. Setup pipenv in the root of the repo:
-```terminal
-$ pipenv install
-```
-2. Ensure you modify `buildconf.yaml` to have the correct values for `unity_location` and `project_path`.
-3. Run the build script
-```terminal
-$ pipenv run python build.py -d
-```
+1. Install the `toriicli` utility:
+   ```terminal
+   $ pip install toriicli
+   ```
+2. Make sure `toriicli` can find your Unity installation by running:
+   ```terminal
+   $ toriicli find
+   ```
+   It should print out the path to the Unity 2017.4.30f1 executable.
+3. Run `toriicli build` in the root of the repo to build the project.
+   Make sure Unity isn't open. This will take a while, so wait for it to finish.
+4. Once it's finished, the build will be in the 'builds' folder as a zip. You
+   can extract it and play it.

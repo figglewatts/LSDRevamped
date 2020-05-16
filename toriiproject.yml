@@ -32,7 +32,7 @@ build_post_steps:
     keep: "lsdr-{{ build_number }}.zip"
     using:
       backend: local
-      container: D:/lsdr_builds
+      container: builds
       path_prefix: "{{ build_def.target }}"
   - step: export
     keep: "lsdr-{{ build_number }}.zip"
