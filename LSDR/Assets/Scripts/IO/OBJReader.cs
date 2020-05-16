@@ -10,6 +10,7 @@ namespace LSDR.IO
 	/// <summary>
 	/// OBJReader is used for loading OBJ files.
 	/// </summary>
+	// TODO: this can probably be replaced with a better written parser...
 	public static class OBJReader
 	{
 		/// <summary>

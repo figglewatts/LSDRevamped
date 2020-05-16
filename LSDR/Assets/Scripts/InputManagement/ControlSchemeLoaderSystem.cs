@@ -5,6 +5,7 @@ using System.Linq;
 using InControl;
 using LSDR.Util;
 using Torii.Serialization;
+using Torii.Util;
 using UnityEngine;
 
 namespace LSDR.InputManagement
@@ -22,7 +23,7 @@ namespace LSDR.InputManagement
 
         public void OnEnable()
         {
-            _controlSchemesPath = IOUtil.PathCombine(Application.persistentDataPath, "input-schemes");
+            _controlSchemesPath = PathUtil.Combine(Application.persistentDataPath, "input-schemes");
 
             InputManager.OnDeviceAttached += initInputDevice;
         }
@@ -52,19 +53,19 @@ namespace LSDR.InputManagement
             
             foreach (var scheme in Schemes)
             {
-                _serializer.Serialize(scheme, IOUtil.PathCombine(_controlSchemesPath, scheme.Name + ".dat"));
+                _serializer.Serialize(scheme, PathUtil.Combine(_controlSchemesPath, scheme.Name + ".dat"));
             }
         }
 
         public void EnsureDefaultSchemes()
         {
-            if (!File.Exists(IOUtil.PathCombine(_controlSchemesPath, "Classic.dat")))
+            if (!File.Exists(PathUtil.Combine(_controlSchemesPath, "Classic.dat")))
             {
                 Debug.Log("Unable to find 'Classic' control scheme - creating...");
                 Schemes.Add(new ControlScheme(ControlActions.CreateDefaultTank(), "Classic", false));
             }
 
-            if (!File.Exists(IOUtil.PathCombine(_controlSchemesPath, "Revamped.dat")))
+            if (!File.Exists(PathUtil.Combine(_controlSchemesPath, "Revamped.dat")))
             {
                 Debug.Log("Unable to find 'Revamped' control scheme - creating...");
                 Schemes.Add(new ControlScheme(ControlActions.CreateDefaultFps(), "Revamped", true, 15F));

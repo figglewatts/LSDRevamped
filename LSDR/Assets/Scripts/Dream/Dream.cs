@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using LSDR.Util;
 using Newtonsoft.Json;
 using ProtoBuf;
+using Torii.Util;
 
 namespace LSDR.Dream
 {

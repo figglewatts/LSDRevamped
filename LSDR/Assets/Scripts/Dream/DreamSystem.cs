@@ -94,7 +94,7 @@ namespace LSDR.Dream
                 : JournalLoader.Current.GetDreamFromGraph(GameSave.CurrentJournalSave.LastGraphX,
                     GameSave.CurrentJournalSave.LastGraphY);
             _currentDreamPath = dreamPath;
-            Dream dream = _serializer.Deserialize<Dream>(IOUtil.PathCombine(Application.streamingAssetsPath,
+            Dream dream = _serializer.Deserialize<Dream>(PathUtil.Combine(Application.streamingAssetsPath,
                 dreamPath));
             BeginDream(dream);
         }
@@ -103,9 +103,6 @@ namespace LSDR.Dream
         {
             _forcedSpawnID = null;
             _canTransition = true;
-            
-            Cursor.visible = false;
-            Cursor.lockState = CursorLockMode.Locked;
 
             // start a timer to end the dream
             float secondsInDream = RandUtil.Float(MIN_SECONDS_IN_DREAM, MAX_SECONDS_IN_DREAM);
@@ -237,7 +234,7 @@ namespace LSDR.Dream
 
             _currentDreamPath = dreamPath;
             Dream dream =
-                _serializer.Deserialize<Dream>(IOUtil.PathCombine(Application.streamingAssetsPath, dreamPath));
+                _serializer.Deserialize<Dream>(PathUtil.Combine(Application.streamingAssetsPath, dreamPath));
             Transition(fadeCol, dream, playSound, spawnPointID);
         }
 
@@ -262,7 +259,7 @@ namespace LSDR.Dream
 
             yield return null;
 
-            Cursor.lockState = CursorLockMode.None;
+            ToriiCursor.Show();
             
             ToriiFader.Instance.FadeOut(1F);
         }
@@ -325,6 +322,8 @@ namespace LSDR.Dream
 
             // reenable pausing
             PauseSystem.CanPause = true;
+            
+            ToriiCursor.Hide();
 
             ToriiFader.Instance.FadeOut(1F, () => _currentlyTransitioning = false);
         }
@@ -349,6 +348,9 @@ namespace LSDR.Dream
         {
             _dreamIsEnding = true;
             _canTransition = false;
+            
+            // disable pausing to prevent throwing off timers etc
+            PauseSystem.CanPause = false;
 
             Debug.Log("Ending dream");
 

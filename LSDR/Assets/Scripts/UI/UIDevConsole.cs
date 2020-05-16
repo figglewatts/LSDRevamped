@@ -83,7 +83,7 @@ namespace LSDR.UI
 
 		private void CommandSubmit(string command)
 		{
-			DevConsole.ProcessConsoleCommand(command);
+			//DevConsole.ProcessConsoleCommand(command);
 			CommandInputField.text = string.Empty;
 			EventSystem.current.SetSelectedGameObject(CommandInputField.gameObject);
 			CommandInputField.OnPointerClick(new PointerEventData(EventSystem.current));

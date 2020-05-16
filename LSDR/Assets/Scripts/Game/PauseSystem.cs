@@ -1,6 +1,7 @@
 using System;
 using InControl;
 using Torii.Event;
+using Torii.Util;
 using UnityEngine;
 
 namespace LSDR.Game
@@ -35,8 +36,7 @@ namespace LSDR.Game
             Time.timeScale = 0;
             OnGamePaused.Raise();
             Settings.CanMouseLook = false;
-            Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.None;
+            ToriiCursor.Show();
         }
 
         public void Unpause()
@@ -44,8 +44,7 @@ namespace LSDR.Game
             Time.timeScale = 1;
             OnGameUnpaused.Raise();
             Settings.CanMouseLook = true;
-            Cursor.visible = false;
-            Cursor.lockState = CursorLockMode.Locked;
+            ToriiCursor.Hide();
         }
     }
 }

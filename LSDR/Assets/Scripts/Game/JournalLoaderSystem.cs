@@ -3,6 +3,7 @@ using System.IO;
 using LSDR.Dream;
 using LSDR.Util;
 using Torii.Serialization;
+using Torii.Util;
 using UnityEngine;
 
 namespace LSDR.Game
@@ -20,7 +21,7 @@ namespace LSDR.Game
         
         public void LoadJournals()
         {
-            var journalsPath = IOUtil.PathCombine(Application.streamingAssetsPath, PathToJournals);
+            var journalsPath = PathUtil.Combine(Application.streamingAssetsPath, PathToJournals);
             var journalFiles = Directory.GetFiles(journalsPath, "*.json");
             Journals = new List<DreamJournal>();
             foreach (var journalFile in journalFiles)

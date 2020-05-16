@@ -4,6 +4,7 @@ using LSDR.Game;
 using LSDR.Util;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Torii.Util;
 using UnityEditor;
 using UnityEngine;
 
@@ -43,8 +44,8 @@ namespace Torii.Build
                 // if the path is relative, then make it relative to the project folder
                 bool isBuildFolderRooted = Path.IsPathRooted(BuildFolder);
                 return isBuildFolderRooted
-                    ? IOUtil.PathCombine(BuildFolder, Target.ToString(), ExecutableName)
-                    : IOUtil.PathCombine(Application.dataPath, "../", BuildFolder, Target.ToString(), ExecutableName);
+                    ? PathUtil.Combine(BuildFolder, Target.ToString(), ExecutableName)
+                    : PathUtil.Combine(Application.dataPath, "../", BuildFolder, Target.ToString(), ExecutableName);
             }
         }
 

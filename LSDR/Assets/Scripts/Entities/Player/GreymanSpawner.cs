@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using LSDR.Dream;
 using LSDR.Util;
+using Torii.Util;
 using UnityEngine;
 
 namespace LSDR.Entities.Dream

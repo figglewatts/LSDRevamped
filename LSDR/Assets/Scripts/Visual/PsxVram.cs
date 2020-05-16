@@ -1,8 +1,7 @@
 namespace LSDR.Visual
 {
     /// <summary>
-    /// Virtual PSX VRAM. A TIX file can be loaded into it to populate it.
-    /// Renderers that want to use this need to set their materials to the ones in here.
+    /// Virtual PSX VRAM.
     /// </summary>
     public static class PsxVram
     {

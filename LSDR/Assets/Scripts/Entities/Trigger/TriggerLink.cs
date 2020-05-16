@@ -4,6 +4,7 @@ using LSDR.Util;
 using ProtoBuf;
 using UnityEngine;
 using Torii.UnityEditor;
+using Torii.Util;
 
 namespace LSDR.Entities.Trigger
 {

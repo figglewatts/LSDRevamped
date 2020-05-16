@@ -36,6 +36,8 @@ namespace Torii.UI
             _fadeImage.color = Color.clear;
         }
 
+        public void SetSortOrder(int idx) { _fadeCanvas.sortingOrder = idx; }
+
         public void FadeIn(float duration, Action onFinish = null)
         {
             beginFade(fadeTo(1, duration, onFinish));

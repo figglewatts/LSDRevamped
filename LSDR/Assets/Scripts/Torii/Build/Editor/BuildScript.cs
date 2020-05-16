@@ -8,6 +8,7 @@ using UnityEditor;
 using UnityEngine;
 using Torii.Serialization;
 using LSDR.Util;
+using Torii.Util;
 using UnityEditor.Callbacks;
 using UnityEditor.Compilation;
 using Assembly = System.Reflection.Assembly;
@@ -35,7 +36,7 @@ namespace Torii.Build
             Debug.Log("Loading build definitions...");
             
             // the build definition file is stored in the project folder, one above the 'Assets/' folder
-            string buildDefinitionPath = IOUtil.PathCombine(Application.dataPath, "../", BUILD_DEFINITION_FILE);
+            string buildDefinitionPath = PathUtil.Combine(Application.dataPath, "../", BUILD_DEFINITION_FILE);
 
             // load the build definitions
             var buildDefs = _serializer.JsonDeserialize<List<BuildDefinition>>(buildDefinitionPath);

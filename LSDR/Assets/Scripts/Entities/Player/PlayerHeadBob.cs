@@ -3,6 +3,9 @@ using LSDR.Game;
 using LSDR.InputManagement;
 using UnityEngine.Audio;
 using LSDR.Util;
+using Torii.Audio;
+using Torii.Resource;
+using Torii.Util;
 
 namespace LSDR.Entities.Player
 {
@@ -64,7 +67,10 @@ namespace LSDR.Entities.Player
 			
 			// load a footstep sound into the audio source
 			// TODO: add more footstep sounds, and play a sound based on what player is currently walking on
-			StartCoroutine(IOUtil.LoadOGGIntoSource(IOUtil.PathCombine("sfx", "SE_00003.ogg"), _footstepAudioSource));
+			var footstepClip =
+				ResourceManager.Load<ToriiAudioClip>(
+					PathUtil.Combine(Application.streamingAssetsPath, "sfx", "SE_00003.ogg"), "global");
+			_footstepAudioSource.clip = footstepClip;
 
 			// cache a reference to the target camera's transform
 			_targetCamTransform = TargetCamera.transform;
