@@ -1,0 +1,64 @@
+# unity_preferred_version (str, optional): the preferred version of Unity to get
+# when using Unity installation auto detection. If not given, it will use the
+# first one it finds.
+#
+unity_preferred_version: "2017.4.30f1"
+
+# actual_project_dir (str, optional): the actual project directory (where the
+# Unity project is) - by default toriicli will use the directory that this
+# config file is in as the Unity project folder but use this if you want to
+# override it
+#
+actual_project_dir: LSDR
+
+# build_defs (array): the list of builds we should be making. Cannot be empty.
+# Each build should have 'target (str)', which is one of https://docs.unity3d.com/ScriptReference/BuildTarget.html
+# As well as 'executable_name (str)', which is the name of the executable to build.
+#
+build_defs:
+  - target: StandaloneWindows
+    executable_name: LSDR.exe
+  # - target: StandaloneOSXUniversal
+  #   executable_name: LSDR.app
+  # - target: StandaloneLinuxUniversal
+  #   executable_name: LSDR
+
+build_post_steps:
+  - step: compress
+    using:
+      format: zip
+      archive_name: "lsdr-{{ build_number }}"
+  - step: export
+    keep: "lsdr-{{ build_number }}.zip"
+    using:
+      backend: local
+      container: D:/lsdr_builds
+      path_prefix: "{{ build_def.target }}"
+  - step: export
+    keep: "lsdr-{{ build_number }}.zip"
+    filter:
+      options: [upload]
+    using:
+      backend: s3
+      region: fra1
+      endpoint: https://fra1.digitaloceanspaces.com/
+      container: $BUCKET_NAME
+      path_prefix: "{{ build_def.target }}"
+
+release_steps:
+  - step: import
+    using:
+      backend: s3
+      region: fra1
+      endpoint: https://fra1.digitaloceanspaces.com/
+      container: $BUCKET_NAME
+      key: "{{ build_def.target }}/lsdr-{{ build_number }}.zip"
+  - step: butler
+    filter:
+      targets: [StandaloneWindows]
+    using:
+      directory: "lsdr-{{ build_number }}.zip"
+      user: figglewatts
+      game: lsd-revamped
+      channel: windows
+      user_version: "{{ build_number }}"
