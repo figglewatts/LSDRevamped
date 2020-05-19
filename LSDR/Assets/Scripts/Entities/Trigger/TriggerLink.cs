@@ -31,6 +31,8 @@ namespace LSDR.Entities.Trigger
 		public void OnTriggerEnter(Collider other)
 		{
 			if (!other.gameObject.CompareTag("Player")) return;
+			
+			Debug.Log("TRIGGERED!");
 
 			if (!ForceFadeColor)
 			{

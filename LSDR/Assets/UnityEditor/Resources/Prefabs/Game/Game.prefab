@@ -39,12 +39,11 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4688482459295186}
-  - component: {fileID: 114965638404720258}
+  - component: {fileID: 114892638709442086}
   - component: {fileID: 114249476281831764}
   - component: {fileID: 114591223964371292}
   - component: {fileID: 114192027312720898}
-  - component: {fileID: 114892638709442086}
-  - component: {fileID: 114806168719190112}
+  - component: {fileID: 114947531301467206}
   m_Layer: 0
   m_Name: Game
   m_TagString: Untagged
@@ -1394,17 +1393,6 @@ MonoBehaviour:
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 1
   m_ChildControlHeight: 0
---- !u!114 &114806168719190112
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1063118541181592}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 384300ab1d3cd484b89b93500c82245e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114839519646742212
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1483,6 +1471,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GameLoadSystem: {fileID: 11400000, guid: b0b8de380138e4f40924088f27ad9204, type: 2}
+  OnGameLaunch: {fileID: 11400000, guid: a8d275f94b6ba0d49b35b79899c7334f, type: 2}
 --- !u!114 &114893495397889668
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1562,7 +1551,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.Scrollbar+ScrollEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
---- !u!114 &114965638404720258
+--- !u!114 &114947531301467206
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -1570,10 +1559,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1063118541181592}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7342265c9e78f074691e34201170c1fb, type: 3}
+  m_Script: {fileID: 11500000, guid: d4cf528cf2547b74bb5c11c1776047ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ToTrigger: {fileID: 11400000, guid: a8d275f94b6ba0d49b35b79899c7334f, type: 2}
 --- !u!114 &114974071294862772
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -22,18 +22,22 @@ namespace LSDR.Game
         /// <summary>
         /// Used to disable player motion, i.e. when linking.
         /// </summary>
+        [NonSerialized]
         public bool CanControlPlayer = true;
 
         /// <summary>
         /// Used to disable mouse looking, i.e. when paused.
         /// </summary>
+        [NonSerialized]
         public bool CanMouseLook = true;
 
+        [NonSerialized]
         public BindBroker SettingsBindBroker = new BindBroker();
 
         /// <summary>
         /// Whether or not we're in VR mode.
         /// </summary>
+        [NonSerialized]
         public bool VR;
         
         /// <summary>

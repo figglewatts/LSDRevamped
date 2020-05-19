@@ -22,6 +22,9 @@ namespace LSDR.Game
 	{
 		public ToriiEvent OnGameDataLoaded;
 
+		[NonSerialized]
+		public static bool GameLoaded = false;
+
 		public IEnumerator LoadGameCoroutine()
 		{
 			// do game startup stuff here
@@ -46,6 +49,8 @@ namespace LSDR.Game
 				yield return new WaitForSeconds(3);
 			else 
 				yield return null;
+
+			GameLoaded = true;
 
 			OnGameDataLoaded.Raise();
 		}

@@ -17,7 +17,7 @@ namespace LSDR.UI.Title
             LoadingIcon.SetActive(false);
             Background.SetActive(false);
             MainMenu.SetActive(true);
-            ToriiFader.Instance.FadeOut(Color.black, 5, () => gameObject.SetActive(false), 1);
+            ToriiFader.Instance.FadeOut(Color.black, 5, null, 1);
         }
     }
 }

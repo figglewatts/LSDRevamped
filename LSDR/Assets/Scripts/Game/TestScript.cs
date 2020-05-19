@@ -13,5 +13,9 @@ namespace LSDR.Game
 {
     public class TestScript : MonoBehaviour
     {
+        public void OnEnable()
+        {
+            Debug.Log("Im enabled");
+        }
     }
 }

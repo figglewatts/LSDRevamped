@@ -1,93 +1,111 @@
+using System;
+using InControl;
+using LSDR.Dream;
 using LSDR.Game;
-using UnityEngine;
 using LSDR.InputManagement;
+using Torii.Util;
+using UnityEngine;
 
 namespace LSDR.Entities.Player
 {
-    /// <summary>
-	/// Handles player motion. Moving forwards and backwards, and strafing if FPS movement is enabled.
-	/// </summary>
-	[RequireComponent(typeof (CharacterController))]
+    
+    [RequireComponent(typeof(CharacterController))]
     public class PlayerMovement : MonoBehaviour
     {
-	    public SettingsSystem Settings;
-	    public ControlSchemeLoaderSystem ControlScheme;
-	    
-	    /// <summary>
-		/// The speed at which to move. Set in editor.
-		/// </summary>
-        public float MovementSpeed;
-		
-		/// <summary>
-		/// The multiplier on gravity. Affects falling speed. Set in editor.
-		/// </summary>
-        public float GravityMultiplier;
+        public SettingsSystem Settings;
+        public ControlSchemeLoaderSystem ControlScheme;
+        public DreamSystem DreamSystem;
+        
+        public float MovementSpeed = 5f;
+        public float Size = 1f;
+        public float GravityMultiplier = 1f;
+        public float LinkDelay = 0.7F;
 
-		/// <summary>
-		/// The threshold above which to move the player when using a gamepad.
-		/// </summary>
-		public const float JOYSTICK_MOVE_THRESHOLD = 0.3F;
-
+        private CharacterController _controller;
         private Vector3 _moveDir;
-        private CharacterController _characterController;
-        private CollisionFlags _collisionFlags;
-        private bool _previouslyGrounded;
+        private FixedTimeSince _timeColliding;
+        private bool _canLink = true;
 
-        // Use this for initialization
-        private void Start()
+        public void Awake()
         {
-            _characterController = GetComponent<CharacterController>();
+            _controller = GetComponent<CharacterController>();
         }
 
-        // Update is called once per frame
-        private void Update()
-        {
-	        _moveDir = getInput();
-	        
-	        if (!_characterController.isGrounded && _previouslyGrounded)
+        public void Update() { _moveDir = getInput(); }
+
+        void FixedUpdate () {
+            Vector3 desiredMove = transform.forward*_moveDir.y + transform.right*_moveDir.x;
+            
+            // apply the movement speed
+            desiredMove *= MovementSpeed;
+
+            if (movingIntoWall(desiredMove))
             {
-                _moveDir.y = 0f;
+                desiredMove = Vector3.zero;
+                if (_timeColliding > LinkDelay && _canLink)
+                {
+                    _canLink = false;
+                    DreamSystem.Transition(RandUtil.RandColor());
+                }
+            }
+            else
+            {
+                _timeColliding = 0;
+            }
+            
+            // if we're not grounded we want to apply gravity to the movement direction
+            if (!_controller.isGrounded)
+            {
+                desiredMove += Physics.gravity * GravityMultiplier;
             }
 
-            _previouslyGrounded = _characterController.isGrounded;
-        }
-
-        private void FixedUpdate()
-        {
-	        // apply this movement direction to the forward and right vectors of the player
-            var trans = transform;
-            Vector3 desiredMove = trans.forward*_moveDir.y + trans.right*_moveDir.x;
-
-            // get a normal for the surface that is being touched (if any) to move along it
-            RaycastHit hitInfo;
-            Physics.SphereCast(trans.position, _characterController.radius, Vector3.down, out hitInfo,
-                               _characterController.height/2f, ~0, QueryTriggerInteraction.Ignore);
-            desiredMove = Vector3.ProjectOnPlane(desiredMove, hitInfo.normal).normalized;
-
-            // modify the current movement direction to include these new calculated values
-            Vector3 moveDirection = new Vector3(desiredMove.x*MovementSpeed, 0, desiredMove.z*MovementSpeed);
-
-            // if we're not grounded we want to apply gravity to this movement direction, for falling
-            if (!_characterController.isGrounded)
-            {
-				moveDirection += Physics.gravity * (GravityMultiplier * Time.fixedDeltaTime);
-			}
-            
-            // move the character controller
-            _collisionFlags = _characterController.Move(moveDirection*Time.fixedDeltaTime);
+            _controller.Move(desiredMove * Time.fixedDeltaTime);
         }
 
         /// <summary>
-        /// Get the input movement vector from the control scheme.
+        /// Perform a bunch of checks to see if we are trying to move into a wall.
         /// </summary>
-        /// <returns>Movement direction.</returns>
+        /// <param name="desiredMove">The vector we're trying to move along.</param>
+        /// <returns>True if we are moving into a wall, false otherwise.</returns>
+        private bool movingIntoWall(Vector3 desiredMove)
+        {
+            float stepTopYPos = (transform.position.y - _controller.height / 2f) + _controller.stepOffset +
+                                _controller.skinWidth;
+            Vector3 stepTopPos = new Vector3(transform.position.x, stepTopYPos, transform.position.z);
+            Vector3 capsuleTop = new Vector3(transform.position.x, transform.position.y + _controller.height / 2f,
+                transform.position.z);
+            Vector3 capsuleBottom = new Vector3(transform.position.x, transform.position.y - _controller.height / 2f,
+                transform.position.z);
+
+            RaycastHit hit;
+            bool hitAboveStepHeight = Physics.CapsuleCast(stepTopPos, capsuleTop, _controller.radius, desiredMove, out hit,
+                _controller.skinWidth * 2);
+            if (hit.collider == null) return false;
+            if (hitAboveStepHeight && !hit.collider.isTrigger) return true;
+            
+            bool hitSomething = Physics.CapsuleCast(capsuleBottom, capsuleTop, _controller.radius, desiredMove, out hit,
+                _controller.skinWidth * 2);
+            Vector3 axis = Vector3.Cross(transform.up, desiredMove);
+            bool hitOverSlopeLimit =
+                hitSomething && Vector3.SignedAngle(hit.normal, transform.up, axis) > _controller.slopeLimit;
+            bool hitSeemsLikeAStep = hit.normal.y < 0.1f || hit.distance < 1E-06;
+            
+            Debug.Log("Slope limit: " + hitOverSlopeLimit);
+            Debug.Log("It's a step: " + hitSeemsLikeAStep);
+            Debug.Log("Normal: " + hit.normal);
+            Debug.Log("Distance: " + hit.distance);
+            Debug.Log("Angle: " + Vector3.SignedAngle(hit.normal, transform.up, axis));
+
+            return !hit.collider.isTrigger && hitOverSlopeLimit && !hitSeemsLikeAStep;
+        }
+
         private Vector2 getInput()
         {
-			// if we can't control the player return zero for input direction
-	        if (!Settings.CanControlPlayer) return Vector2.zero;
-	        // get vector axes from input system
+            // if we can't control the player return zero for input direction
+            if (!Settings.CanControlPlayer) return Vector2.zero;
+            // get vector axes from input system
             float moveDirFrontBack = ControlScheme.Current.Actions.MoveY;
-	        float moveDirLeftRight = ControlScheme.Current.FpsControls ? ControlScheme.Current.Actions.MoveX : 0f;
+            float moveDirLeftRight = ControlScheme.Current.FpsControls ? ControlScheme.Current.Actions.MoveX : 0f;
             Vector2 input = new Vector2(moveDirLeftRight, moveDirFrontBack);
 
             // normalize input if it exceeds 1 in combined length (for diagonal movement)
@@ -97,22 +115,6 @@ namespace LSDR.Entities.Player
             }
 
             return input;
-        }
-
-        private void OnControllerColliderHit(ControllerColliderHit hit)
-        {
-            Rigidbody body = hit.collider.attachedRigidbody;
-            //dont move the rigidbody if the character is on top of it
-            if (_collisionFlags == CollisionFlags.Below)
-            {
-                return;
-            }
-
-            if (body == null || body.isKinematic)
-            {
-                return;
-            }
-            body.AddForceAtPosition(_characterController.velocity*0.1f, hit.point, ForceMode.Impulse);
         }
     }
 }

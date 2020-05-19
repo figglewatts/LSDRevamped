@@ -1,10 +1,19 @@
-﻿using UnityEngine;
+﻿using System;
+using Torii.Event;
+using Torii.Util;
+using UnityEngine;
 
 namespace LSDR.Game
 {
     public class GameLoadScript : MonoBehaviour
     {
         public GameLoadSystem GameLoadSystem;
+        public ToriiEvent OnGameLaunch;
+
+        public void Start()
+        {
+            if (!GameLoadSystem.GameLoaded) OnGameLaunch.Raise();
+        }
 
         public void LoadGame()
         {

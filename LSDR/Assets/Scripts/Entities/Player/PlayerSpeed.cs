@@ -18,11 +18,6 @@ namespace LSDR.Entities.Player
 		/// The move speed when sprinting.
 		/// </summary>
 		public float SprintMoveSpeed;
-		
-		/// <summary>
-		/// The move speed when sprinting for a while.
-		/// </summary>
-		public float SprintFastMoveSpeed;
 
 		/// <summary>
 		/// The bob speed when walking normally.
@@ -43,21 +38,8 @@ namespace LSDR.Entities.Player
 		/// The bob amplitude when sprinting.
 		/// </summary>
 		public float SprintBobAmount;
-		
-		/// <summary>
-		/// The bob speed when sprinting for a while.
-		/// </summary>
-		public float SprintFastBobSpeed;
-		
-		/// <summary>
-		/// The bob amplitude when sprinting for a while.
-		/// </summary>
-		public float SprintFastBobAmount;
 
 		public ControlSchemeLoaderSystem ControlScheme;
-
-		// timer used to figure out how long we've been sprinting for
-		private float _sprintingTimer;
 
 		// references to headbob and movement scripts
 		private PlayerHeadBob _headBob;
@@ -65,7 +47,6 @@ namespace LSDR.Entities.Player
 
 		// keeps track of which sprinting state we're in
 		private bool _isSprinting;
-		private bool _isSprintingFast;
 
 		void Start()
 		{
@@ -77,32 +58,19 @@ namespace LSDR.Entities.Player
 		void FixedUpdate()
 		{
 			// if the sprint button is pressed, we're sprinting
-			if (ControlScheme.Current.Actions.Run.IsPressed)
+			if (ControlScheme.Current.Actions.Run.IsPressed && canStartSprinting())
 			{
 				_isSprinting = true;
 			}
 
 			if (_isSprinting)
 			{
-				_sprintingTimer += Time.deltaTime;
-				if (_sprintingTimer > 10)
-				{
-					// if we've been sprinting for 10 seconds, we should now sprint faster
-					// update values to match sprinting faster
-					_isSprintingFast = true;
-					_playerMovement.MovementSpeed = SprintFastMoveSpeed;
-					_headBob.BobbingSpeed = SprintFastBobSpeed;
-					_headBob.BobbingAmount = SprintFastBobAmount;
-				}
-				else if (!_isSprintingFast)
-				{
-					// update values to match sprinting
-					_playerMovement.MovementSpeed = SprintMoveSpeed;
-					_headBob.BobbingSpeed = SprintBobSpeed;
-					_headBob.BobbingAmount = SprintBobAmount;
-				}
+				// update values to match sprinting
+				_playerMovement.MovementSpeed = SprintMoveSpeed;
+				_headBob.BobbingSpeed = SprintBobSpeed;
+				_headBob.BobbingAmount = SprintBobAmount;
 			}
-			if (!_isSprinting && !_isSprintingFast)
+			else
 			{
 				// update values to match walking
 				_playerMovement.MovementSpeed = DefaultMoveSpeed;
@@ -112,11 +80,15 @@ namespace LSDR.Entities.Player
 
 			// if space is not pressed and no movement keys are pressed
 			if (!ControlScheme.Current.Actions.Run.IsPressed
-			    && !ControlScheme.Current.Actions.MoveY.IsPressed)
+			    && !ControlScheme.Current.Actions.MoveY.IsPressed && !ControlScheme.Current.Actions.MoveX.IsPressed)
 			{
 				_isSprinting = false;
-				_isSprintingFast = false;
 			}
+		}
+
+		private bool canStartSprinting()
+		{
+			return ControlScheme.Current.Actions.MoveX.IsPressed || ControlScheme.Current.Actions.MoveY.Value > 0;
 		}
 	}
 }

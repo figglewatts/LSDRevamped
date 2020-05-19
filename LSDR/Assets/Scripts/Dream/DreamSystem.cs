@@ -31,7 +31,6 @@ namespace LSDR.Dream
     {
         public ScenePicker DreamScene;
         public ScenePicker TitleScene;
-        public GameObject LBDObjectPrefab;
         public Material SkyBackground;
         public JournalLoaderSystem JournalLoader;
         public LevelLoaderSystem LevelLoader;
@@ -42,7 +41,6 @@ namespace LSDR.Dream
         public MusicSystem MusicSystem;
         public PauseSystem PauseSystem;
         public AudioClip LinkSound;
-        public PrefabPool LBDTilePool;
         public Dream CurrentDream { get; private set; }
         public DreamSequence CurrentSequence { get; private set; }
         public ToriiEvent OnReturnToTitle;
@@ -203,8 +201,6 @@ namespace LSDR.Dream
                 AudioPlayer.Instance.PlayClip(LinkSound, false, "SFX");
             }
 
-            LBDTilePool.ReturnAll();
-            
             CurrentSequence.Visited.Add(dream);
 
             ToriiFader.Instance.FadeIn(fadeCol, 1F, () =>
