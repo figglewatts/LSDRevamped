@@ -121,6 +121,7 @@ namespace LSDR.Dream
             if (fromFall)
             {
                 CurrentSequence.UpperModifier += FALLING_UPPER_PENALTY;
+                SettingsSystem.CanControlPlayer = false;
             }
 
             ToriiFader.Instance.FadeIn(Color.black, fromFall ? FADE_OUT_SECS_FALL : FADE_OUT_SECS_REGULAR, () =>

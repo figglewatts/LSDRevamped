@@ -1,4 +1,5 @@
-﻿using LSDR.Dream;
+﻿using System.Collections;
+using LSDR.Dream;
 using UnityEngine;
 using LSDR.Game;
 
@@ -16,17 +17,10 @@ namespace LSDR.Entities.Player
 		[SerializeField]
 		private Camera _targetCamera;
 		private CharacterController _playerController;
-		private float _fallTimer;
-		private Quaternion _lookUpRotation;
-		private bool _canRotateCamera;
-
-		/// <summary>
-		/// Max amount of time player can fall for before dream ends.
-		/// </summary>
-		private const float MAX_FALLING_TIME = 0.7F;
-
-		private const float ROTATION_SPEED = 40F;
-		private const float MAX_X_ROTATION = 320F;
+		private bool _hasFallen = false;
+		
+		private const float ROTATION_SPEED = 45F;
+		private const float MAX_X_ROTATION = 80F;
 
 		public void Awake()
 		{
@@ -35,26 +29,29 @@ namespace LSDR.Entities.Player
 
 		public void FixedUpdate()
 		{
-			if (_playerController.isGrounded)
+			if (_hasFallen) return;
+			
+			RaycastHit hitInfo;
+			bool hit = Physics.SphereCast(transform.position, _playerController.radius, Vector3.down, out hitInfo);
+			if (!hit)
 			{
-				_fallTimer = 0;
-				return;
+				_hasFallen = true;
+				StartCoroutine(fall());
 			}
+		}
 
-			_fallTimer += Time.deltaTime;
-			if (!_canRotateCamera && _fallTimer > MAX_FALLING_TIME)
-			{
-				Settings.CanControlPlayer = false;
-				_lookUpRotation = Quaternion.Euler(MAX_X_ROTATION, _targetCamera.transform.rotation.eulerAngles.y,
-					_targetCamera.transform.rotation.eulerAngles.z);
-				DreamSystem.EndDream(fromFall: true);
-				_canRotateCamera = true;
-			}
+		private IEnumerator fall()
+		{
+			DreamSystem.EndDream(fromFall: true);
 
-			if (_canRotateCamera)
+			var lookUpRot = Quaternion.AngleAxis(MAX_X_ROTATION, -_targetCamera.transform.right) *
+			                _targetCamera.transform.rotation;
+
+			while (true)
 			{
-				_targetCamera.transform.rotation = Quaternion.RotateTowards(_targetCamera.transform.rotation, _lookUpRotation,
+				_targetCamera.transform.rotation = Quaternion.RotateTowards(_targetCamera.transform.rotation, lookUpRot,
 					ROTATION_SPEED * Time.deltaTime);
+				yield return null;
 			}
 		}
 	}

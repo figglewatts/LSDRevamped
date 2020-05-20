@@ -60,16 +60,8 @@ namespace Torii.Audio
             }
 
             channel.loop = loop;
-
-            if (loop)
-            {
-                channel.clip = clip;
-                channel.Play();
-            }
-            else
-            {
-                channel.PlayOneShot(clip);
-            }
+            channel.clip = clip;
+            channel.Play();
 
             return channel;
         }
