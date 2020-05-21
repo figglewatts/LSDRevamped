@@ -82,10 +82,15 @@ namespace LSDR.Dream
         }
 
         /// <summary>
-        /// Get a random environment from this dream.
+        /// Choose an environment for this dream based on the day number. This has the effect of ensuring environments
+        /// remain the same across transitions as it's all derived from the day number.
         /// </summary>
-        /// <returns>The random environment.</returns>
-        public DreamEnvironment RandomEnvironment() { return RandUtil.RandomListElement(Environments); }
+        /// <returns>The environment.</returns>
+        public DreamEnvironment ChooseEnvironment(int dayNum)
+        {
+            int toChoose = (dayNum - 1) % Environments.Count;
+            return Environments[toChoose];
+        }
     }
 
     /// <summary>

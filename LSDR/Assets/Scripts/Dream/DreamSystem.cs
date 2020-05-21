@@ -46,6 +46,8 @@ namespace LSDR.Dream
         public ToriiEvent OnReturnToTitle;
         public ToriiEvent OnLevelLoad;
         public ToriiEvent OnSongChange;
+        public ToriiEvent OnPlayerSpawned;
+        public ToriiEvent OnLevelPreLoad;
         [NonSerialized] public AudioSource MusicSource;
         [NonSerialized] public Transform Player;
         
@@ -272,23 +274,22 @@ namespace LSDR.Dream
 
             string currentScene = SceneManager.GetActiveScene().name;
             
-            // load the scene in the background and wait until it's done
-            var asyncLoad = SceneManager.LoadSceneAsync(DreamScene.ScenePath, LoadSceneMode.Additive);
-            //asyncLoad.allowSceneActivation = false;
-            while (!asyncLoad.isDone)
-            {
-                yield return null;
-            }
+            OnLevelPreLoad.Raise();
 
-            var asyncUnload = SceneManager.UnloadSceneAsync(currentScene);
-            while (!asyncUnload.isDone)
-            {
-                yield return null;
-            }
+            // var asyncUnload = SceneManager.UnloadSceneAsync(currentScene);
+            // yield return asyncUnload;
+
+            SceneManager.LoadScene(DreamScene.ScenePath);
             
+            yield return null;
+            
+            // load the scene in the background and wait until it's done
+            // var asyncLoad = SceneManager.LoadSceneAsync(DreamScene.ScenePath, LoadSceneMode.Additive);
+            // yield return asyncLoad;
+
             ResourceManager.ClearLifespan("scene");
 
-            SceneManager.SetActiveScene(SceneManager.GetSceneByName(DreamScene.ScenePath));
+            //SceneManager.SetActiveScene(SceneManager.GetSceneByName(DreamScene.ScenePath));
 
             CurrentDream = dream;
             
@@ -306,7 +307,7 @@ namespace LSDR.Dream
                 LevelLoader.LoadLevel(levelPath);
             }
 
-            ApplyEnvironment(dream.RandomEnvironment());
+            ApplyEnvironment(dream.ChooseEnvironment(GameSave.CurrentJournalSave.DayNumber));
 
             SettingsSystem.CanControlPlayer = true;
             SettingsSystem.CanMouseLook = true;
@@ -332,6 +333,12 @@ namespace LSDR.Dream
             {
                 LBDLoader.UseTIX(getTIXPathFromTextureSet(CurrentDream, textureSet));
             }
+        }
+
+        public void SpawnPlayer(GameObject player)
+        {
+            Player = player.transform;
+            OnPlayerSpawned.Raise();
         }
 
         public void SkipSong()

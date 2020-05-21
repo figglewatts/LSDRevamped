@@ -15,8 +15,6 @@ MonoBehaviour:
     ScenePath: dream
   TitleScene:
     ScenePath: titlescreen
-  LBDObjectPrefab: {fileID: 1391404547554646, guid: 57ff39c92edab3b40aa311c31ada242d,
-    type: 2}
   SkyBackground: {fileID: 2100000, guid: 33c8328eaeb7fc343941cbd5355573af, type: 2}
   JournalLoader: {fileID: 11400000, guid: 0110fc1016f1f9544869de97eccd3a19, type: 2}
   LevelLoader: {fileID: 11400000, guid: bc20cf5febfe91b47968485d177078dc, type: 2}
@@ -27,7 +25,8 @@ MonoBehaviour:
   MusicSystem: {fileID: 11400000, guid: fdf3b678d4b208b46a7c7a68e70d1e1d, type: 2}
   PauseSystem: {fileID: 11400000, guid: 20bd9efc931456147967bc186a68a628, type: 2}
   LinkSound: {fileID: 8300000, guid: c44f51af973d7884781919daada531a8, type: 3}
-  LBDTilePool: {fileID: 11400000, guid: 4a10cf5eb4b06594eabec4c9f10b6d6f, type: 2}
   OnReturnToTitle: {fileID: 11400000, guid: 44fd4cb80f11a304ba2c096609f4ca91, type: 2}
   OnLevelLoad: {fileID: 11400000, guid: 5e5a3c9828a4f3c459b0cf42fa61b0d6, type: 2}
   OnSongChange: {fileID: 11400000, guid: a9def2d94c126a948a752ab808a90e00, type: 2}
+  OnPlayerSpawned: {fileID: 11400000, guid: 09b3d8881c3dbed42bfb9b199d398bd6, type: 2}
+  OnLevelPreLoad: {fileID: 11400000, guid: bb04295531d5e9042819f5efb35a1ace, type: 2}

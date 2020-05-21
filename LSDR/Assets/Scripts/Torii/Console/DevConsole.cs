@@ -10,33 +10,25 @@ using UnityEngine;
 
 namespace Torii.Console
 {
-    [CreateAssetMenu(menuName = "Torii/System/DevConsole")]
-    public class DevConsoleSystem : ScriptableObject
+    public static class DevConsole
     {
-        private Dictionary<string, ObjectInfo> _registered;
+        private static readonly Dictionary<string, ObjectInfo> _registered = new Dictionary<string, ObjectInfo>();
 
         /// <summary>
         /// Matches commands in the format:
         /// Object.Specifier Arguments
         /// </summary>
         private const string COMMAND_REGEX = @"^(\w*)\.(\w*) +?(.*)$";
-        private Regex _compiledCommandRegex;
+        private static readonly Regex _compiledCommandRegex = new Regex(COMMAND_REGEX);
 
-        public void Init()
-        {
-            Debug.Log("Starting");
-            _registered = new Dictionary<string, ObjectInfo>();
-            _compiledCommandRegex = new Regex(COMMAND_REGEX);
-        }
-
-        public ExecutionResult Execute(string statement)
+        public static ExecutionResult Execute(string statement)
         {
             var matches = _compiledCommandRegex.Match(statement);
             ParsedStatement parsedStatement = new ParsedStatement(matches);
             return execute(parsedStatement);
         }
 
-        public void Register(object obj, string alias = "")
+        public static void Register(object obj, string alias = "")
         {
             var objType = obj.GetType();
             var key = string.IsNullOrEmpty(alias) ? objType.Name : alias;
@@ -48,7 +40,7 @@ namespace Torii.Console
             _registered[key] = new ObjectInfo(obj);
         }
 
-        public void Register(Type t, string alias = "")
+        public static void Register(Type t, string alias = "")
         {
             var key = string.IsNullOrEmpty(alias) ? t.Name : alias;
             if (_registered.ContainsKey(key))
@@ -59,22 +51,22 @@ namespace Torii.Console
             _registered[key] = new ObjectInfo(t);
         }
 
-        public void Deregister(object obj)
+        public static void Deregister(object obj)
         {
             Deregister(obj.GetType());
         }
 
-        public void Deregister(Type t)
+        public static void Deregister(Type t)
         {
             _registered.Remove(t.Name);
         }
 
-        public List<string> Completions(string objFragment)
+        public static List<string> Completions(string objFragment)
         {
             return _registered.Keys.Where(val => val.StartsWith(objFragment)).ToList();
         }
 
-        public List<string> Completions(string obj, string specifierFragment)
+        public static List<string> Completions(string obj, string specifierFragment)
         {
             var fields = _registered[obj].Fields.Keys.Where(val => val.StartsWith(specifierFragment));
             var properties = _registered[obj].Properties.Keys.Where(val => val.StartsWith(specifierFragment));
@@ -83,7 +75,7 @@ namespace Torii.Console
             return fields.Concat(properties).Concat(methods).ToList();
         }
         
-        private ExecutionResult execute(ParsedStatement statement)
+        private static ExecutionResult execute(ParsedStatement statement)
         {
             ObjectInfo obj;
             if (!_registered.TryGetValue(statement.Object, out obj))
@@ -98,7 +90,7 @@ namespace Torii.Console
             return applyStatementToObject(statement, obj);
         }
 
-        private ExecutionResult applyStatementToObject(ParsedStatement statement, ObjectInfo obj)
+        private static ExecutionResult applyStatementToObject(ParsedStatement statement, ObjectInfo obj)
         {
             FieldInfo field;
             if (obj.Fields.TryGetValue(statement.Specifier, out field))
@@ -126,7 +118,7 @@ namespace Torii.Console
             };
         }
 
-        private ExecutionResult applyStatementToObjectField(ParsedStatement statement, ObjectInfo obj, FieldInfo field)
+        private static ExecutionResult applyStatementToObjectField(ParsedStatement statement, ObjectInfo obj, FieldInfo field)
         {
             if (statement.Arguments.Length > 1)
             {
@@ -188,7 +180,7 @@ namespace Torii.Console
             };
         }
 
-        private ExecutionResult applyStatementToObjectProperty(ParsedStatement statement, ObjectInfo obj,
+        private static ExecutionResult applyStatementToObjectProperty(ParsedStatement statement, ObjectInfo obj,
             PropertyInfo property)
         {
             if (statement.Arguments.Length > 1)
@@ -251,7 +243,7 @@ namespace Torii.Console
             };
         }
 
-        private ExecutionResult applyStatementToObjectMethod(ParsedStatement statement, ObjectInfo obj,
+        private static ExecutionResult applyStatementToObjectMethod(ParsedStatement statement, ObjectInfo obj,
             MethodInfo method)
         {
             ParameterInfo[] methodParams = method.GetParameters();
@@ -324,7 +316,7 @@ namespace Torii.Console
             };
         }
 
-        private bool parseArg(string arg, out bool result)
+        private static bool parseArg(string arg, out bool result)
         {
             if (!Boolean.TryParse(arg, out result))
             {
@@ -334,7 +326,7 @@ namespace Torii.Console
             return true;
         }
 
-        private bool parseArg(string arg, out int result)
+        private static bool parseArg(string arg, out int result)
         {
             if (!Int32.TryParse(arg, NumberStyles.Any, CultureInfo.InvariantCulture, out result))
             {
@@ -344,7 +336,7 @@ namespace Torii.Console
             return true;
         }
 
-        private bool parseArg(string arg, out float result)
+        private static bool parseArg(string arg, out float result)
         {
             if (!Single.TryParse(arg, NumberStyles.Any, CultureInfo.InvariantCulture, out result))
             {

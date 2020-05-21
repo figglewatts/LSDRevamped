@@ -1,6 +1,7 @@
 using System;
 using MapParse.Types;
 using ProtoBuf;
+using Torii.Event;
 using Torii.Resource;
 using UnityEngine;
 
@@ -18,9 +19,10 @@ namespace LSDR.Entities.Dream
 
         public void Spawn()
         {
+            Debug.Log("Instantiating player");
             GameObject player = Instantiate(PlayerPrefab, transform.position + new Vector3(0, 0.23f, 0),
                 transform.rotation);
-            DreamSystem.Player = player.transform;
+            DreamSystem.SpawnPlayer(player);
         }
 
         public void OnDrawGizmos()
