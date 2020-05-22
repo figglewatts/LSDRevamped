@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using LSDR.Dream;
 using LSDR.Util;
+using Torii.Console;
 using Torii.Util;
 using UnityEngine;
 
@@ -17,32 +18,39 @@ namespace LSDR.Entities.Dream
         private const float MAX_WAIT_BETWEEN_SPAWN_CHANCES_SECONDS = 10;
         private const float CHANCE_FOR_GREYMAN = 100;
 
-        [NonSerialized] private GameObject _spawnedGreyman;
-        [NonSerialized] private bool _hasSpawnedGreyman;
-        [NonSerialized] private Coroutine _rollForGreymanCoroutine;
-        [NonSerialized] private Transform _playerTransform;
-        
-        public void OnLevelLoad()
+        private GameObject _spawnedGreyman;
+        private bool _hasSpawnedGreyman;
+        private Coroutine _rollForGreymanCoroutine;
+
+        public void Start()
         {
+            DevConsole.Register(this);
+            
             // only start rolling for grey man if level has it enabled
             if (!DreamSystem.CurrentDream.GreyMan) return;
-            
+
             if (_rollForGreymanCoroutine != null) StopCoroutine(_rollForGreymanCoroutine);
 
             _rollForGreymanCoroutine = StartCoroutine(RollForGreyman());
-
-            _playerTransform = transform;
         }
 
+        public void OnDestroy()
+        {
+            DevConsole.Deregister(this);
+        }
+
+        public void OnLevelLoad() { }
+
         [ContextMenu("Spawn")]
+        [Console]
         public void Spawn()
         {
             Debug.Log("Spawning grey man");
-            
+
             if (_spawnedGreyman != null) Destroy(_spawnedGreyman);
 
-            var forward = _playerTransform.forward;
-            Vector3 spawnPos = _playerTransform.position + forward * GreymanSpawnDistance - new Vector3(0, 0.23f, 0);
+            var forward = transform.forward;
+            Vector3 spawnPos = transform.position + forward * GreymanSpawnDistance - new Vector3(0, 0.23f, 0);
             Quaternion spawnRot = Quaternion.LookRotation(forward * -1, Vector3.up);
             _spawnedGreyman = Instantiate(GreymanPrefab, spawnPos, spawnRot);
         }

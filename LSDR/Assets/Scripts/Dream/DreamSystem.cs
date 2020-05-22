@@ -13,6 +13,7 @@ using LSDR.IO;
 using LSDR.UI;
 using LSDR.Util;
 using Torii.Audio;
+using Torii.Console;
 using Torii.Coroutine;
 using Torii.Event;
 using Torii.Pooling;
@@ -83,7 +84,11 @@ namespace LSDR.Dream
         [NonSerialized]
         private string _forcedSpawnID;
 
-        public void OnEnable() { LevelLoader.OnLevelLoaded += spawnPlayerInDream; }
+        public void OnEnable()
+        {
+            LevelLoader.OnLevelLoaded += spawnPlayerInDream;
+            DevConsole.Register(this);
+        }
 
         public void BeginDream()
         {
@@ -140,6 +145,7 @@ namespace LSDR.Dream
         /// <summary>
         /// End dream without advancing the day number or adding progress.
         /// </summary>
+        [Console]
         public void ForceEndDream()
         {
             if (_dreamIsEnding) return;
@@ -341,12 +347,75 @@ namespace LSDR.Dream
             OnPlayerSpawned.Raise();
         }
 
+        [Console]
         public void SkipSong()
         {
+            if (CurrentDream == null) return;
+            
             MusicSystem.PlayRandomSongFromDirectory(MusicSource,
                 PathUtil.Combine(Application.streamingAssetsPath, JournalLoader.Current.MusicFolder));
             OnSongChange.Raise();
         }
+        
+        #region Console Commands
+
+        [Console]
+        public void ListDreamEnvironments()
+        {
+            if (CurrentDream == null) return;
+            Debug.Log($"Dream has {CurrentDream.Environments.Count} environments.");
+        }
+
+        [Console]
+        public void ApplyDreamEnvironment(int idx)
+        {
+            if (CurrentDream == null) return;
+            ApplyEnvironment(CurrentDream.Environments[idx]);
+        }
+
+        [Console]
+        public void SwitchTextures(int idx)
+        {
+            switch (idx)
+            {
+                case 0: ApplyTextureSet(TextureSet.Normal);
+                    break;
+                case 1: ApplyTextureSet(TextureSet.Kanji);
+                    break;
+                case 2: ApplyTextureSet(TextureSet.Downer);
+                    break;
+                case 3: ApplyTextureSet(TextureSet.Upper);
+                    break;
+            }
+        }
+
+        [Console]
+        public void LoadDream(string dreamPath)
+        {
+            Dream dream = _serializer.Deserialize<Dream>(PathUtil.Combine(Application.streamingAssetsPath, "levels",
+                dreamPath));
+            if (CurrentDream == null)
+            {
+                BeginDream(dream);
+            }
+            else
+            {
+                Transition(Color.black, dream, false);
+            }
+        }
+
+        [Console]
+        public void PlaySong(string songPath)
+        {
+            var clip = ResourceManager.Load<ToriiAudioClip>(PathUtil.Combine(Application.streamingAssetsPath, "music",
+                songPath), "scene");
+            MusicSource.Stop();
+            MusicSource.clip = clip;
+            MusicSource.loop = true;
+            MusicSource.Play();
+        }
+        
+        #endregion
 
         private void commonEndDream()
         {

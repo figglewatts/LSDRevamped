@@ -4,6 +4,7 @@ using System.Linq;
 using LSDR.IO;
 using LSDR.Util;
 using Torii.Audio;
+using Torii.Console;
 using Torii.Resource;
 using Torii.Util;
 using UnityEngine;

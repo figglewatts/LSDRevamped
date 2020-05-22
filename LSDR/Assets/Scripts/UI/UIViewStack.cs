@@ -51,17 +51,10 @@ namespace LSDR.UI
             {
                 return;
             }
-            
-            Debug.Log(view);
-            Debug.Log(Current.activeSelf);
-            Debug.Log(view.activeSelf);
-            
+
             Current.SetActive(false);
             view.SetActive(true);
-            
-            Debug.Log(Current.activeSelf);
-            Debug.Log(view.activeSelf);
-            
+
             _views.Push(view);
         }
 

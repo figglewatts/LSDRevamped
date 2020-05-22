@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using Torii.Console;
 using Torii.Util;
 using UnityEngine;
 
@@ -8,7 +9,12 @@ namespace LSDR.Visual
     public class Screenshotter : MonoSingleton<Screenshotter>
     {
         private const string SCREENSHOT_DIR = "screenshots";
-        
+
+        public override void Init()
+        {
+            DevConsole.Register(this);
+        }
+
         public void Update()
         {
             if (Input.GetKeyUp(KeyCode.F9))
@@ -17,6 +23,7 @@ namespace LSDR.Visual
             }
         }
 
+        [Console]
         public void TakeScreenshot()
         {
             string filename = $"{DateTime.Now:yy-MM-dd-HH-mm-ss}.png";

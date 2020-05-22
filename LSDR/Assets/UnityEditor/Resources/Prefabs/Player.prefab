@@ -48,6 +48,9 @@ GameObject:
   - component: {fileID: 114059146247394154}
   - component: {fileID: 114261129463835926}
   - component: {fileID: 114165494839605466}
+  - component: {fileID: 114340756878419258}
+  - component: {fileID: 114268717034229898}
+  - component: {fileID: 114627582535524994}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -316,6 +319,47 @@ MonoBehaviour:
   GreymanPrefab: {fileID: 1000010086982720, guid: 497704a9b9edfaf4e80bb0dbcebe3f9e,
     type: 2}
   GreymanSpawnDistance: 10
+--- !u!114 &114268717034229898
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1460860446963084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4855a35832945d5865aec599963246c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Event: {fileID: 11400000, guid: f18da44b61ed8114397494a267a46ef6, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 114340756878419258}
+        m_MethodName: OnDevConsoleOpen
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+--- !u!114 &114340756878419258
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1460860446963084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 864158b1c00f4bc6b28353443ebce5ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PauseSystem: {fileID: 11400000, guid: 20bd9efc931456147967bc186a68a628, type: 2}
+  SettingsSystem: {fileID: 11400000, guid: 12ecd5989d3bcc549bcacf027048a5bd, type: 2}
 --- !u!114 &114371286810715588
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -351,6 +395,34 @@ MonoBehaviour:
   RunMoveSpeed: 2.4
   StepTimeSeconds: 0.25
   HeadBobAmount: 0.05
+--- !u!114 &114627582535524994
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1460860446963084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4855a35832945d5865aec599963246c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Event: {fileID: 11400000, guid: f9dd020aea24fb84c8817b33cabbab6e, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 114340756878419258}
+        m_MethodName: OnDevConsoleClose
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
 --- !u!114 &114670244303012626
 MonoBehaviour:
   m_ObjectHideFlags: 1

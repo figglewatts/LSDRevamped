@@ -5,6 +5,7 @@ using LSDR.Dream;
 using LSDR.Game;
 using LSDR.InputManagement;
 using Torii.Audio;
+using Torii.Console;
 using Torii.Resource;
 using Torii.Util;
 using UnityEngine;
@@ -19,14 +20,14 @@ namespace LSDR.Entities.Player
         public DreamSystem DreamSystem;
         public Transform Camera;
         
-        public float GravityMultiplier = 1f;
-        public float LinkDelay = 1.7F;
+        [Console] public float GravityMultiplier = 1f;
+        [Console] public float LinkDelay = 1.7F;
 
-        public float WalkMoveSpeed = 0.6f;
-        public float RunMoveSpeed = 2.4f;
-        public float StepTimeSeconds = 0.25f;
+        [Console] public float WalkMoveSpeed = 0.6f;
+        [Console] public float RunMoveSpeed = 2.4f;
+        [Console] public float StepTimeSeconds = 0.25f;
 
-        public float HeadBobAmount = 0.1f;
+        [Console] public float HeadBobAmount = 0.1f;
 
         private CharacterController _controller;
         private Vector3 _stepDir;
@@ -51,6 +52,13 @@ namespace LSDR.Entities.Player
             // this is the amount we want to travel along the head bob sine wave every second
             _sineStep = 2*Mathf.PI / StepTimeSeconds;
             resetHeadbob();
+            
+            DevConsole.Register(this);
+        }
+
+        public void OnDestroy()
+        {
+            DevConsole.Deregister(this);
         }
 
         public void Update()

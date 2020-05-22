@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using LSDR.Entities.Dream;
 using Torii.Util;
 using UnityEngine;
 
@@ -18,12 +19,20 @@ namespace Torii.Console
         /// Matches commands in the format:
         /// Object.Specifier Arguments
         /// </summary>
-        private const string COMMAND_REGEX = @"^(\w*)\.(\w*) +?(.*)$";
-        private static readonly Regex _compiledCommandRegex = new Regex(COMMAND_REGEX);
+        private const string COMMAND_REGEX = @"^(\w*)\.(\w*)(?: +(.*))?$";
+        private static readonly Regex compiledCommandRegex = new Regex(COMMAND_REGEX);
 
         public static ExecutionResult Execute(string statement)
         {
-            var matches = _compiledCommandRegex.Match(statement);
+            var matches = compiledCommandRegex.Match(statement);
+            if (matches.Groups.Count < 4)
+            {
+                return new ExecutionResult
+                {
+                    Failed = true,
+                    Error = new ArgumentException($"Invalid command syntax - syntax is 'Object.Specifier [Arguments]'")
+                };
+            }
             ParsedStatement parsedStatement = new ParsedStatement(matches);
             return execute(parsedStatement);
         }
@@ -63,7 +72,22 @@ namespace Torii.Console
 
         public static List<string> Completions(string objFragment)
         {
-            return _registered.Keys.Where(val => val.StartsWith(objFragment)).ToList();
+            if (!objFragment.Contains('.'))
+            {
+                return _registered.Keys.Where(val => val.StartsWith(objFragment)).ToList();
+            }
+
+            var split = objFragment.Split('.');
+            var objName = split[0];
+            var specifierFrag = split[1];
+            
+            ObjectInfo obj;
+            if (_registered.TryGetValue(objFragment.Split('.')[0], out obj))
+            {
+                return Completions(objName, specifierFrag);
+            }
+            
+            return new List<string>();
         }
 
         public static List<string> Completions(string obj, string specifierFragment)
@@ -82,7 +106,7 @@ namespace Torii.Console
             {
                 return new ExecutionResult()
                 {
-                    Error = new ArgumentException($"Object '{statement.Object}' is not registered"),
+                    Error = new ArgumentException($"Unknown object '{statement.Object}'"),
                     Failed = true
                 };
             }
@@ -306,7 +330,7 @@ namespace Torii.Console
                     args.Add(statement.Arguments[i]);
                 }
             }
-
+            
             var result = method.Invoke(obj.Instance, args.ToArray());
             
             return new ExecutionResult()
@@ -352,6 +376,17 @@ namespace Torii.Console
             public Exception Error;
             public bool Failed;
             public string Message;
+
+            public void Log()
+            {
+                if (Failed)
+                {
+                    Debug.LogError(Error.Message);
+                    return;
+                }
+                
+                if (!string.IsNullOrEmpty(Message)) Debug.Log(Message);
+            }
         }
 
         private struct ParsedStatement
@@ -364,7 +399,7 @@ namespace Torii.Console
             {
                 Object = regexMatch.Groups[1].Value;
                 Specifier = regexMatch.Groups[2].Value;
-                Arguments = regexMatch.Groups[3].Value.Split(',');
+                Arguments = regexMatch.Groups[3].Value.Split(new [] {','}, StringSplitOptions.RemoveEmptyEntries);
                 for (int i = 0; i < Arguments.Length; i++)
                 {
                     Arguments[i] = Arguments[i].Trim();
