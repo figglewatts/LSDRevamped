@@ -8,6 +8,7 @@ A remake of the cult-classic game LSD: Dream Emulator.
 - Windows (this may change soon... watch this space)
 - InControl (Unity Asset Store, paid asset)
 - Python 3.7
+- [Toriicli](https://github.com/Figglewatts/toriicli)
 
 ## Quick start
 1. Ensure you've prepared the prerequisites as above.
@@ -26,16 +27,12 @@ A remake of the cult-classic game LSD: Dream Emulator.
 8. All done!
 
 ## Building the game
-1. Install the `toriicli` utility:
-   ```terminal
-   $ pip install toriicli
-   ```
-2. Make sure `toriicli` can find your Unity installation by running:
+1. Make sure `toriicli` can find your Unity installation by running:
    ```terminal
    $ toriicli find
    ```
    It should print out the path to the Unity 2017.4.30f1 executable.
-3. Run `toriicli build` in the root of the repo to build the project.
+2. Run `toriicli build` in the root of the repo to build the project.
    Make sure Unity isn't open. This will take a while, so wait for it to finish.
-4. Once it's finished, the build will be in the 'builds' folder as a zip. You
+3. Once it's finished, the build will be in the 'builds' folder as a zip. You
    can extract it and play it.
