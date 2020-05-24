@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using libLSD.Formats;
+using libLSD.Formats.Packets;
 using libLSD.Types;
 using LSDR.Visual;
 using UnityEngine;
-using UnityEngine.Profiling;
 
 namespace LSDR.IO
 {
@@ -14,7 +14,7 @@ namespace LSDR.IO
     {
         // default list capacity, used to avoid resizing lists a lot
         private const int DEFAULT_LIST_CAPACITY = 64;
-        
+
         // cached instances of lists to use when building a mesh
         private List<Vector3> _verts;
         private List<Vector3> _normals;
@@ -55,7 +55,7 @@ namespace LSDR.IO
         public Mesh CreateTMDObjectMesh(TMDObject obj)
         {
             clearCachedLists();
-            
+
             foreach (var prim in obj.Primitives)
             {
                 // currently only polygon primitives are supported
@@ -65,12 +65,12 @@ namespace LSDR.IO
                 List<int> indicesList = (prim.Options & TMDPrimitivePacket.OptionsFlags.AlphaBlended) != 0
                     ? _alphaBlendIndices
                     : _indices;
-                
+
                 // get interfaces for different packet types from LibLSD
-                IPrimitivePacket primitivePacket = prim.PacketData;
-                ITexturedPrimitivePacket texturedPrimitivePacket = prim.PacketData as ITexturedPrimitivePacket;
-                IColoredPrimitivePacket coloredPrimitivePacket = prim.PacketData as IColoredPrimitivePacket;
-                ILitPrimitivePacket litPrimitivePacket = prim.PacketData as ILitPrimitivePacket;
+                ITMDPrimitivePacket primitivePacket = prim.PacketData;
+                ITMDTexturedPrimitivePacket texturedPrimitivePacket = prim.PacketData as ITMDTexturedPrimitivePacket;
+                ITMDColoredPrimitivePacket coloredPrimitivePacket = prim.PacketData as ITMDColoredPrimitivePacket;
+                ITMDLitPrimitivePacket litPrimitivePacket = prim.PacketData as ITMDLitPrimitivePacket;
 
                 for (int i = 0; i < primitivePacket.Vertices.Length; i++)
                 {
@@ -84,21 +84,21 @@ namespace LSDR.IO
                     Color32 vertCol = Color.white;
                     Vector3 vertNorm = Vector3.zero;
                     Vector2 vertUV = Vector2.one;
-                    
+
                     // handle packet colour
                     if (coloredPrimitivePacket != null)
                     {
                         Vec3 packetVertCol =
                             coloredPrimitivePacket.Colors[coloredPrimitivePacket.Colors.Length > 1 ? i : 0];
                         vertCol = new Color(packetVertCol.X, packetVertCol.Y, packetVertCol.Z);
-                        if (vertCol.r > 0 && vertCol.g > 0 && vertCol.b > 0 
+                        if (vertCol.r > 0 && vertCol.g > 0 && vertCol.b > 0
                             && (prim.Options & TMDPrimitivePacket.OptionsFlags.Textured) == 0
                             && (prim.Options & TMDPrimitivePacket.OptionsFlags.AlphaBlended) != 0)
                         {
                             vertCol.a = 127;
                         }
                     }
-                    
+
                     // handle packet normals
                     if (litPrimitivePacket != null)
                     {
@@ -106,7 +106,7 @@ namespace LSDR.IO
                             obj.Normals[litPrimitivePacket.Normals[litPrimitivePacket.Normals.Length > 1 ? i : 0]];
                         vertNorm = new Vector3(packetVertNorm.X, packetVertNorm.Y, packetVertNorm.Z);
                     }
-                    
+
                     // handle packet UVs
                     if (texturedPrimitivePacket != null)
                     {
@@ -122,28 +122,29 @@ namespace LSDR.IO
                         int vramYPos = texPageYPos + (256 - texturedPrimitivePacket.UVs[uvIndex + 1]);
                         float uCoord = vramXPos / (float)PsxVram.VRAM_WIDTH;
                         float vCoord = vramYPos / (float)PsxVram.VRAM_HEIGHT;
-                        
+
                         vertUV = new Vector2(uCoord, vCoord);
-                        
+
                         // check for overlapping UVs and fix them slightly
                         foreach (var uv in _uvs)
                         {
                             if (uv.Equals(vertUV))
                             {
-                                vertUV += new Vector2(0.0001f, 0.0001f);    
+                                vertUV += new Vector2(0.0001f, 0.0001f);
                             }
                         }
                     }
-                    
+
                     // add all computed aspects of vertex to lists
                     _verts.Add(vec3VertPos);
                     _normals.Add(vertNorm);
                     _colors.Add(vertCol);
                     _uvs.Add(vertUV);
                 }
+
                 // we want to add extra indices if this primitive is a quad (to triangulate)
                 bool isQuad = (prim.Options & TMDPrimitivePacket.OptionsFlags.Quad) != 0;
-                
+
                 _polyIndices.Add(_packetIndices[0]);
                 _polyIndices.Add(_packetIndices[1]);
                 _polyIndices.Add(_packetIndices[2]);
@@ -169,7 +170,7 @@ namespace LSDR.IO
                         _polyIndices.Add(_packetIndices[3]);
                     }
                 }
-                
+
                 // add the indices to the list
                 indicesList.AddRange(_polyIndices);
                 _polyIndices.Clear();
@@ -180,7 +181,7 @@ namespace LSDR.IO
             result.SetNormals(_normals);
             result.SetColors(_colors);
             result.SetUVs(0, _uvs);
-            
+
             // regular mesh
             if (_indices.Count >= 3)
             {

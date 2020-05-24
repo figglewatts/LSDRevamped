@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using libLSD.Formats;
+using libLSD.Formats.Packets;
 
 namespace LSDR.IO
 {
@@ -51,8 +52,8 @@ namespace LSDR.IO
             hashCode = (hashCode * 397) ^ p.ILen.GetHashCode();
             hashCode = (hashCode * 397) ^ p.OLen.GetHashCode();
             hashCode = (hashCode * 397) ^ p.PacketData.Vertices.Length.GetHashCode();
-            
-            IColoredPrimitivePacket coloredPacket = p.PacketData as IColoredPrimitivePacket;
+
+            ITMDColoredPrimitivePacket coloredPacket = p.PacketData as ITMDColoredPrimitivePacket;
             if (coloredPacket != null)
             {
                 foreach (var col in coloredPacket.Colors)
@@ -61,7 +62,7 @@ namespace LSDR.IO
                 }
             }
 
-            ILitPrimitivePacket litPacket = p.PacketData as ILitPrimitivePacket;
+            ITMDLitPrimitivePacket litPacket = p.PacketData as ITMDLitPrimitivePacket;
             if (litPacket != null)
             {
                 foreach (var norm in litPacket.Normals)
@@ -70,7 +71,7 @@ namespace LSDR.IO
                 }
             }
 
-            ITexturedPrimitivePacket texturedPacket = p.PacketData as ITexturedPrimitivePacket;
+            ITMDTexturedPrimitivePacket texturedPacket = p.PacketData as ITMDTexturedPrimitivePacket;
             if (texturedPacket != null)
             {
                 hashCode = (hashCode * 397) ^ texturedPacket.Texture.TexturePageNumber.GetHashCode();
@@ -83,11 +84,12 @@ namespace LSDR.IO
                     hashCode = (hashCode * 397) ^ uv.GetHashCode();
                 }
             }
-            
+
             foreach (var vert in p.PacketData.Vertices)
             {
                 hashCode = (hashCode * 397) ^ vert.GetHashCode();
             }
+
             hashCode = (hashCode * 397) ^ p.SpriteSize.GetHashCode();
             return hashCode;
         }

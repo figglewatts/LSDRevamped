@@ -1,10 +1,9 @@
 using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
 using libLSD.Formats;
+using libLSD.Formats.Packets;
 using libLSD.Types;
 using LSDR.Visual;
-using UnityEngine.Profiling;
+using UnityEngine;
 
 namespace LSDR.IO
 {
@@ -23,7 +22,7 @@ namespace LSDR.IO
             public int Width;
             public int Height;
         }
-        
+
         /// <summary>
         /// Create a list of meshes based on the contents of a TMD model file.
         /// </summary>
@@ -38,7 +37,7 @@ namespace LSDR.IO
                 Mesh m = MeshFromTMDObject(obj);
                 meshList.Add(m);
             }
-            
+
             return meshList;
         }
 
@@ -70,10 +69,10 @@ namespace LSDR.IO
                     : indices;
 
                 // get interfaces for different packet types from LibLSD
-                IPrimitivePacket primitivePacket = prim.PacketData;
-                ITexturedPrimitivePacket texturedPrimitivePacket = prim.PacketData as ITexturedPrimitivePacket;
-                IColoredPrimitivePacket coloredPrimitivePacket = prim.PacketData as IColoredPrimitivePacket;
-                ILitPrimitivePacket litPrimitivePacket = prim.PacketData as ILitPrimitivePacket;
+                ITMDPrimitivePacket primitivePacket = prim.PacketData;
+                ITMDTexturedPrimitivePacket texturedPrimitivePacket = prim.PacketData as ITMDTexturedPrimitivePacket;
+                ITMDColoredPrimitivePacket coloredPrimitivePacket = prim.PacketData as ITMDColoredPrimitivePacket;
+                ITMDLitPrimitivePacket litPrimitivePacket = prim.PacketData as ITMDLitPrimitivePacket;
 
                 // for each vertex in the primitive
                 List<int> polyIndices = new List<int>();
@@ -90,21 +89,21 @@ namespace LSDR.IO
                     Color32 vertCol = Color.white;
                     Vector3 vertNorm = Vector3.zero;
                     Vector2 vertUV = Vector2.one;
-                    
+
                     // handle packet colour
                     if (coloredPrimitivePacket != null)
                     {
                         Vec3 packetVertCol =
                             coloredPrimitivePacket.Colors[coloredPrimitivePacket.Colors.Length > 1 ? i : 0];
                         vertCol = new Color(packetVertCol.X, packetVertCol.Y, packetVertCol.Z);
-                        if (vertCol.r > 0 && vertCol.g > 0 && vertCol.b > 0 
+                        if (vertCol.r > 0 && vertCol.g > 0 && vertCol.b > 0
                             && (prim.Options & TMDPrimitivePacket.OptionsFlags.Textured) == 0
                             && (prim.Options & TMDPrimitivePacket.OptionsFlags.AlphaBlended) != 0)
                         {
                             vertCol.a = 127;
                         }
                     }
-                    
+
                     // handle packet normals
                     if (litPrimitivePacket != null)
                     {
@@ -112,7 +111,7 @@ namespace LSDR.IO
                             obj.Normals[litPrimitivePacket.Normals[litPrimitivePacket.Normals.Length > 1 ? i : 0]];
                         vertNorm = new Vector3(packetVertNorm.X, packetVertNorm.Y, packetVertNorm.Z);
                     }
-                    
+
                     // handle packet UVs
                     if (texturedPrimitivePacket != null)
                     {
@@ -126,9 +125,11 @@ namespace LSDR.IO
                         int uvIndex = i * 2;
                         int vramXPos = texPageXPos + texturedPrimitivePacket.UVs[uvIndex];
                         int vramYPos = texPageYPos + (256 - texturedPrimitivePacket.UVs[uvIndex + 1]);
-                        float uCoord = (vramXPos + 0.5f) / PsxVram.VRAM_WIDTH; // half-texel correction to prevent bleeding
-                        float vCoord = (vramYPos - 0.5f) / PsxVram.VRAM_HEIGHT; // half-texel correction to prevent bleeding
-                        
+                        float uCoord =
+                            (vramXPos + 0.5f) / PsxVram.VRAM_WIDTH; // half-texel correction to prevent bleeding
+                        float vCoord =
+                            (vramYPos - 0.5f) / PsxVram.VRAM_HEIGHT; // half-texel correction to prevent bleeding
+
                         vertUV = new Vector2(uCoord, vCoord);
                     }
 
@@ -141,7 +142,7 @@ namespace LSDR.IO
 
                 // we want to add extra indices if this primitive is a quad (to triangulate)
                 bool isQuad = (prim.Options & TMDPrimitivePacket.OptionsFlags.Quad) != 0;
-                
+
                 polyIndices.Add(packetIndices[0]);
                 polyIndices.Add(packetIndices[1]);
                 polyIndices.Add(packetIndices[2]);
@@ -167,7 +168,7 @@ namespace LSDR.IO
                         polyIndices.Add(packetIndices[3]);
                     }
                 }
-                
+
                 // add the indices to the list
                 indicesList.AddRange(polyIndices);
             }
@@ -202,7 +203,8 @@ namespace LSDR.IO
         public static GameObject CreateLBDTileMap(LBD lbd)
         {
             GameObject lbdTilemap = new GameObject("LBD TileMap");
-            List<CombineInstance> meshesCreated = new List<CombineInstance>(); // we're combining meshes into a collision mesh
+            List<CombineInstance>
+                meshesCreated = new List<CombineInstance>(); // we're combining meshes into a collision mesh
 
             // for each tile in the tilemap
             int tileNo = 0;
@@ -220,7 +222,7 @@ namespace LSDR.IO
 
                 tileNo++;
             }
-            
+
             // combine all tiles into mesh for efficient collision
             Mesh combined = new Mesh();
             combined.CombineMeshes(meshesCreated.ToArray(), true);
@@ -231,7 +233,11 @@ namespace LSDR.IO
         }
 
         // create an LBD tile GameObject
-        private static GameObject createLBDTile(LBDTile tile, LBDTile[] extraTiles, int x, int y, TMD tilesTmd, 
+        private static GameObject createLBDTile(LBDTile tile,
+            LBDTile[] extraTiles,
+            int x,
+            int y,
+            TMD tilesTmd,
             List<CombineInstance> meshesCreated)
         {
             // create the GameObject for the base tile
@@ -253,7 +259,10 @@ namespace LSDR.IO
         }
 
         // create a single LBD tile GameObject (not including extra tiles)
-        private static GameObject createSingleLBDTile(LBDTile tile, int x, int y, TMD tilesTmd, 
+        private static GameObject createSingleLBDTile(LBDTile tile,
+            int x,
+            int y,
+            TMD tilesTmd,
             List<CombineInstance> meshesCreated)
         {
             // create the GameObject and add/setup necessary components
@@ -263,7 +272,7 @@ namespace LSDR.IO
             TMDObject tileObj = tilesTmd.ObjectTable[tile.TileType];
             Mesh tileMesh = MeshFromTMDObject(tileObj);
             mf.mesh = tileMesh;
-            
+
             // the renderer needs to use virtual PSX Vram as its materials
             //mr.sharedMaterials = new[] {PsxVram.VramMaterial, PsxVram.VramAlphaBlendMaterial};
 
@@ -286,7 +295,7 @@ namespace LSDR.IO
                     break;
                 }
             }
-            
+
             // set the tile's height
             lbdTile.transform.position = new Vector3(x, -tile.TileHeight, y);
 
@@ -309,7 +318,7 @@ namespace LSDR.IO
                     transform = localToWorldMatrix,
                     subMeshIndex = 1
                 };
-                meshesCreated.Add(combineTrans); 
+                meshesCreated.Add(combineTrans);
             }
 
             return lbdTile;
@@ -327,16 +336,17 @@ namespace LSDR.IO
             {
                 wrapMode = TextureWrapMode.Clamp, filterMode = FilterMode.Point, mipMapBias = -0.5f, anisoLevel = 2
             };
-            
+
             // fill the texture with a white colour
             Color[] fill = new Color[PsxVram.VRAM_WIDTH * PsxVram.VRAM_HEIGHT];
             for (int i = 0; i < fill.Length; i++)
             {
                 fill[i] = new Color(1, 1, 1, 1);
             }
+
             tex.SetPixels(fill);
             tex.Apply();
-            
+
             // for each image within the archive, load it and paint it on the 'canvas' we created above
             foreach (var chunk in tix.Chunks)
             {
@@ -345,12 +355,12 @@ namespace LSDR.IO
                     var image = GetImageDataFromTIM(tim);
                     int actualXPos = (tim.PixelData.XPosition - 320) * 2;
                     int actualYPos = 512 - tim.PixelData.YPosition - image.Height;
-                    
+
                     tex.SetPixels(actualXPos, actualYPos, image.Width, image.Height, TimDataToColors(image));
                     tex.Apply();
                 }
             }
-            
+
             return tex;
         }
 
@@ -364,7 +374,7 @@ namespace LSDR.IO
         {
             // get the image data
             TimData data = GetImageDataFromTIM(tim);
-            
+
             // create a texture with the required format
             Texture2D tex = new Texture2D(data.Width, data.Height, TextureFormat.ARGB32, false)
             {
