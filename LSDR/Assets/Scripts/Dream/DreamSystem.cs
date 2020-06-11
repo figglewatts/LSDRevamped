@@ -1,39 +1,40 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
-using InControl;
 using LSDR.Audio;
 using LSDR.Entities;
 using LSDR.Entities.Dream;
-using LSDR.Entities.Original;
 using LSDR.Game;
 using LSDR.InputManagement;
 using LSDR.IO;
-using LSDR.UI;
 using LSDR.Util;
+using LSDR.Visual;
 using Torii.Audio;
 using Torii.Console;
 using Torii.Coroutine;
 using Torii.Event;
-using Torii.Pooling;
+using Torii.Resource;
 using Torii.Serialization;
-using UnityEngine;
-using UnityEngine.SceneManagement;
 using Torii.UI;
 using Torii.UnityEditor;
 using Torii.Util;
-using ResourceManager = Torii.Resource.ResourceManager;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace LSDR.Dream
 {
-    [CreateAssetMenu(menuName="System/DreamSystem")]
+    [CreateAssetMenu(menuName = "System/DreamSystem")]
     public class DreamSystem : ScriptableObject
     {
         public ScenePicker DreamScene;
         public ScenePicker TitleScene;
         public Material SkyBackground;
+        public Shader Classic;
+        public Shader ClassicAlpha;
+        public Shader Revamped;
+        public Shader RevampedAlpha;
         public JournalLoaderSystem JournalLoader;
+        public TextureSetSystem TextureSetSystem;
         public LevelLoaderSystem LevelLoader;
         public LBDFastMeshSystem LBDLoader;
         public GameSaveSystem GameSave;
@@ -51,7 +52,7 @@ namespace LSDR.Dream
         public ToriiEvent OnLevelPreLoad;
         [NonSerialized] public AudioSource MusicSource;
         [NonSerialized] public Transform Player;
-        
+
         [NonSerialized] private bool _dreamIsEnding = false;
         [NonSerialized] private bool _canTransition = true;
         [NonSerialized] private bool _currentlyTransitioning = false;
@@ -67,22 +68,11 @@ namespace LSDR.Dream
         private const float FADE_OUT_SECS_FALL = 2.5f;
         private const float FADE_OUT_SECS_FORCE = 1;
 
-        public TextureSet TextureSet
-        {
-            get { return _textureSet; }
-            set
-            {
-                _textureSet = value;
-                ApplyTextureSet(value);
-            }
-        }
-
         private readonly ToriiSerializer _serializer = new ToriiSerializer();
 
         private TextureSet _textureSet;
-        
-        [NonSerialized]
-        private string _forcedSpawnID;
+
+        [NonSerialized] private string _forcedSpawnID;
 
         public void OnEnable()
         {
@@ -92,7 +82,7 @@ namespace LSDR.Dream
 
         public void BeginDream()
         {
-            TextureSet = randomTextureSetFromDayNumber(GameSave.CurrentJournalSave.DayNumber);
+            TextureSetSystem.SetTextureSet(randomTextureSetFromDayNumber(GameSave.CurrentJournalSave.DayNumber));
 
             string dreamPath = GameSave.CurrentJournalSave.DayNumber == 1
                 ? JournalLoader.Current.GetFirstDream()
@@ -112,7 +102,7 @@ namespace LSDR.Dream
             // start a timer to end the dream
             float secondsInDream = RandUtil.Float(MIN_SECONDS_IN_DREAM, MAX_SECONDS_IN_DREAM);
             _endDreamTimer = Coroutines.Instance.StartCoroutine(EndDreamAfterSeconds(secondsInDream));
-            
+
             ToriiFader.Instance.FadeIn(Color.black, 3, () => Coroutines.Instance.StartCoroutine(LoadDream(dream)));
             CurrentSequence = new DreamSequence();
             CurrentSequence.Visited.Add(dream);
@@ -121,7 +111,7 @@ namespace LSDR.Dream
         public void EndDream(bool fromFall = false)
         {
             if (_dreamIsEnding) return;
-            
+
             commonEndDream();
 
             // penalise upper score if ending dream from falling
@@ -151,7 +141,7 @@ namespace LSDR.Dream
             if (_dreamIsEnding) return;
 
             commonEndDream();
-            
+
             ToriiFader.Instance.FadeIn(Color.black, FADE_OUT_SECS_FORCE, () =>
             {
                 CurrentDream = null;
@@ -176,7 +166,7 @@ namespace LSDR.Dream
             {
                 yield break;
             }
-            
+
             EndDream();
         }
 
@@ -187,18 +177,18 @@ namespace LSDR.Dream
             if (Camera.main != null) Camera.main.backgroundColor = environment.SkyColor;
             SkyBackground.SetColor("_SkyColor", environment.SkyColor);
             Shader.SetGlobalInt("_SubtractiveFog", environment.SubtractiveFog ? 1 : 0);
-            
+
             // TODO: apply the rest of the environment
         }
 
         public void Transition(Color fadeCol, Dream dream, bool playSound = true, string spawnPointID = null)
         {
             if (!_canTransition) return;
-            
+
             Debug.Log($"Linking to {dream.Name}");
 
             _currentlyTransitioning = true;
-            
+
             SettingsSystem.CanControlPlayer = false;
             _forcedSpawnID = spawnPointID;
 
@@ -217,9 +207,10 @@ namespace LSDR.Dream
                 // see if we should switch texture sets
                 if (RandUtil.OneIn(CHANCE_TO_SWITCH_TEXTURES_WHEN_LINKING))
                 {
-                    TextureSet = randomTextureSetFromDayNumber(GameSave.CurrentJournalSave.DayNumber);
+                    TextureSetSystem.SetTextureSet(
+                        randomTextureSetFromDayNumber(GameSave.CurrentJournalSave.DayNumber));
                 }
-                
+
                 Coroutines.Instance.StartCoroutine(LoadDream(dream));
             });
         }
@@ -246,7 +237,7 @@ namespace LSDR.Dream
         public IEnumerator ReturnToTitle()
         {
             Debug.Log("Loading title screen");
-            
+
             if (MusicSource != null && MusicSource.isPlaying)
             {
                 MusicSource.Stop();
@@ -257,15 +248,15 @@ namespace LSDR.Dream
             {
                 yield return null;
             }
-            
+
             ResourceManager.ClearLifespan("scene");
-            
+
             OnReturnToTitle.Raise();
 
             yield return null;
 
             ToriiCursor.Show();
-            
+
             ToriiFader.Instance.FadeOut(1F);
         }
 
@@ -278,32 +269,23 @@ namespace LSDR.Dream
                 MusicSource.Stop();
             }
 
+            TextureSetSystem.DeregisterAllMaterials();
+
             string currentScene = SceneManager.GetActiveScene().name;
-            
+
             OnLevelPreLoad.Raise();
 
-            // var asyncUnload = SceneManager.UnloadSceneAsync(currentScene);
-            // yield return asyncUnload;
-
             SceneManager.LoadScene(DreamScene.ScenePath);
-            
             yield return null;
-            
-            // load the scene in the background and wait until it's done
-            // var asyncLoad = SceneManager.LoadSceneAsync(DreamScene.ScenePath, LoadSceneMode.Additive);
-            // yield return asyncLoad;
 
             ResourceManager.ClearLifespan("scene");
 
-            //SceneManager.SetActiveScene(SceneManager.GetSceneByName(DreamScene.ScenePath));
-
             CurrentDream = dream;
-            
+
             // then instantiate the LBD if it has one
             if (dream.Type == DreamType.Legacy)
             {
                 LBDLoader.LoadLBD(dream.LBDFolder, dream.LegacyTileMode, dream.TileWidth);
-                LBDLoader.UseTIX(getTIXPathFromTextureSet(dream, TextureSet));
             }
 
             // load the manifest if it has one
@@ -317,7 +299,7 @@ namespace LSDR.Dream
 
             SettingsSystem.CanControlPlayer = true;
             SettingsSystem.CanMouseLook = true;
-            
+
             OnLevelLoad.Raise();
 
             MusicSource = MusicSystem.PlayRandomSongFromDirectory(PathUtil.Combine(Application.streamingAssetsPath,
@@ -326,20 +308,13 @@ namespace LSDR.Dream
 
             // reenable pausing
             PauseSystem.CanPause = true;
-            
+
             ToriiCursor.Hide();
 
             ToriiFader.Instance.FadeOut(1F, () => _currentlyTransitioning = false);
         }
 
-        public void ApplyTextureSet(TextureSet textureSet)
-        {
-            // TODO: change texture set on non LBD materials
-            if (CurrentDream != null)
-            {
-                LBDLoader.UseTIX(getTIXPathFromTextureSet(CurrentDream, textureSet));
-            }
-        }
+        public void ApplyTextureSet(TextureSet textureSet) { TextureSetSystem.SetTextureSet(textureSet); }
 
         public void SpawnPlayer(GameObject player)
         {
@@ -347,17 +322,29 @@ namespace LSDR.Dream
             OnPlayerSpawned.Raise();
         }
 
+        public Shader GetShader(bool alpha)
+        {
+            if (alpha)
+            {
+                return SettingsSystem.Settings.UseClassicShaders ? ClassicAlpha : RevampedAlpha;
+            }
+            else
+            {
+                return SettingsSystem.Settings.UseClassicShaders ? Classic : Revamped;
+            }
+        }
+
         [Console]
         public void SkipSong()
         {
             if (CurrentDream == null) return;
-            
+
             MusicSystem.PlayRandomSongFromDirectory(MusicSource,
                 PathUtil.Combine(Application.streamingAssetsPath, JournalLoader.Current.MusicFolder));
             OnSongChange.Raise();
         }
-        
-        #region Console Commands
+
+#region Console Commands
 
         [Console]
         public void ListDreamEnvironments()
@@ -378,13 +365,17 @@ namespace LSDR.Dream
         {
             switch (idx)
             {
-                case 0: ApplyTextureSet(TextureSet.Normal);
+                case 0:
+                    ApplyTextureSet(TextureSet.Normal);
                     break;
-                case 1: ApplyTextureSet(TextureSet.Kanji);
+                case 1:
+                    ApplyTextureSet(TextureSet.Kanji);
                     break;
-                case 2: ApplyTextureSet(TextureSet.Downer);
+                case 2:
+                    ApplyTextureSet(TextureSet.Downer);
                     break;
-                case 3: ApplyTextureSet(TextureSet.Upper);
+                case 3:
+                    ApplyTextureSet(TextureSet.Upper);
                     break;
             }
         }
@@ -414,18 +405,20 @@ namespace LSDR.Dream
             MusicSource.loop = true;
             MusicSource.Play();
         }
-        
-        #endregion
+
+#endregion
 
         private void commonEndDream()
         {
             _dreamIsEnding = true;
             _canTransition = false;
-            
+
             // disable pausing to prevent throwing off timers etc
             PauseSystem.CanPause = false;
 
             Debug.Log("Ending dream");
+
+            TextureSetSystem.DeregisterAllMaterials();
 
             // make sure the dream end timer stops
             if (_endDreamTimer != null)
@@ -442,26 +435,8 @@ namespace LSDR.Dream
                 Debug.LogError("Could not get TIX path from dream, dream did not have LBD folder");
                 return null;
             }
-            
-            switch (textureSet)
-            {
-                default:
-                {
-                    return PathUtil.Combine(dream.LBDFolder, "TEXA.TIX");
-                }
-                case TextureSet.Kanji:
-                {
-                    return PathUtil.Combine(dream.LBDFolder, "TEXB.TIX");
-                }
-                case TextureSet.Downer:
-                {
-                    return PathUtil.Combine(dream.LBDFolder, "TEXC.TIX");
-                }
-                case TextureSet.Upper:
-                {
-                    return PathUtil.Combine(dream.LBDFolder, "TEXD.TIX");
-                }
-            }
+
+            return LSDUtil.GetTIXPathFromLBDPath(dream.LBDFolder, textureSet);
         }
 
         private TextureSet randomTextureSetFromDayNumber(int dayNumber)
@@ -490,7 +465,7 @@ namespace LSDR.Dream
                 // full choice!
                 return RandUtil.RandomEnum<TextureSet>();
             }
-            
+
             // TODO: randomly introduce the glitch texture set
 
             // shouldn't get here due to the mod 41, but we need a default return otherwise C# will moan!
@@ -505,7 +480,7 @@ namespace LSDR.Dream
                 Debug.LogError("No spawn points in dream! Unable to spawn player.");
                 return;
             }
-            
+
             // handle a designated SpawnPoint being used
             if (!string.IsNullOrEmpty(_forcedSpawnID))
             {
@@ -540,7 +515,7 @@ namespace LSDR.Dream
                 RandUtil.RandomListElement(spawnPoints).Spawn();
                 return;
             }
-            
+
             // otherwise we'll have to spawn on a tunnel entrance... this shouldn't happen so warn the player
             Debug.LogWarning(
                 "Unable to find a spawn point that isn't a tunnel entrance -- using a tunnel entrance instead.");

@@ -1,10 +1,8 @@
 ﻿using System;
-using LSDR.Entities.Dream;
-using LSDR.Util;
 using ProtoBuf;
-using UnityEngine;
 using Torii.UnityEditor;
 using Torii.Util;
+using UnityEngine;
 
 namespace LSDR.Entities.Trigger
 {
@@ -31,8 +29,6 @@ namespace LSDR.Entities.Trigger
 		public void OnTriggerEnter(Collider other)
 		{
 			if (!other.gameObject.CompareTag("Player")) return;
-			
-			Debug.Log("TRIGGERED!");
 
 			if (!ForceFadeColor)
 			{

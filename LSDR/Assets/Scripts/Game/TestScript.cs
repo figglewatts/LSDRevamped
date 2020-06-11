@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections;
+﻿using libLSD.Formats;
 using LSDR.Dream;
-using LSDR.UI;
-using Torii.Audio;
-using Torii.Console;
-using Torii.Serialization;
-using Torii.UI;
+using LSDR.Entities.Dream;
+using LSDR.Entities.Original;
+using Torii.Resource;
 using Torii.Util;
 using UnityEngine;
 
@@ -13,15 +10,16 @@ namespace LSDR.Game
 {
     public class TestScript : MonoBehaviour
     {
-        private void Awake()
-        {
-            DevConsole.Register(this);
-        }
+        public TODAnimator Animator;
+        public DreamSystem DreamSystem;
 
-        [Console]
-        public void PrintStatement(string text)
+        [ContextMenu("Test")]
+        public void Test()
         {
-            Debug.Log(text);
+            DreamSystem.ApplyTextureSet(TextureSet.Normal);
+            LBD lbd = ResourceManager.Load<LBD>(PathUtil.Combine(Application.streamingAssetsPath, "original", "STG00",
+                "M000.LBD"));
+            InteractiveObject.Create(lbd, 0, DreamSystem.LBDLoader.LBDDiffuse, "Head guy", 1, true);
         }
     }
 }

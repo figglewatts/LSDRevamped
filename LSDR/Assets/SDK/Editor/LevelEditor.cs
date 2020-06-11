@@ -3,19 +3,17 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using libLSD.Formats;
 using LSDR.Dream;
 using LSDR.Entities;
 using LSDR.Game;
 using LSDR.IO;
 using LSDR.IO.ResourceHandlers;
-using Torii.Pooling;
+using Torii.Resource;
 using Torii.Serialization;
 using Torii.UnityEditor;
 using Torii.Util;
 using UnityEditor;
 using UnityEngine;
-using ResourceManager = Torii.Resource.ResourceManager;
 
 namespace LSDR.SDK
 {
@@ -46,7 +44,7 @@ namespace LSDR.SDK
             editor._levelLoader = AssetDatabase.LoadAssetAtPath<LevelLoaderSystem>("Assets/SDK/LevelLoader.asset");
 
             editor._entityTypes = getClasses(ENTITY_NAMESPACE);
-            
+
             GameObject existingLevel = GameObject.Find("Level");
             if (existingLevel != null)
             {
@@ -67,10 +65,12 @@ namespace LSDR.SDK
             {
                 newLevel();
             }
+
             if (GUILayout.Button("Import", GUILayout.Width(100)))
             {
                 importLevel();
             }
+
             if (GUILayout.Button("Export", GUILayout.Width(100)))
             {
                 exportLevel();
@@ -88,6 +88,7 @@ namespace LSDR.SDK
                 drawEntityPanel();
                 EditorGUI.indentLevel--;
             }
+
             EditorGUILayout.EndScrollView();
 
             EditorGUI.indentLevel--;
@@ -105,17 +106,18 @@ namespace LSDR.SDK
         public void OnSceneGUI(SceneView sceneView)
         {
             if (_levelObj == null) return;
-            
+
             Handles.BeginGUI();
 
-            Rect controlsArea = new Rect(POS_PADDING, POS_PADDING, 
+            Rect controlsArea = new Rect(POS_PADDING, POS_PADDING,
                 CONTROLS_WIDTH, sceneView.position.height - (POS_PADDING * 10));
 
             GUILayout.BeginArea(controlsArea);
 
             GUILayout.BeginVertical();
 
-            if (CommonGUI.ColorButton(new GUIContent("Entity"), _placingEntities ? Color.green : Color.grey, GUILayout.Height(50)))
+            if (CommonGUI.ColorButton(new GUIContent("Entity"), _placingEntities ? Color.green : Color.grey,
+                GUILayout.Height(50)))
             {
                 _placingEntities = !_placingEntities;
                 Selection.activeGameObject = null;
@@ -145,14 +147,15 @@ namespace LSDR.SDK
                 if (GUILayout.Button("+")) SnapToGrid.Resolution *= 2;
                 GUILayout.EndHorizontal();
             }
+
             SnapToGrid.Enabled = GUILayout.Toggle(SnapToGrid.Enabled, "Snap to grid");
-            
+
             GUILayout.EndHorizontal();
             GUILayout.EndVertical();
             GUILayout.EndArea();
 
             Handles.EndGUI();
-            
+
             sceneView.Repaint();
         }
 
@@ -189,7 +192,7 @@ namespace LSDR.SDK
                 _levelObj = _levelLoader.LoadLevel(levelPath);
             }
         }
-        
+
         public void LoadLBD(Dream.Dream dream)
         {
             // check to see if there is already an LBD loaded
@@ -202,9 +205,6 @@ namespace LSDR.SDK
 
             string lbdPath = PathUtil.Combine(Application.streamingAssetsPath, dream.LBDFolder);
             _lbdReader.LoadLBD(lbdPath, dream.LegacyTileMode, dream.TileWidth);
-            
-            string tixFilePath = PathUtil.Combine(lbdPath, "TEXA.TIX");
-            _lbdReader.UseTIX(tixFilePath);
         }
 
         private void handlePlaceEntity(SceneView sceneView)
@@ -226,6 +226,7 @@ namespace LSDR.SDK
                 {
                     createEntity(_entityTypes[_currentEntityType], hit.point);
                 }
+
                 Event.current.Use();
             }
         }
@@ -258,10 +259,10 @@ namespace LSDR.SDK
                     "want to import another level? Any unsaved changes will " +
                     "be lost.", "Yes", "Cancel");
                 if (!yes) return;
-                
+
                 DestroyImmediate(existingLevel);
             }
-            
+
             GameObject levelObj = new GameObject("Level");
             Selection.activeGameObject = levelObj;
             _levelObj = levelObj;
@@ -290,11 +291,11 @@ namespace LSDR.SDK
                     "be lost.", "Yes", "Cancel");
                 if (!yes) return;
             }
-            
+
             string levelPath = CommonGUI.BrowseForFile("Import level...",
                 new[] {"Level files", "tmap,json"}, null);
             if (levelPath == null) return;
-            
+
             EditLevel(levelPath);
         }
 

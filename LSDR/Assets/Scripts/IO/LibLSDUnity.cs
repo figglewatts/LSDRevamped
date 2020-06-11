@@ -23,6 +23,23 @@ namespace LSDR.IO
             public int Height;
         }
 
+        public static List<GameObject> CreateGameObjectsFromMOM(MOM mom, Material mat)
+        {
+            var meshes = CreateMeshesFromTMD(mom.TMD);
+            List<GameObject> meshObjects = new List<GameObject>();
+            foreach (var mesh in meshes)
+            {
+                GameObject meshObj = new GameObject($"mesh {meshObjects.Count}");
+                MeshRenderer mr = meshObj.AddComponent<MeshRenderer>();
+                MeshFilter mf = meshObj.AddComponent<MeshFilter>();
+                mr.sharedMaterial = mat;
+                mf.sharedMesh = mesh;
+                meshObjects.Add(meshObj);
+            }
+
+            return meshObjects;
+        }
+
         /// <summary>
         /// Create a list of meshes based on the contents of a TMD model file.
         /// </summary>

@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using LSDR.InputManagement;
+using LSDR.Visual;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Torii.Binding;
@@ -8,53 +9,43 @@ using Torii.Serialization;
 using Torii.Util;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.XR;
 
 namespace LSDR.Game
 {
-    [CreateAssetMenu(menuName="System/SettingsSystem")]
+    [CreateAssetMenu(menuName = "System/SettingsSystem")]
     public class SettingsSystem : ScriptableObject
     {
         // reference to master audio mixer used for volume controls
         public AudioMixer MasterMixer;
-        
+
         public GameSettings Settings { get; private set; }
-        
+
         /// <summary>
         /// Used to disable player motion, i.e. when linking.
         /// </summary>
-        [NonSerialized]
-        public bool CanControlPlayer = true;
+        [NonSerialized] public bool CanControlPlayer = true;
 
         /// <summary>
         /// Used to disable mouse looking, i.e. when paused.
         /// </summary>
-        [NonSerialized]
-        public bool CanMouseLook = true;
+        [NonSerialized] public bool CanMouseLook = true;
 
-        [NonSerialized]
-        public BindBroker SettingsBindBroker = new BindBroker();
+        [NonSerialized] public BindBroker SettingsBindBroker = new BindBroker();
 
         /// <summary>
         /// Whether or not we're in VR mode.
         /// </summary>
-        [NonSerialized]
-        public bool VR;
-        
+        [NonSerialized] public bool VR;
+
         /// <summary>
         /// The framerate of the PS1. Used when framerate limiting is enabled.
         /// </summary>
         public const int FRAMERATE_LIMIT = 20;
 
-        public Shader ClassicDiffuse;
-        public Shader ClassicAlpha;
-        public Shader RevampedDiffuse;
-        public Shader RevampedAlpha;
-
-        public Material[] DiffuseMaterialsInUse;
-        public Material[] AlphaMaterialsInUse;
-
         public JournalLoaderSystem JournalLoader;
         public ControlSchemeLoaderSystem ControlSchemeLoader;
+        public TextureSetSystem TextureSetSystem;
 
         // reference to serializer used for loading/saving data
         private readonly ToriiSerializer _serializer = new ToriiSerializer();
@@ -64,8 +55,8 @@ namespace LSDR.Game
 
         public void OnEnable()
         {
-            VR = !UnityEngine.XR.XRSettings.loadedDeviceName.Equals(string.Empty);
-            
+            VR = !XRSettings.loadedDeviceName.Equals(string.Empty);
+
             _serializer.RegisterJsonSerializationSettings(typeof(GameSettings), new JsonSerializerSettings()
             {
                 Formatting = Formatting.Indented,
@@ -82,7 +73,7 @@ namespace LSDR.Game
             {
                 SettingsBindBroker.DeregisterData(Settings);
             }
-		    
+
             // check to see if the settings file exists
             if (File.Exists(SettingsPath))
             {
@@ -95,7 +86,7 @@ namespace LSDR.Game
                 Settings = new GameSettings();
                 Save();
             }
-            
+
             // register the new settings object
             SettingsBindBroker.RegisterData(Settings);
         }
@@ -106,16 +97,16 @@ namespace LSDR.Game
 
             _serializer.Serialize(Settings, SettingsPath);
         }
-        
+
         /// <summary>
         /// Apply the game settings. This function propagates the given settings to all game systems that need them.
         /// </summary>
         public void Apply()
         {
             Debug.Log("Applying game settings");
-            
+
             // TODO: try and catch exceptions for erroneous loaded values (i.e. array idx) and reset to default if error
-		    
+
             // set the control scheme
             ControlSchemeLoader.SelectScheme(Settings.CurrentControlSchemeIndex);
             ControlSchemeLoader.SaveSchemes();
@@ -131,52 +122,39 @@ namespace LSDR.Game
                 Screen.SetResolution(Screen.resolutions[Settings.CurrentResolutionIndex].width,
                     Screen.resolutions[Settings.CurrentResolutionIndex].height, Settings.Fullscreen);
             }
-			
+
             // set framerate to limit or not
             Application.targetFrameRate = Settings.LimitFramerate ? FRAMERATE_LIMIT : -1;
-			
+
             // set retro shader affine intensity
             Shader.SetGlobalFloat("AffineIntensity", Settings.AffineIntensity);
-			
+
             // set the current dream journal
             JournalLoader.SelectJournal(Settings.CurrentJournalIndex);
-			
+
             // set volumes
             SetMusicVolume(Settings.MusicVolume);
             SetSFXVolume(Settings.SFXVolume);
-            
+
             // set the graphics quality
             QualitySettings.SetQualityLevel(Settings.CurrentQualityIndex, true);
 
             // update any shaders
-            foreach (var mat in DiffuseMaterialsInUse)
-            {
-                mat.shader = Settings.UseClassicShaders ? ClassicDiffuse : RevampedDiffuse;
-            }
-            foreach (var mat in AlphaMaterialsInUse)
-            {
-                mat.shader = Settings.UseClassicShaders ? ClassicAlpha : RevampedAlpha;
-            }
+            TextureSetSystem.SetShader(Settings.UseClassicShaders);
         }
 
         /// <summary>
         /// Set the music volume.
         /// </summary>
         /// <param name="val">Music volume in percentage.</param>
-        public void SetMusicVolume(float val)
-        {
-            MasterMixer.SetFloat("MusicVolume", volumeToDb(val));
-        }
+        public void SetMusicVolume(float val) { MasterMixer.SetFloat("MusicVolume", volumeToDb(val)); }
 
         /// <summary>
         /// Set the SFX volume.
         /// </summary>
         /// <param name="val">SFX volume in percentage.</param>
-        public void SetSFXVolume(float val)
-        {
-            MasterMixer.SetFloat("SFXVolume", volumeToDb(val));
-        }
-        
+        public void SetSFXVolume(float val) { MasterMixer.SetFloat("SFXVolume", volumeToDb(val)); }
+
         // convert a volume percentage into decibels
         private static float volumeToDb(float volume)
         {
