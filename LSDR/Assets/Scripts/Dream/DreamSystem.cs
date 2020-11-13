@@ -7,6 +7,7 @@ using LSDR.Entities.Dream;
 using LSDR.Game;
 using LSDR.InputManagement;
 using LSDR.IO;
+using LSDR.Lua;
 using LSDR.Util;
 using LSDR.Visual;
 using Torii.Audio;
@@ -29,10 +30,6 @@ namespace LSDR.Dream
         public ScenePicker DreamScene;
         public ScenePicker TitleScene;
         public Material SkyBackground;
-        public Shader Classic;
-        public Shader ClassicAlpha;
-        public Shader Revamped;
-        public Shader RevampedAlpha;
         public JournalLoaderSystem JournalLoader;
         public TextureSetSystem TextureSetSystem;
         public LevelLoaderSystem LevelLoader;
@@ -78,6 +75,7 @@ namespace LSDR.Dream
         {
             LevelLoader.OnLevelLoaded += spawnPlayerInDream;
             DevConsole.Register(this);
+            LuaEngine.RegisterGlobalObject(this, "Dream");
         }
 
         public void BeginDream()
@@ -326,11 +324,17 @@ namespace LSDR.Dream
         {
             if (alpha)
             {
-                return SettingsSystem.Settings.UseClassicShaders ? ClassicAlpha : RevampedAlpha;
+                if (!Application.isPlaying) return Shader.Find("LSDR/RevampedDiffuseAlphaBlend"); // for level editor
+                return SettingsSystem.Settings.UseClassicShaders
+                    ? Shader.Find("LSDR/ClassicDiffuseAlphaBlend")
+                    : Shader.Find("LSDR/RevampedDiffuseAlphaBlend");
             }
             else
             {
-                return SettingsSystem.Settings.UseClassicShaders ? Classic : Revamped;
+                if (!Application.isPlaying) return Shader.Find("LSDR/RevampedDiffuse"); // for level editor
+                return SettingsSystem.Settings.UseClassicShaders
+                    ? Shader.Find("LSDR/ClassicDiffuse")
+                    : Shader.Find("LSDR/RevampedDiffuse");
             }
         }
 
@@ -357,6 +361,13 @@ namespace LSDR.Dream
         public void ApplyDreamEnvironment(int idx)
         {
             if (CurrentDream == null) return;
+            if (idx < 0 || idx >= CurrentDream.Environments.Count)
+            {
+                Debug.LogError(
+                    $"Unable to apply environment '{idx}', dream only has {CurrentDream.Environments.Count}");
+                return;
+            }
+
             ApplyEnvironment(CurrentDream.Environments[idx]);
         }
 

@@ -1,7 +1,7 @@
 ﻿using libLSD.Formats;
 using LSDR.Dream;
-using LSDR.Entities.Dream;
 using LSDR.Entities.Original;
+using LSDR.Visual;
 using Torii.Resource;
 using Torii.Util;
 using UnityEngine;
@@ -13,13 +13,20 @@ namespace LSDR.Game
         public TODAnimator Animator;
         public DreamSystem DreamSystem;
 
-        [ContextMenu("Test")]
-        public void Test()
+        public void Start() { spawnObject(); }
+
+        private void spawnObject()
         {
-            DreamSystem.ApplyTextureSet(TextureSet.Normal);
             LBD lbd = ResourceManager.Load<LBD>(PathUtil.Combine(Application.streamingAssetsPath, "original", "STG00",
                 "M000.LBD"));
-            InteractiveObject.Create(lbd, 0, DreamSystem.LBDLoader.LBDDiffuse, "Head guy", 1, true);
+
+            var texSetOpts = TextureSetOptions.GetFromLBDPath(
+                PathUtil.Combine(Application.streamingAssetsPath, "original", "STG00"),
+                Shader.Find("LSDR/ClassicDiffuse"),
+                Shader.Find("LSDR/RevampedDiffuse"));
+            Material mat = new Material(DreamSystem.GetShader(alpha: false));
+            DreamSystem.TextureSetSystem.RegisterMaterial(mat, texSetOpts);
+            InteractiveObject.Create(lbd, 0, mat, "Head guy", 1, false, "lua/test.lua");
         }
     }
 }

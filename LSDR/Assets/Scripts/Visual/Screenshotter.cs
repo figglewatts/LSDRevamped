@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using LSDR.Lua;
 using Torii.Console;
 using Torii.Util;
 using UnityEngine;
@@ -13,6 +14,7 @@ namespace LSDR.Visual
         public override void Init()
         {
             DevConsole.Register(this);
+            LuaEngine.RegisterGlobalObject(this);
         }
 
         public void Update()

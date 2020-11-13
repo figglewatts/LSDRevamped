@@ -9,13 +9,17 @@ namespace LSDR.SDK
         public static Vector3 Offset = new Vector3(0.5f, 0, 0.5f);
         public static float Resolution = 1f;
 
+        private Vector3 _lastPos;
+
 #if UNITY_EDITOR
         public void Update()
         {
-            if (Enabled)
+            if (Enabled && _lastPos != transform.position)
             {
                 transform.position = roundTransform(transform.position - Offset, 1f * Resolution) + Offset;
             }
+
+            _lastPos = transform.position;
         }
 
         private Vector3 roundTransform(Vector3 v, float snapValue)

@@ -1,14 +1,17 @@
 using System;
+using LSDR.Entities.Dream;
+using LSDR.Entities.Original;
+using LSDR.Entities.Trigger;
 using ProtoBuf;
 using UnityEngine;
-using LSDR.Entities.Dream;
-using LSDR.Entities.Trigger;
 
 namespace LSDR.Entities
 {
     [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
     [ProtoInclude(1000, typeof(SpawnPointMemento))]
     [ProtoInclude(2000, typeof(TriggerLinkMemento))]
+    [ProtoInclude(3000, typeof(InteractiveObjectSpawnMemento))]
+    [ProtoInclude(4000, typeof(TriggerLuaMemento))]
     public abstract class EntityMemento
     {
         public string EntityID;
