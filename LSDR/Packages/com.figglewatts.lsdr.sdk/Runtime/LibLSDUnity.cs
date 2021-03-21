@@ -2,10 +2,9 @@ using System.Collections.Generic;
 using libLSD.Formats;
 using libLSD.Formats.Packets;
 using libLSD.Types;
-using LSDR.Visual;
 using UnityEngine;
 
-namespace LSDR.IO
+namespace LSDR.SDK.IO
 {
     /// <summary>
     /// Contains numerous utility methods for converting data in original game format to formats Unity likes.
@@ -13,6 +12,10 @@ namespace LSDR.IO
     /// </summary>
     public static class LibLSDUnity
     {
+        // as it was in PSX datasheets
+        public const int VRAM_WIDTH = 2056;
+        public const int VRAM_HEIGHT = 512;
+
         /// <summary>
         /// A struct to store data from a PS1 TIM file.
         /// </summary>
@@ -143,9 +146,9 @@ namespace LSDR.IO
                         int vramXPos = texPageXPos + texturedPrimitivePacket.UVs[uvIndex];
                         int vramYPos = texPageYPos + (256 - texturedPrimitivePacket.UVs[uvIndex + 1]);
                         float uCoord =
-                            (vramXPos + 0.5f) / PsxVram.VRAM_WIDTH; // half-texel correction to prevent bleeding
+                            (vramXPos + 0.5f) / VRAM_WIDTH; // half-texel correction to prevent bleeding
                         float vCoord =
-                            (vramYPos - 0.5f) / PsxVram.VRAM_HEIGHT; // half-texel correction to prevent bleeding
+                            (vramYPos - 0.5f) / VRAM_HEIGHT; // half-texel correction to prevent bleeding
 
                         vertUV = new Vector2(uCoord, vCoord);
                     }
@@ -349,13 +352,13 @@ namespace LSDR.IO
         public static Texture2D GetTextureFromTIX(TIX tix)
         {
             // create a texture 2D with the required format
-            Texture2D tex = new Texture2D(PsxVram.VRAM_WIDTH, PsxVram.VRAM_HEIGHT, TextureFormat.ARGB32, false)
+            Texture2D tex = new Texture2D(VRAM_WIDTH, VRAM_HEIGHT, TextureFormat.ARGB32, false)
             {
                 wrapMode = TextureWrapMode.Clamp, filterMode = FilterMode.Point, mipMapBias = -0.5f, anisoLevel = 2
             };
 
             // fill the texture with a white colour
-            Color[] fill = new Color[PsxVram.VRAM_WIDTH * PsxVram.VRAM_HEIGHT];
+            Color[] fill = new Color[VRAM_WIDTH * VRAM_HEIGHT];
             for (int i = 0; i < fill.Length; i++)
             {
                 fill[i] = new Color(1, 1, 1, 1);
@@ -385,12 +388,13 @@ namespace LSDR.IO
         /// Load a PS1 TIM image to a Unity Texture2D.
         /// </summary>
         /// <param name="tim">The loaded TIM image.</param>
+        /// <param name="clutIndex">The index of the CLUT to get the texture from.</param>
         /// <param name="flip">Whether or not we should flip the loaded image.</param>
         /// <returns></returns>
-        public static Texture2D GetTextureFromTIM(TIM tim, bool flip = true)
+        public static Texture2D GetTextureFromTIM(TIM tim, int clutIndex = 0, bool flip = true)
         {
             // get the image data
-            TimData data = GetImageDataFromTIM(tim);
+            TimData data = GetImageDataFromTIM(tim, clutIndex);
 
             // create a texture with the required format
             Texture2D tex = new Texture2D(data.Width, data.Height, TextureFormat.ARGB32, false)
@@ -409,11 +413,12 @@ namespace LSDR.IO
         /// Get the pixels and width/height from a loaded TIM.
         /// </summary>
         /// <param name="tim">The loaded TIM.</param>
+        /// <param name="clutIndex">The index of the CLUT to get the texture from.</param>
         /// <returns>TimData containing the TIM data.</returns>
-        public static TimData GetImageDataFromTIM(TIM tim)
+        public static TimData GetImageDataFromTIM(TIM tim, int clutIndex = 0)
         {
             TimData data;
-            data.Colors = tim.GetImage();
+            data.Colors = tim.GetImage(clutIndex);
             data.Width = data.Colors.GetLength(1);
             data.Height = data.Colors.GetLength(0);
             return data;

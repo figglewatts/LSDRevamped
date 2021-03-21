@@ -1,33 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using libLSD.Formats;
-using LSDR.Visual;
+using LSDR.SDK.IO;
 using Torii.Pooling;
 using UnityEngine;
-using UnityEngine.Profiling;
 
 namespace LSDR.IO
 {
-    [CreateAssetMenu(menuName="System/LBDReaderSystem")]
+    [CreateAssetMenu(menuName = "System/LBDReaderSystem")]
     public class LBDReaderSystem : ScriptableObject
     {
         public const int MAX_POSSIBLE_TILES = 54930;
 
         public Material LBDDiffuse;
         public Material LBDAlpha;
-        
+
         /// <summary>
         /// The PrefabPool to use for LBD tiles.
         /// </summary>
         public PrefabPool LBDTilePool;
-        
+
         private TMDReader _tmdReader;
         private static readonly int _mainTex = Shader.PropertyToID("_MainTex");
 
-        public void OnEnable()
-        {
-            _tmdReader = new TMDReader();
-        }
+        public void OnEnable() { _tmdReader = new TMDReader(); }
 
         public void UseTIX(TIX tix)
         {
@@ -44,7 +39,8 @@ namespace LSDR.IO
         public GameObject CreateLBDTileMap(LBD lbd, Dictionary<TMDObject, Mesh> cache)
         {
             GameObject lbdTilemap = new GameObject("LBD TileMap");
-            List<CombineInstance> meshesCreated = new List<CombineInstance>(); // we're combining meshes into a collision mesh
+            List<CombineInstance>
+                meshesCreated = new List<CombineInstance>(); // we're combining meshes into a collision mesh
 
             // for each tile in the tilemap
             int tileNo = 0;
@@ -62,7 +58,7 @@ namespace LSDR.IO
 
                 tileNo++;
             }
-            
+
             // combine all tiles into mesh for efficient collision
             Mesh combined = new Mesh();
             combined.CombineMeshes(meshesCreated.ToArray(), true);
@@ -75,8 +71,13 @@ namespace LSDR.IO
         }
 
         // create an LBD tile GameObject
-        private GameObject createLBDTile(LBDTile tile, LBDTile[] extraTiles, int x, int y, TMD tilesTmd, 
-            List<CombineInstance> meshesCreated, Dictionary<TMDObject, Mesh> cache)
+        private GameObject createLBDTile(LBDTile tile,
+            LBDTile[] extraTiles,
+            int x,
+            int y,
+            TMD tilesTmd,
+            List<CombineInstance> meshesCreated,
+            Dictionary<TMDObject, Mesh> cache)
         {
             // create the GameObject for the base tile
             GameObject lbdTile = createSingleLBDTile(tile, x, y, tilesTmd, meshesCreated, cache);
@@ -97,8 +98,12 @@ namespace LSDR.IO
         }
 
         // create a single LBD tile GameObject (not including extra tiles)
-        private GameObject createSingleLBDTile(LBDTile tile, int x, int y, TMD tilesTmd, 
-            List<CombineInstance> meshesCreated, Dictionary<TMDObject, Mesh> cache)
+        private GameObject createSingleLBDTile(LBDTile tile,
+            int x,
+            int y,
+            TMD tilesTmd,
+            List<CombineInstance> meshesCreated,
+            Dictionary<TMDObject, Mesh> cache)
         {
             // rotate the tile based on its direction
             Quaternion tileRot = Quaternion.identity;
@@ -120,7 +125,7 @@ namespace LSDR.IO
                     break;
                 }
             }
-            
+
             // create the GameObject and add/setup necessary components
             GameObject lbdTile = LBDTilePool.Summon(new Vector3(x, -tile.TileHeight, y), tileRot);
             MeshFilter mf = lbdTile.GetComponent<MeshFilter>();
@@ -136,8 +141,9 @@ namespace LSDR.IO
                 tileMesh = LibLSDUnity.MeshFromTMDObject(tileObj);
                 cache[tileObj] = tileMesh;
             }
+
             mf.sharedMesh = tileMesh;
-            
+
             // the renderer needs to use virtual PSX Vram as its materials
             mr.sharedMaterials = new[] {LBDDiffuse, LBDAlpha};
 
@@ -163,7 +169,7 @@ namespace LSDR.IO
                     transform = localToWorldMatrix,
                     subMeshIndex = 1
                 };
-                meshesCreated.Add(combineTrans); 
+                meshesCreated.Add(combineTrans);
             }
 
             return lbdTile;

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using libLSD.Formats;
 using libLSD.Formats.Packets;
 using libLSD.Types;
-using LSDR.Visual;
+using LSDR.SDK.IO;
 using UnityEngine;
 
 namespace LSDR.IO
@@ -120,8 +120,8 @@ namespace LSDR.IO
                         int uvIndex = i * 2;
                         int vramXPos = texPageXPos + texturedPrimitivePacket.UVs[uvIndex];
                         int vramYPos = texPageYPos + (256 - texturedPrimitivePacket.UVs[uvIndex + 1]);
-                        float uCoord = vramXPos / (float)PsxVram.VRAM_WIDTH;
-                        float vCoord = vramYPos / (float)PsxVram.VRAM_HEIGHT;
+                        float uCoord = vramXPos / (float)LibLSDUnity.VRAM_WIDTH;
+                        float vCoord = vramYPos / (float)LibLSDUnity.VRAM_HEIGHT;
 
                         vertUV = new Vector2(uCoord, vCoord);
 

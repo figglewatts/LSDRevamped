@@ -4,6 +4,7 @@ using System.IO;
 using libLSD.Formats;
 using LSDR.Dream;
 using LSDR.Entities.Original;
+using LSDR.SDK.IO;
 using LSDR.Visual;
 using Torii.Graphics;
 using Torii.Resource;

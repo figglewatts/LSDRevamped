@@ -5,7 +5,7 @@ using UnityEngine;
 namespace LSDR.SDK.EntityEditors
 {
     [CustomEditor(typeof(InteractiveObjectSpawn))]
-    public class InteractiveObjectSpawnEditor : Editor
+    public class InteractiveObjectSpawnEditor : UnityEditor.Editor
     {
         public override void OnInspectorGUI()
         {

@@ -1,6 +1,4 @@
-using System;
 using System.Collections;
-using InControl;
 using LSDR.Dream;
 using LSDR.Game;
 using LSDR.InputManagement;
@@ -19,7 +17,7 @@ namespace LSDR.Entities.Player
         public ControlSchemeLoaderSystem ControlScheme;
         public DreamSystem DreamSystem;
         public Transform Camera;
-        
+
         [Console] public float GravityMultiplier = 1f;
         [Console] public float LinkDelay = 1.7F;
 
@@ -37,7 +35,7 @@ namespace LSDR.Entities.Player
         private bool _currentlyStepping;
         private bool _currentlySprinting;
         private Coroutine _stepCoroutine;
-        
+
         private float _sineStep;
 
         // TODO: better footstep sounds
@@ -50,16 +48,13 @@ namespace LSDR.Entities.Player
                 PathUtil.Combine(Application.streamingAssetsPath, "sfx", "SE_00003.ogg"), "global");
 
             // this is the amount we want to travel along the head bob sine wave every second
-            _sineStep = 2*Mathf.PI / StepTimeSeconds;
+            _sineStep = 2 * Mathf.PI / StepTimeSeconds;
             resetHeadbob();
-            
+
             DevConsole.Register(this);
         }
 
-        public void OnDestroy()
-        {
-            DevConsole.Deregister(this);
-        }
+        public void OnDestroy() { DevConsole.Deregister(this); }
 
         public void Update()
         {
@@ -68,10 +63,10 @@ namespace LSDR.Entities.Player
             {
                 _controller.Move(Physics.gravity * (GravityMultiplier * Time.deltaTime));
             }
-            
+
             // exit early if movement is disabled
             if (!Settings.CanControlPlayer) return;
-            
+
             Vector2 inputDir = getInputDirection();
 
             if (inputDir == Vector2.zero && !_currentlyStepping)
@@ -79,7 +74,7 @@ namespace LSDR.Entities.Player
                 // reset head bob if we're not moving
                 resetHeadbob();
             }
-            
+
             // check to see if we should sprint
             if (ControlScheme.Current.Actions.Run.IsPressed && canStartSprinting())
             {
@@ -92,7 +87,7 @@ namespace LSDR.Entities.Player
                 float moveSpeed = _currentlySprinting ? RunMoveSpeed : WalkMoveSpeed;
                 _stepCoroutine = StartCoroutine(takeStep(inputDir, moveSpeed));
             }
-            
+
             // if run is not pressed and no movement keys are pressed, we should no longer sprint
             if (!ControlScheme.Current.Actions.Run.IsPressed
                 && !ControlScheme.Current.Actions.MoveY.IsPressed && !ControlScheme.Current.Actions.MoveX.IsPressed)
@@ -105,13 +100,13 @@ namespace LSDR.Entities.Player
         {
             _currentlyStepping = true;
             bool playedFootstep = false;
-            
+
             float t = 0;
             while (t < StepTimeSeconds)
             {
                 t += Time.deltaTime;
                 float progress = t / StepTimeSeconds;
-                
+
                 // make sure we don't do this for too many frames or it'll look jerky
                 if (StepTimeSeconds - t < 0) break;
 
@@ -121,10 +116,10 @@ namespace LSDR.Entities.Player
                     playedFootstep = true;
                     AudioPlayer.Instance.PlayClip(_footstepClip, false, "SFX");
                 }
-                
+
                 moveController(input, speedUnitsPerSecond);
                 headBob(progress);
-                
+
                 yield return null;
             }
 
@@ -145,17 +140,17 @@ namespace LSDR.Entities.Player
             if (!Settings.Settings.HeadBobEnabled) return;
 
             float sinePos = t * 2 * Mathf.PI - Mathf.PI / 2;
-            
+
             // the +1 here is to make the whole wave positive, and the divide by 2 is to normalize it to [0, 1]
             float yAddition = (Mathf.Sin(sinePos) + 1) / 2f;
-            
+
             // scale it so it's not massive
             yAddition *= HeadBobAmount;
 
             float newCameraY = (_controller.height / 2f) + yAddition;
             Camera.localPosition = new Vector3(Camera.localPosition.x, newCameraY, Camera.localPosition.z);
         }
-        
+
         /// <summary>
         /// Reset the head bob sine wave position to the start.
         /// </summary>
@@ -167,7 +162,7 @@ namespace LSDR.Entities.Player
         private void moveController(Vector2 input, float speedUnitsPerSecond)
         {
             Vector3 moveAmount = transform.forward * input.y + transform.right * input.x;
-            
+
             // perform collision detection (to override default Unity char controller's 'slide along walls' for
             // LSD's janky 'lets just stop in place')
             if (movingIntoWall(moveAmount))
@@ -210,23 +205,18 @@ namespace LSDR.Entities.Player
                 transform.position.z);
 
             RaycastHit hit;
-            bool hitAboveStepHeight = Physics.CapsuleCast(stepTopPos, capsuleTop, _controller.radius, desiredMove, out hit,
+            bool hitAboveStepHeight = Physics.CapsuleCast(stepTopPos, capsuleTop, _controller.radius, desiredMove,
+                out hit,
                 _controller.skinWidth * 2);
             if (hit.collider == null) return false;
             if (hitAboveStepHeight && !hit.collider.isTrigger) return true;
-            
+
             bool hitSomething = Physics.CapsuleCast(capsuleBottom, capsuleTop, _controller.radius, desiredMove, out hit,
                 _controller.skinWidth * 2);
             Vector3 axis = Vector3.Cross(transform.up, desiredMove);
             bool hitOverSlopeLimit =
                 hitSomething && Vector3.SignedAngle(hit.normal, transform.up, axis) > _controller.slopeLimit;
             bool hitSeemsLikeAStep = hit.normal.y < 0.1f || hit.distance < 1E-06;
-            
-            Debug.Log("Slope limit: " + hitOverSlopeLimit);
-            Debug.Log("It's a step: " + hitSeemsLikeAStep);
-            Debug.Log("Normal: " + hit.normal);
-            Debug.Log("Distance: " + hit.distance);
-            Debug.Log("Angle: " + Vector3.SignedAngle(hit.normal, transform.up, axis));
 
             return !hit.collider.isTrigger && hitOverSlopeLimit && !hitSeemsLikeAStep;
         }
@@ -248,7 +238,7 @@ namespace LSDR.Entities.Player
 
             return input;
         }
-        
+
         /// <summary>
         /// We can start sprinting if we're moving on the X axis (strafing) or if we're moving forwards.
         /// </summary>
