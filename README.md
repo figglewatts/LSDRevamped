@@ -3,7 +3,7 @@ A remake of the cult-classic game LSD: Dream Emulator.
 
 ## Prerequisites
 - Git LFS (https://git-lfs.github.com/)
-- Unity 2017.4.30f1 installed via Unity Hub
+- Unity 2019.4.20f1 installed via Unity Hub
 - C# IDE (I use JetBrains Rider, but Visual Studio will work too...)
 - Windows (this may change soon... watch this space)
 - InControl (Unity Asset Store, paid asset)
