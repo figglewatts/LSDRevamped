@@ -6,9 +6,11 @@ using UnityEngine;
 
 namespace LSDR.SDK.Editor.AssetImporters
 {
-    public class MOMAnimationHelper
+    public class MOMHelper
     {
-        protected GameObject _rootObject;
+        protected readonly Material _opaque;
+        protected readonly Material _transparent;
+        protected readonly GameObject _rootObject;
         protected readonly Dictionary<int, AnimationObject> _objectTable;
 
         protected class AnimationObject
@@ -114,11 +116,13 @@ namespace LSDR.SDK.Editor.AssetImporters
             public Transform CurrentTransform;
         }
 
-        public MOMAnimationHelper(GameObject root)
+        public MOMHelper(GameObject root, Material opaque, Material transparent)
         {
             _rootObject = root;
             root.name = "0";
             _objectTable = new Dictionary<int, AnimationObject> {[0] = new AnimationObject(root.transform)};
+            _opaque = opaque;
+            _transparent = transparent;
         }
 
         public Transform GetObject(int id) { return _objectTable[id].Transform; }
@@ -140,10 +144,133 @@ namespace LSDR.SDK.Editor.AssetImporters
             }
         }
 
+        public GameObject MakeMeshObject(Mesh mesh, int id)
+        {
+            var meshObj = new GameObject($"{id}");
+            MeshFilter mf = meshObj.AddComponent<MeshFilter>();
+            mf.sharedMesh = mesh;
+            MeshRenderer mr = meshObj.AddComponent<MeshRenderer>();
+
+            if (mesh.subMeshCount > 1)
+            {
+                mr.sharedMaterials = new[]
+                {
+                    _opaque == null
+                        ? AssetDatabase.GetBuiltinExtraResource<Material>("Default-Diffuse.mat")
+                        : _opaque,
+                    _transparent == null
+                        ? AssetDatabase.GetBuiltinExtraResource<Material>("Default-Diffuse.mat")
+                        : _transparent
+                };
+            }
+            else
+            {
+                mr.sharedMaterial = _opaque == null
+                    ? AssetDatabase.GetBuiltinExtraResource<Material>("Default-Diffuse.mat")
+                    : _opaque;
+            }
+
+            return meshObj;
+        }
+
+        public void CreateAnimationObjectHierarchy(TODFrame animFirstFrame, List<Mesh> meshes)
+        {
+            foreach (var packet in animFirstFrame.Packets)
+            {
+                if (packet.Data is TODObjectControlPacketData objControl)
+                {
+                    if (objControl.ObjectControl == TODObjectControlPacketData.ObjectControlType.Create)
+                    {
+                        // create a new object in the transform hierarchy/object table
+                        var newObj = new GameObject($"{packet.ObjectID}");
+                        CreateObject(packet.ObjectID, newObj.transform);
+                    }
+                }
+                else if (packet.Data is TODObjectIDPacketData objId)
+                {
+                    if (packet.PacketType == TODPacket.PacketTypes.TMDDataID)
+                    {
+                        // assign a mesh to an object in the transform hierarchy/object table
+                        var meshObj = MakeMeshObject(meshes[objId.ObjectID - 1], objId.ObjectID - 1);
+                        var parent = GetObject(packet.ObjectID);
+                        meshObj.transform.SetParent(parent);
+                    }
+                    else if (packet.PacketType == TODPacket.PacketTypes.ParentObjectID)
+                    {
+                        // parent something in the transform hierarchy to something else in the transform hierarchy
+                        SetObjectParent(packet.ObjectID, objId.ObjectID);
+                    }
+                }
+            }
+        }
+
+        public void PoseObjectInFirstFrame(TODFrame animFirstFrame)
+        {
+            foreach (var packet in animFirstFrame.Packets)
+            {
+                if (packet.Data is TODCoordinatePacketData packetData)
+                {
+                    var objTransform = GetObject(packet.ObjectID);
+                    if (packetData.HasScale)
+                    {
+                        if (packetData.MatrixType == TODPacketData.PacketDataType.Absolute)
+                        {
+                            objTransform.localScale = new Vector3(packetData.ScaleX / 4096f,
+                                packetData.ScaleY / 4096f,
+                                packetData.ScaleZ / 4096f);
+                        }
+                        else
+                        {
+                            objTransform.localScale = Vector3.Scale(objTransform.localScale, new Vector3(
+                                packetData.ScaleX / 4096f,
+                                packetData.ScaleY / 4096f,
+                                packetData.ScaleZ / 4096f));
+                        }
+                    }
+
+                    if (packetData.HasTranslation)
+                    {
+                        if (packetData.MatrixType == TODPacketData.PacketDataType.Absolute)
+                        {
+                            Vector3 pos = new Vector3(packetData.TransX, -packetData.TransY, packetData.TransZ) /
+                                          2048f;
+                            objTransform.localPosition = pos;
+                        }
+                        else
+                        {
+                            objTransform.localPosition =
+                                objTransform.localPosition +
+                                new Vector3(packetData.TransX, -packetData.TransY, packetData.TransZ) /
+                                2048f;
+                        }
+                    }
+
+                    if (packetData.HasRotation)
+                    {
+                        float pitch = -packetData.RotX / 4096f;
+                        float yaw = packetData.RotY / 4096f;
+                        float roll = -packetData.RotZ / 4096f;
+
+                        if (packetData.MatrixType == TODPacketData.PacketDataType.Absolute)
+                        {
+                            var x = Quaternion.AngleAxis(pitch, Vector3.right);
+                            var y = Quaternion.AngleAxis(yaw, Vector3.up);
+                            var z = Quaternion.AngleAxis(roll, Vector3.forward);
+                            objTransform.localRotation = x * y * z;
+                        }
+                        else
+                        {
+                            objTransform.Rotate(Vector3.right, pitch);
+                            objTransform.Rotate(Vector3.up, yaw);
+                            objTransform.Rotate(Vector3.forward, roll);
+                        }
+                    }
+                }
+            }
+        }
+
         public AnimationClip TODToClip(TOD tod)
         {
-            Debug.Log($"Frames1: {tod.Header.NumberOfFrames}, Frames2: {tod.Frames.Length}");
-
             // scan the packets and store transformations and their frames with the animation objects
             var animObjTransforms = new Dictionary<AnimationObject, List<FrameTransformation>>(_objectTable.Count);
             for (int frameNo = 0; frameNo < tod.Frames.Length; frameNo++)
