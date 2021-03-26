@@ -119,7 +119,6 @@ namespace LSDR.SDK.Editor.AssetImporters
         public MOMHelper(GameObject root, Material opaque, Material transparent)
         {
             _rootObject = root;
-            root.name = "0";
             _objectTable = new Dictionary<int, AnimationObject> {[0] = new AnimationObject(root.transform)};
             _opaque = opaque;
             _transparent = transparent;
@@ -150,6 +149,7 @@ namespace LSDR.SDK.Editor.AssetImporters
             MeshFilter mf = meshObj.AddComponent<MeshFilter>();
             mf.sharedMesh = mesh;
             MeshRenderer mr = meshObj.AddComponent<MeshRenderer>();
+            meshObj.transform.SetParent(_rootObject.transform);
 
             if (mesh.subMeshCount > 1)
             {
