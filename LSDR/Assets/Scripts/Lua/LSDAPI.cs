@@ -1,7 +1,7 @@
 using LSDR.Dream;
-using LSDR.Entities.Dream;
 using LSDR.Entities.Original;
 using LSDR.Lua.Proxies;
+using LSDR.SDK;
 using LSDR.Visual;
 using MoonSharp.Interpreter;
 

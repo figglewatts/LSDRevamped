@@ -3,7 +3,7 @@ using System.Linq;
 using libLSD.Formats;
 using LSDR.Dream;
 using LSDR.IO.ResourceHandlers;
-using LSDR.SDK.IO;
+using LSDR.SDK;
 using Torii.Resource;
 using Torii.UI;
 using Torii.Util;

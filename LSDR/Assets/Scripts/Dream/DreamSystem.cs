@@ -8,6 +8,7 @@ using LSDR.Game;
 using LSDR.InputManagement;
 using LSDR.IO;
 using LSDR.Lua;
+using LSDR.SDK;
 using LSDR.Util;
 using LSDR.Visual;
 using Torii.Audio;

@@ -4,7 +4,7 @@ using libLSD.Formats.Packets;
 using libLSD.Types;
 using UnityEngine;
 
-namespace LSDR.SDK.IO
+namespace LSDR.SDK
 {
     /// <summary>
     /// Contains numerous utility methods for converting data in original game format to formats Unity likes.

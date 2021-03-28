@@ -1,5 +1,5 @@
 using LSDR.Dream;
-using LSDR.Entities.Dream;
+using LSDR.SDK;
 using Torii.Audio;
 using Torii.Serialization;
 using UnityEngine;

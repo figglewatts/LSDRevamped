@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using LSDR.Entities.Dream;
+using LSDR.SDK;
 using Torii.Resource;
 using UnityEngine;
 

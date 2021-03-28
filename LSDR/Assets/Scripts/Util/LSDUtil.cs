@@ -1,5 +1,5 @@
 using System.IO;
-using LSDR.Entities.Dream;
+using LSDR.SDK;
 using Torii.Util;
 
 namespace LSDR.Util

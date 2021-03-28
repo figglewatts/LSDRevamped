@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using libLSD.Formats;
 using libLSD.Formats.Packets;
 using libLSD.Types;
-using LSDR.SDK.IO;
+using LSDR.SDK;
 using UnityEngine;
 
 namespace LSDR.IO

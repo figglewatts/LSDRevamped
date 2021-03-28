@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.IO;
 using libLSD.Formats;
 using LSDR.SDK.Animation;
-using LSDR.SDK.IO;
 using UnityEditor;
 using UnityEditor.Animations;
 using UnityEditor.Experimental.AssetImporters;

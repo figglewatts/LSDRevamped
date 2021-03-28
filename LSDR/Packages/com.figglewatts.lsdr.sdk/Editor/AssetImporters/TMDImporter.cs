@@ -1,6 +1,5 @@
 using System.IO;
 using libLSD.Formats;
-using LSDR.SDK.IO;
 using UnityEditor;
 using UnityEditor.Experimental.AssetImporters;
 using UnityEngine;
@@ -12,7 +11,7 @@ namespace LSDR.SDK.Editor.AssetImporters
     {
         public Material OpaqueMaterial;
         public Material TransparentMaterial;
-        
+
         protected MeshCombiner _meshCombiner;
 
         public override void OnImportAsset(AssetImportContext ctx)
