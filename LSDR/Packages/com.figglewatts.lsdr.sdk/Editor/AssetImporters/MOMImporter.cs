@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using libLSD.Formats;
+using LSDR.SDK.Animation;
 using LSDR.SDK.IO;
 using UnityEditor;
 using UnityEditor.Animations;
@@ -69,7 +70,8 @@ namespace LSDR.SDK.Editor.AssetImporters
                     controller.AddMotion(clips[i]);
                 }
 
-                // add an Animator component to the root object
+                // add components to the root object
+                momObj.AddComponent<AnimatedObject>();
                 momObj.AddComponent<Animator>().runtimeAnimatorController = controller;
             }
 

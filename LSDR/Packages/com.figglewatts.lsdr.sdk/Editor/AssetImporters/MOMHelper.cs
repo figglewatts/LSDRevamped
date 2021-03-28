@@ -353,6 +353,7 @@ namespace LSDR.SDK.Editor.AssetImporters
             settings.loopTime = true;
             AnimationUtility.SetAnimationClipSettings(clip, settings);
             clip.EnsureQuaternionContinuity();
+            clip.hideFlags |= HideFlags.NotEditable;
 
             return clip;
         }
