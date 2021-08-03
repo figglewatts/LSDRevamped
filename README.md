@@ -2,13 +2,13 @@
 A remake of the cult-classic game LSD: Dream Emulator.
 
 ## Prerequisites
-- Git LFS (https://git-lfs.github.com/)
-- Unity 2019.4.20f1 installed via Unity Hub
-- C# IDE (I use JetBrains Rider, but Visual Studio will work too...)
-- Windows (this may change soon... watch this space)
-- InControl (Unity Asset Store, paid asset)
-- Python 3.7
-- [Toriicli](https://github.com/Figglewatts/toriicli)
+* [Git LFS](https://git-lfs.github.com/)
+* Unity 2019.4.20f1 installed via Unity Hub
+* C# IDE (I use JetBrains Rider, but Visual Studio will work too...)
+* Windows (this may change soon... watch this space)
+* [InControl](https://assetstore.unity.com/packages/tools/input-management/incontrol-14695) (Unity Asset Store, paid asset)
+* Python 3.7
+* [Toriicli](https://github.com/Figglewatts/toriicli)
 
 ## Quick start
 1. Ensure you've prepared the prerequisites as above.
@@ -26,7 +26,7 @@ A remake of the cult-classic game LSD: Dream Emulator.
    ```terminal
    $ toriicli find
    ```
-   It should print out the path to the Unity 2017.4.30f1 executable.
+   It should print out the path to the Unity 2019.4.20f1 executable.
 2. Run `toriicli build` in the root of the repo to build the project.
    Make sure Unity isn't open. This will take a while, so wait for it to finish.
 3. Once it's finished, the build will be in the 'builds' folder as a zip. You
