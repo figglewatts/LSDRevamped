@@ -18,20 +18,27 @@ Shader "LSDR/ClassicDiffuseAlphaBlend"
             ZTest LEqual
             CGPROGRAM
             #pragma vertex vert
+            #pragma geometry geom
             #pragma fragment frag
             #pragma multi_compile_instancing
             #pragma multi_compile_fog
             #include "LSDR.cginc"
 
-            v2f vert(appdata v)
+            v2g vert(appdata v)
             {
                 return classicVert(v);
+            }
+
+            [maxvertexcount(3)]
+            void geom(triangle v2g IN[3], inout TriangleStream<g2f> triStream)
+            {
+                classicGeom(IN, triStream);
             }
 
             sampler2D _MainTex;
             fixed4 _Tint;
 
-            fragOut frag(v2f input)
+            fragOut frag(g2f input)
             {
                 return classicFrag(input, _MainTex, _Tint);
             }

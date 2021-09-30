@@ -6,35 +6,48 @@ uniform int _SubtractiveFog;
 
 float GetFogEnd()
 {
-    float der = -1 / unity_FogParams.z;
+    const float der = -1 / unity_FogParams.z;
     return unity_FogParams.w * der;
 }
 
-float GetFogAmount(float distance)
+float GetFogDepth(float distance)
 {
-    #if defined(FOG_LINEAR)
-    float baseFogAmt = saturate(distance * unity_FogParams.z + unity_FogParams.w);
-    float quantized = round(baseFogAmt / 0.1) * 0.1;
-    return quantized;
-    #else
-    return 1;
-    #endif
+    UNITY_CALC_FOG_FACTOR_RAW(distance);
+    return saturate(unityFogFactor);
 }
 
-float4 ApplyFog(half4 color, float amount)
+float4 FogColor(float distance)
 {
-    float3 hslFogCol = rgb2hsl(unity_FogColor.rgb);
+    float fogDepth = GetFogDepth(distance);
+    float3 fogColor = lerp(unity_FogColor.rgb, float3(0, 0, 0), fogDepth);
+    return float4(fogColor, fogDepth);
+}
 
-    // modify lightness based on fog amount
-    hslFogCol.z = lerp(hslFogCol.z, _SubtractiveFog, amount);
+float3 AdditiveFog(float3 color, float3 fogColor, float factor)
+{
+    return color + fogColor * factor;
+}
 
-    // convert back into RGB
-    const float3 modifiedFogCol = hsl2rgb(hslFogCol);
+float3 SubtractiveFog(float3 color, float3 fogColor, float factor)
+{
+    return max(float3(0, 0, 0), color - fogColor * factor);
+}
 
+float4 ApplyClassicFog(float4 color, float4 fogColor)
+{
     // perform addition/subtraction based on the fog mode
-    const float3 finalFogCol = ((color.rgb - (1 - modifiedFogCol)) * _SubtractiveFog) + ((color.rgb + modifiedFogCol) *
-        !_SubtractiveFog);
+    float3 finalFogCol = color.rgb;
+    finalFogCol = AdditiveFog(finalFogCol, fogColor.rgb, 1.0 - _SubtractiveFog);
+    finalFogCol = SubtractiveFog(finalFogCol, fogColor.rgb, _SubtractiveFog);
 
-    color.rgb = lerp(finalFogCol, color.rgb, amount);
-    return color;
+    return float4(finalFogCol.rgb, color.a);
+}
+
+float4 ApplyRevampedFog(float4 color, float4 fogColor)
+{
+    float3 finalFogCol = color.rgb;
+    finalFogCol = AdditiveFog(finalFogCol, fogColor.rgb, 1.0 - _SubtractiveFog);
+    finalFogCol = SubtractiveFog(finalFogCol, fogColor.rgb, _SubtractiveFog);
+
+    return float4(finalFogCol.rgb, color.a);
 }

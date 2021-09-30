@@ -23,9 +23,15 @@ Shader "LSDR/ClassicDiffuseSet"
             #pragma multi_compile_fog
             #include "LSDR.cginc"
 
-            v2f vert(appdata v)
+            v2g vert(appdata v)
             {
                 return classicVert(v);
+            }
+
+            [maxvertexcount(3)]
+            void geom(triangle v2g IN[3], inout TriangleStream<g2f> triStream)
+            {
+                classicGeom(IN, triStream);
             }
 
             sampler2D _MainTexA;
@@ -34,7 +40,7 @@ Shader "LSDR/ClassicDiffuseSet"
             sampler2D _MainTexD;
             fixed4 _Tint;
 
-            float4 frag(v2f input) : COLOR
+            fragOut frag(g2f input)
             {
                 return classicFragSetCutout(input, _MainTexA, _MainTexB, _MainTexC, _MainTexD, _Tint);
             }

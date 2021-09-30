@@ -34,7 +34,7 @@ Shader "LSDR/RevampedDiffuseSet"
             sampler2D _MainTexD;
             fixed4 _Tint;
 
-            float4 frag(v2f input) : COLOR
+            fragOut frag(v2f input)
             {
                 return revampedFragSetCutout(input, _MainTexA, _MainTexB, _MainTexC, _MainTexD, _Tint);
             }
