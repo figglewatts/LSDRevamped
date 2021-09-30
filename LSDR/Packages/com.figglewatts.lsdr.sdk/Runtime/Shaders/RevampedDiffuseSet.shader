@@ -18,26 +18,14 @@ Shader "LSDR/RevampedDiffuseSet"
         {
             CGPROGRAM
             #pragma vertex vert
+            #pragma geometry geom
             #pragma fragment frag
             #pragma multi_compile_instancing
             #pragma multi_compile_fog
+
+            #define LSDR_TEXTURE_SET
+            #define LSDR_CUTOUT_ALPHA
             #include "LSDR.cginc"
-
-            v2f vert(appdata v)
-            {
-                return revampedVert(v);
-            }
-
-            sampler2D _MainTexA;
-            sampler2D _MainTexB;
-            sampler2D _MainTexC;
-            sampler2D _MainTexD;
-            fixed4 _Tint;
-
-            fragOut frag(v2f input)
-            {
-                return revampedFragSetCutout(input, _MainTexA, _MainTexB, _MainTexC, _MainTexD, _Tint);
-            }
             ENDCG
         }
     }

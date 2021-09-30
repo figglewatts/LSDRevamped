@@ -16,23 +16,13 @@ Shader "LSDR/RevampedDiffuse"
             ZTest LEqual
             CGPROGRAM
             #pragma vertex vert
+            #pragma geometry geom
             #pragma fragment frag
             #pragma multi_compile_instancing
             #pragma multi_compile_fog
+
+            #define LSDR_CUTOUT_ALPHA
             #include "LSDR.cginc"
-
-            v2f vert(appdata v)
-            {
-                return revampedVert(v);
-            }
-
-            sampler2D _MainTex;
-            fixed4 _Tint;
-
-            fragOut frag(v2f input)
-            {
-                return revampedFragCutout(input, _MainTex, _Tint);
-            }
             ENDCG
         }
     }

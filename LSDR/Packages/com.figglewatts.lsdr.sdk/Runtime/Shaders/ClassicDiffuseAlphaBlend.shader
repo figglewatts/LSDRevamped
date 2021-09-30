@@ -22,26 +22,9 @@ Shader "LSDR/ClassicDiffuseAlphaBlend"
             #pragma fragment frag
             #pragma multi_compile_instancing
             #pragma multi_compile_fog
+
+            #define LSDR_CLASSIC
             #include "LSDR.cginc"
-
-            v2g vert(appdata v)
-            {
-                return classicVert(v);
-            }
-
-            [maxvertexcount(3)]
-            void geom(triangle v2g IN[3], inout TriangleStream<g2f> triStream)
-            {
-                classicGeom(IN, triStream);
-            }
-
-            sampler2D _MainTex;
-            fixed4 _Tint;
-
-            fragOut frag(g2f input)
-            {
-                return classicFrag(input, _MainTex, _Tint);
-            }
             ENDCG
         }
     }
