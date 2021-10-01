@@ -14,6 +14,7 @@ namespace LSDR.SDK.Editor.AssetImporters
     {
         public Material OpaqueMaterial;
         public Material TransparentMaterial;
+        public bool Collision = true;
 
         protected MeshCombiner _meshCombiner;
 
@@ -81,6 +82,14 @@ namespace LSDR.SDK.Editor.AssetImporters
                 mr.sharedMaterial = OpaqueMaterial == null
                     ? AssetDatabase.GetBuiltinExtraResource<Material>("Default-Diffuse.mat")
                     : OpaqueMaterial;
+            }
+
+            // handle collision
+            if (Collision)
+            {
+                MeshCollider col = meshObj.AddComponent<MeshCollider>();
+                col.sharedMesh = combinedMesh;
+                col.convex = false;
             }
 
             // and set the outputs

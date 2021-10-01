@@ -1,4 +1,4 @@
-using Torii.Util;
+using LSDR.SDK.Editor.Util;
 using UnityEditor;
 using UnityEngine;
 
@@ -12,18 +12,18 @@ namespace LSDR.SDK
         static ListBox()
         {
             Color textColor = EditorGUIUtility.isProSkin ? new Color(0.7f, 0.7f, 0.7f, 1.0f) : Color.black;
-            
+
             GUIStyleState normal = new GUIStyleState()
             {
                 textColor = textColor
             };
-            
+
             GUIStyleState selected = new GUIStyleState()
             {
                 textColor = Color.white,
                 background = TextureUtil.CreateColor(new Color(0.349f, 0.537f, 0.812f))
             };
-            
+
             _style = new GUIStyle()
             {
                 normal = normal,
@@ -38,7 +38,9 @@ namespace LSDR.SDK
                 alignment = TextAnchor.MiddleLeft
             };
 
-            Texture2D boxSprite = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/SDK/box-sprite.png");
+            Texture2D boxSprite =
+                AssetDatabase.LoadAssetAtPath<Texture2D>(
+                    "Packages/com.figglewatts.lsdr.sdk/Editor/Assets/box-sprite.png");
             _boxStyle = new GUIStyle()
             {
                 normal = new GUIStyleState()

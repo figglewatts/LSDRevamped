@@ -1,58 +1,53 @@
 using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
-using Torii.Serialization;
 using UnityEngine;
 
-namespace LSDR.Dream
+namespace LSDR.SDK.Data
 {
-    [JsonObject(MemberSerialization.OptIn)]
-    public class GraphSpawnMap
+    public class GraphSpawnMap : ScriptableObject
     {
         /// <summary>
         /// The pool of dreams to choose from.
         /// </summary>
-        [JsonProperty]
         public List<DreamElement> Dreams;
-        
+
         /// <summary>
         /// The size of the graph on both X and Y axes.
         /// </summary>
         public const int GRAPH_SIZE = 19;
-        
+
         /// <summary>
         /// The layout of the graph. Elements are indices into Dreams list. -1 means random dream from pool.
         /// </summary>
-        [JsonProperty]
-        private int[,] _graph;
+        [SerializeField] private int[] _graph;
 
         private Texture2D _createdTexture;
         private float _createdOpacity;
         private bool _dirty = true;
-        private ToriiSerializer _serializer = new ToriiSerializer();
 
         public GraphSpawnMap()
         {
             Dreams = new List<DreamElement>();
-            _graph = new int[GRAPH_SIZE, GRAPH_SIZE];
+            _graph = new int[GRAPH_SIZE * GRAPH_SIZE];
             for (int y = 0; y < GRAPH_SIZE; y++)
             {
                 for (int x = 0; x < GRAPH_SIZE; x++)
                 {
-                    _graph[x, y] = -1;
+                    _graph[y * GRAPH_SIZE + x] = -1;
                 }
             }
         }
 
         public string Get(int x, int y)
         {
-            int graphIdx = _graph[x, y];
+            int graphIdx = _graph[y * GRAPH_SIZE + x];
             return graphIdx == -1 ? null : Dreams[graphIdx].Path;
-;        }
+            ;
+        }
 
         public void Set(int x, int y, int dreamIdx)
         {
-            _graph[x, y] = dreamIdx;
+            _graph[y * GRAPH_SIZE + x] = dreamIdx;
             _dirty = true;
         }
 
@@ -69,13 +64,13 @@ namespace LSDR.Dream
             {
                 for (int x = 0; x < GRAPH_SIZE; x++)
                 {
-                    if (_graph[x, y] == dreamIdx)
+                    if (_graph[y * GRAPH_SIZE + x] == dreamIdx)
                     {
-                        _graph[x, y] = -1;
+                        _graph[y * GRAPH_SIZE + x] = -1;
                     }
-                    else if (_graph[x, y] > dreamIdx)
+                    else if (_graph[y * GRAPH_SIZE + x] > dreamIdx)
                     {
-                        _graph[x, y]--;
+                        _graph[y * GRAPH_SIZE + x]--;
                     }
                 }
             }
@@ -94,7 +89,7 @@ namespace LSDR.Dream
             // if the data hasn't changed, and the opacity is the same, then return the previously created texture
             // as creating a new texture every time we want to draw will be expensive!
             if (!_dirty && Math.Abs(opacity - _createdOpacity) < float.Epsilon) return _createdTexture;
-            
+
             Texture2D tex = new Texture2D(GRAPH_SIZE, GRAPH_SIZE, TextureFormat.RGBA32, false)
             {
                 filterMode = FilterMode.Point
@@ -103,28 +98,28 @@ namespace LSDR.Dream
             {
                 for (int x = 0; x < GRAPH_SIZE; x++)
                 {
-                    if (_graph[x, y] == -1)
+                    if (_graph[y * GRAPH_SIZE + x] == -1)
                     {
                         tex.SetPixel(x, y, Color.clear);
                     }
                     else
                     {
-                        Color col = Dreams[_graph[x, y]].Display;
+                        Color col = Dreams[_graph[y * GRAPH_SIZE + x]].Display;
                         col.a = opacity;
                         tex.SetPixel(x, y, col);
                     }
-                    
                 }
             }
+
             tex.Apply();
-            
+
             _createdTexture = tex;
             _createdOpacity = opacity;
             _dirty = false;
             return tex;
         }
-        
-        [JsonObject]
+
+        [Serializable]
         public class DreamElement
         {
             public string Path;
