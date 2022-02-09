@@ -1,36 +1,31 @@
-using System;
-using System.IO;
-using System.Linq;
 using LSDR.SDK.Data;
+using LSDR.SDK.Editor.Util;
 using UnityEditor;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace LSDR.SDK
 {
-    public class GraphSpawnMapEditor : EditorWindow
+    [CustomEditor(typeof(GraphSpawnMap))]
+    public class GraphSpawnMapEditor : UnityEditor.Editor
     {
-        public GraphSpawnMap GraphSpawnMap { get => _graphSpawnMap; set => _graphSpawnMap = value; }
-
-        private GraphSpawnMap _graphSpawnMap;
+        private GraphSpawnMap _graphSpawnMap => target as GraphSpawnMap;
 
         private bool _needsRepaint;
         private Texture2D _graphTexture;
-        private Texture2D _gridTex;
 
+        private bool _showDreamBox = true;
         private const int _margin = 2;
-        private Rect _graphTextureRect = new Rect(0, 0, 304, 304);
+        private Rect _graphTextureRect;
         private Vector2 _graphTextureScaleFactor;
-        private Rect _dreamBoxRect;
         private Vector2 _dreamBoxScrollPos = Vector2.zero;
-        private Rect _bottomRect;
+
+        private GUIStyle _selectedDreamStyle;
 
         private int _selectedDream = 0;
 
         private const float GRAPH_GRID_OPACITY = 0.5f;
-        private const int WINDOW_WIDTH = 650;
 
-        private void OnGUI()
+        public override void OnInspectorGUI()
         {
             if (_graphSpawnMap == null) return;
 
@@ -52,138 +47,147 @@ namespace LSDR.SDK
 
         private void drawGraph()
         {
-            GUI.Box(_graphTextureRect, "");
-            GUI.DrawTexture(_graphTextureRect, _graphTexture);
-            GUI.DrawTexture(_graphTextureRect, GraphSpawnMap.GetTexture(GRAPH_GRID_OPACITY));
+            var graphRect = GUILayoutUtility.GetRect(304, 304, 304, 304);
+            GUI.BeginGroup(graphRect);
+            GUI.Box(new Rect(0, 0, 304, 304), GUIContent.none);
+            GUI.DrawTexture(new Rect(0, 0, 304, 304), _graphTexture, ScaleMode.ScaleToFit);
+            GUI.DrawTexture(new Rect(0, 0, 304, 304), _graphSpawnMap.GetTexture(GRAPH_GRID_OPACITY),
+                ScaleMode.ScaleToFit);
+            GUI.EndGroup();
         }
 
         private void drawDreamBox()
         {
-            float colorSize = EditorGUIUtility.singleLineHeight;
-            float xPos = _graphTextureRect.width + _margin;
-            float toolbarHeight = 18;
-            _dreamBoxRect = new Rect(xPos, _graphTextureRect.y + toolbarHeight, position.width - xPos,
-                position.height - toolbarHeight);
-
-            // toolbar
-            float toolbarWidth = position.width - _graphTextureRect.width;
-            GUI.BeginGroup(new Rect(_dreamBoxRect.x - _margin, 0, toolbarWidth, toolbarHeight), EditorStyles.toolbar);
-            if (GUI.Button(new Rect(0, 0, 40, toolbarHeight), "Apply", EditorStyles.toolbarButton))
+            EditorGUILayout.BeginHorizontal();
+            _showDreamBox = EditorGUILayout.Foldout(_showDreamBox, "Dreams");
+            GUILayout.FlexibleSpace();
+            if (GUILayout.Button(new GUIContent("Journal", "Add dreams from a journal")))
             {
-                Close();
+                GraphSpawnMapJournalDreamsEditorWindow.Show(_graphSpawnMap);
             }
 
-            float btnWidth = 18;
-            if (GUI.Button(new Rect(toolbarWidth - btnWidth, 0, btnWidth, toolbarHeight), "-",
-                EditorStyles.toolbarButton))
+            if (GUILayout.Button(new GUIContent("+", "Add a new dream to the list")))
             {
-                removeSelectedDream();
+                _graphSpawnMap.AddDream();
+                serializedObject.FindProperty("Dreams").arraySize =
+                    _graphSpawnMap.Dreams.Count; // hack, update it manually as they go out of sync
+                _selectedDream = _graphSpawnMap.Dreams.Count - 1;
             }
 
-            if (GUI.Button(new Rect(toolbarWidth - btnWidth * 2, 0, btnWidth, toolbarHeight), "+",
-                EditorStyles.toolbarButton))
+            EditorGUILayout.EndHorizontal();
+            if (_showDreamBox && _graphSpawnMap.Dreams.Count > 0)
             {
-                addNewDream();
-            }
+                _dreamBoxScrollPos = EditorGUILayout.BeginScrollView(_dreamBoxScrollPos);
 
-            GUI.EndGroup();
-
-            Rect dreamBoxContentRect = new Rect(0, 0, _dreamBoxRect.width - 30,
-                GraphSpawnMap.Dreams.Count * (EditorGUIUtility.singleLineHeight + 4));
-            _dreamBoxScrollPos = GUI.BeginScrollView(_dreamBoxRect, _dreamBoxScrollPos, dreamBoxContentRect);
-
-            if (GraphSpawnMap.Dreams.Count > 0)
-            {
-                _selectedDream = ListBox.Draw(
-                    new Rect(colorSize + _margin, 0, position.width - xPos - _margin, dreamBoxContentRect.height),
-                    _selectedDream,
-                    GraphSpawnMap.Dreams.Select(d => Path.GetFileName(d.Path)).ToArray());
-
-                for (int i = 0; i < GraphSpawnMap.Dreams.Count; i++)
+                for (int i = 0; i < _graphSpawnMap.Dreams.Count; i++)
                 {
-                    Rect pos = new Rect(0,
-                        2 + (EditorGUIUtility.singleLineHeight + 4) * i,
-                        EditorGUIUtility.singleLineHeight, EditorGUIUtility.singleLineHeight);
-                    var lastCol = GraphSpawnMap.Dreams[i].Display;
-                    var newCol = EditorGUI.ColorField(pos, GUIContent.none,
-                        GraphSpawnMap.Dreams[i].Display, false, false, false, null);
+                    EditorGUILayout.BeginHorizontal(_selectedDream == i ? _selectedDreamStyle : GUIStyle.none);
+
+                    // dream display colour
+                    var lastCol = _graphSpawnMap.Dreams[i].Display;
+                    var newCol = EditorGUILayout.ColorField(GUIContent.none,
+                        _graphSpawnMap.Dreams[i].Display, false, false, false,
+                        GUILayout.Width(EditorGUIUtility.singleLineHeight));
                     if (newCol != lastCol)
                     {
                         _needsRepaint = true;
-                        GraphSpawnMap.ModifyColor(i, newCol);
+                        _graphSpawnMap.ModifyColor(i, newCol);
                     }
-                }
-            }
 
-            GUI.EndScrollView();
+                    // the dream
+                    _graphSpawnMap.Dreams[i].Dream = (Dream)EditorGUILayout.ObjectField(GUIContent.none,
+                        _graphSpawnMap.Dreams[i].Dream, typeof(Dream), false);
+
+                    // chose whether to paint with this dream or not
+                    if (GUILayout.Button("Paint"))
+                    {
+                        _selectedDream = i;
+                    }
+
+                    // remove this dream
+                    if (GUILayout.Button("x"))
+                    {
+                        _graphSpawnMap.RemoveDream(i);
+                        Debug.Log($"Removing {i}, len: {_graphSpawnMap.Dreams.Count}");
+                        if (_selectedDream >= _graphSpawnMap.Dreams.Count)
+                        {
+                            _selectedDream = _graphSpawnMap.Dreams.Count - 1;
+                        }
+                    }
+
+                    EditorGUILayout.EndHorizontal();
+                }
+
+                EditorGUILayout.EndScrollView();
+            }
         }
 
         private void handleInput()
         {
-            if (GraphSpawnMap.Dreams.Count == 0) return;
-
             var current = Event.current;
+            if (_graphSpawnMap.Dreams.Count == 0 || !_graphTextureRect.Contains(current.mousePosition)) return;
 
-            if (current.type == EventType.MouseDown && current.button == 0 &&
-                _graphTextureRect.Contains(current.mousePosition))
+            if (current.type == EventType.MouseDown && current.button == 0)
             {
-                placeOnGrid(current.mousePosition);
+                // paint on left click
+                placeOnGrid(current.mousePosition, clear: false);
+            }
+            else if (current.type == EventType.MouseDown && current.button == 1)
+            {
+                // clear on right click
+                placeOnGrid(current.mousePosition, clear: true);
             }
             else if (current.type == EventType.MouseDrag && current.button == 0 &&
                      _graphTextureRect.Contains(current.mousePosition + current.delta))
             {
-                placeOnGrid(current.mousePosition + current.delta);
+                // paint on left click drag
+                placeOnGrid(current.mousePosition + current.delta, clear: false);
+            }
+            else if (current.type == EventType.MouseDrag && current.button == 1 &&
+                     _graphTextureRect.Contains(current.mousePosition + current.delta))
+            {
+                // clear on right click drag
+                placeOnGrid(current.mousePosition + current.delta, clear: true);
             }
         }
 
-        private void placeOnGrid(Vector2 mousePosition)
+        private void placeOnGrid(Vector2 mousePosition, bool clear)
         {
             Vector2 coordsInside = mousePosition - _graphTextureRect.position;
             Vector2Int gridCoords = new Vector2Int((int)(coordsInside.x / (64 * _graphTextureScaleFactor.x)),
                 (int)(coordsInside.y / (64 * _graphTextureScaleFactor.y)));
-            GraphSpawnMap.Set(gridCoords.x, GraphSpawnMap.GRAPH_SIZE - gridCoords.y - 1, _selectedDream);
+
+            if (clear)
+            {
+                _graphSpawnMap.ClearGraphSquare(gridCoords.x, GraphSpawnMap.GRAPH_SIZE - gridCoords.y - 1);
+            }
+            else
+            {
+                _graphSpawnMap.SetGraphSquare(gridCoords.x, GraphSpawnMap.GRAPH_SIZE - gridCoords.y - 1,
+                    _selectedDream);
+            }
+
             _needsRepaint = true;
-        }
-
-        private void addNewDream()
-        {
-            var dreamPath =
-                EditorUtility.OpenFilePanelWithFilters("Open dream JSON...", "", new[] {"Dream JSON file", "json"});
-
-            if (!string.IsNullOrEmpty(dreamPath))
-            {
-                // now remove everything before StreamingAssets path
-                var indexOf = dreamPath.IndexOf("StreamingAssets", StringComparison.Ordinal) + "StreamingAssets".Length;
-                dreamPath = dreamPath.Substring(indexOf);
-
-                Color displayCol = new Color(Random.value, Random.value, Random.value, 1);
-                GraphSpawnMap.Add(dreamPath, displayCol);
-                _selectedDream = GraphSpawnMap.Dreams.Count - 1;
-            }
-        }
-
-        private void removeSelectedDream()
-        {
-            GraphSpawnMap.Remove(_selectedDream);
-
-            if (_selectedDream >= GraphSpawnMap.Dreams.Count)
-            {
-                _selectedDream = GraphSpawnMap.Dreams.Count - 1;
-            }
         }
 
         private void OnEnable()
         {
-            titleContent.text = "Graph Editor";
             _graphTexture =
                 AssetDatabase.LoadAssetAtPath<Texture2D>(
                     "Packages/com.figglewatts.lsdr.sdk/Editor/Assets/dreamGraph.png");
 
+            _selectedDreamStyle = new GUIStyle
+            {
+                normal = new GUIStyleState
+                {
+                    background = TextureUtil.CreateColor(new Color(0, 0, 1, 0.1f))
+                }
+            };
+
+            _graphTextureRect = new Rect(18, 4, 304, 304);
+
             _graphTextureScaleFactor = new Vector2(_graphTextureRect.width / _graphTexture.width,
                 _graphTextureRect.height / _graphTexture.height);
-
-            minSize = new Vector2(WINDOW_WIDTH, _graphTextureRect.height);
-            maxSize = minSize;
         }
     }
 }

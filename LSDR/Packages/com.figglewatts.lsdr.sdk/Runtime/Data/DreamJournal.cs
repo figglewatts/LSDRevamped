@@ -13,5 +13,8 @@ namespace LSDR.SDK.Data
 
         [Tooltip("The list of dreams contained in this journal.")]
         public List<Dream> Dreams;
+
+        [Tooltip("Map determining where the player spawns for each graph space.")]
+        public GraphSpawnMap GraphSpawnMap;
     }
 }

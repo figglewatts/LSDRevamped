@@ -1,5 +1,4 @@
 using LSDR.SDK.Data;
-using UnityEditor;
 using UnityEngine;
 
 namespace LSDR.SDK
@@ -17,11 +16,11 @@ namespace LSDR.SDK
             {
                 GUI.Label(position, label);
             }
-            
+
             if (GUI.Button(buttonRect, "Edit"))
             {
-                GraphSpawnMapEditor window = EditorWindow.GetWindow<GraphSpawnMapEditor>();
-                window.GraphSpawnMap = spawnMap;
+                //GraphSpawnMapEditor window = EditorWindow.GetWindow<GraphSpawnMapEditor>();
+                //window.GraphSpawnMap = spawnMap;
             }
         }
     }

@@ -1,6 +1,6 @@
+using System;
 using System.Collections.Generic;
 using LSDR.SDK.Data;
-using LSDR.Util;
 using Newtonsoft.Json;
 using Torii.Util;
 
@@ -16,24 +16,24 @@ namespace LSDR.Dream
         /// The name of this dream journal.
         /// </summary>
         public string Name { get; set; }
-        
+
         /// <summary>
         /// The author of this dream journal.
         /// </summary>
         public string Author { get; set; }
-        
+
         /// <summary>
         /// The list of dreams you can get to by linking. These will be chosen from randomly. You cannot link to the
         /// dream you are currently in.
         /// </summary>
         public List<string> LinkableDreams { get; set; }
-        
+
         /// <summary>
         /// The dream to spawn on on the first day of the journal. If empty, then a random dream from LinkableDreams.
         /// If multiple, then a random choice from the dreams given.
         /// </summary>
         public List<string> FirstDream { get; set; }
-        
+
         /// <summary>
         /// The mapping of which graph squares spawn the player into what dreams.
         /// </summary>
@@ -64,13 +64,14 @@ namespace LSDR.Dream
         /// <returns>The dream from the graph.</returns>
         public string GetDreamFromGraph(int x, int y)
         {
-            string graphDreamPath = GraphSpawnMap.Get(x, y);
-            if (string.IsNullOrWhiteSpace(graphDreamPath))
-            {
-                return GetLinkableDream();
-            }
-
-            return graphDreamPath;
+            throw new NotImplementedException("Obsolete");
+            // string graphDreamPath = GraphSpawnMap.Get(x, y);
+            // if (string.IsNullOrWhiteSpace(graphDreamPath))
+            // {
+            //     return GetLinkableDream();
+            // }
+            //
+            // return graphDreamPath;
         }
 
         public DreamJournal()

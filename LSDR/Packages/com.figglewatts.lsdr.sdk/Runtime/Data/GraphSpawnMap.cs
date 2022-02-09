@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace LSDR.SDK.Data
 {
+    [CreateAssetMenu(menuName = "LSDR SDK/Graph spawn map")]
     public class GraphSpawnMap : ScriptableObject
     {
         /// <summary>
@@ -29,6 +31,30 @@ namespace LSDR.SDK.Data
         {
             Dreams = new List<DreamElement>();
             _graph = new int[GRAPH_SIZE * GRAPH_SIZE];
+            ClearAllGraphSquares();
+        }
+
+        public Dream Get(int x, int y)
+        {
+            int graphIdx = _graph[y * GRAPH_SIZE + x];
+            return graphIdx == -1 ? null : Dreams[graphIdx].Dream;
+            ;
+        }
+
+        public void SetGraphSquare(int x, int y, int dreamIdx)
+        {
+            _graph[y * GRAPH_SIZE + x] = dreamIdx;
+            _dirty = true;
+        }
+
+        public void ClearGraphSquare(int x, int y)
+        {
+            _graph[y * GRAPH_SIZE + x] = -1;
+            _dirty = true;
+        }
+
+        public void ClearAllGraphSquares()
+        {
             for (int y = 0; y < GRAPH_SIZE; y++)
             {
                 for (int x = 0; x < GRAPH_SIZE; x++)
@@ -38,26 +64,30 @@ namespace LSDR.SDK.Data
             }
         }
 
-        public string Get(int x, int y)
+        public void AddDreamsFromJournal(DreamJournal journal)
         {
-            int graphIdx = _graph[y * GRAPH_SIZE + x];
-            return graphIdx == -1 ? null : Dreams[graphIdx].Path;
-            ;
-        }
+            Dreams.Clear();
+            foreach (var dream in journal.Dreams)
+            {
+                Dreams.Add(new DreamElement(dream));
+            }
 
-        public void Set(int x, int y, int dreamIdx)
-        {
-            _graph[y * GRAPH_SIZE + x] = dreamIdx;
             _dirty = true;
         }
 
-        public void Add(string dreamPath, Color displayCol)
+        public void AddDream()
         {
-            Dreams.Add(new DreamElement(dreamPath, displayCol));
+            Dreams.Add(new DreamElement());
             _dirty = true;
         }
 
-        public void Remove(int dreamIdx)
+        public void AddDream(Dream dream, Color displayCol)
+        {
+            Dreams.Add(new DreamElement(dream, displayCol));
+            _dirty = true;
+        }
+
+        public void RemoveDream(int dreamIdx)
         {
             Dreams.RemoveAt(dreamIdx);
             for (int y = 0; y < GRAPH_SIZE; y++)
@@ -76,6 +106,12 @@ namespace LSDR.SDK.Data
             }
 
             _dirty = true;
+        }
+
+        public void RemoveAllDreams()
+        {
+            ClearAllGraphSquares();
+            Dreams.Clear();
         }
 
         public void ModifyColor(int dreamIdx, Color c)
@@ -122,12 +158,18 @@ namespace LSDR.SDK.Data
         [Serializable]
         public class DreamElement
         {
-            public string Path;
+            public Dream Dream;
             public Color Display;
 
-            public DreamElement(string path, Color display)
+            public DreamElement() : this(null, new Color(Random.value, Random.value, Random.value, 1)) { }
+
+            public DreamElement(Color display) : this(null, display) { }
+
+            public DreamElement(Dream dream) : this(dream, new Color(Random.value, Random.value, Random.value, 1)) { }
+
+            public DreamElement(Dream dream, Color display)
             {
-                Path = path;
+                Dream = dream;
                 Display = display;
             }
         }
