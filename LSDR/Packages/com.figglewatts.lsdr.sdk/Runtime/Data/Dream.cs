@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 namespace LSDR.SDK.Data
@@ -28,7 +29,7 @@ namespace LSDR.SDK.Data
         [Tooltip("The list of environments this dream can potentially have.")]
         public List<DreamEnvironment> Environments;
 
-        [Tooltip("The prefab that should be spawned for this dream.")]
-        public GameObject DreamPrefab;
+        [Tooltip("The scene that comprises this dream.")]
+        public SceneAsset DreamScene;
     }
 }

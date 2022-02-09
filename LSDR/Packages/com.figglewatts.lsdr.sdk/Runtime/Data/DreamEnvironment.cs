@@ -17,11 +17,17 @@ namespace LSDR.SDK.Data
         [Tooltip("The distance at which fog finishes being applied. Fog here will be at its strongest.")]
         public float FogEndDistance = 30;
 
+        [Tooltip("The height of the fog in the sky.")] [Range(0, 1)]
+        public float FogHeight = 0.24f;
+
+        [Tooltip("The strength of the fog gradient in the sky.")] [Range(0, 1)]
+        public float FogGradient = 0.24f;
+
         [Tooltip("The color of the sky in this environment.")]
         public Color SkyColor = Color.cyan;
 
-        [Tooltip("Whether the sun is enabled.")]
-        public bool Sun;
+        [Tooltip("The color of the fog gradient in the sky.")]
+        public Color SkyFogColor = Color.white;
 
         [Tooltip("What color the sun/moon should be.")]
         public Color SunColor = Color.red;
@@ -35,17 +41,11 @@ namespace LSDR.SDK.Data
         [Tooltip("The chance the 2nd sun has to be enabled. 1 is always, 0 is never.")] [Range(0, 1)]
         public float SecondSunChance = 0.5f;
 
-        [Tooltip("Whether there is a sunburst.")]
-        public bool SunBurst;
-
         [Tooltip("The color of the sunburst.")]
         public Color SunBurstColor = Color.red;
 
         [Tooltip("The chance the sunburst has to be enabled. 1 is always, 0 is never.")] [Range(0, 1)]
         public float SunBurstChance = 0.5f;
-
-        [Tooltip("Whether clouds are enabled.")]
-        public bool Clouds;
 
         [Tooltip("The color of the clouds.")] public Color CloudsColor;
 
@@ -54,9 +54,6 @@ namespace LSDR.SDK.Data
 
         [Tooltip("The chance the clouds have to be enabled. 1 is always, 0 is never.")] [Range(0, 1)]
         public float CloudsChance = 0.5f;
-
-        [Tooltip("Whether stars are enabled.")]
-        public bool Stars;
 
         [Tooltip("The color of the starfields.")]
         public Color StarsColor;

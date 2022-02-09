@@ -161,11 +161,15 @@ namespace LSDR.SDK.Data
             public Dream Dream;
             public Color Display;
 
-            public DreamElement() : this(null, new Color(Random.value, Random.value, Random.value, 1)) { }
+            public DreamElement() : this(null) { }
 
             public DreamElement(Color display) : this(null, display) { }
 
-            public DreamElement(Dream dream) : this(dream, new Color(Random.value, Random.value, Random.value, 1)) { }
+            public DreamElement(Dream dream)
+            {
+                Dream = dream;
+                Display = new Color(Random.value, Random.value, Random.value, 1);
+            }
 
             public DreamElement(Dream dream, Color display)
             {
