@@ -38,7 +38,7 @@ namespace LSDR.SDK.Editor.AssetImporters
     public class MeshCombiner
     {
         protected readonly Dictionary<string, SubmeshType> _combineStorage;
-        protected List<Mesh> _createdMeshes;
+        protected readonly List<Mesh> _createdMeshes;
 
         protected class SubmeshType
         {
@@ -57,7 +57,7 @@ namespace LSDR.SDK.Editor.AssetImporters
 
             if (submeshes == null)
             {
-                submeshes = new[] {"default"};
+                submeshes = new[] { "default" };
             }
 
             foreach (var submeshType in submeshes)
@@ -103,7 +103,7 @@ namespace LSDR.SDK.Editor.AssetImporters
             // combine the temporary meshes into the final mesh
             Mesh combinedMesh = new Mesh();
             combinedMesh.CombineMeshes(
-                _createdMeshes.Select(m => new CombineInstance {mesh = m}).ToArray(),
+                _createdMeshes.Select(m => new CombineInstance { mesh = m }).ToArray(),
                 mergeSubMeshes: false, useMatrices: false);
             combinedMesh.RecalculateNormals();
             combinedMesh.RecalculateBounds();

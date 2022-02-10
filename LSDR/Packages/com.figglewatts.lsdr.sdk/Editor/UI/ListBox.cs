@@ -2,7 +2,7 @@ using LSDR.SDK.Editor.Util;
 using UnityEditor;
 using UnityEngine;
 
-namespace LSDR.SDK
+namespace LSDR.SDK.Editor.UI
 {
     public static class ListBox
     {

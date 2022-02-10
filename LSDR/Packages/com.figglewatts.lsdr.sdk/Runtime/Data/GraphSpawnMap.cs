@@ -69,7 +69,9 @@ namespace LSDR.SDK.Data
             Dreams.Clear();
             foreach (var dream in journal.Dreams)
             {
-                Dreams.Add(new DreamElement(dream));
+                var dreamElement = new DreamElement(dream, new Color(Random.value, Random.value,
+                    Random.value, 1));
+                Dreams.Add(dreamElement);
             }
 
             _dirty = true;
@@ -77,7 +79,9 @@ namespace LSDR.SDK.Data
 
         public void AddDream()
         {
-            Dreams.Add(new DreamElement());
+            var dreamElement = new DreamElement(new Color(Random.value, Random.value,
+                Random.value, 1));
+            Dreams.Add(dreamElement);
             _dirty = true;
         }
 
@@ -161,15 +165,7 @@ namespace LSDR.SDK.Data
             public Dream Dream;
             public Color Display;
 
-            public DreamElement() : this(null) { }
-
             public DreamElement(Color display) : this(null, display) { }
-
-            public DreamElement(Dream dream)
-            {
-                Dream = dream;
-                Display = new Color(Random.value, Random.value, Random.value, 1);
-            }
 
             public DreamElement(Dream dream, Color display)
             {

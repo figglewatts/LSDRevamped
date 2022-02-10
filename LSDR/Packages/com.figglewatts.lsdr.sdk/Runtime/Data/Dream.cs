@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using UnityEditor;
+using LSDR.SDK.Util;
 using UnityEngine;
 
 namespace LSDR.SDK.Data
@@ -30,6 +30,6 @@ namespace LSDR.SDK.Data
         public List<DreamEnvironment> Environments;
 
         [Tooltip("The scene that comprises this dream.")]
-        public SceneAsset DreamScene;
+        public SceneProperty DreamScene;
     }
 }

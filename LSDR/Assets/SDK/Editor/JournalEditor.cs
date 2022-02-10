@@ -89,9 +89,9 @@ namespace LSDR.SDK
                 EditorGUI.indentLevel++;
 
                 Rect graphSpawnMapRect = EditorGUI.IndentedRect(EditorGUILayout.GetControlRect(true));
-                GraphSpawnMapDrawer.OnGUI(graphSpawnMapRect, _journal.GraphSpawnMap,
-                    new GUIContent("Graph spawn map",
-                        "The mapping of which graph squares spawn the player into what dreams."));
+                // GraphSpawnMapDrawer.OnGUI(graphSpawnMapRect, _journal.GraphSpawnMap,
+                //     new GUIContent("Graph spawn map",
+                //         "The mapping of which graph squares spawn the player into what dreams."));
                 
                 EditorGUILayout.BeginHorizontal();
                 EditorGUILayout.LabelField(new GUIContent("Linkable dreams", 

@@ -13,23 +13,22 @@ MonoBehaviour:
   m_Name: TestDreamEnvironment
   m_EditorClassIdentifier: 
   FogColor: {r: 1, g: 1, b: 1, a: 1}
-  SubtractiveFog: 0
+  SubtractiveFog: 1
   FogStartDistance: 10
-  FogEndDistance: 30
-  SkyColor: {r: 0, g: 1, b: 1, a: 1}
-  Sun: 0
+  FogEndDistance: 15
+  FogHeight: 0.24
+  FogGradient: 0.667
+  SkyColor: {r: 0, g: 0, b: 0, a: 1}
+  SkyFogColor: {r: 0, g: 0, b: 0, a: 1}
   SunColor: {r: 1, g: 0, b: 0, a: 1}
-  SunChance: 1
+  SunChance: 0
   SecondSunColor: {r: 0, g: 0, b: 1, a: 1}
-  SecondSunChance: 0.5
-  SunBurst: 0
+  SecondSunChance: 0
   SunBurstColor: {r: 1, g: 0, b: 0, a: 1}
-  SunBurstChance: 0.5
-  Clouds: 0
+  SunBurstChance: 0
   CloudsColor: {r: 0, g: 0, b: 0, a: 0}
   NumberOfClouds: 6
-  CloudsChance: 0.5
-  Stars: 0
+  CloudsChance: 0
   StarsColor: {r: 0, g: 0, b: 0, a: 0}
   NumberOfStars: 3
   StarsChance: 0

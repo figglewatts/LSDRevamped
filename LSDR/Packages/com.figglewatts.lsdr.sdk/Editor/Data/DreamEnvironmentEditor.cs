@@ -2,7 +2,7 @@ using LSDR.SDK.Data;
 using UnityEditor;
 using UnityEngine;
 
-namespace LSDR.SDK
+namespace LSDR.SDK.Editor.Data
 {
     [CustomEditor(typeof(DreamEnvironment))]
     public class DreamEnvironmentEditor : UnityEditor.Editor

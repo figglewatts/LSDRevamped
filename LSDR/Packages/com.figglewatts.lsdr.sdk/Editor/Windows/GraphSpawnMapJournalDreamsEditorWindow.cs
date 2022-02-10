@@ -3,19 +3,18 @@ using LSDR.SDK.Editor.Util;
 using UnityEditor;
 using UnityEngine;
 
-namespace LSDR.SDK
+namespace LSDR.SDK.Editor.Windows
 {
     public class GraphSpawnMapJournalDreamsEditorWindow : EditorWindow
     {
-        public GraphSpawnMap GraphSpawnMap;
-
+        protected GraphSpawnMap _graphSpawnMap;
         protected DreamJournal _journal;
 
         public static void Show(GraphSpawnMap map)
         {
             GraphSpawnMapJournalDreamsEditorWindow window =
                 GetWindow<GraphSpawnMapJournalDreamsEditorWindow>();
-            window.GraphSpawnMap = map;
+            window._graphSpawnMap = map;
             window.titleContent = new GUIContent("Add from journal");
             window.CenterOnMainWindow();
             window.Show();
@@ -42,7 +41,7 @@ namespace LSDR.SDK
                     EditorGUI.BeginDisabledGroup(_journal == null);
                     if (GUILayout.Button("Use dreams"))
                     {
-                        GraphSpawnMap.AddDreamsFromJournal(_journal);
+                        _graphSpawnMap.AddDreamsFromJournal(_journal);
                         Close();
                     }
 

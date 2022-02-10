@@ -1,5 +1,5 @@
 using LSDR.SDK.Animation;
-using LSDR.SDK.Editor.GUI;
+using LSDR.SDK.Editor.UI;
 using UnityEditor;
 using UnityEngine;
 
@@ -55,7 +55,7 @@ namespace LSDR.SDK.Editor.Animation
                 EditorGUILayout.LabelField(clip.name);
 
                 if (ToggleButton.OnGUI(_currentlyPlayingAnimation == clipIndex,
-                    EditorGUIUtility.IconContent("PlayButton"), GUILayout.Width(30)))
+                        EditorGUIUtility.IconContent("PlayButton"), GUILayout.Width(30)))
                 {
                     if (_currentlyPlayingAnimation == clipIndex)
                     {

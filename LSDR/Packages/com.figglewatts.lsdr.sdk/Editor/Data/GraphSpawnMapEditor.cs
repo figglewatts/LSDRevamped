@@ -1,9 +1,10 @@
 using LSDR.SDK.Data;
 using LSDR.SDK.Editor.Util;
+using LSDR.SDK.Editor.Windows;
 using UnityEditor;
 using UnityEngine;
 
-namespace LSDR.SDK
+namespace LSDR.SDK.Editor.Data
 {
     [CustomEditor(typeof(GraphSpawnMap))]
     public class GraphSpawnMapEditor : UnityEditor.Editor

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace LSDR.SDK.Editor.GUI
+namespace LSDR.SDK.Editor.UI
 {
     public static class ToggleButton
     {
