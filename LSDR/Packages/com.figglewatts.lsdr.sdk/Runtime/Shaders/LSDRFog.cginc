@@ -37,8 +37,11 @@ float4 ApplyClassicFog(float4 color, float4 fogColor)
 {
     // perform addition/subtraction based on the fog mode
     float3 finalFogCol = color.rgb;
+
+    #if defined(FOG_LINEAR)
     finalFogCol = AdditiveFog(finalFogCol, fogColor.rgb, 1.0 - _SubtractiveFog);
     finalFogCol = SubtractiveFog(finalFogCol, fogColor.rgb, _SubtractiveFog);
+    #endif
 
     return float4(finalFogCol.rgb, color.a);
 }
@@ -46,8 +49,11 @@ float4 ApplyClassicFog(float4 color, float4 fogColor)
 float4 ApplyRevampedFog(float4 color, float4 fogColor)
 {
     float3 finalFogCol = color.rgb;
+
+    #if defined(FOG_LINEAR)
     finalFogCol = AdditiveFog(finalFogCol, fogColor.rgb, 1.0 - _SubtractiveFog);
     finalFogCol = SubtractiveFog(finalFogCol, fogColor.rgb, _SubtractiveFog);
-
+    #endif
+    
     return float4(finalFogCol.rgb, color.a);
 }
