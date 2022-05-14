@@ -1,4 +1,3 @@
-using LSDR.Dream;
 using LSDR.Entities.Original;
 using LSDR.Lua.Proxies;
 using LSDR.SDK;
@@ -15,7 +14,7 @@ namespace LSDR.Lua
             UserData.RegisterProxyType<ScreenshotterProxy, Screenshotter>(screenshotter =>
                 new ScreenshotterProxy(screenshotter));
             UserData.RegisterProxyType<InteractiveObjectProxy, InteractiveObject>(r => new InteractiveObjectProxy(r));
-            UserData.RegisterProxyType<DreamSystemProxy, DreamSystem>(r => new DreamSystemProxy(r));
+            //UserData.RegisterProxyType<DreamSystemProxy, DreamSystem>(r => new DreamSystemProxy(r));
 
             // register types
             UserData.RegisterType<TODAnimation>();

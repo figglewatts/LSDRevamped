@@ -7,9 +7,6 @@ namespace LSDR.SDK.Editor.Mod
 {
     public class ModBuilder
     {
-        protected ModPlatform _platforms;
-        protected string _outputPath;
-
         protected const BuildAssetBundleOptions BuildOptions = BuildAssetBundleOptions.StrictMode |
                                                                BuildAssetBundleOptions.ChunkBasedCompression |
                                                                BuildAssetBundleOptions.AssetBundleStripUnityVersion |

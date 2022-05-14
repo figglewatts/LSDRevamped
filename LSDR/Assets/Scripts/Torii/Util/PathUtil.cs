@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace Torii.Util
 {
@@ -23,6 +20,7 @@ namespace Torii.Util
             {
                 b = b.Substring(1);
             }
+
             return Path.Combine(a, b).Replace('\\', '/');
         }
 
@@ -38,7 +36,14 @@ namespace Torii.Util
             {
                 path = Combine(path, componentStrings[i]);
             }
+
             return path.Replace('\\', '/');
+        }
+
+        public static string SanitiseFileName(string fileName)
+        {
+            var invalids = Path.GetInvalidFileNameChars();
+            return String.Join("_", fileName.Split(invalids, StringSplitOptions.RemoveEmptyEntries)).TrimEnd('.');
         }
     }
 }

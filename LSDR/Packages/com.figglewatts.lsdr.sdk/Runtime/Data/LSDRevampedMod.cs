@@ -12,5 +12,19 @@ namespace LSDR.SDK.Data
 
         [Tooltip("The dream journals contained in this mod.")]
         public List<DreamJournal> Journals;
+
+        public DreamJournal GetJournal(int journalIdx)
+        {
+            if (journalIdx >= Journals.Count)
+            {
+                journalIdx = Journals.Count - 1;
+            }
+            else if (journalIdx < 0)
+            {
+                journalIdx = 0;
+            }
+
+            return Journals[journalIdx];
+        }
     }
 }

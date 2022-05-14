@@ -14,8 +14,7 @@ namespace LSDR.Dream
         /// <summary>
         /// The list of visited dreams this day.
         /// </summary>
-        [ProtoMember(1)]
-        public readonly List<Dream> Visited = new List<Dream>();
+        [ProtoMember(1)] public readonly List<SDK.Data.Dream> Visited = new List<SDK.Data.Dream>();
 
         /// <summary>
         /// The total upper score across all of the visited dreams.
@@ -31,17 +30,15 @@ namespace LSDR.Dream
         {
             get { return Mathf.Clamp(Visited.Sum(d => d.Dynamicness) + DynamicModifier, -9, 9); }
         }
-        
+
         /// <summary>
         /// Additional points to add to the upper score.
         /// </summary>
-        [ProtoMember(2)]
-        public int UpperModifier;
-        
+        [ProtoMember(2)] public int UpperModifier;
+
         /// <summary>
         /// Additional points to add to the dynamic score.
         /// </summary>
-        [ProtoMember(3)]
-        public int DynamicModifier;
+        [ProtoMember(3)] public int DynamicModifier;
     }
 }
