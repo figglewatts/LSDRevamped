@@ -31,5 +31,11 @@ namespace LSDR.SDK.Data
 
         [Tooltip("The scene that comprises this dream.")]
         public SceneProperty DreamScene;
+
+        public DreamEnvironment ChooseEnvironment(int dayNum)
+        {
+            int toChoose = (dayNum - 1) % Environments.Count;
+            return Environments[toChoose];
+        }
     }
 }

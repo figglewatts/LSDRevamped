@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using Torii.Serialization;
 using Torii.Util;
@@ -6,19 +5,28 @@ using UnityEngine;
 
 namespace LSDR.Game
 {
-    [CreateAssetMenu(menuName="System/GameSaveSystem")]
+    [CreateAssetMenu(menuName = "System/GameSaveSystem")]
     public class GameSaveSystem : ScriptableObject
     {
-        public JournalLoaderSystem JournalLoader;
-        
+        public SettingsSystem SettingsSystem;
+
         public GameSaveData Data { get; private set; }
-        
-        private string _savedGamePath;
+
+        private string _savedGamePath
+        {
+            get
+            {
+                var saveDataFileName = PathUtil.SanitiseFileName($"{SettingsSystem.CurrentMod.Name}_save.dat");
+                return PathUtil.Combine(_saveDataDirectory, saveDataFileName);
+            }
+        }
+
         private readonly ToriiSerializer _serializer = new ToriiSerializer();
+        private string _saveDataDirectory => PathUtil.Combine(Application.persistentDataPath, "saves");
 
-        public GameSaveData.JournalSaveData CurrentJournalSave => Data.Journal(JournalLoader.Current);
+        public GameSaveData.JournalSaveData CurrentJournalSave => Data.Journal(SettingsSystem.CurrentJournal);
 
-        public void OnEnable() { _savedGamePath = PathUtil.Combine(Application.persistentDataPath, "save.dat"); }
+        public void OnEnable() { Directory.CreateDirectory(_saveDataDirectory); }
 
         public void Load()
         {
@@ -26,10 +34,11 @@ namespace LSDR.Game
             {
                 Debug.Log("Unable to find game save -- creating new one");
                 Data = new GameSaveData();
-                foreach (var journal in JournalLoader.Journals)
+                foreach (var journal in SettingsSystem.CurrentMod.Journals)
                 {
                     Data.Journal(journal);
                 }
+
                 Save();
             }
             else

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Reflection;
+using LSDR.InputManagement;
 using LSDR.IO.ResourceHandlers;
 using LSDR.Visual;
-using Torii.Event;
 using Torii.UI;
 using UnityEngine;
 using TResourceManager = Torii.Resource.ResourceManager; // TODO: change when old ResourceManager removed
@@ -18,7 +18,10 @@ namespace LSDR.Game
     [CreateAssetMenu(menuName = "System/GameLoadSystem")]
     public class GameLoadSystem : ScriptableObject
     {
-        public ToriiEvent OnGameDataLoaded;
+        public ModLoaderSystem ModLoaderSystem;
+        public ControlSchemeLoaderSystem ControlSchemeLoaderSystem;
+        public SettingsSystem SettingsSystem;
+        public GameSaveSystem GameSaveSystem;
 
         [NonSerialized] public static bool GameLoaded = false;
 
@@ -41,16 +44,12 @@ namespace LSDR.Game
             Shader.SetGlobalFloat("_FogStep", 0.08F);
             Shader.SetGlobalFloat("AffineIntensity", 0.5F);
 
-            // okay, it's a fake loading screen LOL
-            // it used to be real but it's been optimised away and I liked the animation too much
-            if (!Application.isEditor)
-                yield return new WaitForSeconds(3);
-            else
-                yield return null;
+            ControlSchemeLoaderSystem.LoadSchemes();
+            SettingsSystem.Load();
+            yield return ModLoaderSystem.LoadMods();
+            GameSaveSystem.Load();
 
             GameLoaded = true;
-
-            OnGameDataLoaded.Raise();
         }
     }
 }

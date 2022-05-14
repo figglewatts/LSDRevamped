@@ -6,10 +6,9 @@ using LSDR.Entities;
 using LSDR.Entities.Dream;
 using LSDR.Game;
 using LSDR.InputManagement;
-using LSDR.IO;
 using LSDR.Lua;
 using LSDR.SDK;
-using LSDR.Util;
+using LSDR.SDK.Data;
 using LSDR.Visual;
 using Torii.Audio;
 using Torii.Console;
@@ -31,17 +30,14 @@ namespace LSDR.Dream
         public ScenePicker DreamScene;
         public ScenePicker TitleScene;
         public Material SkyBackground;
-        public JournalLoaderSystem JournalLoader;
         public TextureSetSystem TextureSetSystem;
-        public LevelLoaderSystem LevelLoader;
-        public LBDFastMeshSystem LBDLoader;
         public GameSaveSystem GameSave;
         public ControlSchemeLoaderSystem Control;
         public SettingsSystem SettingsSystem;
         public MusicSystem MusicSystem;
         public PauseSystem PauseSystem;
         public AudioClip LinkSound;
-        public Dream CurrentDream { get; private set; }
+        public SDK.Data.Dream CurrentDream { get; private set; }
         public DreamSequence CurrentSequence { get; private set; }
         public ToriiEvent OnReturnToTitle;
         public ToriiEvent OnLevelLoad;
@@ -55,7 +51,6 @@ namespace LSDR.Dream
         [NonSerialized] private bool _canTransition = true;
         [NonSerialized] private bool _currentlyTransitioning = false;
         [NonSerialized] private Coroutine _endDreamTimer;
-        [NonSerialized] private string _currentDreamPath;
 
         // one in every 6 links switches texture sets
         private const float CHANCE_TO_SWITCH_TEXTURES_WHEN_LINKING = 6;
@@ -74,7 +69,6 @@ namespace LSDR.Dream
 
         public void OnEnable()
         {
-            LevelLoader.OnLevelLoaded += spawnPlayerInDream;
             DevConsole.Register(this);
             LuaEngine.RegisterGlobalObject(this, "Dream");
         }
@@ -83,17 +77,11 @@ namespace LSDR.Dream
         {
             TextureSetSystem.SetTextureSet(randomTextureSetFromDayNumber(GameSave.CurrentJournalSave.DayNumber));
 
-            string dreamPath = GameSave.CurrentJournalSave.DayNumber == 1
-                ? JournalLoader.Current.GetFirstDream()
-                : JournalLoader.Current.GetDreamFromGraph(GameSave.CurrentJournalSave.LastGraphX,
-                    GameSave.CurrentJournalSave.LastGraphY);
-            _currentDreamPath = dreamPath;
-            Dream dream = _serializer.Deserialize<Dream>(PathUtil.Combine(Application.streamingAssetsPath,
-                dreamPath));
+            SDK.Data.Dream dream = null;
             BeginDream(dream);
         }
 
-        public void BeginDream(Dream dream)
+        public void BeginDream(SDK.Data.Dream dream)
         {
             _forcedSpawnID = null;
             _canTransition = true;
@@ -123,7 +111,6 @@ namespace LSDR.Dream
             ToriiFader.Instance.FadeIn(Color.black, fromFall ? FADE_OUT_SECS_FALL : FADE_OUT_SECS_REGULAR, () =>
             {
                 CurrentDream = null;
-                _currentDreamPath = null;
                 GameSave.CurrentJournalSave.SequenceData.Add(CurrentSequence);
                 GameSave.Save();
                 _dreamIsEnding = false;
@@ -144,7 +131,6 @@ namespace LSDR.Dream
             ToriiFader.Instance.FadeIn(Color.black, FADE_OUT_SECS_FORCE, () =>
             {
                 CurrentDream = null;
-                _currentDreamPath = null;
                 _dreamIsEnding = false;
                 Coroutines.Instance.StartCoroutine(ReturnToTitle());
             });
@@ -180,7 +166,10 @@ namespace LSDR.Dream
             // TODO: apply the rest of the environment
         }
 
-        public void Transition(Color fadeCol, Dream dream, bool playSound = true, string spawnPointID = null)
+        public void Transition(Color fadeCol,
+            SDK.Data.Dream dream = null,
+            bool playSound = true,
+            string spawnPointID = null)
         {
             if (!_canTransition) return;
 
@@ -214,25 +203,6 @@ namespace LSDR.Dream
             });
         }
 
-        public void Transition(Color fadeCol,
-            string dreamPath = null,
-            bool playSound = true,
-            string spawnPointID = null)
-        {
-            if (string.IsNullOrEmpty(dreamPath))
-            {
-                // choose a random dream that isn't the current dream
-                dreamPath = RandUtil.RandomListElement(
-                    JournalLoader.Current.LinkableDreams.Where(d => !d.Equals(_currentDreamPath)));
-                Debug.Log($"Dream path: {dreamPath}, Current dream path: {_currentDreamPath}");
-            }
-
-            _currentDreamPath = dreamPath;
-            Dream dream =
-                _serializer.Deserialize<Dream>(PathUtil.Combine(Application.streamingAssetsPath, dreamPath));
-            Transition(fadeCol, dream, playSound, spawnPointID);
-        }
-
         public IEnumerator ReturnToTitle()
         {
             Debug.Log("Loading title screen");
@@ -259,7 +229,7 @@ namespace LSDR.Dream
             ToriiFader.Instance.FadeOut(1F);
         }
 
-        public IEnumerator LoadDream(Dream dream)
+        public IEnumerator LoadDream(SDK.Data.Dream dream)
         {
             Debug.Log($"Loading dream '{dream.Name}'");
 
@@ -281,19 +251,6 @@ namespace LSDR.Dream
 
             CurrentDream = dream;
 
-            // then instantiate the LBD if it has one
-            if (dream.Type == DreamType.Legacy)
-            {
-                LBDLoader.LoadLBD(dream.LBDFolder, dream.LegacyTileMode, dream.TileWidth);
-            }
-
-            // load the manifest if it has one
-            if (!string.IsNullOrEmpty(dream.Level))
-            {
-                string levelPath = PathUtil.Combine(Application.streamingAssetsPath, dream.Level);
-                LevelLoader.LoadLevel(levelPath);
-            }
-
             ApplyEnvironment(dream.ChooseEnvironment(GameSave.CurrentJournalSave.DayNumber));
 
             SettingsSystem.CanControlPlayer = true;
@@ -301,8 +258,8 @@ namespace LSDR.Dream
 
             OnLevelLoad.Raise();
 
-            MusicSource = MusicSystem.PlayRandomSongFromDirectory(PathUtil.Combine(Application.streamingAssetsPath,
-                JournalLoader.Current.MusicFolder));
+            // MusicSource = MusicSystem.PlayRandomSongFromDirectory(PathUtil.Combine(Application.streamingAssetsPath,
+            //     JournalSystem.Current.MusicFolder));
             OnSongChange.Raise();
 
             // reenable pausing
@@ -344,8 +301,8 @@ namespace LSDR.Dream
         {
             if (CurrentDream == null) return;
 
-            MusicSystem.PlayRandomSongFromDirectory(MusicSource,
-                PathUtil.Combine(Application.streamingAssetsPath, JournalLoader.Current.MusicFolder));
+            // MusicSystem.PlayRandomSongFromDirectory(MusicSource,
+            //     PathUtil.Combine(Application.streamingAssetsPath, JournalSystem.Current.MusicFolder));
             OnSongChange.Raise();
         }
 
@@ -395,16 +352,16 @@ namespace LSDR.Dream
         [Console]
         public void LoadDream(string dreamPath)
         {
-            Dream dream = _serializer.Deserialize<Dream>(PathUtil.Combine(Application.streamingAssetsPath, "levels",
-                dreamPath));
-            if (CurrentDream == null)
-            {
-                BeginDream(dream);
-            }
-            else
-            {
-                Transition(Color.black, dream, false);
-            }
+            // Dream dream = _serializer.Deserialize<Dream>(PathUtil.Combine(Application.streamingAssetsPath, "levels",
+            //     dreamPath));
+            // if (CurrentDream == null)
+            // {
+            //     BeginDream(dream);
+            // }
+            // else
+            // {
+            //     Transition(Color.black, dream, false);
+            // }
         }
 
         [Console]
@@ -438,17 +395,6 @@ namespace LSDR.Dream
                 Coroutines.Instance.StopCoroutine(_endDreamTimer);
                 _endDreamTimer = null;
             }
-        }
-
-        private string getTIXPathFromTextureSet(Dream dream, TextureSet textureSet)
-        {
-            if (string.IsNullOrWhiteSpace(dream.LBDFolder))
-            {
-                Debug.LogError("Could not get TIX path from dream, dream did not have LBD folder");
-                return null;
-            }
-
-            return LSDUtil.GetTIXPathFromLBDPath(dream.LBDFolder, textureSet);
         }
 
         private TextureSet randomTextureSetFromDayNumber(int dayNumber)

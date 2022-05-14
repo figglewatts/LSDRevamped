@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using LSDR.InputManagement;
+using LSDR.SDK.Data;
 using LSDR.Visual;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -31,19 +32,22 @@ namespace LSDR.Game
         /// </summary>
         [NonSerialized] public bool CanMouseLook = true;
 
-        [NonSerialized] public BindBroker SettingsBindBroker = new BindBroker();
+        [NonSerialized] public readonly BindBroker SettingsBindBroker = new BindBroker();
 
         /// <summary>
         /// Whether or not we're in VR mode.
         /// </summary>
         [NonSerialized] public bool VR;
 
+        public LSDRevampedMod CurrentMod => ModLoaderSystem.GetMod(Settings.CurrentModIndex);
+        public DreamJournal CurrentJournal => CurrentMod.GetJournal(Settings.CurrentJournalIndex);
+
         /// <summary>
         /// The framerate of the PS1. Used when framerate limiting is enabled.
         /// </summary>
         public const int FRAMERATE_LIMIT = 20;
 
-        public JournalLoaderSystem JournalLoader;
+        public ModLoaderSystem ModLoaderSystem;
         public ControlSchemeLoaderSystem ControlSchemeLoader;
         public TextureSetSystem TextureSetSystem;
 
@@ -128,9 +132,6 @@ namespace LSDR.Game
 
             // set retro shader affine intensity
             Shader.SetGlobalFloat("AffineIntensity", Settings.AffineIntensity);
-
-            // set the current dream journal
-            JournalLoader.SelectJournal(Settings.CurrentJournalIndex);
 
             // set volumes
             SetMusicVolume(Settings.MusicVolume);
