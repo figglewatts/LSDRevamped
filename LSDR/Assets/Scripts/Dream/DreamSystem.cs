@@ -69,6 +69,18 @@ namespace LSDR.Dream
 
         public void OnEnable()
         {
+            #if UNITY_EDITOR
+            if (UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode) initialise();
+            #endif
+        }
+
+        public void Awake()
+        {
+            initialise();
+        }
+
+        protected void initialise()
+        {
             DevConsole.Register(this);
             LuaEngine.RegisterGlobalObject(this, "Dream");
         }

@@ -11,7 +11,7 @@ namespace LSDR.Visual
     {
         private const string SCREENSHOT_DIR = "screenshots";
 
-        public override void Init()
+        public void Initialise()
         {
             DevConsole.Register(this);
             LuaEngine.RegisterGlobalObject(this);

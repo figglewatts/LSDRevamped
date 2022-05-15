@@ -4,6 +4,7 @@ using System.Reflection;
 using LSDR.InputManagement;
 using LSDR.IO.ResourceHandlers;
 using LSDR.Visual;
+using Torii.Console;
 using Torii.UI;
 using UnityEngine;
 using TResourceManager = Torii.Resource.ResourceManager; // TODO: change when old ResourceManager removed
@@ -28,6 +29,8 @@ namespace LSDR.Game
         public IEnumerator LoadGameCoroutine()
         {
             // do game startup stuff here
+            
+            DevConsole.Initialise();
 
             TResourceManager.RegisterHandler(new LBDHandler());
             TResourceManager.RegisterHandler(new TIXHandler());
@@ -36,7 +39,7 @@ namespace LSDR.Game
             TResourceManager.RegisterHandler(new ToriiAudioClipHandler());
             TResourceManager.RegisterHandler(new TIXTexture2DHandler());
 
-            Screenshotter.Instance.Init();
+            Screenshotter.Instance.Initialise();
 
             // set the sort order for the fader so the version text appears on top during fades
             ToriiFader.Instance.SetSortOrder(0);

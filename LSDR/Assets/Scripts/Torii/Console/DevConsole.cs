@@ -22,6 +22,11 @@ namespace Torii.Console
         private const string COMMAND_REGEX = @"^(\w*)\.(\w*)(?: +(.*))?$";
         private static readonly Regex compiledCommandRegex = new Regex(COMMAND_REGEX);
 
+        public static void Initialise()
+        {
+            _registered.Clear();
+        }
+
         public static ExecutionResult Execute(string statement)
         {
             var matches = compiledCommandRegex.Match(statement);
