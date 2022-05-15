@@ -9,6 +9,8 @@ namespace LSDR.Game
     [CreateAssetMenu(menuName = "System/ModLoaderSystem")]
     public class ModLoaderSystem : ScriptableObject
     {
+        public IEnumerable<LSDRevampedMod> Mods => _loadedMods;
+
         protected readonly List<LSDRevampedMod> _loadedMods = new List<LSDRevampedMod>();
 
         protected string _modsDirectory => Path.Combine(Application.streamingAssetsPath, "mods");

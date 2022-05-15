@@ -183,6 +183,7 @@ namespace LSDR.Game
             {
                 _currentModIndex = value;
                 _currentJournalIndex = 0;
+                NotifyPropertyChange(nameof(CurrentJournalIndex));
                 NotifyPropertyChange(nameof(CurrentModIndex));
             }
         }
