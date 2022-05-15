@@ -78,6 +78,7 @@ namespace LSDR.Dream
             TextureSetSystem.SetTextureSet(randomTextureSetFromDayNumber(GameSave.CurrentJournalSave.DayNumber));
 
             SDK.Data.Dream dream = null;
+            // TODO: select a dream based on the graph
             BeginDream(dream);
         }
 

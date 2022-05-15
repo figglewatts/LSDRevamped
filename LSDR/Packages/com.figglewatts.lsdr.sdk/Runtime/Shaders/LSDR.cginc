@@ -15,7 +15,7 @@ struct appdata
     UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
-struct v2f
+struct vertdata
 {
     float4 pos : SV_POSITION;
     half4 color : COLOR0;
@@ -24,16 +24,10 @@ struct v2f
     float distance : FOG;
 };
 
-struct v2g
+struct fragdata
 {
-    v2f data;
-};
-
-struct g2f
-{
-    v2f data;
+    vertdata data;
     float4 fogColor : TEXCOORD2;
-    float4 barycenter : TEXCOORD3;
 };
 
 struct fragOut
@@ -41,9 +35,9 @@ struct fragOut
     fixed4 color : SV_Target;
 };
 
-v2g vert(appdata v)
+fragdata vert(appdata v)
 {
-    v2g output;
+    fragdata output;
 
     UNITY_SETUP_INSTANCE_ID(v);
 
@@ -54,6 +48,9 @@ v2g vert(appdata v)
     // color and UVs
     output.data.uv_MainTex = v.uv;
     output.data.color = v.color;
+
+    // fog
+    output.fogColor = FogColor(distance);
 
     #if defined(LSDR_CLASSIC)
     // vertex snapping
@@ -75,8 +72,9 @@ v2g vert(appdata v)
     return output;
 }
 
+#if !defined(LSDR_NO_GEOM)
 [maxvertexcount(3)]
-void geom(triangle v2g IN[3], inout TriangleStream<g2f> triStream)
+void geom(triangle fragdata IN[3], inout TriangleStream<fragdata> triStream)
 {
     #if defined(LSDR_CLASSIC)
     const float faceDistance = min(IN[0].data.distance, min(IN[1].data.distance, IN[2].data.distance));
@@ -91,13 +89,12 @@ void geom(triangle v2g IN[3], inout TriangleStream<g2f> triStream)
 
     for (int i = 0; i < 3; i++)
     {
-        g2f o;
+        fragdata o;
 
         o.data = IN[i].data;
 
         #if defined(LSDR_CLASSIC)
         // Flatten the triangle to the barycenter
-        o.barycenter = barycenter;
         o.data.pos.z = o.data.pos.w * barycenter.z / barycenter.w;
 
         // handle fog color
@@ -112,11 +109,12 @@ void geom(triangle v2g IN[3], inout TriangleStream<g2f> triStream)
 
     triStream.RestartStrip();
 }
+#endif
 
 #if defined(LSDR_TEXTURE_SET)
-fragOut lsdrFrag(g2f input, sampler2D mainTexA, sampler2D mainTexB, sampler2D mainTexC, sampler2D mainTexD, fixed4 tint)
+fragOut lsdrFrag(fragdata input, sampler2D mainTexA, sampler2D mainTexB, sampler2D mainTexC, sampler2D mainTexD, fixed4 tint)
 #else
-fragOut lsdrFrag(g2f input, sampler2D mainTex, fixed4 tint)
+fragOut lsdrFrag(fragdata input, sampler2D mainTex, fixed4 tint)
 #endif
 {
     fragOut output;
@@ -173,7 +171,7 @@ sampler2D _MainTexC;
 sampler2D _MainTexD;
 fixed4 _Tint;
 
-fragOut frag(g2f input)
+fragOut frag(fragdata input)
 {
     return lsdrFrag(input, _MainTexA, _MainTexB, _MainTexC, _MainTexD, _Tint);
 }
@@ -181,7 +179,7 @@ fragOut frag(g2f input)
 sampler2D _MainTex;
 fixed4 _Tint;
 
-fragOut frag(g2f input)
+fragOut frag(fragdata input)
 {
     return lsdrFrag(input, _MainTex, _Tint);
 }

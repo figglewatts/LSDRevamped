@@ -17,6 +17,8 @@ Shader "LSDR/ClassicDiffuse"
 
 
             CGPROGRAM
+            #pragma exclude_renderers metal
+            
             #pragma vertex vert
             #pragma geometry geom
             #pragma fragment frag
@@ -25,6 +27,34 @@ Shader "LSDR/ClassicDiffuse"
 
             #define LSDR_CLASSIC
             #define LSDR_CUTOUT_ALPHA
+            #include "LSDR.cginc"
+            ENDCG
+        }
+    }
+    
+    // subshader with no geometry shader, for mac
+    SubShader
+    {
+        Tags
+        {
+            "RenderType" = "Opaque"
+        }
+        Pass
+        {
+            ZTest LEqual
+
+
+            CGPROGRAM
+            #pragma only_renderers metal
+            
+            #pragma vertex vert
+            #pragma fragment frag
+            #pragma multi_compile_instancing
+            #pragma multi_compile_fog
+
+            #define LSDR_CLASSIC
+            #define LSDR_CUTOUT_ALPHA
+            #define LSDR_NO_GEOM
             #include "LSDR.cginc"
             ENDCG
         }

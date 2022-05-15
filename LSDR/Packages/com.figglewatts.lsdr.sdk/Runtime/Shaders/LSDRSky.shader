@@ -35,16 +35,16 @@ Shader "LSDR/GradientSky"
                 float2 texcoord : TEXCOORD0;
             };
 
-            struct v2f
+            struct vertdata
             {
                 float4 position : SV_POSITION;
                 float2 texcoord : TEXCOORD0;
                 float4 screenPos : TEXCOORD1;
             };
 
-            v2f vert(appdata v)
+            vertdata vert(appdata v)
             {
-                v2f o;
+                vertdata o;
                 o.position = UnityObjectToClipPos(v.position);
                 o.texcoord = v.texcoord;
                 o.screenPos = ComputeScreenPos(o.position);
@@ -68,7 +68,7 @@ Shader "LSDR/GradientSky"
                 return skyComponent + fogComponent;
             }
 
-            fixed4 frag(v2f i) : SV_Target
+            fixed4 frag(vertdata i) : SV_Target
             {
                 // sky is rendered in screenspace - so we need screenspace UVs
                 float2 normalizedScreenUV = i.screenPos.xy / i.screenPos.w;
