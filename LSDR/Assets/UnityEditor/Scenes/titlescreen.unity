@@ -1801,7 +1801,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   JournalDisplayElement: {fileID: 426412584}
-  JournalLoader: {fileID: 11400000, guid: 0110fc1016f1f9544869de97eccd3a19, type: 2}
+  SettingsSystem: {fileID: 0}
 --- !u!114 &426412587
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8199,6 +8199,7 @@ MonoBehaviour:
   useFixedUpdate: 0
   dontDestroyOnLoad: 1
   suspendInBackground: 0
+  updateMode: 0
   enableICade: 0
   enableXInput: 0
   xInputOverrideUpdateRate: 0
@@ -8207,10 +8208,10 @@ MonoBehaviour:
   xInputBufferSize: 0
   enableNativeInput: 1
   nativeInputEnableXInput: 1
+  nativeInputEnableMFi: 1
   nativeInputPreventSleep: 0
   nativeInputOverrideUpdateRate: 0
   nativeInputUpdateRate: 0
-  customProfiles: []
 --- !u!4 &1684906710
 Transform:
   m_ObjectHideFlags: 0
@@ -9993,7 +9994,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4855a35832945d5865aec599963246c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Event: {fileID: 11400000, guid: e299a6f2b9b55d84cbef028b2f403127, type: 2}
+  Event: {fileID: 11400000, guid: 1812e240addef4e0d9d43cfb70be6143, type: 2}
   Response:
     m_PersistentCalls:
       m_Calls:

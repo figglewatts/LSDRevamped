@@ -93,6 +93,8 @@ namespace LSDR.Game
 
             // register the new settings object
             SettingsBindBroker.RegisterData(Settings);
+
+            Apply();
         }
 
         public void Save()
@@ -109,17 +111,14 @@ namespace LSDR.Game
         {
             Debug.Log("Applying game settings");
 
-            // TODO: try and catch exceptions for erroneous loaded values (i.e. array idx) and reset to default if error
-
             // set the control scheme
             ControlSchemeLoader.SelectScheme(Settings.CurrentControlSchemeIndex);
-            ControlSchemeLoader.SaveSchemes();
 
             // set the resolution
-            if (Settings.CurrentResolutionIndex > Screen.resolutions.Length)
+            if (Settings.CurrentResolutionIndex > Screen.resolutions.Length || Settings.CurrentResolutionIndex < 0)
             {
-                // if the resolution is invalid, set it to the lowest resolution
-                Screen.SetResolution(Screen.resolutions[0].width, Screen.resolutions[0].height, Settings.Fullscreen);
+                // if the resolution is invalid, set it to the native resolution
+                Screen.SetResolution(Display.main.systemWidth, Display.main.systemHeight, Settings.Fullscreen);
             }
             else
             {

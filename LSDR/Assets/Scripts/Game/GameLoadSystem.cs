@@ -5,6 +5,7 @@ using LSDR.InputManagement;
 using LSDR.IO.ResourceHandlers;
 using LSDR.Visual;
 using Torii.Console;
+using Torii.Event;
 using Torii.UI;
 using UnityEngine;
 using TResourceManager = Torii.Resource.ResourceManager; // TODO: change when old ResourceManager removed
@@ -23,6 +24,7 @@ namespace LSDR.Game
         public ControlSchemeLoaderSystem ControlSchemeLoaderSystem;
         public SettingsSystem SettingsSystem;
         public GameSaveSystem GameSaveSystem;
+        public ToriiEvent OnGameLoaded;
 
         [NonSerialized] public static bool GameLoaded = false;
 
@@ -53,6 +55,7 @@ namespace LSDR.Game
             GameSaveSystem.Load();
 
             GameLoaded = true;
+            OnGameLoaded.Raise();
         }
     }
 }

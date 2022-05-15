@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace LSDR.UI
@@ -10,12 +11,12 @@ namespace LSDR.UI
 	{
 		public Text BuildNumberText;
 
-        void Start()
+		void Start()
         {
 	        BuildNumberText.text = getVersionString();
         }
 
-        protected string getVersionString()
+		protected string getVersionString()
         {
 	        var versionString = typeof(UIBuildNumberDisplay).Assembly.GetName().Version.ToString();
 	        var components = versionString.Split(new [] {'.'}, 4);

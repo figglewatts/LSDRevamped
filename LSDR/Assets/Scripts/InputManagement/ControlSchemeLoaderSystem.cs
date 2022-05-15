@@ -14,7 +14,23 @@ namespace LSDR.InputManagement
     public class ControlSchemeLoaderSystem : ScriptableObject
     {
         public List<ControlScheme> Schemes;
-        public ControlScheme Current => Schemes[_currentSchemeHandle];
+
+        public ControlScheme Current
+        {
+            get
+            {
+                if (_currentSchemeHandle > Schemes.Count)
+                {
+                    return Schemes[Schemes.Count - 1];
+                }
+                else if (_currentSchemeHandle < 0)
+                {
+                    return Schemes[0];
+                }
+
+                return Schemes[_currentSchemeHandle];
+            }
+        }
         public int CurrentSchemeIndex => _currentSchemeHandle;
 
         private string _controlSchemesPath;
@@ -31,8 +47,10 @@ namespace LSDR.InputManagement
         public void LoadSchemes()
         {
             Debug.Log("Deserialising control schemes...");
-            
+
             Schemes = new List<ControlScheme>();
+            
+            EnsureDefaultSchemes();
 
             // if the directory doesn't exist, create it
             if (!Directory.Exists(_controlSchemesPath))
@@ -59,24 +77,30 @@ namespace LSDR.InputManagement
 
         public void EnsureDefaultSchemes()
         {
+            bool schemeCreated = false;
             if (!File.Exists(PathUtil.Combine(_controlSchemesPath, "Classic.dat")))
             {
                 Debug.Log("Unable to find 'Classic' control scheme - creating...");
                 Schemes.Add(new ControlScheme(ControlActions.CreateDefaultTank(), "Classic", false));
+                schemeCreated = true;
             }
 
             if (!File.Exists(PathUtil.Combine(_controlSchemesPath, "Revamped.dat")))
             {
                 Debug.Log("Unable to find 'Revamped' control scheme - creating...");
                 Schemes.Add(new ControlScheme(ControlActions.CreateDefaultFps(), "Revamped", true, 15F));
+                schemeCreated = true;
             }
-            
-            SaveSchemes();
-            
-            // we now need to sort the list, as any schemes that might have already been there before the default ones
-            // will now be before them in the list -- this is not preferable as loading them as normal will simply
-            // load them in alphabetical order, so this is to emulate that
-            Schemes.Sort((x, y) => String.Compare(x.Name, y.Name, StringComparison.Ordinal));
+
+            if (schemeCreated)
+            {
+                SaveSchemes();
+                
+                // we now need to sort the list, as any schemes that might have already been there before the default ones
+                // will now be before them in the list -- this is not preferable as loading them as normal will simply
+                // load them in alphabetical order, so this is to emulate that
+                Schemes.Sort((x, y) => String.Compare(x.Name, y.Name, StringComparison.Ordinal));
+            }
         }
 
         public void SelectScheme(int idx)
