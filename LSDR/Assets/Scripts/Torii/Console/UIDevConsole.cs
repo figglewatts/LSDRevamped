@@ -25,6 +25,11 @@ namespace Torii.Console
         private readonly List<string> _commandHistory = new List<string>();
         private int _commandHistoryPos = -1;
 
+        public void Awake()
+        {
+            Application.logMessageReceived += LogHandler; 
+        }
+
         public void Start()
         {
             _visible = gameObject.activeSelf;

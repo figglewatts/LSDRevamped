@@ -8,8 +8,6 @@ namespace Torii.Console
         public const KeyCode ConsoleKey = KeyCode.BackQuote;
         public UIDevConsole Console;
 
-        public void Awake() { Application.logMessageReceived += Console.LogHandler; }
-
         public void Update()
         {
             if (Input.GetKeyDown(ConsoleKey))
