@@ -449,7 +449,7 @@ namespace LSDR.Dream
                     spawn.Spawn();
                     return;
                 }
-                catch (InvalidOperationException e)
+                catch (InvalidOperationException)
                 {
                     Debug.LogError($"Unable to find SpawnPoint with ID '{_forcedSpawnID}'");
                     throw;

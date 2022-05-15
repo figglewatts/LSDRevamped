@@ -8,7 +8,7 @@ using Torii.UI;
 using UnityEngine;
 using TResourceManager = Torii.Resource.ResourceManager; // TODO: change when old ResourceManager removed
 
-[assembly: AssemblyVersion("0.1.*")]
+[assembly: AssemblyVersion("0.2.*")]
 
 namespace LSDR.Game
 {

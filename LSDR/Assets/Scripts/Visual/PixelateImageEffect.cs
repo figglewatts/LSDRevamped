@@ -18,11 +18,6 @@ namespace LSDR.Visual
         protected void Start()
         {
             _main = Camera.main;
-            if (!SystemInfo.supportsImageEffects)
-            {
-                enabled = false;
-                return;
-            }
         }
 
         protected void Update()
