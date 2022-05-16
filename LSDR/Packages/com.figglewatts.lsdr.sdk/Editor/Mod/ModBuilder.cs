@@ -45,8 +45,8 @@ namespace LSDR.SDK.Editor.Mod
                 Debug.Log($"Building mod {mod.Name} for macOS (OS X)...");
                 buildForPlatform(BuildTarget.StandaloneOSX, build, outputPath);
             }
-            
-            Debug.Log("Mod built successfully!");
+
+            EditorUtility.DisplayDialog("Mod finished building", "Mod built successfully!", "Ok");
         }
 
         protected void buildForPlatform(BuildTarget platform, AssetBundleBuild bundle, string outputPath)
