@@ -48,12 +48,7 @@ namespace LSDR.Entities.Original
 
             var lbdPath = PathUtil.Combine(Application.streamingAssetsPath, LBDFile);
             LBD lbd = ResourceManager.Load<LBD>(lbdPath, "scene");
-            var texSetOpts = TextureSetOptions.GetFromLBDPath(Path.GetDirectoryName(lbdPath),
-                Shader.Find("LSDR/ClassicDiffuse"),
-                Shader.Find("LSDR/RevampedDiffuse"));
             Material mat = new Material(Shader.Find("LSDR/RevampedDiffuse"));
-            TIXTexture2D tex = ResourceManager.Load<TIXTexture2D>(texSetOpts.APath);
-            mat.mainTexture = tex;
             SpawnedObject =
                 InteractiveObject.Create(lbd, EntityNumber, mat, EntityID, IdleAnimation, PlayIdleAnimation, LuaScript);
             SpawnedObject.transform.SetParent(transform);
@@ -75,11 +70,7 @@ namespace LSDR.Entities.Original
 
             var lbdPath = PathUtil.Combine(Application.streamingAssetsPath, LBDFile);
             LBD lbd = ResourceManager.Load<LBD>(lbdPath, "scene");
-            var texSetOpts = TextureSetOptions.GetFromLBDPath(Path.GetDirectoryName(lbdPath),
-                Shader.Find("LSDR/ClassicDiffuse"),
-                Shader.Find("LSDR/RevampedDiffuse"));
             Material mat = new Material(DreamSystem.GetShader(alpha: false));
-            DreamSystem.TextureSetSystem.RegisterMaterial(mat, texSetOpts);
             SpawnedObject =
                 InteractiveObject.Create(lbd, EntityNumber, mat, EntityID, IdleAnimation, PlayIdleAnimation, LuaScript);
             SpawnedObject.transform.position = transform.position;

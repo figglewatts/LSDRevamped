@@ -5,9 +5,9 @@
     /// </summary>
     public enum TextureSet
     {
-        Normal,
-        Kanji,
-        Downer,
-        Upper
+        Normal = 0,
+        Kanji = 1,
+        Downer = 2,
+        Upper = 3
     }
 }

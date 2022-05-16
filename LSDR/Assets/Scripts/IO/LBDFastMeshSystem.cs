@@ -16,8 +16,6 @@ namespace LSDR.IO
     [CreateAssetMenu(menuName = "System/LBDFastMeshSystem")]
     public class LBDFastMeshSystem : ScriptableObject
     {
-        public TextureSetSystem TextureSetSystem;
-
         public Material LBDDiffuse;
         public Material LBDAlpha;
         public Shader Classic;
@@ -34,13 +32,6 @@ namespace LSDR.IO
         public void LoadLBD(string lbdFolder, LegacyTileMode tileMode, int lbdWidth)
         {
             lbdFolder = PathUtil.Combine(Application.streamingAssetsPath, lbdFolder);
-
-            TextureSetSystem.DeregisterMaterial(LBDDiffuse);
-            TextureSetSystem.DeregisterMaterial(LBDAlpha);
-            TextureSetSystem.RegisterMaterial(LBDDiffuse,
-                TextureSetOptions.GetFromLBDPath(lbdFolder, Classic, Revamped));
-            TextureSetSystem.RegisterMaterial(LBDAlpha,
-                TextureSetOptions.GetFromLBDPath(lbdFolder, ClassicAlpha, RevampedAlpha));
 
             GameObject lbdRenderer = new GameObject("LBD Renderer");
             LBDTileMap tileMap = lbdRenderer.AddComponent<LBDTileMap>();

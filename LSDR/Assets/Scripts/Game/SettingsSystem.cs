@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using LSDR.InputManagement;
 using LSDR.SDK.Data;
+using LSDR.SDK.Visual;
 using LSDR.Visual;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -49,7 +50,6 @@ namespace LSDR.Game
 
         public ModLoaderSystem ModLoaderSystem;
         public ControlSchemeLoaderSystem ControlSchemeLoader;
-        public TextureSetSystem TextureSetSystem;
 
         // reference to serializer used for loading/saving data
         private readonly ToriiSerializer _serializer = new ToriiSerializer();
@@ -140,7 +140,7 @@ namespace LSDR.Game
             QualitySettings.SetQualityLevel(Settings.CurrentQualityIndex, true);
 
             // update any shaders
-            TextureSetSystem.SetShader(Settings.UseClassicShaders);
+            TextureSetter.Instance.SetAllShaders(Settings.UseClassicShaders);
         }
 
         /// <summary>
