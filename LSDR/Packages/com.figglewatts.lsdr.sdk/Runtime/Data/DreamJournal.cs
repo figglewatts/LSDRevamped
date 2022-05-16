@@ -23,8 +23,24 @@ namespace LSDR.SDK.Data
 
         public Dream GetLinkable() => RandUtil.RandomListElement(LinkableDreams);
 
-        public Dream GetFirstDream() => RandUtil.RandomListElement(Dreams.Where(d => d.FirstDay));
+        public Dream GetFirstDream()
+        {
+            var firstDayDreams = Dreams.Where(d => d.FirstDay).ToList();
+            if (firstDayDreams.Count <= 0) return RandUtil.RandomListElement(Dreams);
+            
+            return RandUtil.RandomListElement(firstDayDreams);
+        }
 
-        public Dream GetDreamFromGraph(int x, int y) => GraphSpawnMap.Get(x, y);
+        public Dream GetDreamFromGraph(int x, int y)
+        {
+            if (GraphSpawnMap != null)
+            {
+                return GraphSpawnMap.Get(x, y);
+            }
+            else
+            {
+                return RandUtil.RandomListElement(Dreams);
+            }
+        }
     }
 }

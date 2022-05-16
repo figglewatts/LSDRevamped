@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.IO;
 using System.Linq;
 using LSDR.Audio;
 using LSDR.Entities;
@@ -27,7 +28,6 @@ namespace LSDR.Dream
     [CreateAssetMenu(menuName = "System/DreamSystem")]
     public class DreamSystem : ScriptableObject
     {
-        public ScenePicker DreamScene;
         public ScenePicker TitleScene;
         public Material SkyBackground;
         public TextureSetSystem TextureSetSystem;
@@ -38,6 +38,7 @@ namespace LSDR.Dream
         public PauseSystem PauseSystem;
         public AudioClip LinkSound;
         public SDK.Data.Dream CurrentDream { get; private set; }
+        public GameObject CurrentDreamInstance { get; private set; }
         public DreamSequence CurrentSequence { get; private set; }
         public ToriiEvent OnReturnToTitle;
         public ToriiEvent OnLevelLoad;
@@ -54,7 +55,7 @@ namespace LSDR.Dream
 
         // one in every 6 links switches texture sets
         private const float CHANCE_TO_SWITCH_TEXTURES_WHEN_LINKING = 6;
-        private const float MIN_SECONDS_IN_DREAM = 300;
+        private const float MIN_SECONDS_IN_DREAM = 90;
         private const float MAX_SECONDS_IN_DREAM = 600;
         private const int FALLING_UPPER_PENALTY = -3;
         private const float FADE_OUT_SECS_REGULAR = 5;
@@ -88,10 +89,8 @@ namespace LSDR.Dream
         public void BeginDream()
         {
             TextureSetSystem.SetTextureSet(randomTextureSetFromDayNumber(GameSave.CurrentJournalSave.DayNumber));
-
-            SDK.Data.Dream dream = null;
-            // TODO: select a dream based on the graph
-            BeginDream(dream);
+            
+            BeginDream(getRandomDream());
         }
 
         public void BeginDream(SDK.Data.Dream dream)
@@ -253,11 +252,15 @@ namespace LSDR.Dream
 
             TextureSetSystem.DeregisterAllMaterials();
 
-            string currentScene = SceneManager.GetActiveScene().name;
-
             OnLevelPreLoad.Raise();
 
-            SceneManager.LoadScene(DreamScene.ScenePath);
+            // unload the last scene (if it existed)
+            if (CurrentDream != null)
+            {
+                Destroy(CurrentDreamInstance);
+            }
+            
+            CurrentDreamInstance = Instantiate(dream.DreamPrefab);
             yield return null;
 
             ResourceManager.ClearLifespan("scene");
@@ -389,6 +392,19 @@ namespace LSDR.Dream
         }
 
 #endregion
+
+        protected LSDR.SDK.Data.Dream getRandomDream()
+        {
+            if (GameSave.CurrentJournalSave.DayNumber == 1)
+            {
+                return SettingsSystem.CurrentJournal.GetFirstDream();
+            }
+            else
+            {
+                return SettingsSystem.CurrentJournal.GetDreamFromGraph(GameSave.CurrentJournalSave.LastGraphX,
+                    GameSave.CurrentJournalSave.LastGraphY);
+            }
+        }
 
         private void commonEndDream()
         {

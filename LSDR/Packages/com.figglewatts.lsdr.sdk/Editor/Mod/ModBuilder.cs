@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using LSDR.SDK.Data;
 using UnityEditor;
 using UnityEngine;
@@ -19,10 +21,10 @@ namespace LSDR.SDK.Editor.Mod
                 Debug.LogWarning("No platforms supplied to mod builder, doing nothing.");
                 return;
             }
-
+            
             AssetBundleBuild build = new AssetBundleBuild
             {
-                assetNames = new[] { AssetDatabase.GetAssetPath(mod) },
+                assetNames = new [] {AssetDatabase.GetAssetPath(mod)},
                 assetBundleName = $"{mod.Name}.lsdrmod"
             };
 
@@ -43,6 +45,8 @@ namespace LSDR.SDK.Editor.Mod
                 Debug.Log($"Building mod {mod.Name} for macOS (OS X)...");
                 buildForPlatform(BuildTarget.StandaloneOSX, build, outputPath);
             }
+            
+            Debug.Log("Mod built successfully!");
         }
 
         protected void buildForPlatform(BuildTarget platform, AssetBundleBuild bundle, string outputPath)

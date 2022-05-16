@@ -29,11 +29,14 @@ namespace LSDR.SDK.Data
         [Tooltip("The list of environments this dream can potentially have.")]
         public List<DreamEnvironment> Environments;
 
-        [Tooltip("The scene that comprises this dream.")]
-        public SceneProperty DreamScene;
+        [Tooltip("The prefab that comprises this dream.")]
+        public GameObject DreamPrefab;
 
         public DreamEnvironment ChooseEnvironment(int dayNum)
         {
+            // if the dream doesn't have environments, just return a default one
+            if (Environments.Count <= 0) return CreateInstance<DreamEnvironment>();
+            
             int toChoose = (dayNum - 1) % Environments.Count;
             return Environments[toChoose];
         }

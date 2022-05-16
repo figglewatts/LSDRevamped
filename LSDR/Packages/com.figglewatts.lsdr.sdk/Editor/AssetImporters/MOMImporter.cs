@@ -59,6 +59,7 @@ namespace LSDR.SDK.Editor.AssetImporters
                 // create it
                 var filePath = Path.Combine(dirName, fileName);
                 var controller = AnimatorController.CreateAnimatorControllerAtPath(filePath);
+                ctx.AddObjectToAsset("MOM Animator Controller", controller);
 
                 // add the clips to it
                 for (int i = 0; i < clips.Length; i++)
