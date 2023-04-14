@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using Torii.Util;
+using LSDR.SDK.Util;
 using UnityEngine;
 
 namespace LSDR.SDK.Data
@@ -21,13 +21,16 @@ namespace LSDR.SDK.Data
 
         public IEnumerable<Dream> LinkableDreams => Dreams.Where(d => d.Linkable);
 
-        public Dream GetLinkable() => RandUtil.RandomListElement(LinkableDreams);
+        public Dream GetLinkable(Dream current)
+        {
+            return RandUtil.RandomListElement(LinkableDreams.Where(d => d != current));
+        }
 
         public Dream GetFirstDream()
         {
-            var firstDayDreams = Dreams.Where(d => d.FirstDay).ToList();
+            List<Dream> firstDayDreams = Dreams.Where(d => d.FirstDay).ToList();
             if (firstDayDreams.Count <= 0) return RandUtil.RandomListElement(Dreams);
-            
+
             return RandUtil.RandomListElement(firstDayDreams);
         }
 
@@ -35,12 +38,11 @@ namespace LSDR.SDK.Data
         {
             if (GraphSpawnMap != null)
             {
-                return GraphSpawnMap.Get(x, y);
+                Dream dream = GraphSpawnMap.Get(x, y);
+                if (dream != null) return dream;
             }
-            else
-            {
-                return RandUtil.RandomListElement(Dreams);
-            }
+
+            return RandUtil.RandomListElement(Dreams);
         }
     }
 }

@@ -9,7 +9,7 @@ namespace LSDR.SDK.Data
         public Color FogColor = Color.white;
 
         [Tooltip("Whether to render light or dark fog. Subtractive is dark.")]
-        public bool SubtractiveFog = false;
+        public bool SubtractiveFog;
 
         [Tooltip("The distance at which fog starts being applied. Fog here will be at its weakest.")]
         public float FogStartDistance = 10;
@@ -62,6 +62,32 @@ namespace LSDR.SDK.Data
         public int NumberOfStars = 3;
 
         [Tooltip("The chance the stars have to be enabled. 1 is always, 0 is never.")] [Range(0, 1)]
-        public float StarsChance = 0;
+        public float StarsChance;
+
+#region Applying
+
+        protected static readonly int _subtractiveFogPropertyId = Shader.PropertyToID("_SubtractiveFog");
+        protected static readonly int _fogHeightPropertyId = Shader.PropertyToID("_FogHeight");
+        protected static readonly int _fogGradientPropertyId = Shader.PropertyToID("_FogGradient");
+        protected static readonly int _skyColorPropertyId = Shader.PropertyToID("_SkyColor");
+        protected static readonly int _fogColorPropertyId = Shader.PropertyToID("_FogColor");
+
+        public void Apply(Material skyMaterial)
+        {
+            skyMaterial.SetFloat(_fogHeightPropertyId, FogHeight);
+            skyMaterial.SetFloat(_fogGradientPropertyId, FogGradient);
+            skyMaterial.SetColor(_skyColorPropertyId, SkyColor);
+            skyMaterial.SetColor(_fogColorPropertyId, SkyFogColor);
+
+            RenderSettings.skybox = skyMaterial;
+            RenderSettings.fog = true;
+            RenderSettings.fogColor = FogColor;
+            RenderSettings.fogStartDistance = FogStartDistance;
+            RenderSettings.fogEndDistance = FogEndDistance;
+            RenderSettings.fogMode = FogMode.Linear;
+            Shader.SetGlobalInt(_subtractiveFogPropertyId, SubtractiveFog ? 1 : 0);
+        }
+
+#endregion
     }
 }

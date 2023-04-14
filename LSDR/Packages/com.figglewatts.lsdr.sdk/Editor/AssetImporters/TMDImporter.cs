@@ -1,5 +1,6 @@
 using System.IO;
 using libLSD.Formats;
+using LSDR.SDK.Visual;
 using UnityEditor;
 using UnityEditor.Experimental.AssetImporters;
 using UnityEngine;
@@ -56,6 +57,7 @@ namespace LSDR.SDK.Editor.AssetImporters
             MeshFilter mf = meshObj.AddComponent<MeshFilter>();
             mf.sharedMesh = combinedMesh;
             MeshRenderer mr = meshObj.AddComponent<MeshRenderer>();
+            meshObj.AddComponent<ShaderSetter>();
 
             if (combinedMesh.subMeshCount > 1)
             {

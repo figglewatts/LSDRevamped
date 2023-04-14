@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Reflection;
+using LSDR.Dream;
 using LSDR.InputManagement;
 using LSDR.IO.ResourceHandlers;
+using LSDR.Lua;
+using LSDR.SDK.DreamControl;
+using LSDR.SDK.Lua;
 using LSDR.Visual;
 using Torii.Console;
 using Torii.Event;
@@ -15,24 +19,30 @@ using TResourceManager = Torii.Resource.ResourceManager; // TODO: change when ol
 namespace LSDR.Game
 {
     /// <summary>
-    /// GameLoadSystem is a system that contains code for initialising the game.
+    ///     GameLoadSystem is a system that contains code for initialising the game.
     /// </summary>
     [CreateAssetMenu(menuName = "System/GameLoadSystem")]
     public class GameLoadSystem : ScriptableObject
     {
+        [NonSerialized] public static bool GameLoaded;
         public ModLoaderSystem ModLoaderSystem;
         public ControlSchemeLoaderSystem ControlSchemeLoaderSystem;
         public SettingsSystem SettingsSystem;
         public GameSaveSystem GameSaveSystem;
+        public DreamSystem DreamSystem;
         public ToriiEvent OnGameLoaded;
-
-        [NonSerialized] public static bool GameLoaded = false;
 
         public IEnumerator LoadGameCoroutine()
         {
+            Debug.Log("Loading game...");
             // do game startup stuff here
-            
+
             DevConsole.Initialise();
+
+            DreamSystem.Initialise();
+
+            LuaManager.ProvideManaged(new LuaEngine());
+            DreamControlManager.ProvideManaged(DreamSystem);
 
             TResourceManager.RegisterHandler(new LBDHandler());
             TResourceManager.RegisterHandler(new TIXHandler());

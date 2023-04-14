@@ -9,18 +9,37 @@ namespace LSDR.SDK.Editor.Data
     [CustomEditor(typeof(GraphSpawnMap))]
     public class GraphSpawnMapEditor : UnityEditor.Editor
     {
-        private GraphSpawnMap _graphSpawnMap => target as GraphSpawnMap;
-
-        private bool _needsRepaint;
+        private const float GRAPH_GRID_OPACITY = 0.5f;
+        private Vector2 _dreamBoxScrollPos = Vector2.zero;
         private Texture2D _graphTexture;
-        private bool _showDreamBox = true;
         private Rect _graphTextureRect;
         private Vector2 _graphTextureScaleFactor;
-        private Vector2 _dreamBoxScrollPos = Vector2.zero;
-        private GUIStyle _selectedDreamStyle;
-        private int _selectedDream;
 
-        private const float GRAPH_GRID_OPACITY = 0.5f;
+        private bool _needsRepaint;
+        private int _selectedDream;
+        private GUIStyle _selectedDreamStyle;
+        private bool _showDreamBox = true;
+        private GraphSpawnMap _graphSpawnMap => serializedObject.targetObject as GraphSpawnMap;
+
+        private void OnEnable()
+        {
+            _graphTexture =
+                AssetDatabase.LoadAssetAtPath<Texture2D>(
+                    "Packages/com.figglewatts.lsdr.sdk/Editor/Assets/dreamGraph.png");
+
+            _selectedDreamStyle = new GUIStyle
+            {
+                normal = new GUIStyleState
+                {
+                    background = TextureUtil.CreateColor(new Color(0, 0, 1, 0.1f))
+                }
+            };
+
+            _graphTextureRect = new Rect(18, 4, 304, 304);
+
+            _graphTextureScaleFactor = new Vector2(_graphTextureRect.width / _graphTexture.width,
+                _graphTextureRect.height / _graphTexture.height);
+        }
 
         public override void OnInspectorGUI()
         {
@@ -35,6 +54,7 @@ namespace LSDR.SDK.Editor.Data
             {
                 _needsRepaint = false;
                 Repaint();
+                EditorUtility.SetDirty(_graphSpawnMap);
             }
 
             serializedObject.ApplyModifiedProperties();
@@ -48,7 +68,7 @@ namespace LSDR.SDK.Editor.Data
 
         private void drawGraph()
         {
-            var graphRect = GUILayoutUtility.GetRect(304, 304, 304, 304);
+            Rect graphRect = GUILayoutUtility.GetRect(304, 304, 304, 304);
             GUI.BeginGroup(graphRect);
             {
                 GUI.Box(new Rect(0, 0, 304, 304), GUIContent.none);
@@ -70,9 +90,7 @@ namespace LSDR.SDK.Editor.Data
                     if (_graphSpawnMap.Dreams.Count <= 0 || EditorUtility.DisplayDialog("Remove existing dreams?",
                             "Adding dreams from a journal will remove any existing dreams added. Are you sure?", "Yes",
                             "Cancel"))
-                    {
                         GraphSpawnMapJournalDreamsEditorWindow.Show(_graphSpawnMap);
-                    }
                 }
             }
             EditorGUILayout.EndHorizontal();
@@ -86,8 +104,8 @@ namespace LSDR.SDK.Editor.Data
                         EditorGUILayout.BeginHorizontal(_selectedDream == i ? _selectedDreamStyle : GUIStyle.none);
                         {
                             // dream display colour
-                            var lastCol = _graphSpawnMap.Dreams[i].Display;
-                            var newCol = EditorGUILayout.ColorField(GUIContent.none,
+                            Color lastCol = _graphSpawnMap.Dreams[i].Display;
+                            Color newCol = EditorGUILayout.ColorField(GUIContent.none,
                                 _graphSpawnMap.Dreams[i].Display, false, false, false,
                                 GUILayout.Width(EditorGUIUtility.singleLineHeight));
                             if (newCol != lastCol)
@@ -100,20 +118,15 @@ namespace LSDR.SDK.Editor.Data
                             _graphSpawnMap.Dreams[i].Dream = (Dream)EditorGUILayout.ObjectField(GUIContent.none,
                                 _graphSpawnMap.Dreams[i].Dream, typeof(Dream), false);
 
-                            // chose whether to paint with this dream or not
-                            if (GUILayout.Button("Paint"))
-                            {
-                                _selectedDream = i;
-                            }
+                            // choose whether to paint with this dream or not
+                            if (GUILayout.Button("Paint")) _selectedDream = i;
 
                             // remove this dream
                             if (GUILayout.Button("x"))
                             {
                                 _graphSpawnMap.RemoveDream(i);
                                 if (_selectedDream >= _graphSpawnMap.Dreams.Count)
-                                {
                                     _selectedDream = _graphSpawnMap.Dreams.Count - 1;
-                                }
                             }
                         }
                         EditorGUILayout.EndHorizontal();
@@ -125,30 +138,30 @@ namespace LSDR.SDK.Editor.Data
 
         private void handleInput()
         {
-            var current = Event.current;
+            Event current = Event.current;
             if (_graphSpawnMap.Dreams.Count == 0 || !_graphTextureRect.Contains(current.mousePosition)) return;
 
             if (current.type == EventType.MouseDown && current.button == 0)
             {
                 // paint on left click
-                placeOnGrid(current.mousePosition, clear: false);
+                placeOnGrid(current.mousePosition, false);
             }
             else if (current.type == EventType.MouseDown && current.button == 1)
             {
                 // clear on right click
-                placeOnGrid(current.mousePosition, clear: true);
+                placeOnGrid(current.mousePosition, true);
             }
             else if (current.type == EventType.MouseDrag && current.button == 0 &&
                      _graphTextureRect.Contains(current.mousePosition + current.delta))
             {
                 // paint on left click drag
-                placeOnGrid(current.mousePosition + current.delta, clear: false);
+                placeOnGrid(current.mousePosition + current.delta, false);
             }
             else if (current.type == EventType.MouseDrag && current.button == 1 &&
                      _graphTextureRect.Contains(current.mousePosition + current.delta))
             {
                 // clear on right click drag
-                placeOnGrid(current.mousePosition + current.delta, clear: true);
+                placeOnGrid(current.mousePosition + current.delta, true);
             }
         }
 
@@ -159,9 +172,7 @@ namespace LSDR.SDK.Editor.Data
                 (int)(coordsInside.y / (64 * _graphTextureScaleFactor.y)));
 
             if (clear)
-            {
                 _graphSpawnMap.ClearGraphSquare(gridCoords.x, GraphSpawnMap.GRAPH_SIZE - gridCoords.y - 1);
-            }
             else
             {
                 _graphSpawnMap.SetGraphSquare(gridCoords.x, GraphSpawnMap.GRAPH_SIZE - gridCoords.y - 1,
@@ -169,26 +180,6 @@ namespace LSDR.SDK.Editor.Data
             }
 
             _needsRepaint = true;
-        }
-
-        private void OnEnable()
-        {
-            _graphTexture =
-                AssetDatabase.LoadAssetAtPath<Texture2D>(
-                    "Packages/com.figglewatts.lsdr.sdk/Editor/Assets/dreamGraph.png");
-
-            _selectedDreamStyle = new GUIStyle
-            {
-                normal = new GUIStyleState
-                {
-                    background = TextureUtil.CreateColor(new Color(0, 0, 1, 0.1f))
-                }
-            };
-
-            _graphTextureRect = new Rect(18, 4, 304, 304);
-
-            _graphTextureScaleFactor = new Vector2(_graphTextureRect.width / _graphTexture.width,
-                _graphTextureRect.height / _graphTexture.height);
         }
     }
 }

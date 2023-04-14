@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using LSDR.SDK.Util;
 using UnityEngine;
 
 namespace LSDR.SDK.Data
@@ -23,6 +22,9 @@ namespace LSDR.SDK.Data
         [Tooltip("Whether this dream is linkable from random links.")]
         public bool Linkable;
 
+        [Tooltip("The weighting of linking to this dream among the other linkable dreams.")] [HideInInspector]
+        public float LinkWeighting = 1;
+
         [Tooltip("Whether this dream should be spawned into on the first day of the journal.")]
         public bool FirstDay;
 
@@ -36,7 +38,7 @@ namespace LSDR.SDK.Data
         {
             // if the dream doesn't have environments, just return a default one
             if (Environments.Count <= 0) return CreateInstance<DreamEnvironment>();
-            
+
             int toChoose = (dayNum - 1) % Environments.Count;
             return Environments[toChoose];
         }

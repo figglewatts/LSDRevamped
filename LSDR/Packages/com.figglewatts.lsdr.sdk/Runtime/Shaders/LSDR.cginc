@@ -69,6 +69,13 @@ fragdata vert(appdata v)
     output.data.affine = 0;
     #endif
 
+    #if defined(LSDR_NO_GEOM)
+    if (distance > GetFogEnd() + _RenderCutoffAdjustment)
+    {
+        output.data.pos.w = 0.0/0.0;
+    }
+    #endif
+
     return output;
 }
 
@@ -79,7 +86,7 @@ void geom(triangle fragdata IN[3], inout TriangleStream<fragdata> triStream)
     #if defined(LSDR_CLASSIC)
     const float faceDistance = min(IN[0].data.distance, min(IN[1].data.distance, IN[2].data.distance));
     half4 barycenter = (IN[0].data.pos + IN[1].data.pos + IN[2].data.pos) / 3;
-    
+
     // render distance
     if (faceDistance > GetFogEnd() + _RenderCutoffAdjustment)
     {
@@ -112,7 +119,8 @@ void geom(triangle fragdata IN[3], inout TriangleStream<fragdata> triStream)
 #endif
 
 #if defined(LSDR_TEXTURE_SET)
-fragOut lsdrFrag(fragdata input, sampler2D mainTexA, sampler2D mainTexB, sampler2D mainTexC, sampler2D mainTexD, fixed4 tint)
+fragOut lsdrFrag(fragdata input, sampler2D mainTexA, sampler2D mainTexB, sampler2D mainTexC, sampler2D mainTexD,
+                 fixed4 tint)
 #else
 fragOut lsdrFrag(fragdata input, sampler2D mainTex, fixed4 tint)
 #endif

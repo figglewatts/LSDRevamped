@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Torii.Util;
+using LSDR.SDK.Util;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -8,6 +8,21 @@ namespace LSDR.SDK.Visual
 {
     public class TextureSetter : MonoBehaviour
     {
+        protected static TextureSetter _instance;
+
+        protected static readonly int _textureSetPropertyID = Shader.PropertyToID("_TextureSet");
+
+        [NonSerialized] protected readonly List<Material> _textureSetMaterials = new List<Material>();
+        protected Shader _classicAlphaShader;
+
+        protected Shader _classicShader;
+
+        protected bool _lastShaderSet;
+        protected Shader _revampedAlphaShader;
+        protected Shader _revampedShader;
+
+        protected TextureSet _textureSet;
+
         public static TextureSetter Instance
         {
             get
@@ -26,15 +41,6 @@ namespace LSDR.SDK.Visual
             }
         }
 
-        protected static TextureSetter _instance;
-        
-        protected Shader _classicShader;
-        protected Shader _classicAlphaShader;
-        protected Shader _revampedShader;
-        protected Shader _revampedAlphaShader;
-
-        protected bool _lastShaderSet;
-        
         public TextureSet TextureSet
         {
             get => _textureSet;
@@ -45,12 +51,6 @@ namespace LSDR.SDK.Visual
             }
         }
 
-        protected TextureSet _textureSet;
-
-        [NonSerialized] protected readonly List<Material> _textureSetMaterials = new List<Material>();
-        
-        protected static readonly int _textureSetPropertyID = Shader.PropertyToID("_TextureSet");
-        
         public void Start()
         {
             _classicShader = Shader.Find("LSDR/ClassicDiffuseSet");
@@ -59,31 +59,21 @@ namespace LSDR.SDK.Visual
             _revampedAlphaShader = Shader.Find("LSDR/RevampedDiffuseSetAlphaBlend");
         }
 
-        public void SetShader(Material mat)
-        {
-            SetShader(mat, _lastShaderSet);
-        }
+        public void SetShader(Material mat) { SetShader(mat, _lastShaderSet); }
 
         public void SetShader(Material mat, bool classic)
         {
-            var queue = mat.shader.FindPassTagValue(0, new ShaderTagId("Queue"));
+            ShaderTagId queue = mat.shader.FindPassTagValue(0, new ShaderTagId("Queue"));
             if (queue.name.Equals("Transparent"))
-            {
                 mat.shader = classic ? _classicAlphaShader : _revampedAlphaShader;
-            }
             else
-            {
                 mat.shader = classic ? _classicShader : _revampedShader;
-            }
         }
 
         public void SetAllShaders(bool classic)
         {
             _lastShaderSet = classic;
-            foreach (var registeredMat in _textureSetMaterials)
-            {
-                SetShader(registeredMat, classic);
-            }
+            foreach (Material registeredMat in _textureSetMaterials) SetShader(registeredMat, classic);
         }
 
         public void RegisterMaterial(Material mat)
@@ -95,7 +85,7 @@ namespace LSDR.SDK.Visual
         public void DeregisterMaterial(Material mat) { _textureSetMaterials.Remove(mat); }
 
         public void DeregisterAllMaterials() { _textureSetMaterials.Clear(); }
-        
+
         public void SetRandomTextureSetFromDayNumber(int dayNumber)
         {
             // 4 texture sets, add a new one into the mix every 10 days -- hence the mod 41 here

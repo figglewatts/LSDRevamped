@@ -3,7 +3,6 @@ using System.IO;
 using LSDR.InputManagement;
 using LSDR.SDK.Data;
 using LSDR.SDK.Visual;
-using LSDR.Visual;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Torii.Binding;
@@ -18,41 +17,46 @@ namespace LSDR.Game
     [CreateAssetMenu(menuName = "System/SettingsSystem")]
     public class SettingsSystem : ScriptableObject
     {
-        // reference to master audio mixer used for volume controls
-        public AudioMixer MasterMixer;
-
-        public GameSettings Settings { get; private set; }
-
         /// <summary>
-        /// Used to disable player motion, i.e. when linking.
-        /// </summary>
-        [NonSerialized] public bool CanControlPlayer = true;
-
-        /// <summary>
-        /// Used to disable mouse looking, i.e. when paused.
-        /// </summary>
-        [NonSerialized] public bool CanMouseLook = true;
-
-        [NonSerialized] public readonly BindBroker SettingsBindBroker = new BindBroker();
-
-        /// <summary>
-        /// Whether or not we're in VR mode.
-        /// </summary>
-        [NonSerialized] public bool VR;
-
-        public LSDRevampedMod CurrentMod => ModLoaderSystem.GetMod(Settings.CurrentModIndex);
-        public DreamJournal CurrentJournal => CurrentMod.GetJournal(Settings.CurrentJournalIndex);
-
-        /// <summary>
-        /// The framerate of the PS1. Used when framerate limiting is enabled.
+        ///     The framerate of the PS1. Used when framerate limiting is enabled.
         /// </summary>
         public const int FRAMERATE_LIMIT = 20;
+
+        // reference to master audio mixer used for volume controls
+        public AudioMixer MasterMixer;
 
         public ModLoaderSystem ModLoaderSystem;
         public ControlSchemeLoaderSystem ControlSchemeLoader;
 
         // reference to serializer used for loading/saving data
         private readonly ToriiSerializer _serializer = new ToriiSerializer();
+
+        [NonSerialized] public readonly BindBroker SettingsBindBroker = new BindBroker();
+
+        /// <summary>
+        ///     Used to disable player motion, i.e. when linking.
+        /// </summary>
+        [NonSerialized] public bool CanControlPlayer = true;
+
+        /// <summary>
+        ///     Used to disable mouse looking, i.e. when paused.
+        /// </summary>
+        [NonSerialized] public bool CanMouseLook = true;
+
+        /// <summary>
+        ///     Used to disable player gravity, i.e. when initially spawning.
+        /// </summary>
+        [NonSerialized] public bool PlayerGravity = true;
+
+        /// <summary>
+        ///     Whether or not we're in VR mode.
+        /// </summary>
+        [NonSerialized] public bool VR;
+
+        public GameSettings Settings { get; private set; }
+
+        public LSDRevampedMod CurrentMod => ModLoaderSystem.GetMod(Settings.CurrentModIndex);
+        public DreamJournal CurrentJournal => CurrentMod.GetJournal(Settings.CurrentJournalIndex);
 
         // the path to the settings serialized file
         private static string SettingsPath => PathUtil.Combine(Application.persistentDataPath, "settings.json");
@@ -61,7 +65,7 @@ namespace LSDR.Game
         {
             VR = !XRSettings.loadedDeviceName.Equals(string.Empty);
 
-            _serializer.RegisterJsonSerializationSettings(typeof(GameSettings), new JsonSerializerSettings()
+            _serializer.RegisterJsonSerializationSettings(typeof(GameSettings), new JsonSerializerSettings
             {
                 Formatting = Formatting.Indented,
                 SerializationBinder = new DefaultSerializationBinder()
@@ -73,16 +77,11 @@ namespace LSDR.Game
             Debug.Log("Loading game settings...");
 
             // if we're loading over an existing settings object we want to deregister the old one
-            if (Settings != null)
-            {
-                SettingsBindBroker.DeregisterData(Settings);
-            }
+            if (Settings != null) SettingsBindBroker.DeregisterData(Settings);
 
             // check to see if the settings file exists
             if (File.Exists(SettingsPath))
-            {
                 Settings = _serializer.Deserialize<GameSettings>(SettingsPath);
-            }
             else
             {
                 // create the default settings
@@ -105,7 +104,7 @@ namespace LSDR.Game
         }
 
         /// <summary>
-        /// Apply the game settings. This function propagates the given settings to all game systems that need them.
+        ///     Apply the game settings. This function propagates the given settings to all game systems that need them.
         /// </summary>
         public void Apply()
         {
@@ -144,13 +143,13 @@ namespace LSDR.Game
         }
 
         /// <summary>
-        /// Set the music volume.
+        ///     Set the music volume.
         /// </summary>
         /// <param name="val">Music volume in percentage.</param>
         public void SetMusicVolume(float val) { MasterMixer.SetFloat("MusicVolume", volumeToDb(val)); }
 
         /// <summary>
-        /// Set the SFX volume.
+        ///     Set the SFX volume.
         /// </summary>
         /// <param name="val">SFX volume in percentage.</param>
         public void SetSFXVolume(float val) { MasterMixer.SetFloat("SFXVolume", volumeToDb(val)); }

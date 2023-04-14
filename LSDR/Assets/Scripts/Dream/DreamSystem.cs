@@ -1,17 +1,16 @@
 using System;
 using System.Collections;
-using System.IO;
+using System.Collections.Generic;
 using System.Linq;
 using LSDR.Audio;
-using LSDR.Entities;
-using LSDR.Entities.Dream;
+using LSDR.Entities.Player;
 using LSDR.Game;
 using LSDR.InputManagement;
-using LSDR.Lua;
 using LSDR.SDK;
-using LSDR.SDK.Data;
+using LSDR.SDK.DreamControl;
+using LSDR.SDK.Entities;
+using LSDR.SDK.Util;
 using LSDR.SDK.Visual;
-using LSDR.Visual;
 using Torii.Audio;
 using Torii.Console;
 using Torii.Coroutine;
@@ -27,32 +26,8 @@ using UnityEngine.SceneManagement;
 namespace LSDR.Dream
 {
     [CreateAssetMenu(menuName = "System/DreamSystem")]
-    public class DreamSystem : ScriptableObject
+    public class DreamSystem : ScriptableObject, IDreamController
     {
-        public ScenePicker TitleScene;
-        public Material SkyBackground;
-        public GameSaveSystem GameSave;
-        public ControlSchemeLoaderSystem Control;
-        public SettingsSystem SettingsSystem;
-        public MusicSystem MusicSystem;
-        public PauseSystem PauseSystem;
-        public AudioClip LinkSound;
-        public SDK.Data.Dream CurrentDream { get; protected set; }
-        public GameObject CurrentDreamInstance { get; protected set; }
-        public DreamSequence CurrentSequence { get; protected set; }
-        public ToriiEvent OnReturnToTitle;
-        public ToriiEvent OnLevelLoad;
-        public ToriiEvent OnSongChange;
-        public ToriiEvent OnPlayerSpawned;
-        public ToriiEvent OnLevelPreLoad;
-        [NonSerialized] public AudioSource MusicSource;
-        [NonSerialized] public Transform Player;
-
-        [NonSerialized] protected bool _dreamIsEnding = false;
-        [NonSerialized] protected bool _canTransition = true;
-        [NonSerialized] protected bool _currentlyTransitioning = false;
-        [NonSerialized] protected Coroutine _endDreamTimer;
-
         // one in every 6 links switches texture sets
         protected const float CHANCE_TO_SWITCH_TEXTURES_WHEN_LINKING = 6;
         protected const float MIN_SECONDS_IN_DREAM = 90;
@@ -61,33 +36,102 @@ namespace LSDR.Dream
         protected const float FADE_OUT_SECS_REGULAR = 5;
         protected const float FADE_OUT_SECS_FALL = 2.5f;
         protected const float FADE_OUT_SECS_FORCE = 1;
+        public ScenePicker TitleScene;
+        public Material SkyBackground;
+        public GameSaveSystem GameSave;
+        public ControlSchemeLoaderSystem Control;
+        public SettingsSystem SettingsSystem;
+        public MusicSystem MusicSystem;
+        public PauseSystem PauseSystem;
+        public AudioClip LinkSound;
+        public ToriiEvent OnReturnToTitle;
+        public ToriiEvent OnLevelLoad;
+        public ToriiEvent OnSongChange;
+        public ToriiEvent OnPlayerSpawned;
+        public ToriiEvent OnLevelPreLoad;
 
         protected readonly ToriiSerializer _serializer = new ToriiSerializer();
+        [NonSerialized] protected bool _canTransition = true;
+        [NonSerialized] protected bool _currentlyTransitioning;
+
+        [NonSerialized] protected bool _dreamIsEnding;
+        [NonSerialized] protected Coroutine _endDreamTimer;
 
         [NonSerialized] protected string _forcedSpawnID;
+        [NonSerialized] public AudioSource MusicSource;
+        [NonSerialized] public GameObject Player;
+        public SDK.Data.Dream CurrentDream { get; protected set; }
+        public GameObject CurrentDreamInstance { get; protected set; }
+        public DreamSequence CurrentSequence { get; protected set; }
 
-        public void OnEnable()
+        public void EndDream(bool fromFall = false)
         {
-            #if UNITY_EDITOR
-            if (UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode) initialise();
-            #endif
+            if (_dreamIsEnding) return;
+
+            // penalise upper score if ending dream from falling
+            if (fromFall)
+            {
+                CurrentSequence.UpperModifier += FALLING_UPPER_PENALTY;
+                SettingsSystem.CanControlPlayer = false;
+            }
+            else
+                SettingsSystem.PlayerGravity = false;
+
+            ToriiFader.Instance.FadeIn(Color.black, fromFall ? FADE_OUT_SECS_FALL : FADE_OUT_SECS_REGULAR, () =>
+            {
+                CurrentDream = null;
+                GameSave.CurrentJournalSave.SequenceData.Add(CurrentSequence);
+                GameSave.Save();
+                _dreamIsEnding = false;
+                Coroutines.Instance.StartCoroutine(ReturnToTitle());
+            });
+
+            commonEndDream();
         }
 
-        public void Awake()
+        public void Transition(Color fadeCol,
+            SDK.Data.Dream dream = null,
+            bool playSound = true,
+            bool lockControls = false,
+            string spawnPointID = null)
         {
-            initialise();
+            if (!_canTransition) return;
+            _canTransition = false;
+
+            if (dream == null) dream = SettingsSystem.CurrentJournal.GetLinkable(CurrentDream);
+
+            Debug.Log($"Linking to {dream.Name}");
+
+            _currentlyTransitioning = true;
+
+            SettingsSystem.CanControlPlayer = false;
+            _forcedSpawnID = spawnPointID;
+            if (lockControls) Player.GetComponent<PlayerMovement>().SetInputLock();
+
+            // disable pausing to prevent throwing off timers etc
+            PauseSystem.CanPause = false;
+
+            if (playSound) AudioPlayer.Instance.PlayClip(LinkSound, false, "SFX");
+
+            CurrentSequence.Visited.Add(dream);
+
+            ToriiFader.Instance.FadeIn(fadeCol, 1F, () =>
+            {
+                // see if we should switch texture sets
+                if (RandUtil.OneIn(CHANCE_TO_SWITCH_TEXTURES_WHEN_LINKING))
+                    TextureSetter.Instance.SetRandomTextureSetFromDayNumber(GameSave.CurrentJournalSave.DayNumber);
+
+                // if we're locking controls then we're going through a tunnel and want to update player rotation
+                Coroutines.Instance.StartCoroutine(LoadDream(dream, !lockControls));
+            });
         }
 
-        protected void initialise()
-        {
-            DevConsole.Register(this);
-            LuaEngine.RegisterGlobalObject(this, "Dream");
-        }
+        public void Initialise() { DevConsole.Register(this); }
 
         public void BeginDream()
         {
             TextureSetter.Instance.SetRandomTextureSetFromDayNumber(GameSave.CurrentJournalSave.DayNumber);
-            
+
             BeginDream(getRandomDream());
         }
 
@@ -100,36 +144,14 @@ namespace LSDR.Dream
             float secondsInDream = RandUtil.Float(MIN_SECONDS_IN_DREAM, MAX_SECONDS_IN_DREAM);
             _endDreamTimer = Coroutines.Instance.StartCoroutine(EndDreamAfterSeconds(secondsInDream));
 
-            ToriiFader.Instance.FadeIn(Color.black, 3, () => Coroutines.Instance.StartCoroutine(LoadDream(dream)));
+            ToriiFader.Instance.FadeIn(Color.black, 3, () => Coroutines.Instance.StartCoroutine(
+                LoadDream(dream, false)));
             CurrentSequence = new DreamSequence();
             CurrentSequence.Visited.Add(dream);
         }
 
-        public void EndDream(bool fromFall = false)
-        {
-            if (_dreamIsEnding) return;
-
-            commonEndDream();
-
-            // penalise upper score if ending dream from falling
-            if (fromFall)
-            {
-                CurrentSequence.UpperModifier += FALLING_UPPER_PENALTY;
-                SettingsSystem.CanControlPlayer = false;
-            }
-
-            ToriiFader.Instance.FadeIn(Color.black, fromFall ? FADE_OUT_SECS_FALL : FADE_OUT_SECS_REGULAR, () =>
-            {
-                CurrentDream = null;
-                GameSave.CurrentJournalSave.SequenceData.Add(CurrentSequence);
-                GameSave.Save();
-                _dreamIsEnding = false;
-                Coroutines.Instance.StartCoroutine(ReturnToTitle());
-            });
-        }
-
         /// <summary>
-        /// End dream without advancing the day number or adding progress.
+        ///     End dream without advancing the day number or adding progress.
         /// </summary>
         [Console]
         public void ForceEndDream()
@@ -151,83 +173,24 @@ namespace LSDR.Dream
             yield return new WaitForSeconds(seconds);
 
             // don't end the dream if we happen to be linking when the timer expires
-            while (_currentlyTransitioning)
-            {
-                yield return null;
-            }
+            while (_currentlyTransitioning) yield return null;
 
             // if the dream is already ending (perhaps we fell) then don't end it again
-            if (_dreamIsEnding)
-            {
-                yield break;
-            }
+            if (_dreamIsEnding) yield break;
 
             EndDream();
-        }
-
-        public void ApplyEnvironment(DreamEnvironment environment)
-        {
-            RenderSettings.fogColor = environment.FogColor;
-            SkyBackground.SetColor("_FogColor", environment.FogColor);
-            if (Camera.main != null) Camera.main.backgroundColor = environment.SkyColor;
-            SkyBackground.SetColor("_SkyColor", environment.SkyColor);
-            Shader.SetGlobalInt("_SubtractiveFog", environment.SubtractiveFog ? 1 : 0);
-
-            // TODO: apply the rest of the environment
-        }
-
-        public void Transition(Color fadeCol,
-            SDK.Data.Dream dream = null,
-            bool playSound = true,
-            string spawnPointID = null)
-        {
-            if (!_canTransition) return;
-
-            Debug.Log($"Linking to {dream.Name}");
-
-            _currentlyTransitioning = true;
-
-            SettingsSystem.CanControlPlayer = false;
-            _forcedSpawnID = spawnPointID;
-
-            // disable pausing to prevent throwing off timers etc
-            PauseSystem.CanPause = false;
-
-            if (playSound)
-            {
-                AudioPlayer.Instance.PlayClip(LinkSound, false, "SFX");
-            }
-
-            CurrentSequence.Visited.Add(dream);
-
-            ToriiFader.Instance.FadeIn(fadeCol, 1F, () =>
-            {
-                // see if we should switch texture sets
-                if (RandUtil.OneIn(CHANCE_TO_SWITCH_TEXTURES_WHEN_LINKING))
-                {
-                    TextureSetter.Instance.SetRandomTextureSetFromDayNumber(GameSave.CurrentJournalSave.DayNumber);
-                }
-
-                Coroutines.Instance.StartCoroutine(LoadDream(dream));
-            });
         }
 
         public IEnumerator ReturnToTitle()
         {
             Debug.Log("Loading title screen");
 
-            if (MusicSource != null && MusicSource.isPlaying)
-            {
-                MusicSource.Stop();
-            }
-            
+            if (MusicSource != null && MusicSource.isPlaying) MusicSource.Stop();
+
             TextureSetter.Instance.DeregisterAllMaterials();
 
-            var asyncLoad = SceneManager.LoadSceneAsync(TitleScene.ScenePath);
-            while (!asyncLoad.isDone)
-            {
-                yield return null;
-            }
+            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(TitleScene.ScenePath);
+            while (!asyncLoad.isDone) yield return null;
 
             ResourceManager.ClearLifespan("scene");
 
@@ -240,35 +203,56 @@ namespace LSDR.Dream
             ToriiFader.Instance.FadeOut(1F);
         }
 
-        public IEnumerator LoadDream(SDK.Data.Dream dream)
+        public IEnumerator LoadDream(SDK.Data.Dream dream, bool transitioning)
         {
             Debug.Log($"Loading dream '{dream.Name}'");
 
-            if (MusicSource != null && MusicSource.isPlaying)
-            {
-                MusicSource.Stop();
-            }
-
-            OnLevelPreLoad.Raise();
+            // disable falling so we don't go through level geometry
+            SettingsSystem.PlayerGravity = false;
 
             // unload the last scene (if it existed)
             if (CurrentDream != null)
             {
                 Destroy(CurrentDreamInstance);
                 TextureSetter.Instance.DeregisterAllMaterials();
+                EntityIndex.Instance.DeregisterAllEntities();
             }
-            
+
+            CurrentDream = dream;
+
+            if (!SceneManager.GetActiveScene().name.Equals("load_mod", StringComparison.InvariantCulture))
+            {
+                AsyncOperation loadSceneOp = SceneManager.LoadSceneAsync("load_mod");
+                yield return loadSceneOp;
+            }
+
+            if (MusicSource != null && MusicSource.isPlaying) MusicSource.Stop();
+
+            OnLevelPreLoad.Raise();
+
             CurrentDreamInstance = Instantiate(dream.DreamPrefab);
             yield return null;
 
             ResourceManager.ClearLifespan("scene");
 
-            CurrentDream = dream;
+            Player = GameObject.FindWithTag("Player");
+            if (Player == null) Debug.LogError("Unable to find player in scene!");
+            registerCommonEntities();
 
-            ApplyEnvironment(dream.ChooseEnvironment(GameSave.CurrentJournalSave.DayNumber));
+            // if we're not transitioning (via a link) then set the orientation
+            // because we're beginning the dream
+            spawnPlayerInDream(transitioning == false);
+
+            dream.ChooseEnvironment(GameSave.CurrentJournalSave.DayNumber).Apply(SkyBackground);
 
             SettingsSystem.CanControlPlayer = true;
             SettingsSystem.CanMouseLook = true;
+            SettingsSystem.PlayerGravity = true;
+
+            PlayerMovement playerMovement = Player.GetComponent<PlayerMovement>();
+            playerMovement.CanLink = true;
+            playerMovement.ClearInputLock();
+            _canTransition = true;
 
             OnLevelLoad.Raise();
             OnSongChange.Raise();
@@ -281,36 +265,93 @@ namespace LSDR.Dream
             ToriiFader.Instance.FadeOut(1F, () => _currentlyTransitioning = false);
         }
 
-        public void SpawnPlayer(GameObject player)
-        {
-            Player = player.transform;
-            OnPlayerSpawned.Raise();
-        }
-
-        public Shader GetShader(bool alpha)
-        {
-            if (alpha)
-            {
-                if (!Application.isPlaying) return Shader.Find("LSDR/RevampedDiffuseAlphaBlend"); // for level editor
-                return SettingsSystem.Settings.UseClassicShaders
-                    ? Shader.Find("LSDR/ClassicDiffuseAlphaBlend")
-                    : Shader.Find("LSDR/RevampedDiffuseAlphaBlend");
-            }
-            else
-            {
-                if (!Application.isPlaying) return Shader.Find("LSDR/RevampedDiffuse"); // for level editor
-                return SettingsSystem.Settings.UseClassicShaders
-                    ? Shader.Find("LSDR/ClassicDiffuse")
-                    : Shader.Find("LSDR/RevampedDiffuse");
-            }
-        }
-
         [Console]
         public void SkipSong()
         {
             if (CurrentDream == null) return;
-            
+
             OnSongChange.Raise();
+        }
+
+        protected SDK.Data.Dream getRandomDream()
+        {
+            if (GameSave.CurrentJournalSave.DayNumber == 1)
+                return SettingsSystem.CurrentJournal.GetFirstDream();
+            return SettingsSystem.CurrentJournal.GetDreamFromGraph(GameSave.CurrentJournalSave.LastGraphX,
+                GameSave.CurrentJournalSave.LastGraphY);
+        }
+
+        protected void registerCommonEntities() { EntityIndex.Instance.Register("__player", Player); }
+
+        protected void commonEndDream()
+        {
+            _dreamIsEnding = true;
+            _canTransition = false;
+
+            Player = null;
+
+            // disable pausing to prevent throwing off timers etc
+            PauseSystem.CanPause = false;
+
+            Debug.Log("Ending dream");
+
+            // make sure the dream end timer stops
+            if (_endDreamTimer != null)
+            {
+                Coroutines.Instance.StopCoroutine(_endDreamTimer);
+                _endDreamTimer = null;
+            }
+        }
+
+        protected void spawnPlayerInDream(bool setOrientation = false)
+        {
+            PlayerSpawn[] allSpawns = CurrentDreamInstance.GetComponentsInChildren<PlayerSpawn>();
+            if (!allSpawns.Any())
+            {
+                Debug.LogError("No spawn points in dream! Unable to spawn player.");
+                return;
+            }
+
+            // handle a designated SpawnPoint being used
+            if (!string.IsNullOrEmpty(_forcedSpawnID))
+            {
+                try
+                {
+                    PlayerSpawn spawn =
+                        allSpawns.First(e => e.ID.Equals(_forcedSpawnID, StringComparison.InvariantCulture));
+                    spawn.Spawn(Player.transform, setOrientation);
+                    return;
+                }
+                catch (InvalidOperationException)
+                {
+                    Debug.LogError($"Unable to find SpawnPoint with ID '{_forcedSpawnID}'");
+                    throw;
+                }
+            }
+
+            // spawn in a first day-designated spawn if it's the first day
+            if (GameSave.CurrentJournalSave.DayNumber == 1)
+            {
+                List<PlayerSpawn> firstDaySpawns = allSpawns.Where(s => s.DayOneSpawn).ToList();
+                if (firstDaySpawns.Any())
+                {
+                    RandUtil.RandomListElement(firstDaySpawns).Spawn(Player.transform, setOrientation);
+                    return;
+                }
+            }
+
+            // make sure we choose a spawn point that isn't a tunnel entrance
+            List<PlayerSpawn> spawnPoints = allSpawns.Where(s => !s.TunnelEntrance).ToList();
+            if (spawnPoints.Any())
+            {
+                RandUtil.RandomListElement(spawnPoints).Spawn(Player.transform, setOrientation);
+                return;
+            }
+
+            // otherwise we'll have to spawn on a tunnel entrance... this shouldn't happen so warn the player
+            Debug.LogWarning(
+                "Unable to find a spawn point that isn't a tunnel entrance -- using a tunnel entrance instead.");
+            RandUtil.RandomListElement(allSpawns).Spawn(Player.transform, setOrientation);
         }
 
 #region Console Commands
@@ -333,7 +374,7 @@ namespace LSDR.Dream
                 return;
             }
 
-            ApplyEnvironment(CurrentDream.Environments[idx]);
+            CurrentDream.Environments[idx].Apply(SkyBackground);
         }
 
         [Console]
@@ -359,7 +400,7 @@ namespace LSDR.Dream
         [Console]
         public void LoadDream(string dreamName)
         {
-            var dream = SettingsSystem.CurrentJournal.Dreams.FirstOrDefault(d =>
+            SDK.Data.Dream dream = SettingsSystem.CurrentJournal.Dreams.FirstOrDefault(d =>
                 d.Name.Equals(dreamName, StringComparison.InvariantCulture));
             if (dream == null)
             {
@@ -368,19 +409,16 @@ namespace LSDR.Dream
             }
 
             if (CurrentDream == null)
-            {
                 BeginDream(dream);
-            }
             else
-            {
                 Transition(Color.black, dream, false);
-            }
         }
 
         [Console]
         public void PlaySong(string songPath)
         {
-            var clip = ResourceManager.Load<ToriiAudioClip>(PathUtil.Combine(Application.streamingAssetsPath, "music",
+            ToriiAudioClip clip = ResourceManager.Load<ToriiAudioClip>(PathUtil.Combine(Application.streamingAssetsPath,
+                "music",
                 songPath), "scene");
             MusicSource.Stop();
             MusicSource.clip = clip;
@@ -389,88 +427,5 @@ namespace LSDR.Dream
         }
 
 #endregion
-
-        protected LSDR.SDK.Data.Dream getRandomDream()
-        {
-            if (GameSave.CurrentJournalSave.DayNumber == 1)
-            {
-                return SettingsSystem.CurrentJournal.GetFirstDream();
-            }
-            else
-            {
-                return SettingsSystem.CurrentJournal.GetDreamFromGraph(GameSave.CurrentJournalSave.LastGraphX,
-                    GameSave.CurrentJournalSave.LastGraphY);
-            }
-        }
-
-        protected void commonEndDream()
-        {
-            _dreamIsEnding = true;
-            _canTransition = false;
-
-            // disable pausing to prevent throwing off timers etc
-            PauseSystem.CanPause = false;
-
-            Debug.Log("Ending dream");
-
-            // make sure the dream end timer stops
-            if (_endDreamTimer != null)
-            {
-                Coroutines.Instance.StopCoroutine(_endDreamTimer);
-                _endDreamTimer = null;
-            }
-        }
-        
-        
-
-        protected void spawnPlayerInDream(LevelEntities entities)
-        {
-            var allSpawns = entities.OfType<SpawnPoint>();
-            if (!allSpawns.Any())
-            {
-                Debug.LogError("No spawn points in dream! Unable to spawn player.");
-                return;
-            }
-
-            // handle a designated SpawnPoint being used
-            if (!string.IsNullOrEmpty(_forcedSpawnID))
-            {
-                try
-                {
-                    SpawnPoint spawn = allSpawns.First(e => e.EntityID == _forcedSpawnID);
-                    spawn.Spawn();
-                    return;
-                }
-                catch (InvalidOperationException)
-                {
-                    Debug.LogError($"Unable to find SpawnPoint with ID '{_forcedSpawnID}'");
-                    throw;
-                }
-            }
-
-            // spawn in a first day-designated spawn if it's the first day
-            if (GameSave.CurrentJournalSave.DayNumber == 1)
-            {
-                var firstDaySpawns = allSpawns.Where(s => s.DayOneSpawn).ToList();
-                if (firstDaySpawns.Any())
-                {
-                    RandUtil.RandomListElement(firstDaySpawns).Spawn();
-                    return;
-                }
-            }
-
-            // make sure we choose a spawn point that isn't a tunnel entrance
-            var spawnPoints = allSpawns.Where(s => !s.TunnelEntrance).ToList();
-            if (spawnPoints.Any())
-            {
-                RandUtil.RandomListElement(spawnPoints).Spawn();
-                return;
-            }
-
-            // otherwise we'll have to spawn on a tunnel entrance... this shouldn't happen so warn the player
-            Debug.LogWarning(
-                "Unable to find a spawn point that isn't a tunnel entrance -- using a tunnel entrance instead.");
-            RandUtil.RandomListElement(allSpawns).Spawn();
-        }
     }
 }

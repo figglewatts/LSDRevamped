@@ -1,19 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using LSDR.Lua.Actions;
+using LSDR.SDK.Lua;
+using LSDR.SDK.Lua.Actions;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Loaders;
-using Torii.Util;
 using UnityEngine;
 
 namespace LSDR.Lua
 {
-    public static class LuaEngine
+    public class LuaEngine : ILuaEngine
     {
-        private static readonly Dictionary<string, object> _registeredObjects;
+        protected readonly Dictionary<string, object> _registeredObjects;
 
-        static LuaEngine()
+        public LuaEngine()
         {
             _registeredObjects = new Dictionary<string, object>();
 
@@ -26,7 +26,7 @@ namespace LSDR.Lua
             createConverters();
         }
 
-        public static Script CreateBaseAPI()
+        public Script CreateBaseAPI()
         {
             Script script = new Script(CoreModules.Preset_SoftSandbox)
             {
@@ -37,64 +37,49 @@ namespace LSDR.Lua
                 }
             };
 
-            createStaticAPI<UnityAPI>(script);
-            createStaticAPI<MiscAPI>(script);
-            createStaticAPI<LSDAPI>(script);
-            LSDAPI.Register();
-            createNamespacedStaticAPI<ActionPredicates>(script, "Condition");
-            createNamespacedStaticAPI<ResourceAPI>(script, "Resources");
-            createNamespacedStaticAPI<ColorAPI>(script, "Color");
+            createStaticAPI(new UnityAPI(), script);
+            createStaticAPI(new MiscAPI(), script);
+            createStaticAPI(new LSDAPI(), script);
+            createNamespacedStaticAPI(new ActionPredicates(), script, "Condition");
+            createNamespacedStaticAPI(new ColorAPI(), script, "Color");
 
             createRegisteredGlobalObjects(script);
 
             return script;
         }
 
-        public static void LoadScript(string scriptPath, Script script)
+        public void RegisterEnum<T>() where T : Enum
         {
-            try
-            {
-                script.DoFile(PathUtil.Combine(Application.streamingAssetsPath, scriptPath));
-            }
-            catch (InternalErrorException e)
-            {
-                Console.WriteLine(e.ToString());
-            }
-            catch (SyntaxErrorException e)
-            {
-                Console.WriteLine($"Lua Syntax Error: {e.DecoratedMessage}");
-            }
-            catch (ScriptRuntimeException e)
-            {
-                Console.WriteLine($"Lua Script Error: {e.DecoratedMessage}");
-            }
+            UserData.RegisterType<T>();
+            DynValue userData = UserData.CreateStatic(typeof(T));
+            RegisterGlobalObject(userData, typeof(T).Name);
         }
 
-        public static void RegisterGlobalObject(object obj, string alias = "")
+        public void RegisterGlobalObject(object obj, string alias = "")
         {
-            var objName = string.IsNullOrEmpty(alias)
+            string objName = string.IsNullOrEmpty(alias)
                 ? obj.GetType().Name
                 : alias;
             _registeredObjects[objName] = obj;
         }
 
-        private static void createRegisteredGlobalObjects(Script script)
+        private void createRegisteredGlobalObjects(Script script)
         {
-            foreach (var registeredObj in _registeredObjects)
+            foreach (KeyValuePair<string, object> registeredObj in _registeredObjects)
             {
-                var objName = registeredObj.Key;
-                var obj = registeredObj.Value;
+                string objName = registeredObj.Key;
+                object obj = registeredObj.Value;
                 script.Globals[objName] = obj;
             }
         }
 
-        private static void createConverters()
+        private void createConverters()
         {
             // Action
             Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Function, typeof(Action),
                 value =>
                 {
-                    var func = value.Function;
+                    Closure func = value.Function;
                     return new Action(() => func.Call());
                 }
             );
@@ -104,7 +89,7 @@ namespace LSDR.Lua
                 typeof(Func<bool>),
                 value =>
                 {
-                    var func = value.Function;
+                    Closure func = value.Function;
                     return new Func<bool>(() => func.Call().Boolean);
                 }
             );
@@ -114,19 +99,19 @@ namespace LSDR.Lua
                 dynVal =>
                 {
                     Table table = dynVal.Table;
-                    float x = (float)((Double)table[1]);
-                    float y = (float)((Double)table[2]);
-                    float z = (float)((Double)table[3]);
+                    float x = (float)(double)table[1];
+                    float y = (float)(double)table[2];
+                    float z = (float)(double)table[3];
                     return new Vector3(x, y, z);
                 }
             );
             Script.GlobalOptions.CustomConverters.SetClrToScriptCustomConversion<Vector3>(
                 (script, vector) =>
                 {
-                    DynValue x = DynValue.NewNumber((double)vector.x);
-                    DynValue y = DynValue.NewNumber((double)vector.y);
-                    DynValue z = DynValue.NewNumber((double)vector.z);
-                    DynValue dynVal = DynValue.NewTable(script, new DynValue[] {x, y, z});
+                    DynValue x = DynValue.NewNumber(vector.x);
+                    DynValue y = DynValue.NewNumber(vector.y);
+                    DynValue z = DynValue.NewNumber(vector.z);
+                    DynValue dynVal = DynValue.NewTable(script, x, y, z);
                     dynVal.Table.MetaTable = DynValue.FromObject(script, new Dictionary<string, object>
                     {
                         {
@@ -178,49 +163,52 @@ namespace LSDR.Lua
                 dynVal =>
                 {
                     Table table = dynVal.Table;
-                    float r = (float)((Double)table[1]);
-                    float g = (float)((Double)table[2]);
-                    float b = (float)((Double)table[3]);
-                    float a = (float)((Double)table[4]);
+                    float r = (float)(double)table[1];
+                    float g = (float)(double)table[2];
+                    float b = (float)(double)table[3];
+                    float a = (float)(double)table[4];
                     return new Color(r, g, b, a);
                 }
             );
             Script.GlobalOptions.CustomConverters.SetClrToScriptCustomConversion<Color>(
                 (script, color) =>
                 {
-                    DynValue r = DynValue.NewNumber((double)color.r);
-                    DynValue g = DynValue.NewNumber((double)color.g);
-                    DynValue b = DynValue.NewNumber((double)color.b);
-                    DynValue a = DynValue.NewNumber((double)color.a);
-                    DynValue dynVal = DynValue.NewTable(script, new DynValue[] {r, g, b, a});
+                    DynValue r = DynValue.NewNumber(color.r);
+                    DynValue g = DynValue.NewNumber(color.g);
+                    DynValue b = DynValue.NewNumber(color.b);
+                    DynValue a = DynValue.NewNumber(color.a);
+                    DynValue dynVal = DynValue.NewTable(script, r, g, b, a);
                     dynVal.Table.MetaTable = DynValue.FromObject(script, new Dictionary<string, object>
                     {
                         {
                             "__tostring", new Func<Table, string>(t => $"(R: {r}, G: {g}, B: {b}, A: {a})")
-                        },
+                        }
                     }).Table;
                     return dynVal;
                 }
             );
         }
 
-        private static void createStaticAPI<T>(Script script)
+        private void createStaticAPI<T>(T instance, Script script) where T : ILuaAPI
         {
-            MethodInfo[] api = typeof(T).GetMethods(BindingFlags.Static | BindingFlags.Public);
-            foreach (var method in api)
-            {
-                script.Globals[method.Name] = method;
-            }
+            Type t = typeof(T);
+
+            instance.Register(this);
+
+            MethodInfo[] api = t.GetMethods(BindingFlags.Instance | BindingFlags.Public);
+            foreach (MethodInfo method in api) script.Globals[method.Name] = method;
         }
 
-        private static void createNamespacedStaticAPI<T>(Script script, string namespace_)
+        private void createNamespacedStaticAPI<T>(T instance, Script script, string namespace_) where T : ILuaAPI
         {
             Dictionary<string, MethodInfo> apiTableData = new Dictionary<string, MethodInfo>();
-            MethodInfo[] api = typeof(T).GetMethods(BindingFlags.Static | BindingFlags.Public);
-            foreach (var method in api)
-            {
-                apiTableData[method.Name] = method;
-            }
+
+            Type t = typeof(T);
+
+            instance.Register(this);
+
+            MethodInfo[] api = t.GetMethods(BindingFlags.Static | BindingFlags.Public);
+            foreach (MethodInfo method in api) apiTableData[method.Name] = method;
 
             DynValue apiTable = DynValue.FromObject(script, apiTableData);
             script.Globals[namespace_] = apiTable;

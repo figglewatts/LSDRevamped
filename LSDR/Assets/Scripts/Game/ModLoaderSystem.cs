@@ -9,9 +9,8 @@ namespace LSDR.Game
     [CreateAssetMenu(menuName = "System/ModLoaderSystem")]
     public class ModLoaderSystem : ScriptableObject
     {
-        public IEnumerable<LSDRevampedMod> Mods => _loadedMods;
-
         protected readonly List<LSDRevampedMod> _loadedMods = new List<LSDRevampedMod>();
+        public IEnumerable<LSDRevampedMod> Mods => _loadedMods;
 
         protected string _modsDirectory => Path.Combine(Application.streamingAssetsPath, "mods");
 
@@ -20,13 +19,8 @@ namespace LSDR.Game
         public LSDRevampedMod GetMod(int modIdx)
         {
             if (modIdx >= _loadedMods.Count)
-            {
                 modIdx = _loadedMods.Count - 1;
-            }
-            else if (modIdx < 0)
-            {
-                modIdx = 0;
-            }
+            else if (modIdx < 0) modIdx = 0;
 
             return _loadedMods[modIdx];
         }
@@ -41,25 +35,37 @@ namespace LSDR.Game
                 yield break;
             }
 
-            var modFiles = Directory.GetFiles(_modsDirectory, "*.lsdrmod", SearchOption.AllDirectories);
-            foreach (var modFile in modFiles)
+            string[] modFiles = Directory.GetFiles(_modsDirectory, "*.lsdrmod", SearchOption.AllDirectories);
+            foreach (string modFile in modFiles)
             {
-                var bundleLoadRequest = AssetBundle.LoadFromFileAsync(modFile);
+                AssetBundleCreateRequest bundleLoadRequest = AssetBundle.LoadFromFileAsync(modFile);
                 yield return bundleLoadRequest;
 
-                var mods = bundleLoadRequest.assetBundle.LoadAllAssets<LSDRevampedMod>();
+                AssetBundle loadedBundle = bundleLoadRequest.assetBundle;
+                if (loadedBundle == null)
+                {
+                    Debug.LogWarning($"Unable to load mod '{modFile}', error loading asset bundle");
+                    continue;
+                }
+
+                AssetBundleRequest assetLoadRequest =
+                    bundleLoadRequest.assetBundle.LoadAllAssetsAsync<LSDRevampedMod>();
+                yield return assetLoadRequest;
+
+                Object[] mods = assetLoadRequest.allAssets;
                 if (mods.Length > 1)
                 {
                     Debug.LogWarning($"Unable to load mod '{modFile}', multiple LSDRevampedMods in bundle");
                     continue;
                 }
-                else if (mods.Length == 0)
+
+                if (mods.Length == 0)
                 {
                     Debug.LogWarning($"Unable to load mod '{modFile}', no LSDRevampedMod in bundle");
                     continue;
                 }
 
-                _loadedMods.Add(mods[0]);
+                _loadedMods.Add((LSDRevampedMod)mods[0]);
             }
         }
     }

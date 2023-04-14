@@ -30,7 +30,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1137826101587610}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.119, z: 0}
+  m_LocalPosition: {x: 0, y: 0.369, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4202393580413338}
@@ -45,7 +45,7 @@ Camera:
   m_GameObject: {fileID: 1137826101587610}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 2
+  m_ClearFlags: 1
   m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
@@ -185,7 +185,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1460860446963084}
   m_LocalRotation: {x: -0, y: -1, z: -0, w: -0.00000008940697}
-  m_LocalPosition: {x: 0.166, y: 0.23, z: 8.532}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4648841864641062}
@@ -221,11 +221,11 @@ CharacterController:
   serializedVersion: 2
   m_Height: 0.5
   m_Radius: 0.08
-  m_SlopeLimit: 45
+  m_SlopeLimit: 46
   m_StepOffset: 0.2
-  m_SkinWidth: 0.08
+  m_SkinWidth: 0.06
   m_MinMoveDistance: 0
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0.25, z: 0}
 --- !u!114 &114447734073296280
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -248,6 +248,8 @@ MonoBehaviour:
   RunMoveSpeed: 2.4
   StepTimeSeconds: 0.25
   HeadBobAmount: 0.05
+  DebugLog: 0
+  CanLink: 1
 --- !u!114 &114219709262752180
 MonoBehaviour:
   m_ObjectHideFlags: 0

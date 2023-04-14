@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using libLSD.Formats;
 using libLSD.Formats.Packets;
+using LSDR.SDK.Visual;
 using UnityEditor;
 using UnityEngine;
 
@@ -150,6 +152,7 @@ namespace LSDR.SDK.Editor.AssetImporters
             mf.sharedMesh = mesh;
             MeshRenderer mr = meshObj.AddComponent<MeshRenderer>();
             meshObj.transform.SetParent(_rootObject.transform);
+            meshObj.AddComponent<ShaderSetter>();
 
             if (mesh.subMeshCount > 1)
             {
@@ -335,12 +338,20 @@ namespace LSDR.SDK.Editor.AssetImporters
                     // add the first frame at the end, to ensure good looping
                     var firstFrame = keyframes[0];
                     keyframes.Add(new Keyframe(tod.Frames.Length * frameTime, firstFrame.value));
+
                     var curve = new AnimationCurve(keyframes.ToArray());
 
-                    for (int i = 0; i < keyframes.Count; i++)
+                    for (int i = 0; i < curve.keys.Length; i++)
                     {
-                        AnimationUtility.SetKeyLeftTangentMode(curve, i, AnimationUtility.TangentMode.Constant);
-                        AnimationUtility.SetKeyRightTangentMode(curve, i, AnimationUtility.TangentMode.Constant);
+                        try
+                        {
+                            AnimationUtility.SetKeyLeftTangentMode(curve, i, AnimationUtility.TangentMode.Constant);
+                            AnimationUtility.SetKeyRightTangentMode(curve, i, AnimationUtility.TangentMode.Constant);
+                        }
+                        catch (IndexOutOfRangeException e)
+                        {
+                            // ignore it, as for some reason it's erroneously generated...
+                        }
                     }
 
                     AnimationUtility.SetEditorCurve(clip,

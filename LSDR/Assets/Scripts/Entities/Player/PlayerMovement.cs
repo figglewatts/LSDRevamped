@@ -2,6 +2,7 @@ using System.Collections;
 using LSDR.Dream;
 using LSDR.Game;
 using LSDR.InputManagement;
+using LSDR.SDK.Util;
 using Torii.Audio;
 using Torii.Console;
 using Torii.Resource;
@@ -26,20 +27,21 @@ namespace LSDR.Entities.Player
         [Console] public float StepTimeSeconds = 0.25f;
 
         [Console] public float HeadBobAmount = 0.1f;
+        [Console] public bool DebugLog;
+        public bool CanLink = true;
 
-        private CharacterController _controller;
-        private Vector3 _stepDir;
-        private FixedTimeSince _timeColliding;
-        private FixedTimeSince _lastInputTime;
-        private bool _canLink = true;
-        private bool _currentlyStepping;
-        private bool _currentlySprinting;
-        private Coroutine _stepCoroutine;
-
-        private float _sineStep;
+        protected CharacterController _controller;
+        protected bool _currentlySprinting;
+        protected bool _currentlyStepping;
 
         // TODO: better footstep sounds
-        private ToriiAudioClip _footstepClip;
+        protected ToriiAudioClip _footstepClip;
+        protected float _initialCameraOffset;
+        protected Vector2 _inputDir;
+        protected bool _inputLocked;
+        protected Vector2 _lockedInput;
+
+        protected FixedTimeSince _timeColliding;
 
         public void Start()
         {
@@ -47,54 +49,55 @@ namespace LSDR.Entities.Player
             _footstepClip = ResourceManager.Load<ToriiAudioClip>(
                 PathUtil.Combine(Application.streamingAssetsPath, "sfx", "SE_00003.ogg"), "global");
 
-            // this is the amount we want to travel along the head bob sine wave every second
-            _sineStep = 2 * Mathf.PI / StepTimeSeconds;
+            _initialCameraOffset = Camera.localPosition.y;
+
             resetHeadbob();
 
             DevConsole.Register(this);
         }
 
-        public void OnDestroy() { DevConsole.Deregister(this); }
-
         public void Update()
         {
             // if we're not grounded we want to apply gravity
-            if (!_controller.isGrounded)
-            {
+            if (!_controller.isGrounded && Settings.PlayerGravity)
                 _controller.Move(Physics.gravity * (GravityMultiplier * Time.deltaTime));
-            }
 
             // exit early if movement is disabled
-            if (!Settings.CanControlPlayer) return;
+            if (!_inputLocked && !Settings.CanControlPlayer) return;
 
-            Vector2 inputDir = getInputDirection();
+            _inputDir = getInputDirection();
 
-            if (inputDir == Vector2.zero && !_currentlyStepping)
+            if (_inputDir == Vector2.zero && !_currentlyStepping)
             {
                 // reset head bob if we're not moving
                 resetHeadbob();
             }
 
             // check to see if we should sprint
-            if (ControlScheme.Current.Actions.Run.IsPressed && canStartSprinting())
-            {
-                _currentlySprinting = true;
-            }
+            if (ControlScheme.Current.Actions.Run.IsPressed && canStartSprinting()) _currentlySprinting = true;
 
             // perform a single step
-            if (!_currentlyStepping && inputDir.sqrMagnitude > 0)
+            if (!_currentlyStepping && _inputDir.sqrMagnitude > 0)
             {
                 float moveSpeed = _currentlySprinting ? RunMoveSpeed : WalkMoveSpeed;
-                _stepCoroutine = StartCoroutine(takeStep(inputDir, moveSpeed));
+                StartCoroutine(takeStep(_inputDir, moveSpeed));
             }
 
             // if run is not pressed and no movement keys are pressed, we should no longer sprint
             if (!ControlScheme.Current.Actions.Run.IsPressed
-                && !ControlScheme.Current.Actions.MoveY.IsPressed && !ControlScheme.Current.Actions.MoveX.IsPressed)
-            {
+                && !ControlScheme.Current.Actions.MoveY.IsPressed)
                 _currentlySprinting = false;
-            }
         }
+
+        public void OnDestroy() { DevConsole.Deregister(this); }
+
+        public void SetInputLock()
+        {
+            _inputLocked = true;
+            _lockedInput = _inputDir;
+        }
+
+        public void ClearInputLock() { _inputLocked = false; }
 
         private IEnumerator takeStep(Vector2 input, float speedUnitsPerSecond)
         {
@@ -127,10 +130,7 @@ namespace LSDR.Entities.Player
             moveController(input, speedUnitsPerSecond);
 
             // if we're sprinting we want to play the footstep sound on the downstep too
-            if (_currentlySprinting)
-            {
-                AudioPlayer.Instance.PlayClip(_footstepClip, false, "SFX");
-            }
+            if (_currentlySprinting) AudioPlayer.Instance.PlayClip(_footstepClip, false, "SFX");
 
             _currentlyStepping = false;
         }
@@ -147,16 +147,16 @@ namespace LSDR.Entities.Player
             // scale it so it's not massive
             yAddition *= HeadBobAmount;
 
-            float newCameraY = (_controller.height / 2f) + yAddition;
+            float newCameraY = _initialCameraOffset + yAddition;
             Camera.localPosition = new Vector3(Camera.localPosition.x, newCameraY, Camera.localPosition.z);
         }
 
         /// <summary>
-        /// Reset the head bob sine wave position to the start.
+        ///     Reset the head bob sine wave position to the start.
         /// </summary>
         private void resetHeadbob()
         {
-            Camera.localPosition = new Vector3(Camera.localPosition.x, _controller.height / 2f, Camera.localPosition.z);
+            Camera.localPosition = new Vector3(Camera.localPosition.x, _initialCameraOffset, Camera.localPosition.z);
         }
 
         private void moveController(Vector2 input, float speedUnitsPerSecond)
@@ -171,16 +171,14 @@ namespace LSDR.Entities.Player
                 moveAmount = Vector3.zero;
 
                 // check to see if we should link
-                if (_timeColliding > LinkDelay && _canLink)
+                if (_timeColliding > LinkDelay && CanLink)
                 {
-                    _canLink = false;
+                    CanLink = false;
                     DreamSystem.Transition(RandUtil.RandColor());
                 }
             }
             else
-            {
                 _timeColliding = 0;
-            }
 
             // apply the movement speed
             moveAmount *= speedUnitsPerSecond;
@@ -190,26 +188,34 @@ namespace LSDR.Entities.Player
         }
 
         /// <summary>
-        /// Perform a bunch of checks to see if we are trying to move into a wall.
+        ///     Perform a bunch of checks to see if we are trying to move into a wall.
         /// </summary>
         /// <param name="desiredMove">The vector we're trying to move along.</param>
         /// <returns>True if we are moving into a wall, false otherwise.</returns>
         private bool movingIntoWall(Vector3 desiredMove)
         {
-            float stepTopYPos = (transform.position.y - _controller.height / 2f) + _controller.stepOffset +
-                                _controller.skinWidth;
+            float stepTopYPos = transform.position.y + _controller.stepOffset + _controller.skinWidth;
             Vector3 stepTopPos = new Vector3(transform.position.x, stepTopYPos, transform.position.z);
-            Vector3 capsuleTop = new Vector3(transform.position.x, transform.position.y + _controller.height / 2f,
+            Vector3 capsuleBottom = new Vector3(transform.position.x, transform.position.y + _controller.radius,
                 transform.position.z);
-            Vector3 capsuleBottom = new Vector3(transform.position.x, transform.position.y - _controller.height / 2f,
+            Vector3 capsuleTop = new Vector3(transform.position.x, capsuleBottom.y + _controller.height,
                 transform.position.z);
+
+            if (DebugLog)
+                Debug.Log($"1. StepTop: {stepTopPos}, CapsuleBottom: {capsuleBottom}, CapsuleTop: {capsuleTop}");
 
             RaycastHit hit;
             bool hitAboveStepHeight = Physics.CapsuleCast(stepTopPos, capsuleTop, _controller.radius, desiredMove,
                 out hit,
                 _controller.skinWidth * 2);
-            if (hit.collider == null) return false;
-            if (hitAboveStepHeight && !hit.collider.isTrigger) return true;
+
+            if (DebugLog)
+            {
+                Debug.Log(
+                    $"2. hitAboveStepHeight: {hitAboveStepHeight}, collider: {hit.collider}, norm: {hit.normal.y}");
+            }
+
+            if (hitAboveStepHeight && !hit.collider.isTrigger && hit.normal.y >= -0.1f) return true;
 
             bool hitSomething = Physics.CapsuleCast(capsuleBottom, capsuleTop, _controller.radius, desiredMove, out hit,
                 _controller.skinWidth * 2);
@@ -218,29 +224,37 @@ namespace LSDR.Entities.Player
                 hitSomething && Vector3.SignedAngle(hit.normal, transform.up, axis) > _controller.slopeLimit;
             bool hitSeemsLikeAStep = hit.normal.y < 0.1f || hit.distance < 1E-06;
 
-            return !hit.collider.isTrigger && hitOverSlopeLimit && !hitSeemsLikeAStep;
+            if (DebugLog)
+            {
+                Debug.Log(
+                    $"3. hitSomething: {hitSomething}, hitOverSlope: {hitOverSlopeLimit}, hotSeemsLikeAStep: {hitSeemsLikeAStep}");
+                Debug.Log(hit.normal.y);
+            }
+
+            return hit.collider && !hit.collider.isTrigger && hitOverSlopeLimit && !hitSeemsLikeAStep;
         }
 
         private Vector2 getInputDirection()
         {
+            // handle input lock
+            if (_inputLocked) return _lockedInput;
+
             // if we can't control the player return zero for input direction
             if (!Settings.CanControlPlayer) return Vector2.zero;
+
             // get vector axes from input system
             float moveDirFrontBack = ControlScheme.Current.Actions.MoveY;
             float moveDirLeftRight = ControlScheme.Current.FpsControls ? ControlScheme.Current.Actions.MoveX : 0f;
             Vector2 input = new Vector2(moveDirLeftRight, moveDirFrontBack);
 
             // normalize input if it exceeds 1 in combined length (for diagonal movement)
-            if (input.sqrMagnitude > 1)
-            {
-                input.Normalize();
-            }
+            if (input.sqrMagnitude > 1) input.Normalize();
 
             return input;
         }
 
         /// <summary>
-        /// We can start sprinting if we're moving on the X axis (strafing) or if we're moving forwards.
+        ///     We can start sprinting if we're moving on the X axis (strafing) or if we're moving forwards.
         /// </summary>
         /// <returns>True if we can start sprinting, false otherwise.</returns>
         private bool canStartSprinting()

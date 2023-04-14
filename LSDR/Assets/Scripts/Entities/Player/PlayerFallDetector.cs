@@ -1,58 +1,56 @@
 ﻿using System.Collections;
 using LSDR.Dream;
-using UnityEngine;
 using LSDR.Game;
+using UnityEngine;
 
 namespace LSDR.Entities.Player
 {
-	/// <summary>
-	/// Used to detect whether or not a player is currently falling.
-	/// </summary>
-	[RequireComponent(typeof(CharacterController))]
-	public class PlayerFallDetector : MonoBehaviour
-	{
-		public SettingsSystem Settings;
-		public DreamSystem DreamSystem;
-		
-		[SerializeField]
-		private Camera _targetCamera;
-		private CharacterController _playerController;
-		private bool _hasFallen = false;
-		
-		private const float ROTATION_SPEED = 45F;
-		private const float MAX_X_ROTATION = 80F;
+    /// <summary>
+    ///     Used to detect whether or not a player is currently falling.
+    /// </summary>
+    [RequireComponent(typeof(CharacterController))]
+    public class PlayerFallDetector : MonoBehaviour
+    {
+        private const float ROTATION_SPEED = 45F;
+        private const float MAX_X_ROTATION = 80F;
+        public SettingsSystem Settings;
+        public DreamSystem DreamSystem;
 
-		public void Awake()
-		{
-			_playerController = GetComponent<CharacterController>();
-		}
+        [SerializeField] private Camera _targetCamera;
 
-		public void FixedUpdate()
-		{
-			if (_hasFallen) return;
-			
-			RaycastHit hitInfo;
-			bool hit = Physics.SphereCast(transform.position, _playerController.radius, Vector3.down, out hitInfo);
-			if (!hit)
-			{
-				_hasFallen = true;
-				StartCoroutine(fall());
-			}
-		}
+        private bool _hasFallen;
+        private CharacterController _playerController;
 
-		private IEnumerator fall()
-		{
-			DreamSystem.EndDream(fromFall: true);
+        public void Awake() { _playerController = GetComponent<CharacterController>(); }
 
-			var lookUpRot = Quaternion.AngleAxis(MAX_X_ROTATION, -_targetCamera.transform.right) *
-			                _targetCamera.transform.rotation;
+        public void Update()
+        {
+            if (!Settings.CanControlPlayer || !Settings.PlayerGravity || _hasFallen) return;
 
-			while (true)
-			{
-				_targetCamera.transform.rotation = Quaternion.RotateTowards(_targetCamera.transform.rotation, lookUpRot,
-					ROTATION_SPEED * Time.deltaTime);
-				yield return null;
-			}
-		}
-	}
+            RaycastHit hitInfo;
+            bool hit = Physics.SphereCast(transform.position + Vector3.up * _playerController.radius * 2,
+                _playerController.radius, Vector3.down,
+                out hitInfo);
+            if (!hit)
+            {
+                _hasFallen = true;
+                StartCoroutine(fall());
+            }
+        }
+
+        private IEnumerator fall()
+        {
+            DreamSystem.EndDream(true);
+
+            Quaternion lookUpRot = Quaternion.AngleAxis(MAX_X_ROTATION, -_targetCamera.transform.right) *
+                                   _targetCamera.transform.rotation;
+
+            while (true)
+            {
+                _targetCamera.transform.rotation = Quaternion.RotateTowards(_targetCamera.transform.rotation, lookUpRot,
+                    ROTATION_SPEED * Time.deltaTime);
+                yield return null;
+            }
+        }
+    }
 }

@@ -4,22 +4,17 @@ using System.Linq;
 using UnityEngine;
 using Random = System.Random;
 
-namespace Torii.Util
+namespace LSDR.SDK.Util
 {
     /// <summary>
-    /// Utility functions for generating random numbers.
-    /// TODO: Refactor RandUtil to not be static, as will help for determinism of random numbers?
+    ///     Utility functions for generating random numbers.
+    ///     TODO: Refactor RandUtil to not be static, as will help for determinism of random numbers?
     /// </summary>
     public static class RandUtil
     {
-        /// <summary>
-        /// The current seed of the random number generator.
-        /// </summary>
-        public static int CurrentSeed { get; private set; }
-
         private static Random _rand;
 
-        private static readonly Color[] _randomColors = new[]
+        private static readonly Color[] _randomColors =
         {
             Color.white,
             Color.red,
@@ -33,7 +28,12 @@ namespace Torii.Util
         static RandUtil() { RefreshSeed(); }
 
         /// <summary>
-        /// Refresh the current random generator seed.
+        ///     The current seed of the random number generator.
+        /// </summary>
+        public static int CurrentSeed { get; private set; }
+
+        /// <summary>
+        ///     Refresh the current random generator seed.
         /// </summary>
         public static void RefreshSeed()
         {
@@ -42,26 +42,26 @@ namespace Torii.Util
         }
 
         /// <summary>
-        /// Set the random generator to a given seed. Used for determinism.
+        ///     Set the random generator to a given seed. Used for determinism.
         /// </summary>
         /// <param name="seed">The seed to set it to.</param>
         public static void SetSeed(int seed) { _rand = new Random(seed); }
 
         /// <summary>
-        /// Get a non-negative random integer.
+        ///     Get a non-negative random integer.
         /// </summary>
         /// <returns>A non-negative random integer.</returns>
         public static int Int() { return _rand.Next(); }
 
         /// <summary>
-        /// Get a random non-negative integer with exclusive maximum value.
+        ///     Get a random non-negative integer with exclusive maximum value.
         /// </summary>
         /// <param name="max">The exlusive max value.</param>
         /// <returns>A random non-negative integer.</returns>
         public static int Int(int max) { return _rand.Next(max); }
 
         /// <summary>
-        /// Get a random non-negative integer between a min and max value.
+        ///     Get a random non-negative integer between a min and max value.
         /// </summary>
         /// <param name="min">The inclusive min bound.</param>
         /// <param name="max">The exlusive max bound.</param>
@@ -69,34 +69,34 @@ namespace Torii.Util
         public static int Int(int min, int max) { return _rand.Next(min, max); }
 
         /// <summary>
-        /// Get a random float x, where 0.0 &lt;= x &lt; 1.0
+        ///     Get a random float x, where 0.0 &lt;= x &lt; 1.0
         /// </summary>
         /// <returns>The random float.</returns>
         public static float Float() { return (float)_rand.NextDouble(); }
 
         /// <summary>
-        /// Get a random float between given bounds.
+        ///     Get a random float between given bounds.
         /// </summary>
         /// <param name="min">Inclusive min bound.</param>
         /// <param name="max">Exclusive max bound.</param>
         /// <returns>The random float.</returns>
-        public static float Float(float min, float max) { return (min + Float() * (max - min)); }
+        public static float Float(float min, float max) { return min + Float() * (max - min); }
 
         /// <summary>
-        /// Get a random float with a max possible value (exclusive).
+        ///     Get a random float with a max possible value (exclusive).
         /// </summary>
         /// <param name="max">The exclusive max bound.</param>
         /// <returns>The random float.</returns>
         public static float Float(float max) { return Float(0, max); }
 
         /// <summary>
-        /// Generate a random color.
+        ///     Generate a random color.
         /// </summary>
         /// <returns>A random color.</returns>
         public static Color RandColor() { return _randomColors[Int(_randomColors.Length)]; }
 
         /// <summary>
-        /// Choose a random element from an array.
+        ///     Choose a random element from an array.
         /// </summary>
         /// <param name="array">The array.</param>
         /// <typeparam name="T">The type of the object contained within the array.</typeparam>
@@ -104,7 +104,7 @@ namespace Torii.Util
         public static T RandomArrayElement<T>(T[] array) { return array[Int(array.Length)]; }
 
         /// <summary>
-        /// Choose a random element from a list.
+        ///     Choose a random element from a list.
         /// </summary>
         /// <param name="list">The list.</param>
         /// <typeparam name="T">The type opf the objects contained within the list.</typeparam>
@@ -119,7 +119,7 @@ namespace Torii.Util
 
         public static T RandomEnum<T>()
         {
-            var v = Enum.GetValues(typeof(T));
+            Array v = Enum.GetValues(typeof(T));
             return (T)v.GetValue(_rand.Next(v.Length));
         }
 
