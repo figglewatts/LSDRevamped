@@ -114,13 +114,13 @@ namespace Torii.Build
                 BuildSummary summary = BuildPipeline.BuildPlayer(buildPlayerOptions).summary;
                 if (summary.result == BuildResult.Succeeded)
                 {
-                    Debug.Log("Build success!");
+                    Debug.Log($"Build for config '{buildConf.Name}' succeeded!");
                     Debug.Log($"Size: {summary.totalSize} bytes");
                     Debug.Log($"Time: {summary.totalTime}");
                 }
                 else
                 {
-                    Debug.Log($"Build did not succeed - got result '{summary.result}'");
+                    Debug.Log($"Build for config '{buildConf.Name}' did not succeed - got result '{summary.result}'");
                     EditorApplication.Exit(1);
                 }
             }

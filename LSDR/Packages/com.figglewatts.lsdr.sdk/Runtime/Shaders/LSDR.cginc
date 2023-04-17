@@ -107,7 +107,6 @@ void geom(triangle fragdata IN[3], inout TriangleStream<fragdata> triStream)
         // handle fog color
         o.fogColor = FogColor(faceDistance);
         #else
-        o.barycenter = float4(0, 0, 0, 0);
         o.fogColor = float4(0, 0, 0, 1);
         #endif
 
