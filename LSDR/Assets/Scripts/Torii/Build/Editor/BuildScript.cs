@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Unity.CodeEditor;
 using UnityEditor;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
@@ -46,6 +47,15 @@ namespace Torii.Build
             }
 
             return null;
+        }
+
+        /// <summary>
+        ///     Used for generating project solution in CI/CD.
+        /// </summary>
+        public static void GenerateSolution()
+        {
+            Debug.Log("Generating solution...");
+            CodeEditor.CurrentEditor.SyncAll();
         }
 
         /// <summary>
