@@ -10,118 +10,15 @@ namespace LSDR.SDK.Editor.AssetImporters
 {
     public class MOMHelper
     {
-        protected readonly Material _opaque;
-        protected readonly Material _transparent;
-        protected readonly GameObject _rootObject;
         protected readonly Dictionary<int, AnimationObject> _objectTable;
-
-        protected class AnimationObject
-        {
-            public Transform Transform { get; }
-            public AnimationObject Parent { get; protected set; }
-
-            public AnimationObject(Transform transform)
-            {
-                Transform = transform;
-                Parent = null;
-            }
-
-            public void SetParent(AnimationObject parent)
-            {
-                Parent = parent;
-                Transform.SetParent(parent.Transform);
-            }
-
-            public string GetPath()
-            {
-                return Parent == null ? Transform.gameObject.name : $"{Parent.GetPath()}/{Transform.gameObject.name}";
-            }
-        }
-
-        protected struct FrameTransformation
-        {
-            public TODCoordinatePacketData CoordPacket;
-            public int FrameNumber;
-
-            public TransformationResult PerformTransformation(float frameTime, Transform currentTransform)
-            {
-                var result = new TransformationResult
-                    {Keyframes = new Keyframe[10], CurrentTransform = currentTransform};
-                if (CoordPacket.HasScale)
-                {
-                    var scale = new Vector3(CoordPacket.ScaleX / 4096f, CoordPacket.ScaleY / 4096f,
-                        CoordPacket.ScaleZ / 4096f);
-                    if (CoordPacket.MatrixType == TODPacketData.PacketDataType.Absolute)
-                    {
-                        result.CurrentTransform.localScale = scale;
-                    }
-                    else
-                    {
-                        result.CurrentTransform.localScale = Vector3.Scale(result.CurrentTransform.localScale, scale);
-                    }
-                }
-
-                if (CoordPacket.HasTranslation)
-                {
-                    var translation = new Vector3(CoordPacket.TransX, -CoordPacket.TransY, CoordPacket.TransZ) / 2048f;
-                    if (CoordPacket.MatrixType == TODPacketData.PacketDataType.Absolute)
-                    {
-                        result.CurrentTransform.localPosition = translation;
-                    }
-                    else
-                    {
-                        result.CurrentTransform.localPosition += translation;
-                    }
-                }
-
-                if (CoordPacket.HasRotation)
-                {
-                    float pitch = -CoordPacket.RotX / 4096f;
-                    float yaw = CoordPacket.RotY / 4096f;
-                    float roll = -CoordPacket.RotZ / 4096f;
-
-                    if (CoordPacket.MatrixType == TODPacketData.PacketDataType.Absolute)
-                    {
-                        var x = Quaternion.AngleAxis(pitch, Vector3.right);
-                        var y = Quaternion.AngleAxis(yaw, Vector3.up);
-                        var z = Quaternion.AngleAxis(roll, Vector3.forward);
-                        result.CurrentTransform.localRotation = x * y * z;
-                    }
-                    else
-                    {
-                        result.CurrentTransform.Rotate(Vector3.right, pitch);
-                        result.CurrentTransform.Rotate(Vector3.up, yaw);
-                        result.CurrentTransform.Rotate(Vector3.forward, roll);
-                    }
-                }
-
-                // now fill the keyframes in with transform information
-                float time = FrameNumber * frameTime;
-                result.Keyframes[0] = new Keyframe(time, result.CurrentTransform.localPosition.x);
-                result.Keyframes[1] = new Keyframe(time, result.CurrentTransform.localPosition.y);
-                result.Keyframes[2] = new Keyframe(time, result.CurrentTransform.localPosition.z);
-                result.Keyframes[3] = new Keyframe(time, result.CurrentTransform.localRotation.x);
-                result.Keyframes[4] = new Keyframe(time, result.CurrentTransform.localRotation.y);
-                result.Keyframes[5] = new Keyframe(time, result.CurrentTransform.localRotation.z);
-                result.Keyframes[6] = new Keyframe(time, result.CurrentTransform.localRotation.w);
-                result.Keyframes[7] = new Keyframe(time, result.CurrentTransform.localScale.x);
-                result.Keyframes[8] = new Keyframe(time, result.CurrentTransform.localScale.y);
-                result.Keyframes[9] = new Keyframe(time, result.CurrentTransform.localScale.z);
-
-                return result;
-            }
-        }
-
-        protected struct TransformationResult
-        {
-            public Keyframe[] Keyframes;
-            public Transform CurrentTransform;
-        }
+        protected readonly Material _opaque;
+        protected readonly GameObject _rootObject;
+        protected readonly Material _transparent;
 
         public MOMHelper(GameObject root, Material opaque, Material transparent)
         {
             _rootObject = root;
-            _objectTable = new Dictionary<int, AnimationObject> {[0] = new AnimationObject(root.transform)};
+            _objectTable = new Dictionary<int, AnimationObject> { [0] = new AnimationObject(root.transform) };
             _opaque = opaque;
             _transparent = transparent;
         }
@@ -295,7 +192,7 @@ namespace LSDR.SDK.Editor.AssetImporters
             }
 
             var frameTime = tod.Header.Resolution / 60f;
-            AnimationClip clip = new AnimationClip {frameRate = 1f / frameTime};
+            AnimationClip clip = new AnimationClip { frameRate = 1f / frameTime };
             foreach (AnimationObject animObj in _objectTable.Values)
             {
                 if (!animObjTransforms.ContainsKey(animObj)) continue;
@@ -348,14 +245,16 @@ namespace LSDR.SDK.Editor.AssetImporters
                             AnimationUtility.SetKeyLeftTangentMode(curve, i, AnimationUtility.TangentMode.Constant);
                             AnimationUtility.SetKeyRightTangentMode(curve, i, AnimationUtility.TangentMode.Constant);
                         }
-                        catch (IndexOutOfRangeException e)
+#pragma warning disable CS0168
+                        catch (IndexOutOfRangeException _)
+#pragma warning restore CS0168
                         {
                             // ignore it, as for some reason it's erroneously generated...
                         }
                     }
 
                     AnimationUtility.SetEditorCurve(clip,
-                        new EditorCurveBinding {path = path, propertyName = propertyName, type = typeof(Transform)},
+                        new EditorCurveBinding { path = path, propertyName = propertyName, type = typeof(Transform) },
                         curve);
                 }
             }
@@ -379,6 +278,109 @@ namespace LSDR.SDK.Editor.AssetImporters
             }
 
             map[animObject].Add(transformation);
+        }
+
+        protected class AnimationObject
+        {
+            public AnimationObject(Transform transform)
+            {
+                Transform = transform;
+                Parent = null;
+            }
+
+            public Transform Transform { get; }
+            public AnimationObject Parent { get; protected set; }
+
+            public void SetParent(AnimationObject parent)
+            {
+                Parent = parent;
+                Transform.SetParent(parent.Transform);
+            }
+
+            public string GetPath()
+            {
+                return Parent == null ? Transform.gameObject.name : $"{Parent.GetPath()}/{Transform.gameObject.name}";
+            }
+        }
+
+        protected struct FrameTransformation
+        {
+            public TODCoordinatePacketData CoordPacket;
+            public int FrameNumber;
+
+            public TransformationResult PerformTransformation(float frameTime, Transform currentTransform)
+            {
+                var result = new TransformationResult
+                    { Keyframes = new Keyframe[10], CurrentTransform = currentTransform };
+                if (CoordPacket.HasScale)
+                {
+                    var scale = new Vector3(CoordPacket.ScaleX / 4096f, CoordPacket.ScaleY / 4096f,
+                        CoordPacket.ScaleZ / 4096f);
+                    if (CoordPacket.MatrixType == TODPacketData.PacketDataType.Absolute)
+                    {
+                        result.CurrentTransform.localScale = scale;
+                    }
+                    else
+                    {
+                        result.CurrentTransform.localScale = Vector3.Scale(result.CurrentTransform.localScale, scale);
+                    }
+                }
+
+                if (CoordPacket.HasTranslation)
+                {
+                    var translation = new Vector3(CoordPacket.TransX, -CoordPacket.TransY, CoordPacket.TransZ) / 2048f;
+                    if (CoordPacket.MatrixType == TODPacketData.PacketDataType.Absolute)
+                    {
+                        result.CurrentTransform.localPosition = translation;
+                    }
+                    else
+                    {
+                        result.CurrentTransform.localPosition += translation;
+                    }
+                }
+
+                if (CoordPacket.HasRotation)
+                {
+                    float pitch = -CoordPacket.RotX / 4096f;
+                    float yaw = CoordPacket.RotY / 4096f;
+                    float roll = -CoordPacket.RotZ / 4096f;
+
+                    if (CoordPacket.MatrixType == TODPacketData.PacketDataType.Absolute)
+                    {
+                        var x = Quaternion.AngleAxis(pitch, Vector3.right);
+                        var y = Quaternion.AngleAxis(yaw, Vector3.up);
+                        var z = Quaternion.AngleAxis(roll, Vector3.forward);
+                        result.CurrentTransform.localRotation = x * y * z;
+                    }
+                    else
+                    {
+                        result.CurrentTransform.Rotate(Vector3.right, pitch);
+                        result.CurrentTransform.Rotate(Vector3.up, yaw);
+                        result.CurrentTransform.Rotate(Vector3.forward, roll);
+                    }
+                }
+
+                // now fill the keyframes in with transform information
+                float time = FrameNumber * frameTime;
+                result.Keyframes[0] = new Keyframe(time, result.CurrentTransform.localPosition.x);
+                result.Keyframes[1] = new Keyframe(time, result.CurrentTransform.localPosition.y);
+                result.Keyframes[2] = new Keyframe(time, result.CurrentTransform.localPosition.z);
+                result.Keyframes[3] = new Keyframe(time, result.CurrentTransform.localRotation.x);
+                result.Keyframes[4] = new Keyframe(time, result.CurrentTransform.localRotation.y);
+                result.Keyframes[5] = new Keyframe(time, result.CurrentTransform.localRotation.z);
+                result.Keyframes[6] = new Keyframe(time, result.CurrentTransform.localRotation.w);
+                result.Keyframes[7] = new Keyframe(time, result.CurrentTransform.localScale.x);
+                result.Keyframes[8] = new Keyframe(time, result.CurrentTransform.localScale.y);
+                result.Keyframes[9] = new Keyframe(time, result.CurrentTransform.localScale.z);
+
+                return result;
+            }
+        }
+
+        protected struct TransformationResult
+        {
+            public Keyframe[] Keyframes;
+            public Transform CurrentTransform;
         }
     }
 }
