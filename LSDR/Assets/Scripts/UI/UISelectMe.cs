@@ -1,59 +1,38 @@
-﻿using System;
-using System.Collections;
-using InControl;
+﻿using System.Collections;
 using LSDR.InputManagement;
 using UnityEngine;
-using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace LSDR.UI
 {
-	/// <summary>
-	/// When attached to a UI object, makes it so that this object is initially selected.
-	/// </summary>
-	public class UISelectMe : MonoBehaviour
-	{
-		public bool SelectEvenWithMouse;
-		public ControlSchemeLoaderSystem ControlScheme;
-		
-		void Start()
-		{
-			init();
-			StartCoroutine(waitFrameThenSelect(InputManager.ActiveDevice));
-		}
+    /// <summary>
+    ///     When attached to a UI object, makes it so that this object is initially selected.
+    /// </summary>
+    public class UISelectMe : MonoBehaviour
+    {
+        public bool SelectEvenWithMouse;
+        public ControlSchemeLoaderSystem ControlScheme;
 
-		private void Update()
-		{
-			if (ControlScheme.Current.Actions.Move.Value.sqrMagnitude > 0 &&
-			    EventSystem.current.currentSelectedGameObject == null)
-			{
-				StartCoroutine(waitFrameThenSelect(InputManager.ActiveDevice));
-			}
-		}
+        private void Start() { StartCoroutine(waitFrameThenSelect()); }
 
-		void OnEnable() { StartCoroutine(waitFrameThenSelect(InputManager.ActiveDevice)); }
+        private void OnEnable()
+        {
+            StartCoroutine(waitFrameThenSelect());
+            ControlScheme.OnLastUsedDeviceChanged += onDeviceChanged;
+        }
 
-		private void OnDestroy()
-		{
-			InputManager.OnActiveDeviceChanged -= onControllerConnect;
-			InputManager.OnDeviceAttached -= onControllerConnect;
-		}
+        private void OnDisable() { ControlScheme.OnLastUsedDeviceChanged -= onDeviceChanged; }
 
-		private void init()
-		{
-			InputManager.OnActiveDeviceChanged += onControllerConnect;
-			InputManager.OnDeviceAttached += onControllerConnect;
-		}
+        private void onDeviceChanged(InputDevice device)
+        {
+            if (device is Gamepad) StartCoroutine(waitFrameThenSelect());
+        }
 
-		private void onControllerConnect(InputDevice device) { StartCoroutine(waitFrameThenSelect(device)); }
-
-		private IEnumerator waitFrameThenSelect(InputDevice device)
-		{
-			yield return null;
-			if (!InputManager.ActiveDevice.Name.Equals("None") || SelectEvenWithMouse)
-			{
-				GetComponent<Selectable>().Select();
-			}
-		}
-	}
+        private IEnumerator waitFrameThenSelect()
+        {
+            yield return null;
+            if (ControlScheme.LastUsedGamepad || SelectEvenWithMouse) GetComponent<Selectable>().Select();
+        }
+    }
 }

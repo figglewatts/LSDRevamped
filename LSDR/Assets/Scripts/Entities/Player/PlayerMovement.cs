@@ -74,7 +74,7 @@ namespace LSDR.Entities.Player
             }
 
             // check to see if we should sprint
-            if (ControlScheme.Current.Actions.Run.IsPressed && canStartSprinting()) _currentlySprinting = true;
+            if (ControlScheme.InputActions.Game.Run.IsPressed() && canStartSprinting()) _currentlySprinting = true;
 
             // perform a single step
             if (!_currentlyStepping && _inputDir.sqrMagnitude > 0)
@@ -84,8 +84,8 @@ namespace LSDR.Entities.Player
             }
 
             // if run is not pressed and no movement keys are pressed, we should no longer sprint
-            if (!ControlScheme.Current.Actions.Run.IsPressed
-                && !ControlScheme.Current.Actions.MoveY.IsPressed)
+            if (!ControlScheme.InputActions.Game.Run.IsPressed()
+                && !ControlScheme.InputActions.Game.Move.IsPressed())
                 _currentlySprinting = false;
         }
 
@@ -243,14 +243,10 @@ namespace LSDR.Entities.Player
             if (!Settings.CanControlPlayer) return Vector2.zero;
 
             // get vector axes from input system
-            float moveDirFrontBack = ControlScheme.Current.Actions.MoveY;
-            float moveDirLeftRight = ControlScheme.Current.FpsControls ? ControlScheme.Current.Actions.MoveX : 0f;
-            Vector2 input = new Vector2(moveDirLeftRight, moveDirFrontBack);
+            Vector2 move = ControlScheme.InputActions.Game.Move.ReadValue<Vector2>();
+            move.x = ControlScheme.Current.FpsControls ? move.x : 0;
 
-            // normalize input if it exceeds 1 in combined length (for diagonal movement)
-            if (input.sqrMagnitude > 1) input.Normalize();
-
-            return input;
+            return move;
         }
 
         /// <summary>
@@ -259,7 +255,8 @@ namespace LSDR.Entities.Player
         /// <returns>True if we can start sprinting, false otherwise.</returns>
         private bool canStartSprinting()
         {
-            return ControlScheme.Current.Actions.MoveX.IsPressed || ControlScheme.Current.Actions.MoveY.Value > 0;
+            Vector2 move = ControlScheme.InputActions.Game.Move.ReadValue<Vector2>();
+            return move.x != 0 || move.y > 0;
         }
     }
 }

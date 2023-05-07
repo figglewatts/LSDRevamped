@@ -6,21 +6,22 @@ using UnityEngine.UI;
 namespace LSDR.UI.Settings
 {
     /// <summary>
-    /// Verifies a control scheme name.
+    ///     Verifies a control scheme name.
     /// </summary>
     [RequireComponent(typeof(InputField))]
     public class UIControlSchemeNameVerifier : MonoBehaviour
     {
         public ControlSchemeLoaderSystem ControlSchemeLoader;
-        
+
         public Button Button;
+
+        [SerializeField] private bool _canHaveSameName;
+
+        [SerializeField] private InputField _inputField;
 
         public bool CanHaveSameName
         {
-            get
-            {
-                return _canHaveSameName;
-            }
+            get => _canHaveSameName;
             set
             {
                 _canHaveSameName = value;
@@ -28,11 +29,7 @@ namespace LSDR.UI.Settings
             }
         }
 
-        [SerializeField] private bool _canHaveSameName;
-
-        [SerializeField] private InputField _inputField;
-
-        void Awake()
+        private void Awake()
         {
             _inputField = GetComponent<InputField>();
             _inputField.onValueChanged.AddListener(validateInput);
@@ -40,27 +37,17 @@ namespace LSDR.UI.Settings
         }
 
         /// <summary>
-        /// Validate this control scheme name.
+        ///     Validate this control scheme name.
         /// </summary>
         /// <param name="input">The control scheme name.</param>
         /// <returns>False if invalid, true otherwise.</returns>
         public bool Validate(string input)
         {
             // scheme can't be empty
-            if (string.IsNullOrEmpty(input))
-            {
-                return false;
-            }
+            if (string.IsNullOrEmpty(input)) return false;
 
             // scheme can't overwrite another scheme
-            if (!CanHaveSameName && ControlSchemeLoader.Schemes.Count(scheme => scheme.Name == input) > 0)
-            {
-                Debug.Log("Invalid");
-                Debug.Log(CanHaveSameName);
-                return false;
-            }
-            
-            Debug.Log("Valid");
+            if (!CanHaveSameName && ControlSchemeLoader.Schemes.Count(scheme => scheme.Name == input) > 0) return false;
 
             return true;
         }

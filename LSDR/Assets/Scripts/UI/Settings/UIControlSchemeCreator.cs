@@ -1,192 +1,156 @@
-﻿using System;
+﻿using LSDR.InputManagement;
 using UnityEngine;
-using InControl;
-using LSDR.InputManagement;
-using Torii.UI;
+using UnityEngine.UI;
+using Slider = Torii.UI.Slider;
+using Toggle = Torii.UI.Toggle;
 
 namespace LSDR.UI.Settings
 {
-	/// <summary>
-	/// Menu used for creating a control scheme.
-	/// </summary>
-	public class UIControlSchemeCreator : MonoBehaviour
-	{
-	    public UnityEngine.UI.Button SubmitSchemeButton;
-	    public UnityEngine.UI.Text SubmitSchemeButtonText;
-	    public UnityEngine.UI.InputField SchemeNameField;
-	    public UnityEngine.UI.Button CancelSchemeButton;
-
-	    public UnityEngine.UI.Button CreateNewSchemeButton;
-	    public UnityEngine.UI.Button EditExistingSchemeButton;
-
-	    public Slider MouseSensitivitySlider;
-	    public Toggle UseFpsControlsToggle;
-
-	    public GameObject CreatorObject;
-	    public GameObject SelectorObject;
-
-	    public UIControlSchemeNameVerifier NameVerifier;
-	    public UIRebindContainerPopulator RebindContainerPopulator;
-
-	    public UITabView TopButtonsTabView;
-	    public UnityEngine.UI.Button SettingsApplyButton;
-	    public UnityEngine.UI.Button SettingsBackButton;
-
-	    public UIControlSchemeDropdownPopulator ControlSchemeDropdownPopulator;
-
-	    public ControlSchemeLoaderSystem ControlSchemeLoader;
-
-	    private ControlScheme _currentlyEditingScheme;
-
-	    public enum ControlSchemeCreatorMode
-	    {
+    /// <summary>
+    ///     Menu used for creating a control scheme.
+    /// </summary>
+    public class UIControlSchemeCreator : MonoBehaviour
+    {
+        public enum ControlSchemeCreatorMode
+        {
             Create,
             Edit
-	    }
+        }
 
-        [HideInInspector]
-	    public ControlSchemeCreatorMode Mode;
+        public GameObject CreatorObject;
+        public GameObject SelectorObject;
+        public ControlSchemeLoaderSystem ControlSchemeLoader;
 
-	    public void Start()
-	    {
-            MouseSensitivitySlider.onValueChanged.AddListener(mouseSensitivityOnValueChanged);
-            UseFpsControlsToggle.onValueChanged.AddListener(useFpsControlsOnValueChanged);
-            CreateNewSchemeButton.onClick.AddListener(() => Show(ControlSchemeCreatorMode.Create));
-            EditExistingSchemeButton.onClick.AddListener(() => Show(ControlSchemeCreatorMode.Edit));
-            SchemeNameField.onValueChanged.AddListener(schemeNameFieldOnValueChanged);
-            SubmitSchemeButton.onClick.AddListener(SubmitScheme);
-            CancelSchemeButton.onClick.AddListener(Hide);
-	    }
+        public UIControlSchemeNameVerifier NameVerifier;
+        public UIRebindContainerPopulator RebindContainerPopulator;
+        public UIControlSchemeDropdownPopulator ControlSchemeDropdownPopulator;
 
-	    public void OnDisable()
-	    {
-		    Hide();
-	    }
+        public UITabView TopButtonsTabView;
 
-	    /// <summary>
-	    /// Show the control scheme creator in a certain mode.
-	    /// </summary>
-	    /// <param name="mode">Whether we're creating or editing.</param>
-	    public void Show(ControlSchemeCreatorMode mode)
-	    {
-		    CreatorObject.SetActive(true);
+        protected ControlScheme _currentlyEditingScheme;
+        protected string _lastBindings;
+        protected ControlSchemeCreatorMode _mode;
+
+        public void OnDisable() { Hide(); }
+
+        public void ShowCreate() { Show(ControlSchemeCreatorMode.Create); }
+
+        public void ShowEdit() { Show(ControlSchemeCreatorMode.Edit); }
+
+        /// <summary>
+        ///     Show the control scheme creator in a certain mode.
+        /// </summary>
+        /// <param name="mode">Whether we're creating or editing.</param>
+        public void Show(ControlSchemeCreatorMode mode)
+        {
+            CreatorObject.SetActive(true);
             SelectorObject.SetActive(false);
-	        Mode = mode;
-	        switch (mode)
-	        {
-	            case ControlSchemeCreatorMode.Create:
-	            {
-		            _currentlyEditingScheme = new ControlScheme(ControlActions.CreateDefaultTank(), "NewScheme", false);
-	                SubmitSchemeButtonText.text = "Save";
-	                NameVerifier.CanHaveSameName = false;
-	                SubmitSchemeButton.interactable = NameVerifier.Validate(_currentlyEditingScheme.Name);
-	                SchemeNameField.interactable = true;
-	                SchemeNameField.text = _currentlyEditingScheme.Name;
-	                break;
-	            }
-	            case ControlSchemeCreatorMode.Edit:
-	            {
-	                _currentlyEditingScheme = ControlSchemeLoader.Current;
-	                SubmitSchemeButtonText.text = "Save";
-	                SubmitSchemeButton.interactable = true;
-	                Debug.Log("Editing scheme...");
-	                Debug.Log(SubmitSchemeButton.interactable);
-	                NameVerifier.Button.interactable = true;
-	                SchemeNameField.interactable = false;
-	                SchemeNameField.text = ControlSchemeLoader.Current.Name;
-	                NameVerifier.CanHaveSameName = true;
-	                break;
-	            }
-	        }
-	        RebindContainerPopulator.EditingScheme = _currentlyEditingScheme;
-	        UseFpsControlsToggle.isOn = _currentlyEditingScheme.FpsControls;
-	        MouseSensitivitySlider.value = _currentlyEditingScheme.MouseSensitivity;
+            _mode = mode;
+            switch (mode)
+            {
+                case ControlSchemeCreatorMode.Create:
+                {
+                    _currentlyEditingScheme = new ControlScheme(ControlSchemeLoader.Current);
+                    break;
+                }
+                case ControlSchemeCreatorMode.Edit:
+                {
+                    _currentlyEditingScheme = ControlSchemeLoader.Current;
+                    break;
+                }
+            }
+
+            UpdateView();
+
             TopButtonsTabView.SetAllButtonsInteractable(false);
-	        SettingsApplyButton.interactable = false;
-	        SettingsBackButton.interactable = false;
-	    }
+            SettingsApplyButton.interactable = false;
+            SettingsBackButton.interactable = false;
+        }
 
-	    /// <summary>
-	    /// Submit a control scheme to the ControlSchemeManager.
-	    /// </summary>
-	    public void SubmitScheme()
-	    {
-	        switch (Mode)
-	        {
-	            case ControlSchemeCreatorMode.Create:
-	            {
-	                ControlSchemeLoader.Schemes.Add(_currentlyEditingScheme);
-                    ControlSchemeLoader.SelectScheme(ControlSchemeLoader.Schemes.Count - 1);
-	                break;
-	                
-	            }
-	            case ControlSchemeCreatorMode.Edit:
-	            {
-	                ControlSchemeLoader.Schemes[ControlSchemeLoader.CurrentSchemeIndex] = _currentlyEditingScheme;
-	                break;
-	            }
-	        }
-	        ControlSchemeLoader.SaveSchemes();
-	        ControlSchemeDropdownPopulator.PopulateDropdown();
-	        Hide();
-	    }
+        public void UpdateView()
+        {
+            RebindContainerPopulator.EditingScheme = _currentlyEditingScheme;
+            UseFpsControlsToggle.isOn = _currentlyEditingScheme.FpsControls;
+            MouseSensitivitySlider.value = _currentlyEditingScheme.MouseSensitivity;
 
-	    /// <summary>
-	    /// Hide the creator menu and show the selector menu.
-	    /// </summary>
-	    public void Hide()
-	    {
-	        CreatorObject.SetActive(false);
-	        SelectorObject.SetActive(true);
+            switch (_mode)
+            {
+                case ControlSchemeCreatorMode.Create:
+                    SubmitSchemeButtonText.text = "Create";
+                    SubmitSchemeButton.interactable = NameVerifier.Validate(_currentlyEditingScheme.Name);
+                    SchemeNameField.interactable = true;
+                    SchemeNameField.text = _currentlyEditingScheme.Name;
+                    NameVerifier.CanHaveSameName = false;
+                    break;
+                case ControlSchemeCreatorMode.Edit:
+                    SubmitSchemeButtonText.text = "Edit";
+                    SubmitSchemeButton.interactable = true;
+                    NameVerifier.Button.interactable = true;
+                    SchemeNameField.interactable = false;
+                    SchemeNameField.text = ControlSchemeLoader.Current.Name;
+                    NameVerifier.CanHaveSameName = true;
+                    break;
+            }
+        }
+
+        /// <summary>
+        ///     Submit a control scheme to the ControlSchemeManager.
+        /// </summary>
+        public void SubmitScheme()
+        {
+            _currentlyEditingScheme.SyncToInputActions(ControlSchemeLoader.InputActions);
+            switch (_mode)
+            {
+                case ControlSchemeCreatorMode.Create:
+                {
+                    ControlSchemeLoader.CreateScheme(_currentlyEditingScheme, true);
+                    break;
+                }
+            }
+
+            ControlSchemeLoader.SaveSchemes();
+            ControlSchemeDropdownPopulator.PopulateDropdown();
+            Hide();
+        }
+
+        /// <summary>
+        ///     Hide the creator menu and show the selector menu.
+        /// </summary>
+        public void Hide()
+        {
+            CreatorObject.SetActive(false);
+            SelectorObject.SetActive(true);
             TopButtonsTabView.SetAllButtonsInteractable(true);
-	        SettingsApplyButton.interactable = true;
-	        SettingsBackButton.interactable = true;
-	    }
+            SettingsApplyButton.interactable = true;
+            SettingsBackButton.interactable = true;
+        }
 
-	    private void schemeNameFieldOnValueChanged(string value) { _currentlyEditingScheme.Name = value; }
+        public void SchemeNameFieldOnValueChanged(string value) { _currentlyEditingScheme.Name = value; }
 
-	    private void mouseSensitivityOnValueChanged(float sensitivity)
-	    {
-	        _currentlyEditingScheme.MouseSensitivity = sensitivity;
-	    }
+        public void MouseSensitivityOnValueChanged(float sensitivity)
+        {
+            _currentlyEditingScheme.MouseSensitivity = sensitivity;
+        }
 
-	    private void useFpsControlsOnValueChanged(bool fpsControls)
-	    {
-	        // based on whether we're using FPS controls or not, we want the bindings to be different
-	        // to support mouselook and strafing etc.
-		    _currentlyEditingScheme.FpsControls = fpsControls;
-	        if (fpsControls)
-	        {
-	            _currentlyEditingScheme.Actions.LookUp.ClearBindings();
-	            _currentlyEditingScheme.Actions.LookUp.AddDefaultBinding(Mouse.PositiveY);
-	            _currentlyEditingScheme.Actions.LookUp.AddDefaultBinding(InputControlType.RightStickUp);
+        public void UseFpsControlsOnValueChanged(bool fpsControls)
+        {
+            _currentlyEditingScheme.FpsControls = fpsControls;
+        }
 
-	            _currentlyEditingScheme.Actions.LookDown.ClearBindings();
-	            _currentlyEditingScheme.Actions.LookDown.AddDefaultBinding(Mouse.NegativeY);
-	            _currentlyEditingScheme.Actions.LookDown.AddDefaultBinding(InputControlType.RightStickDown);
+        public void InvertLookYOnValueChanged(bool invertLookY) { _currentlyEditingScheme.InvertLookY = invertLookY; }
 
-	            _currentlyEditingScheme.Actions.LookLeft.ClearBindings();
-	            _currentlyEditingScheme.Actions.LookLeft.AddDefaultBinding(Mouse.NegativeX);
-	            _currentlyEditingScheme.Actions.LookLeft.AddDefaultBinding(InputControlType.RightStickLeft);
+#region Controls
 
-	            _currentlyEditingScheme.Actions.LookRight.ClearBindings();
-	            _currentlyEditingScheme.Actions.LookRight.AddDefaultBinding(Mouse.PositiveX);
-	            _currentlyEditingScheme.Actions.LookRight.AddDefaultBinding(InputControlType.RightStickRight);
-	        }
-	        else
-	        {
-	            _currentlyEditingScheme.Actions.LookUp.ClearBindings();
-	            _currentlyEditingScheme.Actions.LookUp.AddDefaultBinding(Key.E);
-	            _currentlyEditingScheme.Actions.LookUp.AddDefaultBinding(InputControlType.Action4);
+        public Button SubmitSchemeButton;
+        public Text SubmitSchemeButtonText;
+        public InputField SchemeNameField;
 
-	            _currentlyEditingScheme.Actions.LookDown.ClearBindings();
-	            _currentlyEditingScheme.Actions.LookDown.AddDefaultBinding(Key.Q);
-	            _currentlyEditingScheme.Actions.LookDown.AddDefaultBinding(InputControlType.Action3);
+        public Slider MouseSensitivitySlider;
+        public Toggle UseFpsControlsToggle;
 
-                _currentlyEditingScheme.Actions.LookLeft.ClearBindings();
-                _currentlyEditingScheme.Actions.LookRight.ClearBindings();
-	        }
-            RebindContainerPopulator.PopulateRebindContainer();
-	    }
-	}
+        public Button SettingsApplyButton;
+        public Button SettingsBackButton;
+
+#endregion
+    }
 }
