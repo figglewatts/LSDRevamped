@@ -320,6 +320,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "CancelBinding",
+                    "type": "Button",
+                    "id": "0ddfc64a-ef3b-4fa5-a4cb-0402466f37b2",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -474,6 +483,28 @@
                     "processors": "",
                     "groups": "Keyboard and mouse",
                     "action": "Point",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b0de99f3-b5c4-495a-8b30-13f442d461d5",
+                    "path": "<Gamepad>/select",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "CancelBinding",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d5d0b94f-33bc-4728-ab68-1ed136bef630",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard and mouse",
+                    "action": "CancelBinding",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

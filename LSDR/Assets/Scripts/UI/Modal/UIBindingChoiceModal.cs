@@ -1,0 +1,87 @@
+﻿using System;
+using LSDR.InputManagement;
+using LSDR.UI.Settings;
+using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.UI;
+
+namespace LSDR.UI.Modal
+{
+    public class UIBindingChoiceModal : MonoBehaviour
+    {
+        public enum BindingChoiceType
+        {
+            Rebind,
+            Reset,
+            Delete
+        }
+
+        [Header("View")]
+        public Text TitleText;
+        public Text CancelText;
+        public RectTransform ButtonContainer;
+
+        [Header("Other")]
+        public GameObject BindingChoiceButtonPrefab;
+        public UIRebinder Rebinder;
+
+        public void ProvideCancelAction(InputAction cancelAction)
+        {
+            CancelText.text = $"Press {cancelAction.GetBindingDisplayString()} to cancel";
+        }
+
+        public void ProvideActionBindings(RebindableActions.ActionBindings actionBindings,
+            BindingChoiceType choiceType)
+        {
+            TitleText.text = $"Choose binding to {choiceTypeToString(choiceType)}";
+
+            foreach (IndexedActionBinding binding in actionBindings.IndexedBindings)
+            {
+                createChoiceButton(binding, choiceType);
+            }
+        }
+
+        protected GameObject createChoiceButton(IndexedActionBinding binding, BindingChoiceType choiceType)
+        {
+            GameObject buttonObj = Instantiate(BindingChoiceButtonPrefab, ButtonContainer);
+            buttonObj.SetActive(true);
+            Button button = buttonObj.GetComponent<Button>();
+            button.onClick.AddListener(() =>
+            {
+                switch (choiceType)
+                {
+                    case BindingChoiceType.Rebind:
+                        Rebinder.InteractiveRebind(binding, () => { });
+                        break;
+                    case BindingChoiceType.Reset:
+                        binding.ResetBinding();
+                        break;
+                    case BindingChoiceType.Delete:
+                        binding.DeleteBinding();
+                        break;
+                }
+                UIModalController.Instance.HideModal(); // hide this modal
+            });
+
+            Text buttonText = buttonObj.GetComponentInChildren<Text>();
+            buttonText.text = binding.GetDisplayString();
+
+            return buttonObj;
+        }
+
+        protected string choiceTypeToString(BindingChoiceType choiceType)
+        {
+            switch (choiceType)
+            {
+                case BindingChoiceType.Rebind:
+                    return "change";
+                case BindingChoiceType.Reset:
+                    return "reset";
+                case BindingChoiceType.Delete:
+                    return "clear";
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(choiceType), choiceType, null);
+            }
+        }
+    }
+}
