@@ -114,7 +114,7 @@ namespace LSDR.Game
             ControlSchemeLoader.SelectScheme(Settings.CurrentControlSchemeIndex);
 
             // set the resolution
-            if (Settings.CurrentResolutionIndex > Screen.resolutions.Length || Settings.CurrentResolutionIndex < 0)
+            if (Settings.CurrentResolutionIndex >= Screen.resolutions.Length || Settings.CurrentResolutionIndex < 0)
             {
                 // if the resolution is invalid, set it to the native resolution
                 Screen.SetResolution(Display.main.systemWidth, Display.main.systemHeight, Settings.Fullscreen);

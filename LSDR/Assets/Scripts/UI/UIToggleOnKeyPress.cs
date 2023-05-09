@@ -1,16 +1,16 @@
-using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace LSDR.UI
 {
     public class UIToggleOnKeyPress : MonoBehaviour
     {
         public GameObject Target;
-        public KeyCode Key;
+        public Key Key;
 
         public void Update()
         {
-            if (Input.GetKeyDown(Key)) Target.SetActive(!Target.activeSelf);
+            if (Keyboard.current[Key].wasPressedThisFrame) Target.SetActive(!Target.activeSelf);
         }
     }
 }

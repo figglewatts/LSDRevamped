@@ -14,7 +14,10 @@ namespace LSDR.Util
             ControlScheme.OnLastUsedDeviceChanged += checkActiveDeviceController;
         }
 
-        private void OnDisable() { ControlScheme.OnLastUsedDeviceChanged -= checkActiveDeviceController; }
+        private void OnDisable()
+        {
+            if (ControlScheme != null) ControlScheme.OnLastUsedDeviceChanged -= checkActiveDeviceController;
+        }
 
         private void checkActiveDeviceController(InputDevice device) { Cursor.visible = device is Mouse; }
     }

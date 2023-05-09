@@ -4,6 +4,7 @@ using LSDR.SDK.Lua;
 using Torii.Console;
 using Torii.Util;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace LSDR.Visual
 {
@@ -13,7 +14,7 @@ namespace LSDR.Visual
 
         public void Update()
         {
-            if (Input.GetKeyUp(KeyCode.F9)) TakeScreenshot();
+            if (Keyboard.current[Key.F9].wasPressedThisFrame) TakeScreenshot();
         }
 
         public void Initialise()
@@ -28,7 +29,8 @@ namespace LSDR.Visual
             string filename = $"{DateTime.Now:yy-MM-dd-HH-mm-ss}.png";
             string screenshotDir = PathUtil.Combine(Application.persistentDataPath, SCREENSHOT_DIR);
             Directory.CreateDirectory(screenshotDir);
-            ScreenCapture.CaptureScreenshot(PathUtil.Combine(Application.persistentDataPath, SCREENSHOT_DIR, filename));
+            ScreenCapture.CaptureScreenshot(PathUtil.Combine(Application.persistentDataPath, SCREENSHOT_DIR,
+                filename));
             Debug.Log("Captured screenshot");
         }
     }

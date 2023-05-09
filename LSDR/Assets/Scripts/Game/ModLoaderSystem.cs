@@ -35,6 +35,8 @@ namespace LSDR.Game
                 yield break;
             }
 
+            ensureDirectory();
+
             string[] modFiles = Directory.GetFiles(_modsDirectory, "*.lsdrmod", SearchOption.AllDirectories);
             foreach (string modFile in modFiles)
             {
@@ -67,6 +69,12 @@ namespace LSDR.Game
 
                 _loadedMods.Add((LSDRevampedMod)mods[0]);
             }
+        }
+
+        protected void ensureDirectory()
+        {
+            // if the directory doesn't exist, create it
+            if (!Directory.Exists(_modsDirectory)) Directory.CreateDirectory(_modsDirectory);
         }
     }
 }

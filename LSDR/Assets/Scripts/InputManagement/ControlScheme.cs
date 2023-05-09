@@ -7,7 +7,7 @@ namespace LSDR.InputManagement
     ///     ControlScheme is a data container used to store a control scheme.
     ///     It gets serialized to Google's Protobuf format.
     /// </summary>
-    [ProtoContract]
+    [ProtoContract(SkipConstructor = true)]
     public class ControlScheme
     {
         /// <summary>

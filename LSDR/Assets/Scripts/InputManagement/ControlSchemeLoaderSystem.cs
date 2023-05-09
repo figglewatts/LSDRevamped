@@ -76,10 +76,9 @@ namespace LSDR.InputManagement
 
             Schemes = new List<ControlScheme>();
 
-            EnsureDefaultSchemes();
+            ensureDirectory();
 
-            // if the directory doesn't exist, create it
-            if (!Directory.Exists(_controlSchemesPath)) Directory.CreateDirectory(_controlSchemesPath);
+            EnsureDefaultSchemes();
 
             // deserialize all of the control schemes in the path
             foreach (string file in Directory.GetFiles(_controlSchemesPath, "*.dat"))
@@ -89,6 +88,8 @@ namespace LSDR.InputManagement
         public void SaveSchemes()
         {
             Debug.Log("Serialising control schemes...");
+
+            ensureDirectory();
 
             foreach (ControlScheme scheme in Schemes)
                 _serializer.Serialize(scheme, PathUtil.Combine(_controlSchemesPath, scheme.Name + ".dat"));
@@ -156,6 +157,12 @@ namespace LSDR.InputManagement
             Schemes.Add(scheme);
 
             if (select) SelectScheme(scheme);
+        }
+
+        protected void ensureDirectory()
+        {
+            // if the directory doesn't exist, create it
+            if (!Directory.Exists(_controlSchemesPath)) Directory.CreateDirectory(_controlSchemesPath);
         }
     }
 }
