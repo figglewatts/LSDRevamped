@@ -31,12 +31,18 @@ namespace LSDR.Game
         public GameSaveSystem GameSaveSystem;
         public DreamSystem DreamSystem;
         public ToriiEvent OnGameLoaded;
+        public Action<string> OnGameLoadError;
+
+        public void OnEnable()
+        {
+            OnGameLoadError += err => { Debug.LogError($"Game load error: {err}"); };
+        }
 
         public IEnumerator LoadGameCoroutine()
         {
             Debug.Log("Loading game...");
-            // do game startup stuff here
 
+            // do game startup stuff here
             DevConsole.Initialise();
 
             DreamSystem.Initialise();
@@ -62,6 +68,12 @@ namespace LSDR.Game
             ControlSchemeLoaderSystem.LoadSchemes();
             SettingsSystem.Load();
             yield return ModLoaderSystem.LoadMods();
+            if (!ModLoaderSystem.ModsAvailable)
+            {
+                OnGameLoadError?.Invoke("There are no mods available.\n\nPlease check your mod folder and try again.");
+                yield break;
+            }
+
             GameSaveSystem.Load();
 
             GameLoaded = true;
