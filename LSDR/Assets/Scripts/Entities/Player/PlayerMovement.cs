@@ -217,7 +217,8 @@ namespace LSDR.Entities.Player
 
             if (hitAboveStepHeight && !hit.collider.isTrigger && hit.normal.y >= -0.1f) return true;
 
-            bool hitSomething = Physics.CapsuleCast(capsuleBottom, capsuleTop, _controller.radius, desiredMove, out hit,
+            bool hitSomething = Physics.CapsuleCast(capsuleBottom, capsuleTop, _controller.radius, desiredMove,
+                out hit,
                 _controller.skinWidth * 2);
             Vector3 axis = Vector3.Cross(transform.up, desiredMove);
             bool hitOverSlopeLimit =
@@ -236,6 +237,8 @@ namespace LSDR.Entities.Player
 
         private Vector2 getInputDirection()
         {
+            if (Time.timeScale <= 0) return Vector2.zero;
+
             // handle input lock
             if (_inputLocked) return _lockedInput;
 
@@ -245,6 +248,12 @@ namespace LSDR.Entities.Player
             // get vector axes from input system
             Vector2 move = ControlScheme.InputActions.Game.Move.ReadValue<Vector2>();
             move.x = ControlScheme.Current.FpsControls ? move.x : 0;
+
+            // no partial movement
+            if (move.x > 0) move.x = 1;
+            else if (move.x < 0) move.x = -1;
+            if (move.y > 0) move.y = 1;
+            else if (move.y < 0) move.y = -1;
 
             return move;
         }
