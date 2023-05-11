@@ -21,6 +21,10 @@ namespace LSDR.UI.Settings
         public GameObject SelectorObject;
         public ControlSchemeLoaderSystem ControlSchemeLoader;
 
+        public Button SchemeEditButton;
+        public Button SchemeDeleteButton;
+        public Dropdown SchemeDropdown;
+
         public UIControlSchemeNameVerifier NameVerifier;
         public UIRebindContainerPopulator RebindContainerPopulator;
         public UIControlSchemeDropdownPopulator ControlSchemeDropdownPopulator;
@@ -28,7 +32,6 @@ namespace LSDR.UI.Settings
         public UITabView TopButtonsTabView;
 
         protected ControlScheme _currentlyEditingScheme;
-        protected string _lastBindings;
         protected ControlSchemeCreatorMode _mode;
 
         public void OnDisable() { Hide(); }
@@ -45,17 +48,13 @@ namespace LSDR.UI.Settings
         {
             CreatorObject.SetActive(true);
             SelectorObject.SetActive(false);
+            _currentlyEditingScheme = ControlSchemeLoader.Current;
             _mode = mode;
             switch (mode)
             {
                 case ControlSchemeCreatorMode.Create:
                 {
                     _currentlyEditingScheme = new ControlScheme(ControlSchemeLoader.Current);
-                    break;
-                }
-                case ControlSchemeCreatorMode.Edit:
-                {
-                    _currentlyEditingScheme = ControlSchemeLoader.Current;
                     break;
                 }
             }
@@ -69,9 +68,16 @@ namespace LSDR.UI.Settings
 
         public void UpdateView()
         {
+            if (_currentlyEditingScheme == null) return;
+
             RebindContainerPopulator.EditingScheme = _currentlyEditingScheme;
             UseFpsControlsToggle.isOn = _currentlyEditingScheme.FpsControls;
             MouseSensitivitySlider.value = _currentlyEditingScheme.MouseSensitivity;
+
+            SchemeEditButton.interactable = _currentlyEditingScheme.Editable;
+            SchemeDeleteButton.interactable = _currentlyEditingScheme.Editable;
+
+            SchemeDropdown.value = ControlSchemeLoader.CurrentSchemeIndex;
 
             switch (_mode)
             {
@@ -98,7 +104,6 @@ namespace LSDR.UI.Settings
         /// </summary>
         public void SubmitScheme()
         {
-            _currentlyEditingScheme.SyncToInputActions(ControlSchemeLoader.InputActions);
             switch (_mode)
             {
                 case ControlSchemeCreatorMode.Create:
@@ -110,7 +115,16 @@ namespace LSDR.UI.Settings
 
             ControlSchemeLoader.SaveSchemes();
             ControlSchemeDropdownPopulator.PopulateDropdown();
+            SchemeDropdown.value = ControlSchemeLoader.CurrentSchemeIndex;
             Hide();
+        }
+
+        public void DeleteScheme()
+        {
+            ControlSchemeLoader.DeleteScheme(_currentlyEditingScheme);
+            ControlSchemeLoader.SaveSchemes();
+            ControlSchemeDropdownPopulator.PopulateDropdown();
+            SchemeDropdown.value = ControlSchemeLoader.CurrentSchemeIndex;
         }
 
         /// <summary>
@@ -125,19 +139,36 @@ namespace LSDR.UI.Settings
             SettingsBackButton.interactable = true;
         }
 
-        public void SchemeNameFieldOnValueChanged(string value) { _currentlyEditingScheme.Name = value; }
+        public void SchemeDropdownFieldChanged(int idx)
+        {
+            _currentlyEditingScheme = ControlSchemeLoader.Schemes[idx];
+            ControlSchemeLoader.SelectScheme(idx);
+            UpdateView();
+        }
+
+        public void SchemeNameFieldOnValueChanged(string value)
+        {
+            if (_currentlyEditingScheme == null) return;
+            _currentlyEditingScheme.Name = value;
+        }
 
         public void MouseSensitivityOnValueChanged(float sensitivity)
         {
+            if (_currentlyEditingScheme == null) return;
             _currentlyEditingScheme.MouseSensitivity = sensitivity;
         }
 
         public void UseFpsControlsOnValueChanged(bool fpsControls)
         {
+            if (_currentlyEditingScheme == null) return;
             _currentlyEditingScheme.FpsControls = fpsControls;
         }
 
-        public void InvertLookYOnValueChanged(bool invertLookY) { _currentlyEditingScheme.InvertLookY = invertLookY; }
+        public void InvertLookYOnValueChanged(bool invertLookY)
+        {
+            if (_currentlyEditingScheme == null) return;
+            _currentlyEditingScheme.InvertLookY = invertLookY;
+        }
 
 #region Controls
 

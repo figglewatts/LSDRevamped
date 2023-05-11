@@ -57,7 +57,6 @@ namespace LSDR.InputManagement
                         Binding = action.bindings[i],
                         InputAction = action
                     };
-                    bindings.Add(indexedActionBinding);
 
                     // if it's composite, add all of the composite bindings to the representation
                     if (action.bindings[i].isComposite)
@@ -72,6 +71,7 @@ namespace LSDR.InputManagement
                         Assert.IsTrue(composites.Count > 0);
                         indexedActionBinding.CompositeBindings = composites;
                     }
+                    bindings.Add(indexedActionBinding);
                 }
             }
         }

@@ -25,8 +25,21 @@ namespace LSDR.UI.Modal
         public GameObject BindingChoiceButtonPrefab;
         public UIRebinder Rebinder;
 
+        protected InputAction _cancelAction;
+        protected bool _canHideModal = true;
+
+        protected void Update()
+        {
+            if (_canHideModal && _cancelAction != null && _cancelAction.WasReleasedThisFrame())
+            {
+                UIModalController.Instance.HideModal();
+            }
+
+        }
+
         public void ProvideCancelAction(InputAction cancelAction)
         {
+            _cancelAction = cancelAction;
             CancelText.text = $"Press {cancelAction.GetBindingDisplayString()} to cancel";
         }
 
@@ -43,7 +56,7 @@ namespace LSDR.UI.Modal
 
         protected GameObject createChoiceButton(IndexedActionBinding binding, BindingChoiceType choiceType)
         {
-            GameObject buttonObj = Instantiate(BindingChoiceButtonPrefab, ButtonContainer);
+            GameObject buttonObj = Instantiate(BindingChoiceButtonPrefab, ButtonContainer, false);
             buttonObj.SetActive(true);
             Button button = buttonObj.GetComponent<Button>();
             button.onClick.AddListener(() =>
@@ -51,16 +64,21 @@ namespace LSDR.UI.Modal
                 switch (choiceType)
                 {
                     case BindingChoiceType.Rebind:
-                        Rebinder.InteractiveRebind(binding, () => { });
+                        _canHideModal = false;
+                        Rebinder.InteractiveRebind(binding, () => UIModalController.Instance.HideModal(), () =>
+                        {
+                            _canHideModal = true;
+                        });
                         break;
                     case BindingChoiceType.Reset:
                         binding.ResetBinding();
+                        UIModalController.Instance.HideModal();
                         break;
                     case BindingChoiceType.Delete:
                         binding.DeleteBinding();
+                        UIModalController.Instance.HideModal();
                         break;
                 }
-                UIModalController.Instance.HideModal(); // hide this modal
             });
 
             Text buttonText = buttonObj.GetComponentInChildren<Text>();

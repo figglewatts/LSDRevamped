@@ -39,8 +39,9 @@ namespace LSDR.UI.Settings
             get => _editingScheme;
             set
             {
+                Debug.Log("Setting editing scheme");
                 _editingScheme = value;
-                populateRebindContainer();
+                if (gameObject.activeInHierarchy) populateRebindContainer();
             }
         }
 
@@ -58,6 +59,8 @@ namespace LSDR.UI.Settings
 
         protected void refreshInternalRepresentation()
         {
+            if (_editingScheme == null) return;
+
             if (_inputActions == null) _inputActions = new InputActions();
             _inputActions.LoadBindingOverridesFromJson(_editingScheme.SchemeString);
             _internalRepresentation = new RebindableActions(_inputActions);
@@ -66,11 +69,14 @@ namespace LSDR.UI.Settings
         protected void syncBindingsToControlScheme()
         {
             _editingScheme.SyncToInputActions(_inputActions);
+            populateRebindContainer();
         }
 
         // populate the container with the rows for each action
         protected void populateRebindContainer()
         {
+            if (_editingScheme == null) return;
+
             refreshInternalRepresentation();
 
             var population = new List<GameObject>();
@@ -94,7 +100,7 @@ namespace LSDR.UI.Settings
         // create a single rebinding row
         protected GameObject createRebindRow(RebindableActions.ActionBindings actionBindings)
         {
-            RebindRow row = Instantiate(Template.gameObject, transform, true).GetComponent<RebindRow>();
+            RebindRow row = Instantiate(Template.gameObject).GetComponent<RebindRow>();
             row.gameObject.SetActive(true);
             row.ActionName.text = getActionDisplayString(actionBindings);
             row.Bindings = actionBindings.IndexedBindings;
@@ -142,7 +148,8 @@ namespace LSDR.UI.Settings
                 // InputAction has only single binding, perform actions directly without choice modal
                 row.RebindButton.onClick.AddListener(() =>
                 {
-                    Rebinder.InteractiveRebind(actionBindings.IndexedBindings[0], syncBindingsToControlScheme);
+                    Rebinder.InteractiveRebind(actionBindings.IndexedBindings[0], syncBindingsToControlScheme,
+                        syncBindingsToControlScheme);
                 });
                 row.ResetButton.onClick.AddListener(() =>
                 {

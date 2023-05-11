@@ -39,12 +39,13 @@ namespace LSDR.InputManagement
         }
 
         public void InteractiveRebind(InputAction cancelAction,
-            Action<InputActionRebindingExtensions.RebindingOperation> onPrepareRebinding, Action onRebindSuccess,
-            Action onRebindCancel)
+            Action<InputActionRebindingExtensions.RebindingOperation, InputBinding> onPrepareRebinding,
+            Action onRebindSuccess,
+            Action onRebindCancel,
+            bool gamepad)
         {
-            bool bindingIsGamepad = Binding.groups.Contains("Gamepad");
             InputControl cancelControl =
-                cancelAction.controls.First(c => bindingIsGamepad ? c.device is Gamepad : c.device is Keyboard);
+                cancelAction.controls.FirstOrDefault(c => gamepad ? c.device is Gamepad : c.device is Keyboard);
 
             // perform cleanup related to a rebinding operation
             void cleanup(InputActionRebindingExtensions.RebindingOperation op)
@@ -59,7 +60,6 @@ namespace LSDR.InputManagement
             {
                 if (!bindingIndexes.MoveNext()) // if we have no more elements
                 {
-                    if (hasComposite) onRebindSuccess?.Invoke(); // invoke it here as we're now complete
                     return;
                 }
                 InputActionRebindingExtensions.RebindingOperation rebindOp =
@@ -73,10 +73,10 @@ namespace LSDR.InputManagement
                           .OnComplete(op =>
                            {
                                cleanup(op);
+                               onRebindSuccess?.Invoke();
                                if (hasComposite) performRebind(action, bindingIndexes, true);
-                               else onRebindSuccess?.Invoke();
                            });
-                onPrepareRebinding?.Invoke(rebindOp);
+                onPrepareRebinding?.Invoke(rebindOp, action.bindings[bindingIndexes.Current]);
                 rebindOp.Start();
             }
 

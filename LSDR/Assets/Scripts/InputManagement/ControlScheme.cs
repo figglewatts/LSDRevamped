@@ -36,7 +36,7 @@ namespace LSDR.InputManagement
 
         public ControlScheme(ControlScheme other)
         {
-            Name = "New control scheme";
+            Name = "";
             FpsControls = other.FpsControls;
             MouseSensitivity = other.MouseSensitivity;
             InvertLookY = other.InvertLookY;
@@ -52,7 +52,7 @@ namespace LSDR.InputManagement
         ///     The encoded scheme string of this control scheme. Used to save the data.
         /// </summary>
         [ProtoMember(2)]
-        public string SchemeString { get; set; }
+        public string SchemeString { get; set; } = "";
 
         /// <summary>
         ///     Whether or not FPS mouselook/strafing is enabled.

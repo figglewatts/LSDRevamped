@@ -36,6 +36,8 @@ namespace LSDR.InputManagement
             }
         }
 
+        public int CurrentSchemeIndex => _currentSchemeHandle;
+
         protected int _currentSchemeHandle { get; private set; }
 
         public void OnEnable()
@@ -92,7 +94,12 @@ namespace LSDR.InputManagement
             ensureDirectory();
 
             foreach (ControlScheme scheme in Schemes)
-                _serializer.Serialize(scheme, PathUtil.Combine(_controlSchemesPath, scheme.Name + ".dat"));
+                _serializer.Serialize(scheme, getControlSchemePath(scheme));
+        }
+
+        protected string getControlSchemePath(ControlScheme scheme)
+        {
+            return PathUtil.Combine(_controlSchemesPath, scheme.Name + ".dat");
         }
 
         public void EnsureDefaultSchemes()
@@ -132,9 +139,11 @@ namespace LSDR.InputManagement
                 return;
             }
 
+            Debug.Log($"Selecting scheme {idx}");
             _currentSchemeHandle = idx;
             Assert.IsNotNull(Schemes[idx].SchemeString);
             InputActions.LoadBindingOverridesFromJson(Schemes[idx].SchemeString);
+            InputActions.Enable();
         }
 
         public void SelectScheme(ControlScheme scheme)
@@ -155,8 +164,29 @@ namespace LSDR.InputManagement
             Assert.IsNotNull(scheme.SchemeString);
 
             Schemes.Add(scheme);
+            Schemes.Sort((a, b) => string.Compare(a.Name, b.Name, StringComparison.InvariantCulture));
 
             if (select) SelectScheme(scheme);
+        }
+
+        public void DeleteScheme(ControlScheme scheme)
+        {
+            int idx = Schemes.IndexOf(scheme);
+            if (idx == -1)
+            {
+                Debug.LogWarning(
+                    $"Unable to delete scheme '{scheme}': not found in schemes list (is it created?)");
+                return;
+            }
+
+            File.Delete(getControlSchemePath(scheme));
+            Schemes.RemoveAt(idx);
+
+            if (idx == _currentSchemeHandle && idx == Schemes.Count)
+            {
+                // we removed the last scheme, set current to new last scheme
+                //_currentSchemeHandle = Schemes.Count - 1;
+            }
         }
 
         protected void ensureDirectory()

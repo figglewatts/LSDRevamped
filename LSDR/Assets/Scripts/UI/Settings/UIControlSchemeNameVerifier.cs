@@ -44,10 +44,11 @@ namespace LSDR.UI.Settings
         public bool Validate(string input)
         {
             // scheme can't be empty
-            if (string.IsNullOrEmpty(input)) return false;
+            if (string.IsNullOrWhiteSpace(input)) return false;
 
             // scheme can't overwrite another scheme
-            if (!CanHaveSameName && ControlSchemeLoader.Schemes.Count(scheme => scheme.Name == input) > 0) return false;
+            if (!CanHaveSameName && ControlSchemeLoader.Schemes.Count(scheme => scheme.Name == input) > 0)
+                return false;
 
             return true;
         }

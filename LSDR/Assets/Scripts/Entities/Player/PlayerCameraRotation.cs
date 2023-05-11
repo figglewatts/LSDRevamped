@@ -77,13 +77,7 @@ namespace LSDR.Entities.Player
             // if mouselook is disabled, we don't want to handle rotation this way
             if (!Settings.CanMouseLook) return;
 
-            Vector2 controllerLookVec = ControlScheme.InputActions.Game.Look.ReadValue<Vector2>();
-
-            if (!Settings.Settings.LimitFramerate) controllerLookVec *= 0.2f;
-
-            Vector2 mouseLookVec = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
-
-            Vector2 lookVec = controllerLookVec + mouseLookVec;
+            Vector2 lookVec = ControlScheme.InputActions.Game.Look.ReadValue<Vector2>();
 
             // if the framerate is limited and we're using a controller, scale the look vector a bit as otherwise
             // it'll be pretty slow
