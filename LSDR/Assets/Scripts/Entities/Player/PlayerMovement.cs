@@ -49,7 +49,7 @@ namespace LSDR.Entities.Player
             _footstepClip = ResourceManager.Load<ToriiAudioClip>(
                 PathUtil.Combine(Application.streamingAssetsPath, "sfx", "SE_00003.ogg"), "global");
 
-            _initialCameraOffset = Camera.localPosition.y;
+            _initialCameraOffset = _controller.height;
 
             resetHeadbob();
 

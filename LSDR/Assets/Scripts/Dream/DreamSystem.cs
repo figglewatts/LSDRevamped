@@ -57,6 +57,8 @@ namespace LSDR.Dream
         [NonSerialized] protected Coroutine _endDreamTimer;
 
         [NonSerialized] protected string _forcedSpawnID;
+        [NonSerialized] protected float _lastPlayerYRotation;
+        [NonSerialized] protected bool _spawnedInAtLeastOnce; // true if we've been in a dream yet
         [NonSerialized] public AudioSource MusicSource;
         [NonSerialized] public GameObject Player;
         public SDK.Data.Dream CurrentDream { get; protected set; }
@@ -287,6 +289,9 @@ namespace LSDR.Dream
             _dreamIsEnding = true;
             _canTransition = false;
 
+            // save the last Y rotation for the player, so we can set it back to this when we start the next dream
+            _lastPlayerYRotation = Player.transform.rotation.eulerAngles.y;
+
             Player = null;
 
             // disable pausing to prevent throwing off timers etc
@@ -304,53 +309,68 @@ namespace LSDR.Dream
 
         protected void spawnPlayerInDream(bool setOrientation = false)
         {
-            PlayerSpawn[] allSpawns = CurrentDreamInstance.GetComponentsInChildren<PlayerSpawn>();
-            if (!allSpawns.Any())
+            try
             {
-                Debug.LogError("No spawn points in dream! Unable to spawn player.");
-                return;
-            }
-
-            // handle a designated SpawnPoint being used
-            if (!string.IsNullOrEmpty(_forcedSpawnID))
-            {
-                try
+                PlayerSpawn[] allSpawns = CurrentDreamInstance.GetComponentsInChildren<PlayerSpawn>();
+                if (!allSpawns.Any())
                 {
-                    PlayerSpawn spawn =
-                        allSpawns.First(e => e.ID.Equals(_forcedSpawnID, StringComparison.InvariantCulture));
-                    spawn.Spawn(Player.transform, setOrientation);
+                    Debug.LogError("No spawn points in dream! Unable to spawn player.");
                     return;
                 }
-                catch (InvalidOperationException)
-                {
-                    Debug.LogError($"Unable to find SpawnPoint with ID '{_forcedSpawnID}'");
-                    throw;
-                }
-            }
 
-            // spawn in a first day-designated spawn if it's the first day
-            if (GameSave.CurrentJournalSave.DayNumber == 1)
-            {
-                List<PlayerSpawn> firstDaySpawns = allSpawns.Where(s => s.DayOneSpawn).ToList();
-                if (firstDaySpawns.Any())
+                // handle a designated SpawnPoint being used
+                if (!string.IsNullOrEmpty(_forcedSpawnID))
                 {
-                    RandUtil.RandomListElement(firstDaySpawns).Spawn(Player.transform, setOrientation);
+                    try
+                    {
+                        PlayerSpawn spawn =
+                            allSpawns.First(e => e.ID.Equals(_forcedSpawnID, StringComparison.InvariantCulture));
+                        spawn.Spawn(Player.transform, setOrientation);
+                        return;
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        Debug.LogError($"Unable to find SpawnPoint with ID '{_forcedSpawnID}'");
+                        throw;
+                    }
+                }
+
+                // spawn in a first day-designated spawn if it's the first day
+                if (GameSave.CurrentJournalSave.DayNumber == 1)
+                {
+                    List<PlayerSpawn> firstDaySpawns = allSpawns.Where(s => s.DayOneSpawn).ToList();
+                    if (firstDaySpawns.Any())
+                    {
+                        RandUtil.RandomListElement(firstDaySpawns).Spawn(Player.transform, setOrientation);
+                        return;
+                    }
+                }
+
+                // make sure we choose a spawn point that isn't a tunnel entrance
+                List<PlayerSpawn> spawnPoints = allSpawns.Where(s => !s.TunnelEntrance).ToList();
+                if (spawnPoints.Any())
+                {
+                    RandUtil.RandomListElement(spawnPoints).Spawn(Player.transform, setOrientation);
                     return;
                 }
-            }
 
-            // make sure we choose a spawn point that isn't a tunnel entrance
-            List<PlayerSpawn> spawnPoints = allSpawns.Where(s => !s.TunnelEntrance).ToList();
-            if (spawnPoints.Any())
+                // otherwise we'll have to spawn on a tunnel entrance... this shouldn't happen so warn the player
+                Debug.LogWarning(
+                    "Unable to find a spawn point that isn't a tunnel entrance -- using a tunnel entrance instead.");
+                RandUtil.RandomListElement(allSpawns).Spawn(Player.transform, setOrientation);
+            }
+            finally
             {
-                RandUtil.RandomListElement(spawnPoints).Spawn(Player.transform, setOrientation);
-                return;
+                // make sure we only try to do this if we've already dreamed (i.e. we have a last Y rotation)
+                // otherwise, we'll be overwriting the Y rotation of the spawn point chosen
+                if (_spawnedInAtLeastOnce)
+                {
+                    // set the last Y rotation to what it was before
+                    Player.transform.rotation = Quaternion.Euler(Player.transform.rotation.x, _lastPlayerYRotation,
+                        Player.transform.rotation.z);
+                }
+                _spawnedInAtLeastOnce = true;
             }
-
-            // otherwise we'll have to spawn on a tunnel entrance... this shouldn't happen so warn the player
-            Debug.LogWarning(
-                "Unable to find a spawn point that isn't a tunnel entrance -- using a tunnel entrance instead.");
-            RandUtil.RandomListElement(allSpawns).Spawn(Player.transform, setOrientation);
         }
 
 #region Console Commands

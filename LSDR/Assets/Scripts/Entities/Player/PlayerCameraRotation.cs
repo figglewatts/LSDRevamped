@@ -11,6 +11,8 @@ namespace LSDR.Entities.Player
     /// </summary>
     public class PlayerCameraRotation : MonoBehaviour
     {
+        public CharacterController PlayerCharacterController;
+
         /// <summary>
         ///     The speed at which to rotate the camera. Set in inspector.
         /// </summary>
@@ -52,27 +54,51 @@ namespace LSDR.Entities.Player
         public ControlSchemeLoaderSystem ControlScheme;
 
         // used to store how much we need to rotate on X axis (for lerping)
-        private float _rotationX;
+        protected float _rotationX;
 
-        private void Update()
+        protected void Start()
+        {
+            foreach (Camera c in TargetCameras)
+            {
+                setCameraPosition(c);
+            }
+        }
+
+        protected void Update()
         {
             // if we can't control the player, or we're in VR, then we don't want to affect camera rotation
             if (!Settings.CanControlPlayer || Settings.VR) return;
 
+
             foreach (Camera c in TargetCameras)
+            {
                 // handle the controls differently depending on whether or not the current
                 // control scheme has FPS controls (mouselook) enabled
                 if (ControlScheme.Current.FpsControls)
+                {
                     handleFpsCameraRotation(c);
+                }
                 else
+                {
                     handleTankCameraRotation(c);
+                }
+            }
+        }
+
+        /// <summary>
+        ///     Set the camera's position to that of the character controller's height.
+        /// </summary>
+        /// <param name="target">The target Camera.</param>
+        protected void setCameraPosition(Camera target)
+        {
+            target.transform.localPosition = new Vector3(0, PlayerCharacterController.height, 0);
         }
 
         /// <summary>
         ///     Handle camera rotation as in an FPS game.
         /// </summary>
         /// <param name="target">The target Camera.</param>
-        private void handleFpsCameraRotation(Camera target)
+        protected void handleFpsCameraRotation(Camera target)
         {
             // if mouselook is disabled, we don't want to handle rotation this way
             if (!Settings.CanMouseLook) return;
@@ -110,7 +136,7 @@ namespace LSDR.Entities.Player
         ///     Handle camera rotation as in the original version of the game.
         /// </summary>
         /// <param name="target">The target Camera.</param>
-        private void handleTankCameraRotation(Camera target)
+        protected void handleTankCameraRotation(Camera target)
         {
             Quaternion transformRotation = target.transform.rotation;
 
@@ -156,7 +182,7 @@ namespace LSDR.Entities.Player
         /// <param name="min">The min angle.</param>
         /// <param name="max">The max angle.</param>
         /// <returns>The clamped angle.</returns>
-        private float ClampAngle(float angle, float min, float max)
+        protected float ClampAngle(float angle, float min, float max)
         {
             if (angle < -360F) angle += 360F;
             if (angle > 360F) angle -= 360F;
