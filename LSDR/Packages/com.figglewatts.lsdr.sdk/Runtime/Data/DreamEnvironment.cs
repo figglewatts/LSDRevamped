@@ -72,8 +72,9 @@ namespace LSDR.SDK.Data
         protected static readonly int _skyColorPropertyId = Shader.PropertyToID("_SkyColor");
         protected static readonly int _fogColorPropertyId = Shader.PropertyToID("_FogColor");
 
-        public void Apply(Material skyMaterial)
+        public void Apply()
         {
+            Material skyMaterial = new Material(Shader.Find("LSDR/GradientSky"));
             skyMaterial.SetFloat(_fogHeightPropertyId, FogHeight);
             skyMaterial.SetFloat(_fogGradientPropertyId, FogGradient);
             skyMaterial.SetColor(_skyColorPropertyId, SkyColor);

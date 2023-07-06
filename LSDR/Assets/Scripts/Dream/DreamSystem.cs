@@ -37,7 +37,6 @@ namespace LSDR.Dream
         protected const float FADE_OUT_SECS_FALL = 2.5f;
         protected const float FADE_OUT_SECS_FORCE = 1;
         public ScenePicker TitleScene;
-        public Material SkyBackground;
         public GameSaveSystem GameSave;
         public ControlSchemeLoaderSystem Control;
         public SettingsSystem SettingsSystem;
@@ -243,7 +242,7 @@ namespace LSDR.Dream
             // because we're beginning the dream
             spawnPlayerInDream(transitioning == false);
 
-            dream.ChooseEnvironment(GameSave.CurrentJournalSave.DayNumber).Apply(SkyBackground);
+            dream.ChooseEnvironment(GameSave.CurrentJournalSave.DayNumber).Apply();
 
             SettingsSystem.CanControlPlayer = true;
             SettingsSystem.CanMouseLook = true;
@@ -374,7 +373,7 @@ namespace LSDR.Dream
                 return;
             }
 
-            CurrentDream.Environments[idx].Apply(SkyBackground);
+            CurrentDream.Environments[idx].Apply();
         }
 
         [Console]
@@ -417,7 +416,8 @@ namespace LSDR.Dream
         [Console]
         public void PlaySong(string songPath)
         {
-            ToriiAudioClip clip = ResourceManager.Load<ToriiAudioClip>(PathUtil.Combine(Application.streamingAssetsPath,
+            ToriiAudioClip clip = ResourceManager.Load<ToriiAudioClip>(PathUtil.Combine(
+                Application.streamingAssetsPath,
                 "music",
                 songPath), "scene");
             MusicSource.Stop();

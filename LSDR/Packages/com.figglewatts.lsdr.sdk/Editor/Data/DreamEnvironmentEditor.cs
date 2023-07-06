@@ -107,8 +107,7 @@ namespace LSDR.SDK.Editor.Data
 
             _oldRenderSettings = new RenderSettings();
 
-            _previewSkyMaterial = new Material(Shader.Find("LSDR/GradientSky"));
-            dreamEnvironment.Apply(_previewSkyMaterial);
+            dreamEnvironment.Apply();
         }
 
         protected void destroyPreview()
