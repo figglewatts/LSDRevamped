@@ -219,6 +219,7 @@ namespace LSDR.Dream
                 EntityIndex.Instance.DeregisterAllEntities();
             }
 
+            bool loadingSameDream = CurrentDream == dream;
             CurrentDream = dream;
 
             if (!SceneManager.GetActiveScene().name.Equals("load_mod", StringComparison.InvariantCulture))
@@ -227,7 +228,7 @@ namespace LSDR.Dream
                 yield return loadSceneOp;
             }
 
-            if (MusicSource != null && MusicSource.isPlaying) MusicSource.Stop();
+            if (MusicSource != null && MusicSource.isPlaying && !loadingSameDream) MusicSource.Stop();
 
             OnLevelPreLoad.Raise();
 
