@@ -2,7 +2,6 @@ using System.Collections;
 using LSDR.Dream;
 using LSDR.Game;
 using LSDR.InputManagement;
-using LSDR.SDK.Util;
 using Torii.Audio;
 using Torii.Console;
 using Torii.Resource;
@@ -174,7 +173,7 @@ namespace LSDR.Entities.Player
                 if (_timeColliding > LinkDelay && CanLink)
                 {
                     CanLink = false;
-                    DreamSystem.Transition(RandUtil.RandColor());
+                    DreamSystem.Transition();
                 }
             }
             else

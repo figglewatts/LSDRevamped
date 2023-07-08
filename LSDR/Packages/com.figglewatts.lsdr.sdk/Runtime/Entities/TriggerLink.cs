@@ -1,6 +1,5 @@
 ﻿using LSDR.SDK.Data;
 using LSDR.SDK.DreamControl;
-using LSDR.SDK.Util;
 using UnityEngine;
 
 namespace LSDR.SDK.Entities
@@ -18,9 +17,17 @@ namespace LSDR.SDK.Entities
 
         protected override void onTrigger(Collider player)
         {
-            Color linkColor = ForceFadeColor ? ForcedLinkColor : RandUtil.RandColor();
             string forcedSpawnPoint = string.IsNullOrWhiteSpace(SpawnPointEntityID) ? null : SpawnPointEntityID;
-            DreamControlManager.Managed.Transition(linkColor, Linked, PlayLinkSound, LockInput, forcedSpawnPoint);
+
+            if (!ForceFadeColor)
+            {
+                DreamControlManager.Managed.Transition(Linked, PlayLinkSound, LockInput, forcedSpawnPoint);
+            }
+            else
+            {
+                DreamControlManager.Managed.Transition(ForcedLinkColor, Linked, PlayLinkSound, LockInput,
+                    forcedSpawnPoint);
+            }
         }
     }
 }

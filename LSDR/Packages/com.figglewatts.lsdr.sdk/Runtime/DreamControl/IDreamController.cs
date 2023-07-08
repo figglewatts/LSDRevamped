@@ -11,6 +11,11 @@ namespace LSDR.SDK.DreamControl
             bool lockInput = false,
             string spawnPointID = null);
 
+        void Transition(Dream dream = null,
+            bool playSound = true,
+            bool lockInput = false,
+            string spawnPointID = null);
+
         void EndDream(bool fromFall = false);
     }
 }

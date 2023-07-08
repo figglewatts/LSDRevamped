@@ -127,6 +127,19 @@ namespace LSDR.Dream
             });
         }
 
+        /// <summary>
+        ///     Transition with fade colour determined by the current graph position.
+        /// </summary>
+        /// <param name="dream">Dream to transition to, if null then randomly selected from pool of eligible.</param>
+        /// <param name="playSound">Whether to play sound or not when transitioning. Default true.</param>
+        /// <param name="lockControls">Whether to lock controls while linking. Default false.</param>
+        /// <param name="spawnPointID">If non-null then should be the ID of a spawn point to spawn at in the dream.</param>
+        public void Transition(SDK.Data.Dream dream = null, bool playSound = true, bool lockControls = false,
+            string spawnPointID = null)
+        {
+            Transition(fadeColorFromCurrentSequence(), dream, playSound, lockControls, spawnPointID);
+        }
+
         public void Initialise() { DevConsole.Register(this); }
 
         public void BeginDream()
@@ -273,6 +286,28 @@ namespace LSDR.Dream
             if (CurrentDream == null) return;
 
             OnSongChange.Raise();
+        }
+
+        protected Color fadeColorFromCurrentSequence()
+        {
+            Vector2Int graphPos = CurrentSequence.EvaluateGraphPosition();
+            switch (graphPos)
+            {
+                case var p when p.x <= -4 && p.y >= 1:
+                    return Color.green;
+                case var p when p.x <= 3 && p.y >= 4:
+                    return Color.blue;
+                case var p when p.x >= 4 && p.y >= 4:
+                    return Color.magenta;
+                case var p when p.x >= 4 && p.y >= -3:
+                    return Color.black;
+                case var p when p.x <= -4 && p.y <= -4:
+                    return Color.yellow;
+                case var p when p.x <= 3 && p.y <= -4:
+                    return Color.red;
+                default:
+                    return Color.white;
+            }
         }
 
         protected SDK.Data.Dream getRandomDream()
