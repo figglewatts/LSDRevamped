@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using LSDR.SDK.Data;
 using Newtonsoft.Json;
 using UnityEngine;
 
@@ -16,49 +17,61 @@ namespace LSDR.Dream
         /// </summary>
         public readonly List<VisitedDream> Visited = new List<VisitedDream>();
 
-        /// <summary>
-        ///     Additional points to add to the dynamic score.
-        /// </summary>
-        public int DynamicModifier;
+        protected List<GraphContribution> _areaGraphContributions = new List<GraphContribution>();
+        protected List<GraphContribution> _entityGraphContributions = new List<GraphContribution>();
 
-        /// <summary>
-        ///     Additional points to add to the upper score.
-        /// </summary>
-        public int UpperModifier;
-
-        /// <summary>
-        ///     The total upper score across all of the visited dreams.
-        /// </summary>
-        [JsonIgnore]
-        public int UpperScore { get { return Mathf.Clamp(Visited.Sum(d => d.Upperness) + UpperModifier, -9, 9); } }
-
-        /// <summary>
-        ///     The total dynamic score across all of the visited dreams.
-        /// </summary>
-        [JsonIgnore]
-        public int DynamicScore
+        public void LogGraphContributionFromArea(int dynamicness, int upperness)
         {
-            get { return Mathf.Clamp(Visited.Sum(d => d.Dynamicness) + DynamicModifier, -9, 9); }
+            _areaGraphContributions.Add(new GraphContribution(dynamicness, upperness));
         }
 
-        [JsonObject]
-        public struct VisitedDream
+        public void LogGraphContributionFromEntity(int dynamicness, int upperness)
         {
-            public string Name;
-            public string Author;
-            public int Upperness;
-            public int Dynamicness;
+            _entityGraphContributions.Add(new GraphContribution(dynamicness, upperness));
+        }
 
-            public static implicit operator VisitedDream(SDK.Data.Dream dream)
+        public Vector2Int EvaluateGraphPosition()
+        {
+            Vector2Int areaContribution = evaluateContributionList(_areaGraphContributions);
+            Vector2Int entityContribution = evaluateContributionList(_entityGraphContributions);
+            Vector2Int unclampedContribution = (areaContribution + entityContribution) / 2;
+            return correctOutOfGraphBounds(unclampedContribution);
+        }
+
+        protected Vector2Int correctOutOfGraphBounds(Vector2Int contribution)
+        {
+            int correctComponent(int component)
             {
-                return new VisitedDream
-                {
-                    Name = dream.Name,
-                    Author = dream.Author,
-                    Upperness = dream.Upperness,
-                    Dynamicness = dream.Dynamicness
-                };
+                if (component < -9) return 9;
+                if (component > 9) return -9;
+                return component;
             }
+
+            return new Vector2Int(correctComponent(contribution.x), correctComponent(contribution.y));
+        }
+
+        protected Vector2Int evaluateContributionList(List<GraphContribution> contributions)
+        {
+            Vector2Int averageContribution = new Vector2Int(
+                (int)contributions.Average(c => c.Dynamic),
+                (int)contributions.Average(c => c.Upper));
+            Vector2Int lastContributionEvaluation = evaluateContribution(contributions.Last());
+            return averageContribution + lastContributionEvaluation;
+        }
+
+        protected Vector2Int evaluateContribution(GraphContribution contribution)
+        {
+            return new Vector2Int(evaluateContributionComponent(contribution.Dynamic),
+                evaluateContributionComponent(contribution.Upper));
+        }
+
+        protected int evaluateContributionComponent(int contributionValue)
+        {
+            if (contributionValue <= -6) return -2;
+            if (contributionValue <= -3) return -1;
+            if (contributionValue <= 2) return 0;
+            if (contributionValue <= 5) return 1;
+            return 2;
         }
     }
 }

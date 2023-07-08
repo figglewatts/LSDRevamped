@@ -7,7 +7,7 @@ namespace LSDR.Entities.Dream
     [RequireComponent(typeof(MeshRenderer))]
     public class Greyman : MonoBehaviour
     {
-        public const int HAPPINESS_PENALTY = -2;
+        public const int UPPERNESS_PENALTY = -9;
         public float MoveSpeed = 0.5f;
         public float FlashDistance = 4;
         public DreamSystem DreamSystem;
@@ -33,7 +33,7 @@ namespace LSDR.Entities.Dream
 
         private void playerEncountered()
         {
-            DreamSystem.CurrentSequence.UpperModifier += HAPPINESS_PENALTY;
+            DreamSystem.CurrentSequence.LogGraphContributionFromEntity(0, UPPERNESS_PENALTY);
             ToriiFader.Instance.FadeIn(Color.white, 0.1F, () =>
             {
                 Renderer.enabled = false;

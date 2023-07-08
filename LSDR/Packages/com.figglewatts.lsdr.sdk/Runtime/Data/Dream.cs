@@ -10,12 +10,6 @@ namespace LSDR.SDK.Data
 
         [Tooltip("The author of this dream.")] public string Author;
 
-        [Tooltip("How much visiting this dream affects the upper axis of the graph.")] [Range(-9, 9)]
-        public int Upperness;
-
-        [Tooltip("How much visiting this dream affects the dynamic axis of the graph.")] [Range(-9, 9)]
-        public int Dynamicness;
-
         [Tooltip("Whether this dream can spawn the grey man.")]
         public bool GreyMan;
 

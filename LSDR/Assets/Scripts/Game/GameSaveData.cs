@@ -29,10 +29,10 @@ namespace LSDR.Game
             public int DayNumber => SequenceData.Count + 1;
 
             [JsonIgnore]
-            public int LastGraphX => SequenceData.Last().DynamicScore + 9;
+            public int LastGraphX => SequenceData.Last().EvaluateGraphPosition().x;
 
             [JsonIgnore]
-            public int LastGraphY => SequenceData.Last().UpperScore + 9;
+            public int LastGraphY => SequenceData.Last().EvaluateGraphPosition().y;
         }
     }
 }

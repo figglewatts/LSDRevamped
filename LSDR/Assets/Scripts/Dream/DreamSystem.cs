@@ -32,7 +32,7 @@ namespace LSDR.Dream
         protected const float CHANCE_TO_SWITCH_TEXTURES_WHEN_LINKING = 6;
         protected const float MIN_SECONDS_IN_DREAM = 90;
         protected const float MAX_SECONDS_IN_DREAM = 600;
-        protected const int FALLING_UPPER_PENALTY = -3;
+        protected const int FALLING_UPPER_PENALTY = -9;
         protected const float FADE_OUT_SECS_REGULAR = 5;
         protected const float FADE_OUT_SECS_FALL = 2.5f;
         protected const float FADE_OUT_SECS_FORCE = 1;
@@ -72,7 +72,7 @@ namespace LSDR.Dream
             // penalise upper score if ending dream from falling
             if (fromFall)
             {
-                CurrentSequence.UpperModifier += FALLING_UPPER_PENALTY;
+                CurrentSequence.LogGraphContributionFromEntity(0, FALLING_UPPER_PENALTY);
                 SettingsSystem.CanControlPlayer = false;
             }
             else
