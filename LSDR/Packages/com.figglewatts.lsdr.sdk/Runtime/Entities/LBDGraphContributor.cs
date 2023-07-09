@@ -8,17 +8,6 @@ namespace LSDR.SDK.Entities
 {
     public class LBDGraphContributor : MonoBehaviour
     {
-        // require player
-
-        // require LBD type and width
-
-        // convert player XZ coords to LBD tilemap position
-        // when tilemap position has changed, use pos to idx
-        // into array of contribution values for the dream
-        // and submit the values to dream system
-
-        // use Y coords if vertical LBD
-
         public enum LBDLayoutType
         {
             Horizontal,

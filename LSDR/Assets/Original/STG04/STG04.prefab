@@ -180,6 +180,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2940507415088835220}
+  - component: {fileID: 2940507415663406484}
   m_Layer: 0
   m_Name: STG04
   m_TagString: Untagged
@@ -205,6 +206,57 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2940507415663406484
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2940507415088835223}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1abf60f790a74eee91ff9106b9553b3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LayoutType: 0
+  TileWidth: 6
+  LBDGraphData:
+  - _vector: {x: 5, y: 9}
+  - _vector: {x: 5, y: 8}
+  - _vector: {x: 7, y: 7}
+  - _vector: {x: 4, y: 7}
+  - _vector: {x: 3, y: 7}
+  - _vector: {x: 9, y: 0}
+  - _vector: {x: 2, y: 7}
+  - _vector: {x: -2, y: 7}
+  - _vector: {x: -3, y: 7}
+  - _vector: {x: -4, y: 7}
+  - _vector: {x: -5, y: 7}
+  - _vector: {x: -5, y: 8}
+  - _vector: {x: -5, y: 9}
+  - _vector: {x: -4, y: 9}
+  - _vector: {x: -3, y: 9}
+  - _vector: {x: -2, y: 9}
+  - _vector: {x: -1, y: 9}
+  - _vector: {x: 9, y: 0}
+  - _vector: {x: 1, y: 9}
+  - _vector: {x: 2, y: 9}
+  - _vector: {x: 3, y: 9}
+  - _vector: {x: 4, y: 9}
+  - _vector: {x: 4, y: 8}
+  - _vector: {x: 3, y: 8}
+  - _vector: {x: 2, y: 8}
+  - _vector: {x: 1, y: 8}
+  - _vector: {x: 0, y: 8}
+  - _vector: {x: -1, y: 8}
+  - _vector: {x: -2, y: 8}
+  - _vector: {x: 9, y: 0}
+  - _vector: {x: 9, y: 0}
+  - _vector: {x: 9, y: 0}
+  - _vector: {x: 9, y: 0}
+  - _vector: {x: 9, y: 0}
+  - _vector: {x: 9, y: 0}
+  - _vector: {x: 9, y: 0}
 --- !u!1 &2940507416546072257
 GameObject:
   m_ObjectHideFlags: 0

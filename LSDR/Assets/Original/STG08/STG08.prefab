@@ -120,6 +120,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5023297531694240143}
+  - component: {fileID: 5023297532862803070}
   m_Layer: 0
   m_Name: STG08
   m_TagString: Untagged
@@ -144,6 +145,24 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5023297532862803070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5023297531694240142}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1abf60f790a74eee91ff9106b9553b3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LayoutType: 0
+  TileWidth: 1
+  LBDGraphData:
+  - _vector: {x: 7, y: 0}
+  - _vector: {x: -7, y: 0}
+  - _vector: {x: -7, y: 1}
 --- !u!1 &5023297533468927896
 GameObject:
   m_ObjectHideFlags: 0

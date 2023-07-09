@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2077765334041024332}
+  - component: {fileID: 2077765334339579008}
   m_Layer: 0
   m_Name: STG13
   m_TagString: Untagged
@@ -34,6 +35,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2077765334339579008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2077765334041024335}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1abf60f790a74eee91ff9106b9553b3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LayoutType: 0
+  TileWidth: 2
+  LBDGraphData:
+  - _vector: {x: -1, y: 3}
+  - _vector: {x: 9, y: 0}
+  - _vector: {x: -1, y: 2}
+  - _vector: {x: -2, y: 2}
 --- !u!1 &2077765335090344088
 GameObject:
   m_ObjectHideFlags: 0
