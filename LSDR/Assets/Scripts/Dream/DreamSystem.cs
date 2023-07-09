@@ -329,7 +329,14 @@ namespace LSDR.Dream
                 GameSave.CurrentJournalSave.LastGraphY);
         }
 
-        protected void registerCommonEntities() { EntityIndex.Instance.Register("__player", Player); }
+        protected void registerCommonEntities()
+        {
+            EntityIndex.Instance.Register("__player", Player);
+
+            var camera = GameObject.FindWithTag("MainCamera");
+            if (camera == null) Debug.LogWarning("Unable to find MainCamera in scene");
+            EntityIndex.Instance.Register("__camera", camera);
+        }
 
         protected void commonEndDream()
         {

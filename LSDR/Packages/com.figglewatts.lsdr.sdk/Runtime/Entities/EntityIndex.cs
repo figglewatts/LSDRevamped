@@ -54,6 +54,18 @@ namespace LSDR.SDK.Entities
             return _entities[id];
         }
 
+        public T GetComponent<T>(string id) where T : Component
+        {
+            var obj = Get(id);
+            var component = obj.GetComponent<T>();
+            if (component == null)
+            {
+                Debug.LogError($"Entity with ID '{id}' did not have component of type {typeof(T)}");
+                return null;
+            }
+            return component;
+        }
+
         public void DeregisterAllEntities() => _entities.Clear();
     }
 }

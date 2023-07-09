@@ -8,10 +8,12 @@ namespace LSDR.SDK.Lua
     {
         public const string START_FUNCTION_NAME = "start";
         public const string UPDATE_FUNCTION_NAME = "update";
+        public const string INTERACT_FUNCTION_NAME = "interact";
 
         protected readonly InteractiveObject _interactiveObject;
         protected DynValue _startFunc;
         protected DynValue _updateFunc;
+        protected DynValue _interactFunc;
 
         public InteractiveObjectLuaScript(ILuaEngine engine, LuaScriptAsset asset, InteractiveObject interactiveObject)
             : base(engine, asset)
@@ -27,10 +29,13 @@ namespace LSDR.SDK.Lua
 
         public void Update() { _scriptAsset.HandleLuaErrorsFor(() => { Script.Call(_updateFunc); }); }
 
+        public void Interact() { _scriptAsset.HandleLuaErrorsFor(() => { Script.Call(_interactFunc); }); }
+
         private void loadFunctions()
         {
             _startFunc = Script.Globals.Get(START_FUNCTION_NAME);
             _updateFunc = Script.Globals.Get(UPDATE_FUNCTION_NAME);
+            _interactFunc = Script.Globals.Get(INTERACT_FUNCTION_NAME);
         }
     }
 }
