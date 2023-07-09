@@ -19,7 +19,7 @@ namespace LSDR.SDK.Entities
         }
 
         public LuaScriptAsset Script;
-        public bool HasGraphContribution;
+        public bool HasGraphContribution = true;
         public GraphContribution GraphContribution;
         public InteractionType InteractionKind;
         public float InteractionDistance = 3;

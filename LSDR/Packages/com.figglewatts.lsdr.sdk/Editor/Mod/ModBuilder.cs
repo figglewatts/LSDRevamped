@@ -21,10 +21,10 @@ namespace LSDR.SDK.Editor.Mod
                 Debug.LogWarning("No platforms supplied to mod builder, doing nothing.");
                 return;
             }
-            
+
             AssetBundleBuild build = new AssetBundleBuild
             {
-                assetNames = new [] {AssetDatabase.GetAssetPath(mod)},
+                assetNames = new[] { AssetDatabase.GetAssetPath(mod) },
                 assetBundleName = $"{mod.Name}.lsdrmod"
             };
 
@@ -47,17 +47,22 @@ namespace LSDR.SDK.Editor.Mod
             }
 
             EditorUtility.DisplayDialog("Mod finished building", "Mod built successfully!", "Ok");
+            EditorUtility.RevealInFinder(Path.Combine(outputPath, $"{mod.Name}.lsdrmod"));
         }
 
         protected void buildForPlatform(BuildTarget platform, AssetBundleBuild bundle, string outputPath)
         {
-            var fullOutputDirectory = Path.Combine(outputPath, platform.ToString());
+            var fullOutputDirectory = outputPath;
             Directory.CreateDirectory(fullOutputDirectory);
             BuildPipeline.BuildAssetBundles(fullOutputDirectory, new[] { bundle }, BuildOptions, platform);
 
-            var manifestBundlePath = Path.Combine(fullOutputDirectory, platform.ToString());
-            File.Delete(manifestBundlePath);
-            File.Delete($"{manifestBundlePath}.manifest");
+            var manifestPath = Path.Combine(fullOutputDirectory, $"{bundle.assetBundleName}.manifest");
+            var outputDirName = new DirectoryInfo(outputPath).Name;
+            var weirdPath = Path.Combine(fullOutputDirectory, outputDirName);
+            var weirdPathManifest = $"{weirdPath}.manifest";
+            File.Delete(manifestPath);
+            File.Delete(weirdPath);
+            File.Delete(weirdPathManifest);
         }
     }
 }
