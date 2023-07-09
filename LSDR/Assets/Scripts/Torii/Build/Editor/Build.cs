@@ -1,5 +1,8 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
+using LSDR.SDK.Data;
+using LSDR.SDK.Editor.Mod;
 using Unity.CodeEditor;
 using UnityEditor;
 using UnityEditor.Build.Reporting;
@@ -79,6 +82,14 @@ namespace Torii.Build
 
             PlayerSettings.bundleVersion = version;
             Debug.Log($"Using '{version}' as version");
+
+            // build mods
+            Debug.Log("Building mods to StreamingAssets path");
+            ModBuilder modBuilder = new ModBuilder();
+            var originalDreamsMod =
+                AssetDatabase.LoadAssetAtPath<LSDRevampedMod>("Assets/Original/OriginalDreamsMod.asset");
+            var modOutputPath = Path.Combine(Application.streamingAssetsPath, "mods");
+            modBuilder.Build(originalDreamsMod, ModPlatform.Windows, modOutputPath);
 
             string filter = getArgValue(FILTER_ARG);
             string[] filters = null;
