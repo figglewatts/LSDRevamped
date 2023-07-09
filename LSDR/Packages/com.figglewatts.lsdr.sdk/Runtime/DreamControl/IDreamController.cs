@@ -17,5 +17,8 @@ namespace LSDR.SDK.DreamControl
             string spawnPointID = null);
 
         void EndDream(bool fromFall = false);
+
+        void LogGraphContributionFromArea(int dynamicness, int upperness);
+        void LogGraphContributionFromEntity(int dynamicness, int upperness);
     }
 }

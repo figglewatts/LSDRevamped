@@ -90,6 +90,16 @@ namespace LSDR.Dream
             commonEndDream();
         }
 
+        public void LogGraphContributionFromArea(int dynamicness, int upperness)
+        {
+            CurrentSequence.LogGraphContributionFromArea(dynamicness, upperness);
+        }
+
+        public void LogGraphContributionFromEntity(int dynamicness, int upperness)
+        {
+            CurrentSequence.LogGraphContributionFromEntity(dynamicness, upperness);
+        }
+
         public void Transition(Color fadeCol,
             SDK.Data.Dream dream = null,
             bool playSound = true,
@@ -202,6 +212,7 @@ namespace LSDR.Dream
             if (MusicSource != null && MusicSource.isPlaying) MusicSource.Stop();
 
             TextureSetter.Instance.DeregisterAllMaterials();
+            EntityIndex.Instance.DeregisterAllEntities();
 
             AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(TitleScene.ScenePath);
             while (!asyncLoad.isDone) yield return null;

@@ -52,6 +52,11 @@ namespace LSDR.Dream
 
         protected Vector2Int evaluateContributionList(List<GraphContribution> contributions)
         {
+            if (contributions.Count == 0)
+            {
+                return Vector2Int.zero;
+            }
+
             Vector2Int averageContribution = new Vector2Int(
                 (int)contributions.Average(c => c.Dynamic),
                 (int)contributions.Average(c => c.Upper));

@@ -15,6 +15,8 @@ namespace LSDR.SDK.Entities
         public bool PlayLinkSound;
         public bool LockInput;
 
+        protected override Color _editorColour { get; } = new Color(1, 0.6f, 0);
+
         protected override void onTrigger(Collider player)
         {
             string forcedSpawnPoint = string.IsNullOrWhiteSpace(SpawnPointEntityID) ? null : SpawnPointEntityID;

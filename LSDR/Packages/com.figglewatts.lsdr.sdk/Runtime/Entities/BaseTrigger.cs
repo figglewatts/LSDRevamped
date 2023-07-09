@@ -10,6 +10,8 @@ namespace LSDR.SDK.Entities
         protected BoxCollider _collider;
         protected bool _triggered;
 
+        protected abstract Color _editorColour { get; }
+
         public override void Start()
         {
             base.Start();
@@ -20,10 +22,10 @@ namespace LSDR.SDK.Entities
         public void OnDrawGizmos()
         {
             Vector3 position = transform.position;
-            Gizmos.color = Color.green;
+            Gizmos.color = _editorColour;
             Vector3 localScale = transform.localScale;
             Gizmos.DrawWireCube(position, localScale);
-            Gizmos.color = new Color(0, 1, 0, 0.5f);
+            Gizmos.color = new Color(_editorColour.r, _editorColour.g, _editorColour.b, _editorColour.a * 0.25f);
             Gizmos.DrawCube(position, localScale);
         }
 
