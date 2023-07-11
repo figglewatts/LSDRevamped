@@ -19,35 +19,6 @@ Shader "LSDR/ClassicDiffuseSetAlphaBlend"
             Blend SrcAlpha OneMinusSrcAlpha
             ZWrite Off
             CGPROGRAM
-            #pragma exclude_renderers metal
-            
-            #pragma vertex vert
-            #pragma geometry geom
-            #pragma fragment frag
-            #pragma multi_compile_instancing
-            #pragma multi_compile_fog
-
-            #define LSDR_CLASSIC
-            #define LSDR_TEXTURE_SET
-            #include "LSDR.cginc"
-            ENDCG
-        }
-    }
-    
-    // subshader with no geometry shader, for mac
-    SubShader
-    {
-        Tags
-        {
-            "Queue" = "Transparent" "RenderType" = "Transparent"
-        }
-        Pass
-        {
-            Blend SrcAlpha OneMinusSrcAlpha
-            ZWrite Off
-            CGPROGRAM
-            #pragma only_renderers metal
-            
             #pragma vertex vert
             #pragma fragment frag
             #pragma multi_compile_instancing
@@ -55,7 +26,6 @@ Shader "LSDR/ClassicDiffuseSetAlphaBlend"
 
             #define LSDR_CLASSIC
             #define LSDR_TEXTURE_SET
-            #define LSDR_NO_GEOM
             #include "LSDR.cginc"
             ENDCG
         }

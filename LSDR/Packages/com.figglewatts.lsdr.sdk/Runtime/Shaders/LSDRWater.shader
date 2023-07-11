@@ -4,8 +4,7 @@
 		_PaletteTexture ("Water Palette", 2D) = "white" {}
 		_AnimationSpeed ("Speed", float) = 1.0
 		_Alpha ("Transparency", float) = 0.5
-		_Brightness ("B", float) = 1
-	}
+    }
 	SubShader {
 		Tags { "RenderType"="Transparent" "Queue" = "Transparent" }
 		Blend SrcAlpha OneMinusSrcAlpha
@@ -24,7 +23,6 @@
 		sampler2D _PaletteTexture;
 		float _AnimationSpeed;
 		float _Alpha;
-		float _Brightness;
 		
 		struct Input {
 			float2 uv_WaterMapTexture;

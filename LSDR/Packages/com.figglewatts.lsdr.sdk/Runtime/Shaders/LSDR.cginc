@@ -21,13 +21,13 @@ struct vertdata
     half4 color : COLOR0;
     float2 uv_MainTex : TEXCOORD0;
     half3 affine : TEXCOORD1;
-    float distance : FOG;
 };
 
 struct fragdata
 {
     vertdata data;
-    float4 fogColor : TEXCOORD2;
+    float distance : FOG;
+    float3 worldPos : TEXCOORD2;
 };
 
 struct fragOut
@@ -41,16 +41,13 @@ fragdata vert(appdata v)
 
     UNITY_SETUP_INSTANCE_ID(v);
 
-    // vertex distance
-    const float distance = length(UnityObjectToViewPos(v.position));
-    output.data.distance = distance;
-
     // color and UVs
     output.data.uv_MainTex = v.uv;
     output.data.color = v.color;
 
-    // fog
-    output.fogColor = FogColor(distance);
+
+    output.worldPos = mul(unity_ObjectToWorld, float4(v.position.xyz, 1)).xyz;
+    output.distance = length(UnityObjectToViewPos(v.position));
 
     #if defined(LSDR_CLASSIC)
     // vertex snapping
@@ -62,60 +59,20 @@ fragdata vert(appdata v)
     output.data.pos = snapToPixel;
 
     // affine texture mapping
-    output.data.uv_MainTex *= distance + (v.position.w * _AffineIntensity * 8) / distance / 2;
-    output.data.affine = distance + (v.position.w * _AffineIntensity * 8) / distance / 2;
+    output.data.uv_MainTex *= output.distance + (v.position.w * _AffineIntensity * 8) / output.distance / 2;
+    output.data.affine = output.distance + (v.position.w * _AffineIntensity * 8) / output.distance / 2;
     #else
     output.data.pos = UnityObjectToClipPos(v.position);
     output.data.affine = 0;
     #endif
 
-    #if defined(LSDR_NO_GEOM)
-    if (distance > GetFogEnd() + _RenderCutoffAdjustment)
+    if (output.distance > GetFogEnd() + _RenderCutoffAdjustment)
     {
-        output.data.pos.w = 0.0/0.0;
+        output.data.pos.z = -1000;
     }
-    #endif
 
     return output;
 }
-
-#if !defined(LSDR_NO_GEOM)
-[maxvertexcount(3)]
-void geom(triangle fragdata IN[3], inout TriangleStream<fragdata> triStream)
-{
-    #if defined(LSDR_CLASSIC)
-    const float faceDistance = min(IN[0].data.distance, min(IN[1].data.distance, IN[2].data.distance));
-    half4 barycenter = (IN[0].data.pos + IN[1].data.pos + IN[2].data.pos) / 3;
-
-    // render distance
-    if (faceDistance > GetFogEnd() + _RenderCutoffAdjustment)
-    {
-        return;
-    }
-    #endif
-
-    for (int i = 0; i < 3; i++)
-    {
-        fragdata o;
-
-        o.data = IN[i].data;
-
-        #if defined(LSDR_CLASSIC)
-        // Flatten the triangle to the barycenter
-        o.data.pos.z = o.data.pos.w * barycenter.z / barycenter.w;
-
-        // handle fog color
-        o.fogColor = FogColor(faceDistance);
-        #else
-        o.fogColor = float4(0, 0, 0, 1);
-        #endif
-
-        triStream.Append(o);
-    }
-
-    triStream.RestartStrip();
-}
-#endif
 
 #if defined(LSDR_TEXTURE_SET)
 fragOut lsdrFrag(fragdata input, sampler2D mainTexA, sampler2D mainTexB, sampler2D mainTexC, sampler2D mainTexD,
@@ -160,9 +117,11 @@ fragOut lsdrFrag(fragdata input, sampler2D mainTex, fixed4 tint)
 
     // apply fog
     #if defined(LSDR_CLASSIC)
-    output_col = ApplyClassicFog(output_col, input.fogColor);
+    // operate on floored versions of coords to produce grid effect
+    float4 fogColor = FogColor(length(int3(input.worldPos) - int3(_WorldSpaceCameraPos)));
+    output_col = ApplyClassicFog(output_col, fogColor);
     #else
-    const float4 fogColor = FogColor(input.data.distance);
+    const float4 fogColor = FogColor(input.distance);
     output_col = ApplyRevampedFog(output_col, fogColor);
     #endif
 
