@@ -5,6 +5,8 @@ uniform float _AffineIntensity;
 uniform float _RenderCutoffAdjustment;
 uniform int _TextureSet;
 
+const static float BRIGHTNESS = 1;
+
 // incoming vertices
 struct appdata
 {
@@ -44,7 +46,6 @@ fragdata vert(appdata v)
     // color and UVs
     output.data.uv_MainTex = v.uv;
     output.data.color = v.color;
-
 
     output.worldPos = mul(unity_ObjectToWorld, float4(v.position.xyz, 1)).xyz;
     output.distance = length(UnityObjectToViewPos(v.position));
@@ -110,7 +111,7 @@ fragOut lsdrFrag(fragdata input, sampler2D mainTex, fixed4 tint)
     #endif
 
     // apply vertex color
-    output_col *= input.data.color;
+    output_col *= (input.data.color * 1.3);
 
     // apply tint
     output_col *= tint;
@@ -125,12 +126,71 @@ fragOut lsdrFrag(fragdata input, sampler2D mainTex, fixed4 tint)
     output_col = ApplyRevampedFog(output_col, fogColor);
     #endif
 
-    output.color = output_col;
+    output.color = output_col * BRIGHTNESS;
 
     return output;
 }
 
-#if defined(LSDR_TEXTURE_SET)
+#if defined(LSDR_WATER)
+sampler2D _MainTextureA;
+sampler2D _MainTextureB;
+sampler2D _MainTextureC;
+sampler2D _MainTextureD;
+sampler2D _WaterPaletteA;
+sampler2D _WaterPaletteB;
+sampler2D _WaterPaletteC;
+sampler2D _WaterPaletteD;
+fixed4 _Tint;
+float _AnimationSpeed;
+float _Alpha;
+
+fragOut frag(fragdata input)
+{
+    fragOut output;
+    
+#if defined(LSDR_CLASSIC)
+    float2 uvs = input.data.uv_MainTex / input.data.affine.x;
+#else
+    float2 uvs = input.data.uv_MainTex;
+#endif
+
+
+    half4 waterMap;
+    if (_TextureSet == 2) waterMap = tex2D(_MainTextureB, uvs);
+    else if (_TextureSet == 3) waterMap = tex2D(_MainTextureC, uvs);
+    else if (_TextureSet == 4) waterMap = tex2D(_MainTextureD, uvs);
+    else waterMap = tex2D(_MainTextureA, uvs);
+    
+    float paletteIdx = (waterMap.r - _Time[0] * _AnimationSpeed) % 1.0;
+
+    half4 output_col;
+    if (_TextureSet == 2) output_col = tex2D(_WaterPaletteB, float2(paletteIdx, 0.5));
+    else if (_TextureSet == 3) output_col = tex2D(_WaterPaletteC, float2(paletteIdx, 0.5));
+    else if (_TextureSet == 4) output_col = tex2D(_WaterPaletteD, float2(paletteIdx, 0.5));
+    else output_col = tex2D(_WaterPaletteA, float2(paletteIdx, 0.5));
+
+    // apply vertex color
+    output_col *= (input.data.color * 1.3);
+
+    // apply tint
+    output_col *= _Tint;
+
+    // apply fog
+#if defined(LSDR_CLASSIC)
+    // operate on floored versions of coords to produce grid effect
+    float4 fogColor = FogColor(length(int3(input.worldPos) - int3(_WorldSpaceCameraPos)));
+    output_col = ApplyClassicFog(output_col, fogColor);
+#else
+    const float4 fogColor = FogColor(input.distance);
+    output_col = ApplyRevampedFog(output_col, fogColor);
+#endif
+    
+    output.color = output_col * BRIGHTNESS;
+    output.color.a = min(_Alpha, waterMap.a);
+    
+    return output;
+}
+#elif defined(LSDR_TEXTURE_SET)
 sampler2D _MainTexA;
 sampler2D _MainTexB;
 sampler2D _MainTexC;
