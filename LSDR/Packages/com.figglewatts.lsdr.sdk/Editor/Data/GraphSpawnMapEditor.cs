@@ -25,7 +25,7 @@ namespace LSDR.SDK.Editor.Data
         {
             _graphTexture =
                 AssetDatabase.LoadAssetAtPath<Texture2D>(
-                    "Packages/com.figglewatts.lsdr.sdk/Editor/Assets/dreamGraph.png");
+                    "Packages/com.figglewatts.lsdr.sdk/Assets/dreamGraph.png");
 
             _selectedDreamStyle = new GUIStyle
             {

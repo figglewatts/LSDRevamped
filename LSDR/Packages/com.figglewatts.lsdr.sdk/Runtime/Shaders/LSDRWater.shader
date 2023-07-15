@@ -1,6 +1,6 @@
 ﻿Shader "LSDR/Water" {
 	Properties {
-		_WaterMapTexture ("Water Map", 2D) = "white" {}
+		_MainTex ("Water Map", 2D) = "white" {}
 		_PaletteTexture ("Water Palette", 2D) = "white" {}
 		_AnimationSpeed ("Speed", float) = 1.0
 		_Alpha ("Transparency", float) = 0.5
@@ -19,13 +19,13 @@
 		// Use shader model 3.0 target, to get nicer looking lighting
 		#pragma target 3.0
 
-		sampler2D _WaterMapTexture;
+		sampler2D _MainTex;
 		sampler2D _PaletteTexture;
 		float _AnimationSpeed;
 		float _Alpha;
 		
 		struct Input {
-			float2 uv_WaterMapTexture;
+			float2 uv_MainTex;
 		};
 
 		// Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
@@ -36,7 +36,7 @@
 		UNITY_INSTANCING_BUFFER_END(Props)
 
 		void surf (Input IN, inout SurfaceOutput o) {
-		    float4 mapSample = tex2D(_WaterMapTexture, IN.uv_WaterMapTexture);
+		    float4 mapSample = tex2D(_MainTex, IN.uv_MainTex);
 		    float paletteIdx = (mapSample.r - _Time[0] * _AnimationSpeed) % 1.0;
 			o.Albedo = tex2D(_PaletteTexture, float2(paletteIdx, 0.5));
 			o.Alpha = min(_Alpha, mapSample.a);

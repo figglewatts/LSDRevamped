@@ -26,7 +26,7 @@ namespace LSDR.SDK.Editor.AssetImporters
 
             // create data for combining into single mesh
             var meshes = LibLSDUnity.CreateMeshesFromTMD(tmd);
-            _meshCombiner = new MeshCombiner(new[] {"opaque", "transparent"});
+            _meshCombiner = new MeshCombiner();
             _meshCombiner.SetSubmeshSettings("opaque", useMatrices: false);
             _meshCombiner.SetSubmeshSettings("transparent", useMatrices: false);
             foreach (Mesh tmdObj in meshes)

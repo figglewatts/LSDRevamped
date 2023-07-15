@@ -14,10 +14,12 @@ namespace LSDR.SDK.Editor.AssetImporters
             var opaqueMaterialProperty = serializedObject.FindProperty("OpaqueMaterial");
             var transparentMaterialProperty = serializedObject.FindProperty("TransparentMaterial");
             var collisionProperty = serializedObject.FindProperty("Collision");
+            var overrideProperty = serializedObject.FindProperty("UVMaterialOverrides");
 
             EditorGUILayout.PropertyField(opaqueMaterialProperty);
             EditorGUILayout.PropertyField(transparentMaterialProperty);
             EditorGUILayout.PropertyField(collisionProperty);
+            EditorGUILayout.PropertyField(overrideProperty);
 
             serializedObject.ApplyModifiedProperties();
             ApplyRevertGUI();

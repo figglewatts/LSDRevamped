@@ -40,7 +40,7 @@ namespace LSDR.SDK.Editor.UI
 
             Texture2D boxSprite =
                 AssetDatabase.LoadAssetAtPath<Texture2D>(
-                    "Packages/com.figglewatts.lsdr.sdk/Editor/Assets/box-sprite.png");
+                    "Packages/com.figglewatts.lsdr.sdk/Assets/box-sprite.png");
             _boxStyle = new GUIStyle()
             {
                 normal = new GUIStyleState()

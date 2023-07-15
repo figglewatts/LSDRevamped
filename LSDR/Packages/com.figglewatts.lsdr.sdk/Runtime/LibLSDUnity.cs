@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using System.Linq;
 using libLSD.Formats;
 using libLSD.Formats.Packets;
 using libLSD.Types;
+using LSDR.SDK.Assets;
 using UnityEngine;
 
 namespace LSDR.SDK
@@ -47,14 +49,15 @@ namespace LSDR.SDK
         /// Create a list of meshes based on the contents of a TMD model file.
         /// </summary>
         /// <param name="tmd">The loaded TMD to use.</param>
+        /// <param name="uvMaterialOverrides">Optional - the list of UV material overrides to apply.</param>
         /// <returns>The loaded list of meshes.</returns>
-        public static List<Mesh> CreateMeshesFromTMD(TMD tmd)
+        public static List<Mesh> CreateMeshesFromTMD(TMD tmd, List<UVMaterialOverride> uvMaterialOverrides = null)
         {
             List<Mesh> meshList = new List<Mesh>();
 
             foreach (var obj in tmd.ObjectTable)
             {
-                Mesh m = MeshFromTMDObject(obj);
+                Mesh m = MeshFromTMDObject(obj, uvMaterialOverrides);
                 meshList.Add(m);
             }
 
@@ -65,8 +68,9 @@ namespace LSDR.SDK
         /// Create a mesh from an object stored inside a TMD model file.
         /// </summary>
         /// <param name="obj">The TMD object to create a mesh from.</param>
+        /// <param name="uvMaterialOverrides">Optional - the list of UV material overrides to apply.</param>
         /// <returns>The Mesh created from the object.</returns>
-        public static Mesh MeshFromTMDObject(TMDObject obj)
+        public static Mesh MeshFromTMDObject(TMDObject obj, List<UVMaterialOverride> uvMaterialOverrides = null)
         {
             // create the mesh, and lists of vertices, normals, colors, uvs, and indices
             Mesh result = new Mesh();
@@ -76,6 +80,26 @@ namespace LSDR.SDK
             List<Vector2> uvs = new List<Vector2>();
             List<int> indices = new List<int>();
             List<int> alphaBlendIndices = new List<int>(); // alpha blended polygons are stored in a submesh
+
+            // material overrides are also stored in submeshes
+            List<List<int>> materialOverrideIndices = uvMaterialOverrides == null
+                ? new List<List<int>>()
+                : new List<List<int>>(uvMaterialOverrides.Select(o => new List<int>()));
+
+            // local function used to check if a set of UV coords has a material override
+            bool uvHasOverride(Vector2 uv, out int overrideIndex)
+            {
+                for (int i = 0; i < uvMaterialOverrides.Count; i++)
+                {
+                    if (uvMaterialOverrides[i].UVRect.Contains(uv))
+                    {
+                        overrideIndex = i;
+                        return true;
+                    }
+                }
+                overrideIndex = -1;
+                return false;
+            }
 
             // TMD objects are built from 'primitives'
             foreach (var prim in obj.Primitives)
@@ -151,6 +175,16 @@ namespace LSDR.SDK
                             (vramYPos - 0.5f) / VRAM_HEIGHT; // half-texel correction to prevent bleeding
 
                         vertUV = new Vector2(uCoord, vCoord);
+
+                        // handle UV material overrides
+                        if (uvMaterialOverrides != null && uvHasOverride(vertUV, out int materialOverrideIndex))
+                        {
+                            // make sure we're adding this primitive to the correct submesh for the override
+                            indicesList = materialOverrideIndices[materialOverrideIndex];
+
+                            // map the UV to the overridden material
+                            vertUV = uvMaterialOverrides[materialOverrideIndex].MapUVInRect(vertUV);
+                        }
                     }
 
                     // add all computed aspects of vertex to lists
@@ -200,148 +234,26 @@ namespace LSDR.SDK
             result.uv = uvs.ToArray();
 
             // regular mesh
-            if (indices.Count >= 3)
-            {
-                result.SetTriangles(indices, 0, false, 0);
-            }
+            result.subMeshCount = 2;
+            result.SetTriangles(indices, 0, false, 0);
 
             // alpha blended mesh
-            if (alphaBlendIndices.Count >= 3)
+            result.SetTriangles(alphaBlendIndices, 1, false, 0);
+
+            // material override meshes
+            if (uvMaterialOverrides != null)
             {
-                result.subMeshCount = 2;
-                result.SetTriangles(alphaBlendIndices, 1, false, 0);
+                for (int i = 0; i < uvMaterialOverrides.Count; i++)
+                {
+                    result.subMeshCount++; // inc submesh so we have empty submeshes
+
+                    // ignore materials without any indices
+                    if (materialOverrideIndices[i].Count == 0) continue;
+                    result.SetTriangles(materialOverrideIndices[i].ToArray(), 2 + i, false, 0);
+                }
             }
 
             return result;
-        }
-
-        /// <summary>
-        /// Create an LBD tilemap GameObject from an LSD level tileset.
-        /// </summary>
-        /// <param name="lbd">The loaded LBD file.</param>
-        /// <returns>A GameObject containing loaded meshes for all tiles in their layout.</returns>
-        public static GameObject CreateLBDTileMap(LBD lbd)
-        {
-            GameObject lbdTilemap = new GameObject("LBD TileMap");
-            List<CombineInstance>
-                meshesCreated = new List<CombineInstance>(); // we're combining meshes into a collision mesh
-
-            // for each tile in the tilemap
-            int tileNo = 0;
-            foreach (LBDTile tile in lbd.TileLayout)
-            {
-                int x = tileNo / lbd.Header.TileWidth;
-                int y = tileNo % lbd.Header.TileWidth;
-
-                // create an LBD tile if we should draw it
-                if (tile.DrawTile)
-                {
-                    GameObject lbdTile = createLBDTile(tile, lbd.ExtraTiles, x, y, lbd.Tiles, meshesCreated);
-                    lbdTile.transform.SetParent(lbdTilemap.transform);
-                }
-
-                tileNo++;
-            }
-
-            // combine all tiles into mesh for efficient collision
-            Mesh combined = new Mesh();
-            combined.CombineMeshes(meshesCreated.ToArray(), true);
-            MeshCollider mc = lbdTilemap.AddComponent<MeshCollider>();
-            mc.sharedMesh = combined;
-
-            return lbdTilemap;
-        }
-
-        // create an LBD tile GameObject
-        private static GameObject createLBDTile(LBDTile tile,
-            LBDTile[] extraTiles,
-            int x,
-            int y,
-            TMD tilesTmd,
-            List<CombineInstance> meshesCreated)
-        {
-            // create the GameObject for the base tile
-            GameObject lbdTile = createSingleLBDTile(tile, x, y, tilesTmd, meshesCreated);
-
-            // now see if it has any extra tiles, and create those
-            LBDTile curTile = tile;
-            int i = 0;
-            while (curTile.ExtraTileIndex >= 0 && i <= 1)
-            {
-                LBDTile extraTile = extraTiles[curTile.ExtraTileIndex];
-                GameObject extraTileObj = createSingleLBDTile(extraTile, x, y, tilesTmd, meshesCreated);
-                extraTileObj.transform.SetParent(lbdTile.transform, true); // parent them to original tile
-                curTile = extraTile;
-                i++;
-            }
-
-            return lbdTile;
-        }
-
-        // create a single LBD tile GameObject (not including extra tiles)
-        private static GameObject createSingleLBDTile(LBDTile tile,
-            int x,
-            int y,
-            TMD tilesTmd,
-            List<CombineInstance> meshesCreated)
-        {
-            // create the GameObject and add/setup necessary components
-            GameObject lbdTile = new GameObject($"Tile {tile.TileType}");
-            MeshFilter mf = lbdTile.AddComponent<MeshFilter>();
-            MeshRenderer mr = lbdTile.AddComponent<MeshRenderer>();
-            TMDObject tileObj = tilesTmd.ObjectTable[tile.TileType];
-            Mesh tileMesh = MeshFromTMDObject(tileObj);
-            mf.mesh = tileMesh;
-
-            // the renderer needs to use virtual PSX Vram as its materials
-            //mr.sharedMaterials = new[] {PsxVram.VramMaterial, PsxVram.VramAlphaBlendMaterial};
-
-            // rotate the tile based on its direction
-            switch (tile.TileDirection)
-            {
-                case LBDTile.TileDirections.Deg90:
-                {
-                    lbdTile.transform.Rotate(Vector3.up, 90);
-                    break;
-                }
-                case LBDTile.TileDirections.Deg180:
-                {
-                    lbdTile.transform.Rotate(Vector3.up, 180);
-                    break;
-                }
-                case LBDTile.TileDirections.Deg270:
-                {
-                    lbdTile.transform.Rotate(Vector3.up, 270);
-                    break;
-                }
-            }
-
-            // set the tile's height
-            lbdTile.transform.position = new Vector3(x, -tile.TileHeight, y);
-
-            // make a CombineInstance for combining all tiles into one mesh later on
-            var localToWorldMatrix = lbdTile.transform.localToWorldMatrix;
-            CombineInstance combine = new CombineInstance()
-            {
-                mesh = tileMesh,
-                transform = localToWorldMatrix,
-                subMeshIndex = 0
-            };
-            meshesCreated.Add(combine);
-
-            // if tile has transparent part, do the same for the transparent mesh
-            if (tileMesh.subMeshCount > 1)
-            {
-                CombineInstance combineTrans = new CombineInstance()
-                {
-                    mesh = tileMesh,
-                    transform = localToWorldMatrix,
-                    subMeshIndex = 1
-                };
-                meshesCreated.Add(combineTrans);
-            }
-
-            return lbdTile;
         }
 
         /// <summary>

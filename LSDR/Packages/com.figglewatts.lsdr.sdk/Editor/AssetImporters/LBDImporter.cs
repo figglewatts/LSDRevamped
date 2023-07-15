@@ -1,6 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using libLSD.Formats;
+using LSDR.SDK.Assets;
+using LSDR.SDK.Editor.Assets;
 using LSDR.SDK.Visual;
 using UnityEditor;
 using UnityEditor.Experimental.AssetImporters;
@@ -13,6 +17,7 @@ namespace LSDR.SDK.Editor.AssetImporters
     {
         public Material OpaqueMaterial;
         public Material TransparentMaterial;
+        public UVMaterialOverrideAsset UVMaterialOverrides;
         public bool Collision = true;
 
         protected MeshCombiner _meshCombiner;
@@ -27,8 +32,9 @@ namespace LSDR.SDK.Editor.AssetImporters
             }
 
             // now create the mesh for the LBD file
-            _meshCombiner = new MeshCombiner(new[] { "opaque", "transparent" });
-            List<Mesh> lbdMeshes = LibLSDUnity.CreateMeshesFromTMD(lbd.Tiles);
+            _meshCombiner = new MeshCombiner();
+            List<Mesh> lbdMeshes = LibLSDUnity.CreateMeshesFromTMD(lbd.Tiles,
+                UVMaterialOverrides != null ? UVMaterialOverrides.Overrides : new List<UVMaterialOverride>());
             int tileNo = 0;
             foreach (LBDTile tile in lbd.TileLayout)
             {
@@ -65,24 +71,21 @@ namespace LSDR.SDK.Editor.AssetImporters
             MeshRenderer mr = meshObj.AddComponent<MeshRenderer>();
             meshObj.AddComponent<ShaderSetter>();
 
-            if (combinedMesh.subMeshCount > 1)
+            // set up materials
+            int numMaterials = 2 + (UVMaterialOverrides != null ? UVMaterialOverrides.Overrides.Count : 0);
+            var meshMaterials = new Material[numMaterials];
+            meshMaterials[0] = OpaqueMaterial == null
+                ? AssetDatabase.GetBuiltinExtraResource<Material>("Default-Diffuse.mat")
+                : OpaqueMaterial;
+            meshMaterials[1] = TransparentMaterial == null
+                ? AssetDatabase.GetBuiltinExtraResource<Material>("Default-Diffuse.mat")
+                : TransparentMaterial;
+            for (int i = 2; i < numMaterials; i++)
             {
-                mr.sharedMaterials = new[]
-                {
-                    OpaqueMaterial == null
-                        ? AssetDatabase.GetBuiltinExtraResource<Material>("Default-Diffuse.mat")
-                        : OpaqueMaterial,
-                    TransparentMaterial == null
-                        ? AssetDatabase.GetBuiltinExtraResource<Material>("Default-Diffuse.mat")
-                        : TransparentMaterial
-                };
+                int overrideIdx = i - 2;
+                meshMaterials[i] = UVMaterialOverrides.Overrides[overrideIdx].Material;
             }
-            else
-            {
-                mr.sharedMaterial = OpaqueMaterial == null
-                    ? AssetDatabase.GetBuiltinExtraResource<Material>("Default-Diffuse.mat")
-                    : OpaqueMaterial;
-            }
+            mr.sharedMaterials = meshMaterials;
 
             // handle collision
             if (Collision)
@@ -145,20 +148,29 @@ namespace LSDR.SDK.Editor.AssetImporters
                 subMeshIndex = 0,
                 transform = tileTransformMatrix
             };
-
-            // add it to the mesh combiner
             _meshCombiner.Add(combineInstance, "opaque");
 
-            // if we have a transparent part we'll have to add the transparent part as a combine instance
-            if (mesh.subMeshCount > 1)
+            CombineInstance transparentCombineInstance = new CombineInstance
             {
-                CombineInstance transparentCombineInstance = new CombineInstance
+                mesh = mesh,
+                subMeshIndex = 1,
+                transform = tileTransformMatrix
+            };
+            _meshCombiner.Add(transparentCombineInstance, "transparent");
+
+            if (UVMaterialOverrides != null)
+            {
+                for (int i = 0; i < UVMaterialOverrides.Overrides.Count; i++)
                 {
-                    mesh = mesh,
-                    subMeshIndex = 1,
-                    transform = tileTransformMatrix
-                };
-                _meshCombiner.Add(transparentCombineInstance, "transparent");
+                    CombineInstance overrideCombineInstance = new CombineInstance
+                    {
+                        mesh = mesh,
+                        subMeshIndex = 2 + i,
+                        transform = tileTransformMatrix
+                    };
+                    string submeshType = $"override{i}";
+                    _meshCombiner.Add(overrideCombineInstance, submeshType);
+                }
             }
         }
     }
