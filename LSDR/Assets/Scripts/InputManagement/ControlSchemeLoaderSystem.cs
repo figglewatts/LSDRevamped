@@ -143,6 +143,10 @@ namespace LSDR.InputManagement
             _currentSchemeHandle = idx;
             Assert.IsNotNull(Schemes[idx].SchemeString);
             InputActions.LoadBindingOverridesFromJson(Schemes[idx].SchemeString);
+
+            if (Current.InvertLookY) invertLook();
+            else uninvertLook();
+
             InputActions.Enable();
         }
 
@@ -193,6 +197,18 @@ namespace LSDR.InputManagement
         {
             // if the directory doesn't exist, create it
             if (!Directory.Exists(_controlSchemesPath)) Directory.CreateDirectory(_controlSchemesPath);
+        }
+
+        protected void invertLook()
+        {
+            InputActions.Game.Look.ApplyBindingOverride(
+                new InputBinding { overrideProcessors = "invertVector2(invertX=false,invertY=true)" });
+        }
+
+        protected void uninvertLook()
+        {
+            InputActions.Game.Look.ApplyBindingOverride(
+                new InputBinding { overrideProcessors = "invertVector2(invertX=false,invertY=false)" });
         }
     }
 }

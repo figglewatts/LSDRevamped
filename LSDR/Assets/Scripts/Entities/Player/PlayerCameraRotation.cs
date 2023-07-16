@@ -196,8 +196,6 @@ namespace LSDR.Entities.Player
                 if (Mathf.Abs(_lookUpDownRotation) < 2) _lookUpDownRotation = 0;
             }
 
-            Debug.Log($"updown: {_lookUpDownRotation}, behind {_lookBehindRotation}");
-
             target.transform.rotation = Quaternion.AngleAxis(_lookBehindRotation,
                                             PlayerCharacterController.transform.up) *
                                         originalOrientation;
