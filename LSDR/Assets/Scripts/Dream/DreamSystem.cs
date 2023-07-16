@@ -248,33 +248,38 @@ namespace LSDR.Dream
 
             if (!SceneManager.GetActiveScene().name.Equals("load_mod", StringComparison.InvariantCulture))
             {
+                Debug.Log("Loading dream scene...");
                 AsyncOperation loadSceneOp = SceneManager.LoadSceneAsync("load_mod");
                 yield return loadSceneOp;
             }
 
             if (MusicSource != null && MusicSource.isPlaying && !loadingSameDream) MusicSource.Stop();
 
+            Debug.Log("Registering entities...");
+            Player = GameObject.FindWithTag("Player");
+            if (Player == null) Debug.LogError("Unable to find player in scene!");
+            registerCommonEntities();
+
             OnLevelPreLoad.Raise();
 
+            Debug.Log("Instantiating dream prefab...");
             CurrentDreamInstance = Instantiate(dream.DreamPrefab);
             yield return null;
 
             ResourceManager.ClearLifespan("scene");
 
-            Player = GameObject.FindWithTag("Player");
-            if (Player == null) Debug.LogError("Unable to find player in scene!");
-            registerCommonEntities();
-
             // if we're not transitioning (via a link) then set the orientation
             // because we're beginning the dream
             spawnPlayerInDream(transitioning == false);
 
+            Debug.Log("Choosing environment...");
             dream.ChooseEnvironment(GameSave.CurrentJournalSave.DayNumber).Apply();
 
             SettingsSystem.CanControlPlayer = true;
             SettingsSystem.CanMouseLook = true;
             SettingsSystem.PlayerGravity = true;
 
+            Debug.Log("Restoring player input etc...");
             PlayerMovement playerMovement = Player.GetComponent<PlayerMovement>();
             playerMovement.CanLink = true;
             playerMovement.ClearInputLock();
@@ -363,6 +368,7 @@ namespace LSDR.Dream
 
         protected void spawnPlayerInDream(bool setOrientation = false)
         {
+            Debug.Log("Spawning player...");
             try
             {
                 PlayerSpawn[] allSpawns = CurrentDreamInstance.GetComponentsInChildren<PlayerSpawn>();

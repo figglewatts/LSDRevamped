@@ -25,8 +25,11 @@ namespace LSDR.Bindings
 
         public void OnSettingsApply()
         {
-            PixelateImageEffect.enabled = Settings.Settings.UsePixelationShader;
-            Camera.fieldOfView = Settings.Settings.FOV;
+            if (Settings.Settings != null)
+            {
+                PixelateImageEffect.enabled = Settings.Settings.UsePixelationShader;
+                Camera.fieldOfView = Settings.Settings.FOV;
+            }
         }
     }
 }

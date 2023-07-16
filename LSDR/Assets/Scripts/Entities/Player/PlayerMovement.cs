@@ -17,6 +17,7 @@ namespace LSDR.Entities.Player
         public ControlSchemeLoaderSystem ControlScheme;
         public DreamSystem DreamSystem;
         public Transform Camera;
+        public AudioClip FootstepClip;
 
         [Console] public float GravityMultiplier = 1f;
         [Console] public float LinkDelay = 1.7F;
@@ -34,7 +35,6 @@ namespace LSDR.Entities.Player
         protected bool _currentlyStepping;
 
         // TODO: better footstep sounds
-        protected ToriiAudioClip _footstepClip;
         protected float _initialCameraOffset;
         protected Vector2 _inputDir;
         protected bool _inputLocked;
@@ -45,8 +45,6 @@ namespace LSDR.Entities.Player
         public void Start()
         {
             _controller = GetComponent<CharacterController>();
-            _footstepClip = ResourceManager.Load<ToriiAudioClip>(
-                PathUtil.Combine(Application.streamingAssetsPath, "sfx", "SE_00003.ogg"), "global");
 
             _initialCameraOffset = _controller.height;
 
@@ -116,7 +114,7 @@ namespace LSDR.Entities.Player
                 if (!playedFootstep && progress > 0.5f)
                 {
                     playedFootstep = true;
-                    AudioPlayer.Instance.PlayClip(_footstepClip, false, "SFX");
+                    AudioPlayer.Instance.PlayClip(FootstepClip, false, "SFX");
                 }
 
                 moveController(input, speedUnitsPerSecond);
@@ -129,7 +127,7 @@ namespace LSDR.Entities.Player
             moveController(input, speedUnitsPerSecond);
 
             // if we're sprinting we want to play the footstep sound on the downstep too
-            if (_currentlySprinting) AudioPlayer.Instance.PlayClip(_footstepClip, false, "SFX");
+            if (_currentlySprinting) AudioPlayer.Instance.PlayClip(FootstepClip, false, "SFX");
 
             _currentlyStepping = false;
         }
@@ -193,45 +191,55 @@ namespace LSDR.Entities.Player
         /// <returns>True if we are moving into a wall, false otherwise.</returns>
         private bool movingIntoWall(Vector3 desiredMove)
         {
-            float stepTopYPos = transform.position.y + _controller.stepOffset + _controller.skinWidth;
+            float stepTopYPos = transform.position.y + _controller.radius + _controller.stepOffset +
+                                _controller.skinWidth;
             Vector3 stepTopPos = new Vector3(transform.position.x, stepTopYPos, transform.position.z);
-            Vector3 capsuleBottom = new Vector3(transform.position.x, transform.position.y + _controller.radius,
+            Vector3 capsuleBottom = new Vector3(transform.position.x,
+                transform.position.y + _controller.radius + _controller.skinWidth,
                 transform.position.z);
-            Vector3 capsuleTop = new Vector3(transform.position.x, capsuleBottom.y + _controller.height,
+            Vector3 capsuleTop = new Vector3(transform.position.x,
+                capsuleBottom.y + _controller.height - _controller.radius,
                 transform.position.z);
 
             if (DebugLog)
                 Debug.Log($"1. StepTop: {stepTopPos}, CapsuleBottom: {capsuleBottom}, CapsuleTop: {capsuleTop}");
 
-            RaycastHit hit;
-            bool hitAboveStepHeight = Physics.CapsuleCast(stepTopPos, capsuleTop, _controller.radius, desiredMove,
-                out hit,
-                _controller.skinWidth * 2);
-
+            (bool hitAboveStepHeight, RaycastHit hit) = castController(stepTopPos, capsuleTop, _controller.radius,
+                desiredMove, _controller.skinWidth * 2);
             if (DebugLog)
             {
                 Debug.Log(
-                    $"2. hitAboveStepHeight: {hitAboveStepHeight}, collider: {hit.collider}, norm: {hit.normal.y}");
+                    $"2. hitAboveStepHeight: {hitAboveStepHeight}, collider: {hit.collider}, norm: {hit.normal}");
             }
 
             if (hitAboveStepHeight && !hit.collider.isTrigger && hit.normal.y >= -0.1f) return true;
 
-            bool hitSomething = Physics.CapsuleCast(capsuleBottom, capsuleTop, _controller.radius, desiredMove,
-                out hit,
+            bool hitSomething;
+            (hitSomething, hit) = castController(capsuleBottom, capsuleTop, _controller.radius, desiredMove,
                 _controller.skinWidth * 2);
             Vector3 axis = Vector3.Cross(transform.up, desiredMove);
-            bool hitOverSlopeLimit =
-                hitSomething && Vector3.SignedAngle(hit.normal, transform.up, axis) > _controller.slopeLimit;
+            float slopeAngle = Vector3.SignedAngle(hit.normal, transform.up, axis);
+            bool hitOverSlopeLimit = hitSomething && slopeAngle > _controller.slopeLimit;
             bool hitSeemsLikeAStep = hit.normal.y < 0.1f || hit.distance < 1E-06;
 
             if (DebugLog)
             {
                 Debug.Log(
-                    $"3. hitSomething: {hitSomething}, hitOverSlope: {hitOverSlopeLimit}, hotSeemsLikeAStep: {hitSeemsLikeAStep}");
-                Debug.Log(hit.normal.y);
+                    $"3. hitSomething: {hitSomething}, hitNormal: {hit.normal}, slopeAngle: {slopeAngle}, " +
+                    $"hitOverSlope: {hitOverSlopeLimit}, hitSeemsLikeAStep: {hitSeemsLikeAStep}");
             }
 
             return hit.collider && !hit.collider.isTrigger && hitOverSlopeLimit && !hitSeemsLikeAStep;
+        }
+
+        protected (bool, RaycastHit) castController(Vector3 bottomPos, Vector3 topPos, float halfExtent,
+            Vector3 direction, float distance)
+        {
+            Vector3 boxCenter = bottomPos + ((topPos - bottomPos) / 2);
+            Vector3 halfExtents = new Vector3(halfExtent, _controller.height / 2, halfExtent);
+            bool hitSomething = Physics.BoxCast(boxCenter, halfExtents, direction,
+                out RaycastHit hitInfo, Quaternion.identity, distance);
+            return (hitSomething, hitInfo);
         }
 
         private Vector2 getInputDirection()
