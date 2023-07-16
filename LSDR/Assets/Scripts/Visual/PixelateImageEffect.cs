@@ -28,6 +28,8 @@ namespace LSDR.Visual
 
         private void OnRenderImage(RenderTexture src, RenderTexture dest)
         {
+            if (_width == 0) return;
+
             src.filterMode = FilterMode.Point;
             RenderTexture buffer = RenderTexture.GetTemporary(_width, Height, -1);
             buffer.filterMode = FilterMode.Point;
