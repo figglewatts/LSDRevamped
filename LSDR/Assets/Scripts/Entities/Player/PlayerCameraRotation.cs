@@ -35,12 +35,6 @@ namespace LSDR.Entities.Player
         public List<Camera> TargetCameras;
 
         /// <summary>
-        ///     Mouse look rotations will be multiplied by this factor.
-        ///     Set in inspector.
-        /// </summary>
-        public float MouseLookRotationMultiplier;
-
-        /// <summary>
         ///     Max Y rotation when using mouse look. Set in inspector.
         /// </summary>
         public float MaxY = 70F;
@@ -61,6 +55,9 @@ namespace LSDR.Entities.Player
         protected float _lookBehindRotation = 0;
         protected TimeSince _timeSinceInteract;
         protected const float INTERACT_LOOK_BEHIND_TIME = 0.5f;
+
+        // mouse look constants (per: https://eliteownage.com/mousesensitivity.html)
+        protected const float DEGREES_PER_DOT = 0.02199f;
 
         protected void Start()
         {
@@ -115,17 +112,17 @@ namespace LSDR.Entities.Player
             // it'll be pretty slow
             if (Settings.Settings.LimitFramerate && ControlScheme.LastUsedGamepad) lookVec *= 4;
 
+            // sensitivity calculation
+            Vector2 adjustedLookVec = lookVec * DEGREES_PER_DOT * ControlScheme.Current.MouseSensitivity;
+
             // rotate the camera around the Y axis based on mouse horizontal movement
             transform.Rotate(0,
-                lookVec.x * ControlScheme.Current.MouseSensitivity *
-                MouseLookRotationMultiplier,
+                adjustedLookVec.x,
                 0, Space.Self);
 
             // rotate the camera around the X axis based on mouse vertical movement
             Transform temp = target.transform;
-            _rotationX += -lookVec.y *
-                          ControlScheme.Current.MouseSensitivity *
-                          MouseLookRotationMultiplier;
+            _rotationX += -adjustedLookVec.y;
 
             // make sure this angle is clamped between the min and max Y values
             _rotationX = ClampAngle(_rotationX, MinY, MaxY);
