@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using LSDR.Game;
 using LSDR.InputManagement;
+using Torii.Util;
 using UnityEngine;
 
 namespace LSDR.Entities.Player
@@ -55,6 +56,11 @@ namespace LSDR.Entities.Player
 
         // used to store how much we need to rotate on X axis (for lerping)
         protected float _rotationX;
+
+        protected float _lookUpDownRotation = 0;
+        protected float _lookBehindRotation = 0;
+        protected TimeSince _timeSinceInteract;
+        protected const float INTERACT_LOOK_BEHIND_TIME = 0.5f;
 
         protected void Start()
         {
@@ -147,32 +153,55 @@ namespace LSDR.Entities.Player
                 transformRotation.eulerAngles.z);
 
             // store the original orientation so we can rotate back towards it when we're not looking up or down
-            Quaternion originalOrientation = Quaternion.Euler(0, transformRotation.eulerAngles.y,
-                transformRotation.eulerAngles.z);
+            Quaternion originalOrientation = PlayerCharacterController.transform.rotation;
 
             if (ControlScheme.InputActions.Game.LookUp.IsPressed())
             {
                 // rotate towards the max negative rotation if we're looking up
-                target.transform.rotation = Quaternion.RotateTowards(transformRotation, maxNegative,
-                    RotationSpeed * Time.deltaTime);
+                _lookUpDownRotation += RotationSpeed * Time.deltaTime;
+                _lookUpDownRotation = Mathf.Clamp(_lookUpDownRotation, MinY, MaxY);
             }
 
             if (ControlScheme.InputActions.Game.LookDown.IsPressed())
             {
                 // rotate towards the max positive rotation if we're looking down
-                target.transform.rotation = Quaternion.RotateTowards(transformRotation, maxPositive,
-                    RotationSpeed * Time.deltaTime);
+                _lookUpDownRotation -= RotationSpeed * Time.deltaTime;
+                _lookUpDownRotation = Mathf.Clamp(_lookUpDownRotation, MinY, MaxY);
+            }
+
+            if (ControlScheme.InputActions.Game.Interact.WasPressedThisFrame()) _timeSinceInteract = 0;
+            if (ControlScheme.InputActions.Game.Interact.IsPressed())
+            {
+                if (_timeSinceInteract > INTERACT_LOOK_BEHIND_TIME && _lookBehindRotation < 180f)
+                {
+                    // rotate towards look behind position
+                    _lookBehindRotation += RotationSpeed * 4 * Time.deltaTime;
+                }
+            }
+            else if (_lookBehindRotation > 0)
+            {
+                _lookBehindRotation -= RotationSpeed * 4 * Time.deltaTime;
+                if (Mathf.Abs(_lookBehindRotation) < 2) _lookBehindRotation = 0;
             }
 
             if (!ControlScheme.InputActions.Game.LookUp.IsPressed() &&
-                !ControlScheme.InputActions.Game.LookDown.IsPressed())
+                !ControlScheme.InputActions.Game.LookDown.IsPressed() &&
+                !ControlScheme.InputActions.Game.Interact.IsPressed())
             {
                 // rotate towards the neutral rotation orientation if we neither looking up nor down
-                target.transform.rotation = Quaternion.RotateTowards(transformRotation, originalOrientation,
-                    RotationSpeed * Time.deltaTime);
+                if (_lookUpDownRotation < 0) _lookUpDownRotation += RotationSpeed * Time.deltaTime;
+                else if (_lookUpDownRotation > 0) _lookUpDownRotation -= RotationSpeed * Time.deltaTime;
+
+
+                if (Mathf.Abs(_lookUpDownRotation) < 2) _lookUpDownRotation = 0;
             }
 
-            // TODO: look behind
+            Debug.Log($"updown: {_lookUpDownRotation}, behind {_lookBehindRotation}");
+
+            target.transform.rotation = Quaternion.AngleAxis(_lookBehindRotation,
+                                            PlayerCharacterController.transform.up) *
+                                        originalOrientation;
+            target.transform.Rotate(Vector3.right, _lookUpDownRotation, Space.Self);
         }
 
         /// <summary>
