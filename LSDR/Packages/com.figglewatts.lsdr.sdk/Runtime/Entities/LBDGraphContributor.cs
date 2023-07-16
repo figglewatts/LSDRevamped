@@ -61,6 +61,8 @@ namespace LSDR.SDK.Entities
             else
             {
                 // otherwise we have the data, so we can log it!
+                Debug.Log(
+                    $"lbdIndex: {lbdIndex}, playerPos: {playerPos}, lastIndex: {_lastLbdIndex}, count: {LBDGraphData.Count}");
                 var contribution = LBDGraphData[lbdIndex];
                 DreamControlManager.Managed.LogGraphContributionFromArea(contribution.Dynamic, contribution.Upper);
             }
@@ -86,7 +88,9 @@ namespace LSDR.SDK.Entities
             }
             else
             {
-                return (int)localPos.y;
+                int flooredY = (int)localPos.y;
+                if (flooredY < 0) return -1;
+                return flooredY;
             }
         }
     }
