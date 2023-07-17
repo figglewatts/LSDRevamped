@@ -17,8 +17,8 @@ namespace LSDR.Dream
         /// </summary>
         public readonly List<VisitedDream> Visited = new List<VisitedDream>();
 
-        protected List<GraphContribution> _areaGraphContributions = new List<GraphContribution>();
-        protected List<GraphContribution> _entityGraphContributions = new List<GraphContribution>();
+        [JsonProperty] protected List<GraphContribution> _areaGraphContributions = new List<GraphContribution>();
+        [JsonProperty] protected List<GraphContribution> _entityGraphContributions = new List<GraphContribution>();
 
         public void LogGraphContributionFromArea(int dynamicness, int upperness)
         {

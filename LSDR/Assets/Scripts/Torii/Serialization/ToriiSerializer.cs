@@ -18,10 +18,10 @@ namespace Torii.Serialization
     public class ToriiSerializer
     {
         private readonly JsonSerializer _json; // reference to JSON serializer
-        
+
         // map types to serializer settings
         private readonly Dictionary<Type, JsonSerializerSettings> _serializationSettingsTypeMap;
-        
+
         static ToriiSerializer()
         {
             // add some protobuf converters for common Unity3D types
@@ -37,12 +37,13 @@ namespace Torii.Serialization
         {
             _json = new JsonSerializer();
             _serializationSettingsTypeMap = new Dictionary<Type, JsonSerializerSettings>();
-            
+
             // add some JSON converters for common Unity3D types
             _json.Converters.Add(new JsonVector3Converter());
             _json.Converters.Add(new JsonQuaternionConverter());
             _json.Converters.Add(new JsonColorConverter());
             _json.Converters.Add(new StringEnumConverter());
+            _json.Converters.Add(new JsonGraphContributionConverter());
         }
 
         /// <summary>
@@ -131,7 +132,8 @@ namespace Torii.Serialization
             }
             catch (JsonException e)
             {
-                Debug.LogError($"Deserialization error: Could not deserialize from \"{filePath}\", JSON was in unexpected format: {e.Message}");
+                Debug.LogError(
+                    $"Deserialization error: Could not deserialize from \"{filePath}\", JSON was in unexpected format: {e.Message}");
                 Debug.LogException(e);
                 return null;
             }
@@ -183,7 +185,8 @@ namespace Torii.Serialization
             }
             catch (IOException e)
             {
-                Debug.LogError($"Deserialization error: Could not deserialize from \"{filePath}\", an error occurred opening the file");
+                Debug.LogError(
+                    $"Deserialization error: Could not deserialize from \"{filePath}\", an error occurred opening the file");
                 Debug.LogException(e);
                 return null;
             }
@@ -260,7 +263,8 @@ namespace Torii.Serialization
             }
             catch (SecurityException e)
             {
-                Debug.LogError($"Serialization error: Could not serialize to \"{filePath}\", caller has incorrect permission");
+                Debug.LogError(
+                    $"Serialization error: Could not serialize to \"{filePath}\", caller has incorrect permission");
                 Debug.LogException(e);
                 return false;
             }
@@ -282,7 +286,8 @@ namespace Torii.Serialization
             }
             catch (UnauthorizedAccessException e)
             {
-                Debug.LogError($"Serialization error: Could not serialize to \"{filePath}\", incorrect permission or readonly file");
+                Debug.LogError(
+                    $"Serialization error: Could not serialize to \"{filePath}\", incorrect permission or readonly file");
                 Debug.LogException(e);
             }
             catch (ArgumentException e)
@@ -292,18 +297,21 @@ namespace Torii.Serialization
             }
             catch (DirectoryNotFoundException e)
             {
-                Debug.LogError($"Serialization error: Could not serialize to \"{filePath}\", directory not found or path invalid");
+                Debug.LogError(
+                    $"Serialization error: Could not serialize to \"{filePath}\", directory not found or path invalid");
                 Debug.LogException(e);
             }
             catch (IOException e)
             {
-                Debug.LogError($"Serialization error: Could not serialize to \"{filePath}\", error occurred creating the file");
+                Debug.LogError(
+                    $"Serialization error: Could not serialize to \"{filePath}\", error occurred creating the file");
                 Debug.LogException(e);
 
             }
             catch (NotSupportedException e)
             {
-                Debug.LogError($"Serialization error: Could not serialize to \"{filePath}\", path is in invalid format");
+                Debug.LogError(
+                    $"Serialization error: Could not serialize to \"{filePath}\", path is in invalid format");
                 Debug.LogException(e);
             }
 
@@ -341,6 +349,5 @@ namespace Torii.Serialization
             _json.TypeNameAssemblyFormatHandling = settings.TypeNameAssemblyFormatHandling;
             _json.TypeNameHandling = settings.TypeNameHandling;
         }
-
     }
 }

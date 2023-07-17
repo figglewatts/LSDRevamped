@@ -28,9 +28,13 @@ namespace LSDR.SDK.Data
         private Texture2D _createdTexture;
         private bool _dirty = true;
 
+        // get a dream from the current graph position (i.e. -9 to +9)
         public Dream Get(int x, int y)
         {
-            int graphIdx = _graph[y * GRAPH_SIZE + x];
+            int graphX = x + 9;
+            int graphY = y + 9;
+
+            int graphIdx = _graph[graphY * GRAPH_SIZE + graphX];
             return graphIdx == -1 ? null : Dreams[graphIdx].Dream;
         }
 
