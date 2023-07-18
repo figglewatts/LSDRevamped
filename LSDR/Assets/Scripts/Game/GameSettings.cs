@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using Torii.Binding;
 using UnityEngine;
@@ -163,12 +164,20 @@ namespace LSDR.Game
             }
         }
 
+        private float _affineIntensity;
+
         /// <summary>
-        /// Hidden setting. How intense to render the affine effect used in PS1 shaders.
+        /// How intense to render the affine effect used in PS1 shaders.
         /// </summary>
-        [JsonIgnore]
-        public float
-            AffineIntensity { get; set; } // the intensity of the affine texture mapping used in classic shaders
+        public float AffineIntensity
+        {
+            get => _affineIntensity;
+            set
+            {
+                _affineIntensity = value;
+                NotifyPropertyChange(nameof(AffineIntensity));
+            }
+        }
 
 #endregion
 
@@ -271,6 +280,12 @@ namespace LSDR.Game
 
 #endregion
 
+        public List<SettingsProfile> Profiles;
+        public int CurrentProfileIndex = 0;
+        public bool SettingsMatchProfile;
+
+        [JsonIgnore]
+        public SettingsProfile CurrentProfile => Profiles[CurrentProfileIndex];
 
         /// <summary>
         /// Create a new instance of the settings object with default values.
@@ -292,6 +307,61 @@ namespace LSDR.Game
             MusicVolume = 1F;
             SFXVolume = 1F;
             GUID = Guid.NewGuid();
+
+            Profiles = new List<SettingsProfile>();
+            SettingsMatchProfile = true;
+        }
+
+        public void SwitchToNextProfile()
+        {
+            if (SettingsMatchProfile)
+            {
+                CurrentProfileIndex = (CurrentProfileIndex + 1) % Profiles.Count;
+            }
+            ApplyCurrentProfile();
+        }
+
+        public void ApplyCurrentProfile()
+        {
+            if (CurrentProfileIndex >= Profiles.Count || CurrentProfileIndex < 0) CurrentProfileIndex = 0;
+            Profiles[CurrentProfileIndex].ApplyTo(this);
+            SettingsMatchProfile = true;
+        }
+
+        public void UpdateCurrentProfile()
+        {
+            CurrentProfile.ApplyFrom(this);
+            ApplyCurrentProfile();
+        }
+
+        public void InvalidateCurrentProfile()
+        {
+            SettingsMatchProfile = false;
+        }
+
+        public void CreateNewProfile()
+        {
+            Profiles.Add(new SettingsProfile(this) { Name = $"Profile {Profiles.Count}" });
+            CurrentProfileIndex = Profiles.Count - 1;
+            ApplyCurrentProfile();
+        }
+
+        public void DeleteCurrentProfile()
+        {
+            if (Profiles.Count == 1)
+            {
+                Debug.LogWarning("Cannot delete last profile");
+                return;
+            }
+
+            Profiles.RemoveAt(CurrentProfileIndex);
+
+            // if we deleted the last one, adjust it so we're now on the new last one
+            if (CurrentProfileIndex == Profiles.Count)
+            {
+                CurrentProfileIndex--;
+            }
+            ApplyCurrentProfile();
         }
 
         // find the current resolution index
@@ -308,6 +378,9 @@ namespace LSDR.Game
         }
 
         // used for BindBrokers
-        public void NotifyPropertyChange(string propertyName) { OnPropertyChange?.Invoke(propertyName, this); }
+        public void NotifyPropertyChange(string propertyName)
+        {
+            OnPropertyChange?.Invoke(propertyName, this);
+        }
     }
 }

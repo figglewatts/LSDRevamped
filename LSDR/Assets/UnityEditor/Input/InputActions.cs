@@ -89,6 +89,15 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""NextProfile"",
+                    ""type"": ""Button"",
+                    ""id"": ""555e6bb0-3ea8-4cfa-9d6f-6b3bab2f1d5c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -298,6 +307,28 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard and mouse"",
                     ""action"": ""Look"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""39291120-3105-4382-ae4f-a5aecf55dcb8"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and mouse"",
+                    ""action"": ""NextProfile"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2bb1fd37-b4e4-44e2-93ce-3d82d4897fd2"",
+                    ""path"": ""<Gamepad>/select"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""NextProfile"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -592,6 +623,7 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
         m_Game_LookUp = m_Game.FindAction("LookUp", throwIfNotFound: true);
         m_Game_LookDown = m_Game.FindAction("LookDown", throwIfNotFound: true);
         m_Game_Pause = m_Game.FindAction("Pause", throwIfNotFound: true);
+        m_Game_NextProfile = m_Game.FindAction("NextProfile", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -666,6 +698,7 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Game_LookUp;
     private readonly InputAction m_Game_LookDown;
     private readonly InputAction m_Game_Pause;
+    private readonly InputAction m_Game_NextProfile;
     public struct GameActions
     {
         private @InputActions m_Wrapper;
@@ -677,6 +710,7 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
         public InputAction @LookUp => m_Wrapper.m_Game_LookUp;
         public InputAction @LookDown => m_Wrapper.m_Game_LookDown;
         public InputAction @Pause => m_Wrapper.m_Game_Pause;
+        public InputAction @NextProfile => m_Wrapper.m_Game_NextProfile;
         public InputActionMap Get() { return m_Wrapper.m_Game; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -707,6 +741,9 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                 @Pause.started -= m_Wrapper.m_GameActionsCallbackInterface.OnPause;
                 @Pause.performed -= m_Wrapper.m_GameActionsCallbackInterface.OnPause;
                 @Pause.canceled -= m_Wrapper.m_GameActionsCallbackInterface.OnPause;
+                @NextProfile.started -= m_Wrapper.m_GameActionsCallbackInterface.OnNextProfile;
+                @NextProfile.performed -= m_Wrapper.m_GameActionsCallbackInterface.OnNextProfile;
+                @NextProfile.canceled -= m_Wrapper.m_GameActionsCallbackInterface.OnNextProfile;
             }
             m_Wrapper.m_GameActionsCallbackInterface = instance;
             if (instance != null)
@@ -732,6 +769,9 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                 @Pause.started += instance.OnPause;
                 @Pause.performed += instance.OnPause;
                 @Pause.canceled += instance.OnPause;
+                @NextProfile.started += instance.OnNextProfile;
+                @NextProfile.performed += instance.OnNextProfile;
+                @NextProfile.canceled += instance.OnNextProfile;
             }
         }
     }
@@ -836,6 +876,7 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
         void OnLookUp(InputAction.CallbackContext context);
         void OnLookDown(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
+        void OnNextProfile(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

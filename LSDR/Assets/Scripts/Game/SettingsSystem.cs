@@ -6,6 +6,7 @@ using LSDR.SDK.Visual;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Torii.Binding;
+using Torii.Event;
 using Torii.Serialization;
 using Torii.Util;
 using UnityEngine;
@@ -27,6 +28,8 @@ namespace LSDR.Game
 
         public ModLoaderSystem ModLoaderSystem;
         public ControlSchemeLoaderSystem ControlSchemeLoader;
+
+        public ToriiEvent OnSettingsApply;
 
         // reference to serializer used for loading/saving data
         private readonly ToriiSerializer _serializer = new ToriiSerializer();
@@ -81,7 +84,9 @@ namespace LSDR.Game
 
             // check to see if the settings file exists
             if (File.Exists(SettingsPath))
+            {
                 Settings = _serializer.Deserialize<GameSettings>(SettingsPath);
+            }
             else
             {
                 // create the default settings
@@ -90,9 +95,12 @@ namespace LSDR.Game
                 Save();
             }
 
+            if (Settings.Profiles.Count == 0) Settings.Profiles = SettingsProfile.CreateDefaultProfiles();
+
             // register the new settings object
             SettingsBindBroker.RegisterData(Settings);
 
+            Settings.ApplyCurrentProfile();
             Apply();
         }
 
@@ -129,7 +137,7 @@ namespace LSDR.Game
             Application.targetFrameRate = Settings.LimitFramerate ? FRAMERATE_LIMIT : -1;
 
             // set retro shader affine intensity
-            Shader.SetGlobalFloat("AffineIntensity", Settings.AffineIntensity);
+            Shader.SetGlobalFloat("_AffineIntensity", Settings.AffineIntensity);
 
             // set volumes
             SetMusicVolume(Settings.MusicVolume);
@@ -140,6 +148,32 @@ namespace LSDR.Game
 
             // update any shaders
             TextureSetter.Instance.SetAllShaders(Settings.UseClassicShaders);
+
+            Settings.UpdateCurrentProfile();
+
+            OnSettingsApply.Raise();
+        }
+
+        public void SwitchToNextProfile()
+        {
+            Settings.SwitchToNextProfile();
+            Apply();
+        }
+
+        public void RevertCurrentProfile()
+        {
+            Settings.ApplyCurrentProfile();
+        }
+
+        public void InvalidateCurrentProfile()
+        {
+            Settings.InvalidateCurrentProfile();
+        }
+
+        public void DeleteCurrentProfile()
+        {
+            Settings.DeleteCurrentProfile();
+            Apply();
         }
 
         /// <summary>

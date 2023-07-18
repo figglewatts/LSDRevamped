@@ -22,7 +22,7 @@ struct vertdata
     float4 pos : SV_POSITION;
     half4 color : COLOR0;
     float2 uv_MainTex : TEXCOORD0;
-    half3 affine : TEXCOORD1;
+    float4 clipPos : TEXCOORD1;
 };
 
 struct fragdata
@@ -60,11 +60,13 @@ fragdata vert(appdata v)
     output.data.pos = snapToPixel;
 
     // affine texture mapping
-    output.data.uv_MainTex *= output.distance + (v.position.w * _AffineIntensity * 8) / output.distance / 2;
-    output.data.affine = output.distance + (v.position.w * _AffineIntensity * 8) / output.distance / 2;
+    output.data.clipPos = UnityObjectToClipPos(v.position);
+    output.data.clipPos.w += 0.25;
+    output.data.clipPos.w = lerp(1, output.data.clipPos.w, _AffineIntensity);
+    output.data.uv_MainTex *= output.data.clipPos.w;
     #else
     output.data.pos = UnityObjectToClipPos(v.position);
-    output.data.affine = 0;
+    output.data.clipPos = 1;
     #endif
 
     if (output.distance > GetFogEnd() + _RenderCutoffAdjustment)
@@ -85,25 +87,20 @@ fragOut lsdrFrag(fragdata input, sampler2D mainTex, fixed4 tint)
     fragOut output;
     half4 output_col;
 
-    // handle reading texture colour
     #if defined(LSDR_CLASSIC)
-    #if defined(LSDR_TEXTURE_SET)
-    if (_TextureSet == 2) output_col = tex2D(mainTexB, input.data.uv_MainTex / input.data.affine.x);
-    else if (_TextureSet == 3) output_col = tex2D(mainTexC, input.data.uv_MainTex / input.data.affine.x);
-    else if (_TextureSet == 4) output_col = tex2D(mainTexD, input.data.uv_MainTex / input.data.affine.x);
-    else output_col = tex2D(mainTexA, input.data.uv_MainTex / input.data.affine.x);
+    float2 uvs = input.data.uv_MainTex / input.data.clipPos.w;
     #else
-    output_col = tex2D(mainTex, input.data.uv_MainTex / input.data.affine.x);
+    float2 uvs = input.data.uv_MainTex;
     #endif
-    #else
+
+    // handle reading texture colour
     #if defined(LSDR_TEXTURE_SET)
-    if (_TextureSet == 2) output_col = tex2D(mainTexB, input.data.uv_MainTex);
-    else if (_TextureSet == 3) output_col = tex2D(mainTexC, input.data.uv_MainTex);
-    else if (_TextureSet == 4) output_col = tex2D(mainTexD, input.data.uv_MainTex);
-    else output_col = tex2D(mainTexA, input.data.uv_MainTex);
+    if (_TextureSet == 2) output_col = tex2D(mainTexB, uvs);
+    else if (_TextureSet == 3) output_col = tex2D(mainTexC, uvs);
+    else if (_TextureSet == 4) output_col = tex2D(mainTexD, uvs);
+    else output_col = tex2D(mainTexA, uvs);
     #else
-    output_col = tex2D(mainTex, input.data.uv_MainTex);
-    #endif
+    output_col = tex2D(mainTex, uvs);
     #endif
 
     #if defined(LSDR_CUTOUT_ALPHA)
@@ -147,12 +144,12 @@ float _Alpha;
 fragOut frag(fragdata input)
 {
     fragOut output;
-    
-#if defined(LSDR_CLASSIC)
-    float2 uvs = input.data.uv_MainTex / input.data.affine.x;
-#else
+
+    #if defined(LSDR_CLASSIC)
+    float2 uvs = input.data.uv_MainTex / input.data.clipPos.w;
+    #else
     float2 uvs = input.data.uv_MainTex;
-#endif
+    #endif
 
 
     half4 waterMap;
@@ -160,7 +157,7 @@ fragOut frag(fragdata input)
     else if (_TextureSet == 3) waterMap = tex2D(_MainTextureC, uvs);
     else if (_TextureSet == 4) waterMap = tex2D(_MainTextureD, uvs);
     else waterMap = tex2D(_MainTextureA, uvs);
-    
+
     float paletteIdx = (waterMap.r - _Time[0] * _AnimationSpeed) % 1.0;
 
     half4 output_col;
@@ -176,18 +173,18 @@ fragOut frag(fragdata input)
     output_col *= _Tint;
 
     // apply fog
-#if defined(LSDR_CLASSIC)
+    #if defined(LSDR_CLASSIC)
     // operate on floored versions of coords to produce grid effect
     float4 fogColor = FogColor(length(int3(input.worldPos) - int3(_WorldSpaceCameraPos)));
     output_col = ApplyClassicFog(output_col, fogColor);
-#else
+    #else
     const float4 fogColor = FogColor(input.distance);
     output_col = ApplyRevampedFog(output_col, fogColor);
-#endif
-    
+    #endif
+
     output.color = output_col * BRIGHTNESS;
     output.color.a = min(_Alpha, waterMap.a);
-    
+
     return output;
 }
 #elif defined(LSDR_TEXTURE_SET)
