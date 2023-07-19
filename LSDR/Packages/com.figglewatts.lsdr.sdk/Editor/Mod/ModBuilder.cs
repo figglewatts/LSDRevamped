@@ -16,12 +16,6 @@ namespace LSDR.SDK.Editor.Mod
 
         public void Build(LSDRevampedMod mod, ModPlatform platforms, string outputPath)
         {
-            if (platforms == ModPlatform.Nothing)
-            {
-                Debug.LogWarning("No platforms supplied to mod builder, doing nothing.");
-                return;
-            }
-
             AssetBundleBuild build = new AssetBundleBuild
             {
                 assetNames = new[] { AssetDatabase.GetAssetPath(mod) },
