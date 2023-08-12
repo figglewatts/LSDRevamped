@@ -11,8 +11,8 @@ namespace LSDR.SDK.Editor.AssetImporters
         {
             serializedObject.Update();
 
-            var opaqueMaterialProperty = serializedObject.FindProperty("OpaqueMaterial");
-            var transparentMaterialProperty = serializedObject.FindProperty("TransparentMaterial");
+            SerializedProperty opaqueMaterialProperty = serializedObject.FindProperty("OpaqueMaterial");
+            SerializedProperty transparentMaterialProperty = serializedObject.FindProperty("TransparentMaterial");
 
             EditorGUILayout.PropertyField(opaqueMaterialProperty);
             EditorGUILayout.PropertyField(transparentMaterialProperty);

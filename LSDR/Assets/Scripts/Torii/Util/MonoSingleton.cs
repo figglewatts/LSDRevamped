@@ -1,24 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Torii.Util
 {
     /// <summary>
-    /// A Singleton that inherits from MonoBehaviour allowing it to be attached to GameObjects.
-    /// Create subclasses of this to use it.
+    ///     A Singleton that inherits from MonoBehaviour allowing it to be attached to GameObjects.
+    ///     Create subclasses of this to use it.
     /// </summary>
     /// <typeparam name="T">The type of the Singleton. Should be same as subclass type.</typeparam>
     public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T>
     {
-        private static bool _initialised = false;
+        private static bool _initialised;
 
-        private static T _instance = null;
+        private static T _instance;
 
         /// <summary>
-        /// Get this singleton's instance.
+        ///     Get this singleton's instance.
         /// </summary>
         public static T Instance
         {
@@ -39,7 +35,7 @@ namespace Torii.Util
         }
 
         /// <summary>
-        /// Unity Awake() function. Checks for other instances and initialises singleton state.
+        ///     Unity Awake() function. Checks for other instances and initialises singleton state.
         /// </summary>
         public void Awake()
         {
@@ -62,8 +58,8 @@ namespace Torii.Util
         }
 
         /// <summary>
-        /// Override this and put what you'd normally put in Awake() in here.
-        /// Awake() is already in use to check for other instances and perform initialisation.
+        ///     Override this and put what you'd normally put in Awake() in here.
+        ///     Awake() is already in use to check for other instances and perform initialisation.
         /// </summary>
         public virtual void Init() { }
     }

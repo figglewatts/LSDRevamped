@@ -87,7 +87,7 @@ namespace LSDR.SDK.Util
         /// </summary>
         /// <param name="max">The exclusive max bound.</param>
         /// <returns>The random float.</returns>
-        public static float Float(float max) { return Float(0, max); }
+        public static float Float(float max) { return Float(min: 0, max); }
 
         /// <summary>
         ///     Generate a random color.

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace LSDR.SDK.Editor.AssetImporters
 {
-    [ScriptedImporter(1, "lua")]
+    [ScriptedImporter(version: 1, "lua")]
     public class LuaScriptImporter : ScriptedImporter
     {
         public override void OnImportAsset(AssetImportContext ctx)

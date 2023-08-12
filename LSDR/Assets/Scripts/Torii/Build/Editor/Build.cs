@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using LSDR.SDK.Data;
@@ -77,7 +78,7 @@ namespace Torii.Build
             if (version == null)
             {
                 Debug.LogError("--version argument is required");
-                EditorApplication.Exit(1);
+                EditorApplication.Exit(returnValue: 1);
             }
 
             PlayerSettings.bundleVersion = version;
@@ -86,9 +87,9 @@ namespace Torii.Build
             // build mods
             Debug.Log("Building mods to StreamingAssets path");
             ModBuilder modBuilder = new ModBuilder();
-            var originalDreamsMod =
+            LSDRevampedMod originalDreamsMod =
                 AssetDatabase.LoadAssetAtPath<LSDRevampedMod>("Assets/Original/OriginalDreamsMod.asset");
-            var modOutputPath = Path.Combine(Application.streamingAssetsPath, "mods");
+            string modOutputPath = Path.Combine(Application.streamingAssetsPath, "mods");
             modBuilder.Build(originalDreamsMod, ModPlatform.Windows, modOutputPath);
 
             string filter = getArgValue(FILTER_ARG);
@@ -100,10 +101,11 @@ namespace Torii.Build
             }
 
             Debug.Log("Loading BuildConfigurations...");
-            var buildConfigs = AssetDatabase.FindAssets("t:BuildConfiguration")
-                                            .Select(AssetDatabase.GUIDToAssetPath)
-                                            .Select(AssetDatabase.LoadAssetAtPath<BuildConfiguration>)
-                                            .Where(conf => conf.Enabled);
+            IEnumerable<BuildConfiguration> buildConfigs = AssetDatabase.FindAssets("t:BuildConfiguration")
+                                                                        .Select(AssetDatabase.GUIDToAssetPath)
+                                                                        .Select(AssetDatabase
+                                                                            .LoadAssetAtPath<BuildConfiguration>)
+                                                                        .Where(conf => conf.Enabled);
             foreach (BuildConfiguration buildConf in buildConfigs)
             {
                 // skip if filtered out
@@ -132,7 +134,7 @@ namespace Torii.Build
                 else
                 {
                     Debug.Log($"Build for config '{buildConf.Name}' did not succeed - got result '{summary.result}'");
-                    EditorApplication.Exit(1);
+                    EditorApplication.Exit(returnValue: 1);
                 }
             }
         }

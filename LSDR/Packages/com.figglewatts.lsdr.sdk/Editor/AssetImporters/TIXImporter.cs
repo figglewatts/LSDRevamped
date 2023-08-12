@@ -2,10 +2,11 @@ using System.IO;
 using libLSD.Formats;
 using UnityEditor;
 using UnityEditor.Experimental.AssetImporters;
+using UnityEngine;
 
 namespace LSDR.SDK.Editor.AssetImporters
 {
-    [ScriptedImporter(version: 1, ext: "tix")]
+    [ScriptedImporter(version: 1, "tix")]
     public class TIXImporter : ScriptedImporter
     {
         public override void OnImportAsset(AssetImportContext ctx)
@@ -18,8 +19,8 @@ namespace LSDR.SDK.Editor.AssetImporters
             }
 
             // convert it to a texture
-            var texture = LibLSDUnity.GetTextureFromTIX(tix);
-            var thumbnail = AssetPreview.GetMiniThumbnail(texture);
+            Texture2D texture = LibLSDUnity.GetTextureFromTIX(tix);
+            Texture2D thumbnail = AssetPreview.GetMiniThumbnail(texture);
 
             // set the outputs
             ctx.AddObjectToAsset("TIX Texture", texture, thumbnail);

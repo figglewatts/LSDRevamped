@@ -1,6 +1,4 @@
-﻿using System;
-using Torii.Event;
-using Torii.Util;
+﻿using Torii.Event;
 using UnityEngine;
 
 namespace LSDR.Game
@@ -21,7 +19,7 @@ namespace LSDR.Game
             // make sure we don't really slow down the editor when loading a lot of data
             Application.backgroundLoadingPriority = ThreadPriority.Low;
             #endif
-            
+
             StartCoroutine(GameLoadSystem.LoadGameCoroutine());
         }
     }

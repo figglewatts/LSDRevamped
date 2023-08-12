@@ -7,7 +7,7 @@ namespace LSDR.Entities.Player
     {
         public PauseSystem PauseSystem;
         public SettingsSystem SettingsSystem;
-        
+
         public void OnDevConsoleOpen()
         {
             SettingsSystem.CanControlPlayer = false;

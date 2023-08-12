@@ -1,28 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Torii.Util
 {
     /// <summary>
-    /// Various utility methods for Enums.
+    ///     Various utility methods for Enums.
     /// </summary>
     public static class EnumUtil
     {
         /// <summary>
-        /// Parse a string value to an enum. Case insensitive.
+        ///     Parse a string value to an enum. Case insensitive.
         /// </summary>
         /// <typeparam name="T">The Type of the enum</typeparam>
         /// <param name="value">The string value to parse</param>
         /// <returns>The parsed enum value</returns>
         public static T Parse<T>(string value)
         {
-            return (T)Enum.Parse(typeof(T), value, true);
+            return (T)Enum.Parse(typeof(T), value, ignoreCase: true);
         }
 
         /// <summary>
-        /// Try to parse a string value to an enum. Case insensitive.
+        ///     Try to parse a string value to an enum. Case insensitive.
         /// </summary>
         /// <typeparam name="T">The Type of the enum.</typeparam>
         /// <param name="value">The string value to parse to.</param>
@@ -32,12 +29,12 @@ namespace Torii.Util
         {
             try
             {
-                parsed = (T)Enum.Parse(typeof(T), value, true);
+                parsed = (T)Enum.Parse(typeof(T), value, ignoreCase: true);
                 return true;
             }
             catch (ArgumentException)
             {
-                parsed = default(T);
+                parsed = default;
                 return false;
             }
         }

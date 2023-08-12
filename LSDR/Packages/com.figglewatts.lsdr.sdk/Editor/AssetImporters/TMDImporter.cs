@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using libLSD.Formats;
 using LSDR.SDK.Visual;
@@ -7,7 +8,7 @@ using UnityEngine;
 
 namespace LSDR.SDK.Editor.AssetImporters
 {
-    [ScriptedImporter(version: 1, ext: "tmd")]
+    [ScriptedImporter(version: 1, "tmd")]
     public class TMDImporter : ScriptedImporter
     {
         public Material OpaqueMaterial;
@@ -25,7 +26,7 @@ namespace LSDR.SDK.Editor.AssetImporters
             }
 
             // create data for combining into single mesh
-            var meshes = LibLSDUnity.CreateMeshesFromTMD(tmd);
+            List<Mesh> meshes = LibLSDUnity.CreateMeshesFromTMD(tmd);
             _meshCombiner = new MeshCombiner();
             _meshCombiner.SetSubmeshSettings("opaque", useMatrices: false);
             _meshCombiner.SetSubmeshSettings("transparent", useMatrices: false);
@@ -34,7 +35,7 @@ namespace LSDR.SDK.Editor.AssetImporters
                 _meshCombiner.Add(new CombineInstance
                 {
                     mesh = tmdObj,
-                    subMeshIndex = 0,
+                    subMeshIndex = 0
                 }, "opaque");
 
                 // if it has a transparent part, we need to add it
@@ -84,7 +85,7 @@ namespace LSDR.SDK.Editor.AssetImporters
             ctx.AddObjectToAsset("TMD Mesh", combinedMesh);
 
             // clean up unused assets
-            foreach (var tmdMesh in meshes)
+            foreach (Mesh tmdMesh in meshes)
             {
                 DestroyImmediate(tmdMesh);
             }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using LSDR.SDK.Data;
 using LSDR.SDK.DreamControl;
 using UnityEngine;
@@ -14,15 +13,15 @@ namespace LSDR.SDK.Entities
             Vertical
         }
 
+        protected const float UPDATE_INTERVAL = 0.25f;
+
         public LBDLayoutType LayoutType;
         public int TileWidth = 1;
         public List<GraphContribution> LBDGraphData = new List<GraphContribution>();
-
-        protected const float UPDATE_INTERVAL = 0.25f;
-
-        protected float _t = 0;
-        protected Transform _player;
         protected int _lastLbdIndex = -1;
+        protected Transform _player;
+
+        protected float _t;
 
         public void Start()
         {
@@ -42,8 +41,8 @@ namespace LSDR.SDK.Entities
         protected void processPlayerPosition()
         {
             // get the player's position and calculate which LBD tile we're standing on
-            var playerPos = _player.position;
-            var lbdIndex = positionToLBDIndex(playerPos);
+            Vector3 playerPos = _player.position;
+            int lbdIndex = positionToLBDIndex(playerPos);
 
             // if we're not on an LBD tile, or we're on the same tile as before - do nothing
             if (lbdIndex == -1 || _lastLbdIndex == lbdIndex) return;
@@ -61,7 +60,7 @@ namespace LSDR.SDK.Entities
             else
             {
                 // otherwise we have the data, so we can log it!
-                var contribution = LBDGraphData[lbdIndex];
+                GraphContribution contribution = LBDGraphData[lbdIndex];
                 DreamControlManager.Managed.LogGraphContributionFromArea(contribution.Dynamic, contribution.Upper);
             }
 
@@ -72,7 +71,7 @@ namespace LSDR.SDK.Entities
         // returns -1 if the player is not over an LBD tile
         protected int positionToLBDIndex(Vector3 position)
         {
-            var localPos = transform.InverseTransformPoint(position);
+            Vector3 localPos = transform.InverseTransformPoint(position);
             if (LayoutType == LBDLayoutType.Horizontal)
             {
                 int lbdYPos = (int)localPos.z / 20;
@@ -84,12 +83,9 @@ namespace LSDR.SDK.Entities
 
                 return lbdYPos * TileWidth + lbdXPos;
             }
-            else
-            {
-                int flooredY = (int)localPos.y;
-                if (flooredY < 0) return -1;
-                return flooredY;
-            }
+            int flooredY = (int)localPos.y;
+            if (flooredY < 0) return -1;
+            return flooredY;
         }
     }
 }

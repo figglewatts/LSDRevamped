@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace LSDR.SDK.Visual
@@ -7,7 +6,7 @@ namespace LSDR.SDK.Visual
     public class ShaderSetter : MonoBehaviour
     {
         protected Renderer _renderer;
-        
+
         public void Start()
         {
             _renderer = GetComponent<Renderer>();

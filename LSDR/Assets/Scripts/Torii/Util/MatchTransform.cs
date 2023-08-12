@@ -3,48 +3,16 @@ using UnityEngine;
 namespace Torii.Util
 {
     /// <summary>
-    /// MatchTransform matches the transform of the attached object to a given target.
+    ///     MatchTransform matches the transform of the attached object to a given target.
     /// </summary>
     public class MatchTransform : MonoBehaviour
     {
-        public bool MatchPosition
-        {
-            get { return MatchPosX && MatchPosY && MatchPosZ; }
-            set
-            {
-                MatchPosX = value;
-                MatchPosY = value;
-                MatchPosZ = value;
-            }
-        }
         public bool MatchPosX;
         public bool MatchPosY;
         public bool MatchPosZ;
-
-        public bool MatchRotation
-        {
-            get { return MatchRotX && MatchRotY && MatchRotZ; }
-            set
-            {
-                MatchRotX = value;
-                MatchRotY = value;
-                MatchRotZ = value;
-            }
-        }
         public bool MatchRotX;
         public bool MatchRotY;
         public bool MatchRotZ;
-
-        public bool MatchScale
-        {
-            get { return MatchScaleX && MatchScaleY && MatchScaleZ; }
-            set
-            {
-                MatchScaleX = value;
-                MatchScaleY = value;
-                MatchScaleZ = value;
-            }
-        }
         public bool MatchScaleX;
         public bool MatchScaleY;
         public bool MatchScaleZ;
@@ -52,6 +20,38 @@ namespace Torii.Util
         public Transform Match;
 
         private Transform _this;
+        public bool MatchPosition
+        {
+            get => MatchPosX && MatchPosY && MatchPosZ;
+            set
+            {
+                MatchPosX = value;
+                MatchPosY = value;
+                MatchPosZ = value;
+            }
+        }
+
+        public bool MatchRotation
+        {
+            get => MatchRotX && MatchRotY && MatchRotZ;
+            set
+            {
+                MatchRotX = value;
+                MatchRotY = value;
+                MatchRotZ = value;
+            }
+        }
+
+        public bool MatchScale
+        {
+            get => MatchScaleX && MatchScaleY && MatchScaleZ;
+            set
+            {
+                MatchScaleX = value;
+                MatchScaleY = value;
+                MatchScaleZ = value;
+            }
+        }
 
         private void Start() { _this = transform; }
 

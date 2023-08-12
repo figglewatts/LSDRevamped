@@ -4,12 +4,12 @@ using System.IO;
 namespace Torii.Util
 {
     /// <summary>
-    /// Various utility methods for paths.
+    ///     Various utility methods for paths.
     /// </summary>
     public static class PathUtil
     {
         /// <summary>
-        /// Combines two elements into a path. Converts back slashes in path to forward slashes.
+        ///     Combines two elements into a path. Converts back slashes in path to forward slashes.
         /// </summary>
         /// <param name="a">Element A</param>
         /// <param name="b">Element B</param>
@@ -18,14 +18,14 @@ namespace Torii.Util
         {
             if (b.StartsWith("\\") || b.StartsWith("/"))
             {
-                b = b.Substring(1);
+                b = b.Substring(startIndex: 1);
             }
 
-            return Path.Combine(a, b).Replace('\\', '/');
+            return Path.Combine(a, b).Replace(oldChar: '\\', newChar: '/');
         }
 
         /// <summary>
-        /// Combines any number of path parameters. Converts back slashes in path to forward slashes.
+        ///     Combines any number of path parameters. Converts back slashes in path to forward slashes.
         /// </summary>
         /// <param name="componentStrings">Any number of path elements to combine</param>
         /// <returns>The combined path.</returns>
@@ -37,13 +37,13 @@ namespace Torii.Util
                 path = Combine(path, componentStrings[i]);
             }
 
-            return path.Replace('\\', '/');
+            return path.Replace(oldChar: '\\', newChar: '/');
         }
 
         public static string SanitiseFileName(string fileName)
         {
-            var invalids = Path.GetInvalidFileNameChars();
-            return String.Join("_", fileName.Split(invalids, StringSplitOptions.RemoveEmptyEntries)).TrimEnd('.');
+            char[] invalids = Path.GetInvalidFileNameChars();
+            return string.Join("_", fileName.Split(invalids, StringSplitOptions.RemoveEmptyEntries)).TrimEnd('.');
         }
     }
 }

@@ -5,63 +5,22 @@ using UnityEngine;
 
 namespace LSDR.Entities.Original
 {
-#if UNITY_EDITOR
+    #if UNITY_EDITOR
     [ExecuteInEditMode]
-#endif
+    #endif
     public class TODAnimator : MonoBehaviour
     {
-        public bool Playing = false;
+        public const double TICK = 1d / 60;
+        public bool Playing;
+        private readonly Dictionary<int, MeshFilter> _objectTable = new Dictionary<int, MeshFilter>();
+        private TODAnimation _currentAnimation;
+        private readonly List<GameObject> _lastObjTable = new List<GameObject>();
+
+        private bool _shouldDestroyLastObjTable;
+
+        private double time;
 
         public int CurrentFrame { get; set; }
-
-        public const double TICK = 1d / 60;
-
-        private double time = 0;
-        private TODAnimation _currentAnimation;
-        private readonly Dictionary<int, MeshFilter> _objectTable = new Dictionary<int, MeshFilter>();
-
-        private bool _shouldDestroyLastObjTable = false;
-        private List<GameObject> _lastObjTable = new List<GameObject>();
-
-        public void Play(TODAnimation anim)
-        {
-            _currentAnimation = anim;
-            CurrentFrame = 0;
-            time = 0;
-            Playing = true;
-            resetObjectTable();
-            processFrame(0);
-        }
-
-        public void SetAnimation(TODAnimation anim)
-        {
-            _currentAnimation = anim;
-            time = 0;
-            Playing = false;
-            FirstFrame(anim);
-        }
-
-        public void FirstFrame(TODAnimation anim)
-        {
-            _currentAnimation = anim;
-            resetObjectTable();
-            processFrame(0);
-            Playing = false;
-            time = 0;
-        }
-
-        public void Resume() { Playing = true; }
-
-        public void Pause() { Playing = false; }
-
-        public void Stop()
-        {
-            _currentAnimation = null;
-            CurrentFrame = 0;
-            time = 0;
-            Playing = false;
-            resetObjectTable();
-        }
 
         public void Start() { CurrentFrame = 0; }
 
@@ -80,9 +39,49 @@ namespace LSDR.Entities.Original
             }
         }
 
+        public void Play(TODAnimation anim)
+        {
+            _currentAnimation = anim;
+            CurrentFrame = 0;
+            time = 0;
+            Playing = true;
+            resetObjectTable();
+            processFrame(frameNumber: 0);
+        }
+
+        public void SetAnimation(TODAnimation anim)
+        {
+            _currentAnimation = anim;
+            time = 0;
+            Playing = false;
+            FirstFrame(anim);
+        }
+
+        public void FirstFrame(TODAnimation anim)
+        {
+            _currentAnimation = anim;
+            resetObjectTable();
+            processFrame(frameNumber: 0);
+            Playing = false;
+            time = 0;
+        }
+
+        public void Resume() { Playing = true; }
+
+        public void Pause() { Playing = false; }
+
+        public void Stop()
+        {
+            _currentAnimation = null;
+            CurrentFrame = 0;
+            time = 0;
+            Playing = false;
+            resetObjectTable();
+        }
+
         private void resetObjectTable()
         {
-            foreach (var obj in _objectTable)
+            foreach (KeyValuePair<int, MeshFilter> obj in _objectTable)
             {
                 // check to see if we're playing to destroy - as we may be running in the editor (in the level editor)
                 if (Application.isPlaying)
@@ -101,14 +100,14 @@ namespace LSDR.Entities.Original
             }
 
             _objectTable.Clear();
-            var rootObj = new GameObject("Animation Root Object");
-            rootObj.transform.SetParent(transform, false);
-            _objectTable[0] = rootObj.AddComponent<MeshFilter>();
+            GameObject rootObj = new GameObject("Animation Root Object");
+            rootObj.transform.SetParent(transform, worldPositionStays: false);
+            _objectTable[key: 0] = rootObj.AddComponent<MeshFilter>();
         }
 
         private void cleanupLastObjectTable()
         {
-            foreach (var obj in _lastObjTable)
+            foreach (GameObject obj in _lastObjTable)
             {
                 // check to see if we're playing to destroy - as we may be running in the editor (in the level editor)
                 if (Application.isPlaying)
@@ -126,7 +125,7 @@ namespace LSDR.Entities.Original
             if (_objectTable.ContainsKey(objectId)) return;
 
             GameObject obj = new GameObject($"Animation Object {objectId}");
-            obj.transform.SetParent(transform, false);
+            obj.transform.SetParent(transform, worldPositionStays: false);
             obj.AddComponent<MeshRenderer>().sharedMaterial = _currentAnimation.Material;
             MeshFilter mf = obj.AddComponent<MeshFilter>();
             _objectTable[objectId] = mf;
@@ -152,7 +151,7 @@ namespace LSDR.Entities.Original
             if (frame.Packets == null)
                 return;
 
-            foreach (var packet in frame.Packets)
+            foreach (TODPacket packet in frame.Packets)
             {
                 if (packet.Data is TODObjectControlPacketData)
                 {
@@ -188,14 +187,14 @@ namespace LSDR.Entities.Original
             if (packet.PacketType == TODPacket.PacketTypes.TMDDataID)
             {
                 // create mapping in object table
-                var obj = _objectTable[packet.ObjectID];
+                MeshFilter obj = _objectTable[packet.ObjectID];
                 obj.sharedMesh = _currentAnimation.ObjectTable[packetData.ObjectID - 1];
             }
             else if (packet.PacketType == TODPacket.PacketTypes.ParentObjectID)
             {
                 // set object parent
                 Transform parentTransform = _objectTable[packetData.ObjectID].transform;
-                _objectTable[packet.ObjectID].transform.SetParent(parentTransform, false);
+                _objectTable[packet.ObjectID].transform.SetParent(parentTransform, worldPositionStays: false);
             }
         }
 
@@ -244,9 +243,9 @@ namespace LSDR.Entities.Original
 
                 if (packetData.MatrixType == TODPacketData.PacketDataType.Absolute)
                 {
-                    var x = Quaternion.AngleAxis(pitch, Vector3.right);
-                    var y = Quaternion.AngleAxis(yaw, Vector3.up);
-                    var z = Quaternion.AngleAxis(roll, Vector3.forward);
+                    Quaternion x = Quaternion.AngleAxis(pitch, Vector3.right);
+                    Quaternion y = Quaternion.AngleAxis(yaw, Vector3.up);
+                    Quaternion z = Quaternion.AngleAxis(roll, Vector3.forward);
                     objTransform.localRotation = x * y * z;
                 }
                 else

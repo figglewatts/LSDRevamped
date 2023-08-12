@@ -6,12 +6,12 @@ namespace LSDR.Game
     [JsonObject]
     public class SettingsProfile
     {
+        public float AffineIntensity;
+        public float FOV;
+        public bool LimitFramerate;
         public string Name;
         public bool UseClassicShaders;
         public bool UsePixelationShader;
-        public bool LimitFramerate;
-        public float FOV;
-        public float AffineIntensity;
 
         public SettingsProfile() { }
 
@@ -58,8 +58,8 @@ namespace LSDR.Game
                     UsePixelationShader = false,
                     LimitFramerate = false,
                     FOV = 50,
-                    AffineIntensity = 0.4f,
-                },
+                    AffineIntensity = 0.4f
+                }
             };
         }
     }

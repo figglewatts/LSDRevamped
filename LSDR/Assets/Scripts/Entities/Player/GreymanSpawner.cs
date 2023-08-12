@@ -39,7 +39,7 @@ namespace LSDR.Entities.Dream
             if (_spawnedGreyman != null) Destroy(_spawnedGreyman);
 
             Vector3 forward = transform.forward;
-            Vector3 spawnPos = transform.position + forward * GreymanSpawnDistance - new Vector3(0, 0.23f, 0);
+            Vector3 spawnPos = transform.position + forward * GreymanSpawnDistance - new Vector3(x: 0, y: 0.23f, z: 0);
             _spawnedGreyman = Instantiate(GreymanPrefab, spawnPos, Quaternion.identity);
         }
 

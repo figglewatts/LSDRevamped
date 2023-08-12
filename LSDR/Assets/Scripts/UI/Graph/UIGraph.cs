@@ -55,7 +55,7 @@ namespace LSDR.UI.Graph
 
         private void InstantiateGraphSquare(Vector2 pos, bool mostRecent)
         {
-            GameObject square = Instantiate(_graphSquarePrefab, GraphSquareContainer, false);
+            GameObject square = Instantiate(_graphSquarePrefab, GraphSquareContainer, worldPositionStays: false);
             UIGraphSquare squareScript = square.GetComponent<UIGraphSquare>();
             squareScript.Position = pos;
             squareScript.MostRecent = mostRecent;

@@ -41,9 +41,11 @@ namespace LSDR.SDK.Editor.Data
                         3 * uppernessRect.width / 4, uppernessRect.height);
 
                     EditorGUI.LabelField(dynamicnessLabelRect, "Dynamic");
-                    EditorGUI.IntSlider(dynamicnessSliderRect, dynamicnessProperty, -9, 9, GUIContent.none);
+                    EditorGUI.IntSlider(dynamicnessSliderRect, dynamicnessProperty, leftValue: -9, rightValue: 9,
+                        GUIContent.none);
                     EditorGUI.LabelField(uppernessLabelRect, "Upper");
-                    EditorGUI.IntSlider(uppernessSliderRect, uppernessProperty, -9, 9, GUIContent.none);
+                    EditorGUI.IntSlider(uppernessSliderRect, uppernessProperty, leftValue: -9, rightValue: 9,
+                        GUIContent.none);
                 }
             }
 

@@ -30,7 +30,7 @@ namespace LSDR.InputManagement
             {
                 if (_currentSchemeHandle > Schemes.Count)
                     return Schemes[Schemes.Count - 1];
-                if (_currentSchemeHandle < 0) return Schemes[0];
+                if (_currentSchemeHandle < 0) return Schemes[index: 0];
 
                 return Schemes[_currentSchemeHandle];
             }
@@ -56,7 +56,7 @@ namespace LSDR.InputManagement
             {
                 // some devices spam events when they shouldn't - so lets check the controls
                 // in the changed event and find if any changed above zero
-                if (!eventPtr.EnumerateChangedControls(device, 0.0001f).Any()) return;
+                if (!eventPtr.EnumerateChangedControls(device, magnitudeThreshold: 0.0001f).Any()) return;
             }
 
             LastUsedDevice = device;
@@ -108,14 +108,16 @@ namespace LSDR.InputManagement
             if (!File.Exists(PathUtil.Combine(_controlSchemesPath, "Classic.dat")))
             {
                 Debug.Log("Unable to find 'Classic' control scheme - creating...");
-                Schemes.Add(new ControlScheme("Classic", InputActions, false, 15F, false, false));
+                Schemes.Add(new ControlScheme("Classic", InputActions, fpsControls: false, mouseSensitivity: 15F,
+                    invertLookY: false, editable: false));
                 schemeCreated = true;
             }
 
             if (!File.Exists(PathUtil.Combine(_controlSchemesPath, "Revamped.dat")))
             {
                 Debug.Log("Unable to find 'Revamped' control scheme - creating...");
-                Schemes.Add(new ControlScheme("Revamped", InputActions, true, 15F, false, false));
+                Schemes.Add(new ControlScheme("Revamped", InputActions, fpsControls: true, mouseSensitivity: 15F,
+                    invertLookY: false, editable: false));
                 schemeCreated = true;
             }
 

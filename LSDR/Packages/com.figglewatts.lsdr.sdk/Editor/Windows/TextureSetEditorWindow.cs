@@ -6,24 +6,16 @@ namespace LSDR.SDK.Editor.Windows
 {
     public class TextureSetEditorWindow : EditorWindow
     {
-        protected Texture2D[] _textureSetTextures;
-        protected static readonly string[] _textureSetNames = {"Normal", "Kanji", "Downer", "Upper"};
-        protected GUIStyle _textStyle;
-        protected GUIStyle _textShadowStyle;
-        protected GUIStyle _hoverTextStyle;
-        protected GUIStyle _selectedTextStyle;
-        protected bool _repaint;
-        protected int _currentTextureSet = 0;
+        protected static readonly string[] _textureSetNames = { "Normal", "Kanji", "Downer", "Upper" };
 
         protected static readonly int _textureSetPropertyID = Shader.PropertyToID("_TextureSet");
-
-        [MenuItem("LSDR SDK/Show texture set window")]
-        public static void Init()
-        {
-            TextureSetEditorWindow window = GetWindow<TextureSetEditorWindow>();
-            window.titleContent = new GUIContent("Texture set");
-            window.Show();
-        }
+        protected int _currentTextureSet;
+        protected GUIStyle _hoverTextStyle;
+        protected bool _repaint;
+        protected GUIStyle _selectedTextStyle;
+        protected GUIStyle _textShadowStyle;
+        protected GUIStyle _textStyle;
+        protected Texture2D[] _textureSetTextures;
 
         public void Awake()
         {
@@ -42,7 +34,7 @@ namespace LSDR.SDK.Editor.Windows
             _textShadowStyle.normal.textColor = Color.black;
 
             _hoverTextStyle = new GUIStyle(_textStyle);
-            _hoverTextStyle.normal.textColor = new Color(0.8f, 0.8f, 0.8f);
+            _hoverTextStyle.normal.textColor = new Color(r: 0.8f, g: 0.8f, b: 0.8f);
 
             _selectedTextStyle = new GUIStyle(_textStyle);
             _selectedTextStyle.normal.textColor = Color.yellow;
@@ -59,15 +51,15 @@ namespace LSDR.SDK.Editor.Windows
         {
             for (int i = 0; i < 4; i++)
             {
-                var rect = EditorGUILayout.GetControlRect(GUILayout.Height(60));
-                var texture = _textureSetTextures[i];
-                UnityEngine.GUI.DrawTextureWithTexCoords(rect, _textureSetTextures[i],
-                    new Rect(0, 0, rect.width / texture.width * 0.5f,
+                Rect rect = EditorGUILayout.GetControlRect(GUILayout.Height(height: 60));
+                Texture2D texture = _textureSetTextures[i];
+                GUI.DrawTextureWithTexCoords(rect, _textureSetTextures[i],
+                    new Rect(x: 0, y: 0, rect.width / texture.width * 0.5f,
                         rect.height / texture.height * 0.5f));
-                var shadowRect = new Rect(rect.x + 2f, rect.y + 2f, rect.width - 2f, rect.height - 2f);
+                Rect shadowRect = new Rect(rect.x + 2f, rect.y + 2f, rect.width - 2f, rect.height - 2f);
                 EditorGUI.LabelField(shadowRect, _textureSetNames[i], _textShadowStyle);
 
-                var style = _textStyle;
+                GUIStyle style = _textStyle;
                 if (rect.Contains(Event.current.mousePosition))
                 {
                     style = _hoverTextStyle;
@@ -83,6 +75,14 @@ namespace LSDR.SDK.Editor.Windows
             }
         }
 
+        [MenuItem("LSDR SDK/Show texture set window")]
+        public static void Init()
+        {
+            TextureSetEditorWindow window = GetWindow<TextureSetEditorWindow>();
+            window.titleContent = new GUIContent("Texture set");
+            window.Show();
+        }
+
         protected void setTextureSet(int index)
         {
             Shader.SetGlobalInt(_textureSetPropertyID, index + 1);
@@ -94,7 +94,7 @@ namespace LSDR.SDK.Editor.Windows
             while (_repaint)
             {
                 Repaint();
-                await Task.Delay(100);
+                await Task.Delay(millisecondsDelay: 100);
             }
         }
     }

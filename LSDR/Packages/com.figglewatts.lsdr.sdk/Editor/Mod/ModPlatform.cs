@@ -7,6 +7,6 @@ namespace LSDR.SDK.Editor.Mod
     {
         Windows = 1 << 0,
         Linux = 1 << 1,
-        OSX = 1 << 2,
+        OSX = 1 << 2
     }
 }

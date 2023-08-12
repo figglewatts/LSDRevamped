@@ -19,10 +19,10 @@ namespace LSDR.UI.Title
 
         protected void onGameLoadError(string error)
         {
-            LoadingView.SetActive(false);
+            LoadingView.SetActive(value: false);
             ErrorText.text = error;
             QuitButton.onClick.AddListener(Application.Quit);
-            ErrorDialog.SetActive(true);
+            ErrorDialog.SetActive(value: true);
         }
     }
 }

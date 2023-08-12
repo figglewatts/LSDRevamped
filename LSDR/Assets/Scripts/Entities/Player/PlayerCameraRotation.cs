@@ -12,6 +12,10 @@ namespace LSDR.Entities.Player
     /// </summary>
     public class PlayerCameraRotation : MonoBehaviour
     {
+        protected const float INTERACT_LOOK_BEHIND_TIME = 0.5f;
+
+        // mouse look constants (per: https://eliteownage.com/mousesensitivity.html)
+        protected const float DEGREES_PER_DOT = 0.02199f;
         public CharacterController PlayerCharacterController;
 
         /// <summary>
@@ -47,17 +51,13 @@ namespace LSDR.Entities.Player
         public SettingsSystem Settings;
 
         public ControlSchemeLoaderSystem ControlScheme;
+        protected float _lookBehindRotation;
+
+        protected float _lookUpDownRotation;
 
         // used to store how much we need to rotate on X axis (for lerping)
         protected float _rotationX;
-
-        protected float _lookUpDownRotation = 0;
-        protected float _lookBehindRotation = 0;
         protected TimeSince _timeSinceInteract;
-        protected const float INTERACT_LOOK_BEHIND_TIME = 0.5f;
-
-        // mouse look constants (per: https://eliteownage.com/mousesensitivity.html)
-        protected const float DEGREES_PER_DOT = 0.02199f;
 
         protected void Start()
         {
@@ -94,7 +94,7 @@ namespace LSDR.Entities.Player
         /// <param name="target">The target Camera.</param>
         protected void setCameraPosition(Camera target)
         {
-            target.transform.localPosition = new Vector3(0, PlayerCharacterController.height, 0);
+            target.transform.localPosition = new Vector3(x: 0, PlayerCharacterController.height, z: 0);
         }
 
         /// <summary>
@@ -116,9 +116,9 @@ namespace LSDR.Entities.Player
             Vector2 adjustedLookVec = lookVec * DEGREES_PER_DOT * ControlScheme.Current.MouseSensitivity;
 
             // rotate the camera around the Y axis based on mouse horizontal movement
-            transform.Rotate(0,
+            transform.Rotate(xAngle: 0,
                 adjustedLookVec.x,
-                0, Space.Self);
+                zAngle: 0, Space.Self);
 
             // rotate the camera around the X axis based on mouse vertical movement
             Transform temp = target.transform;
@@ -129,7 +129,7 @@ namespace LSDR.Entities.Player
 
             // update the transform's rotation with the newly applied rotation
             Transform targetTransform = target.transform;
-            temp.localEulerAngles = new Vector3(_rotationX, targetTransform.localEulerAngles.y, 0);
+            temp.localEulerAngles = new Vector3(_rotationX, targetTransform.localEulerAngles.y, z: 0);
 
             // interpolate between the old rotation and the new rotation
             target.transform.localEulerAngles = temp.localEulerAngles;

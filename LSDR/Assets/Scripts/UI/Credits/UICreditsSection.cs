@@ -17,7 +17,7 @@ namespace LSDR.UI.Credits
         public void SetImage(string imagePath)
         {
             if (string.IsNullOrWhiteSpace(imagePath)) return;
-            
+
             Image.texture = ResourceManager.UnityLoad<Texture2D>(imagePath);
             Image.color = Color.white;
             float resizeRatio = ImageLayoutElement.minWidth / Image.texture.width;
@@ -29,8 +29,8 @@ namespace LSDR.UI.Credits
         public void PopulateNames(IEnumerable<string> names, bool sortNames)
         {
             if (sortNames) names = names.OrderBy(s => s);
-            
-            foreach (var n in names)
+
+            foreach (string n in names)
             {
                 Text nameText = Instantiate(UICreditsSectionNamePrefab, NamesContainer).GetComponent<Text>();
                 nameText.text = n;

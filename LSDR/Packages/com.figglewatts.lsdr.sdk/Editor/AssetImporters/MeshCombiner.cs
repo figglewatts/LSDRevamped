@@ -5,13 +5,12 @@ using UnityEngine;
 namespace LSDR.SDK.Editor.AssetImporters
 {
     /// <summary>
-    /// Utility class for combining meshes with submeshes. Should be used in editor only.
-    ///
-    /// Usage:
-    /// <code>
+    ///     Utility class for combining meshes with submeshes. Should be used in editor only.
+    ///     Usage:
+    ///     <code>
     /// var mc = new MeshCombiner(new[] {"opaque", "transparent"});
     /// mc.SetSubmeshSettings("transparent", mergeSubMeshes: false, useMatrices: false);
-    ///
+    /// 
     /// foreach (var mesh in meshes)
     /// {
     ///     mc.Add(new CombineInstance
@@ -20,7 +19,7 @@ namespace LSDR.SDK.Editor.AssetImporters
     ///         subMeshIndex = 0,
     ///         transform = Matrix4x4.Identity
     ///     }, "opaque");
-    ///
+    /// 
     ///     if (mesh.subMeshCount > 1)
     ///     {
     ///         mc.Add(new CombineInstance
@@ -31,23 +30,13 @@ namespace LSDR.SDK.Editor.AssetImporters
     ///         }, "transparent");
     ///     }
     /// }
-    ///
+    /// 
     /// var combinedMesh = mc.Combine();
     /// </code>
     /// </summary>
     public class MeshCombiner
     {
         protected readonly Dictionary<string, SubmeshType> _combineStorage;
-
-        protected class SubmeshType
-        {
-            public bool MergeSubMeshes = true;
-            public bool UseMatrices = true;
-            public bool HasLightmapData = false;
-            public readonly List<CombineInstance> CombineInstances;
-
-            public SubmeshType() { CombineInstances = new List<CombineInstance>(); }
-        }
 
         public MeshCombiner()
         {
@@ -66,7 +55,7 @@ namespace LSDR.SDK.Editor.AssetImporters
             bool hasLightmapData = false)
         {
             ensureSubmeshExists(submeshType);
-            var submesh = _combineStorage[submeshType];
+            SubmeshType submesh = _combineStorage[submeshType];
             submesh.UseMatrices = useMatrices;
             submesh.MergeSubMeshes = mergeSubMeshes;
             submesh.HasLightmapData = hasLightmapData;
@@ -78,9 +67,9 @@ namespace LSDR.SDK.Editor.AssetImporters
             // this is because Unity does not let us combine and preserve submeshes, so we create
             // and combine them separately, then combine at the end with mergeSubMeshes false
             var createdMeshes = new List<Mesh>();
-            foreach (var kv in _combineStorage)
+            foreach (KeyValuePair<string, SubmeshType> kv in _combineStorage)
             {
-                var (submeshName, submeshType) = (kv.Key, kv.Value);
+                (string submeshName, SubmeshType submeshType) = (kv.Key, kv.Value);
                 int vertsRunningCount = 0;
                 Mesh submesh = new Mesh
                 {
@@ -95,8 +84,8 @@ namespace LSDR.SDK.Editor.AssetImporters
                     triangles = submeshType.CombineInstances.SelectMany(i =>
                                             {
                                                 int count = vertsRunningCount;
-                                                var indices = i.mesh.GetTriangles(i.subMeshIndex)
-                                                               .Select(idx => count + idx);
+                                                IEnumerable<int> indices = i.mesh.GetTriangles(i.subMeshIndex)
+                                                                            .Select(idx => count + idx);
                                                 vertsRunningCount += i.mesh.vertexCount;
                                                 return indices;
                                             })
@@ -119,7 +108,7 @@ namespace LSDR.SDK.Editor.AssetImporters
 
             int submeshNum = 0;
             int runningIndexTotal = 0;
-            foreach (var mesh in createdMeshes)
+            foreach (Mesh mesh in createdMeshes)
             {
                 if (mesh.vertexCount > 0)
                 {
@@ -134,7 +123,7 @@ namespace LSDR.SDK.Editor.AssetImporters
             combinedMesh.Optimize();
 
             // clean up the temporary meshes we made
-            foreach (var mesh in createdMeshes)
+            foreach (Mesh mesh in createdMeshes)
             {
                 Object.DestroyImmediate(mesh);
             }
@@ -144,11 +133,21 @@ namespace LSDR.SDK.Editor.AssetImporters
 
         protected void ensureSubmeshExists(string submeshType)
         {
-            var exists = _combineStorage.ContainsKey(submeshType);
+            bool exists = _combineStorage.ContainsKey(submeshType);
             if (!exists)
             {
                 _combineStorage[submeshType] = new SubmeshType();
             }
+        }
+
+        protected class SubmeshType
+        {
+            public readonly List<CombineInstance> CombineInstances;
+            public bool HasLightmapData;
+            public bool MergeSubMeshes = true;
+            public bool UseMatrices = true;
+
+            public SubmeshType() { CombineInstances = new List<CombineInstance>(); }
         }
     }
 }

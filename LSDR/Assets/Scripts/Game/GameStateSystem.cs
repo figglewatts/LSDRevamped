@@ -10,10 +10,10 @@ namespace LSDR.Game
         // scenes
         public SceneProperty ModLoadScene;
         public SceneProperty TitleScreenScene;
-        
+
         // systems
         public ModLoaderSystem ModLoaderSystem;
-        
+
 
         public void StartGame()
         {

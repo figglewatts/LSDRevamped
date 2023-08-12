@@ -63,7 +63,7 @@ namespace LSDR.SDK.Visual
 
         public void SetShader(Material mat, bool classic)
         {
-            ShaderTagId queue = mat.shader.FindPassTagValue(0, new ShaderTagId("Queue"));
+            ShaderTagId queue = mat.shader.FindPassTagValue(passIndex: 0, new ShaderTagId("Queue"));
             if (queue.name.Equals("Transparent"))
                 mat.shader = classic ? _classicAlphaShader : _revampedAlphaShader;
             else

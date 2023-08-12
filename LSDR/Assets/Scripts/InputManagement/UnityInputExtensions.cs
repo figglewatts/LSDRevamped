@@ -14,7 +14,7 @@ namespace LSDR.InputManagement
             if (string.IsNullOrEmpty(displayString.Trim()) && !string.IsNullOrEmpty(binding.effectivePath))
             {
                 displayString =
-                    binding.effectivePath.Split(new[] { '/' }, 2, StringSplitOptions.RemoveEmptyEntries)[1];
+                    binding.effectivePath.Split(new[] { '/' }, count: 2, StringSplitOptions.RemoveEmptyEntries)[1];
             }
             displayString = CultureInfo.InvariantCulture.TextInfo.ToTitleCase(displayString);
 

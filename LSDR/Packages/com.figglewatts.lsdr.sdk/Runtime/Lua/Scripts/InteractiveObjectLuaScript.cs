@@ -11,9 +11,9 @@ namespace LSDR.SDK.Lua
         public const string INTERACT_FUNCTION_NAME = "interact";
 
         protected readonly InteractiveObject _interactiveObject;
+        protected DynValue _interactFunc;
         protected DynValue _startFunc;
         protected DynValue _updateFunc;
-        protected DynValue _interactFunc;
 
         public InteractiveObjectLuaScript(ILuaEngine engine, LuaScriptAsset asset, InteractiveObject interactiveObject)
             : base(engine, asset)

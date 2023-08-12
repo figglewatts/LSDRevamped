@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using LSDR.SDK.Data;
 using UnityEditor;
 using UnityEngine;
@@ -46,14 +44,14 @@ namespace LSDR.SDK.Editor.Mod
 
         protected void buildForPlatform(BuildTarget platform, AssetBundleBuild bundle, string outputPath)
         {
-            var fullOutputDirectory = outputPath;
+            string fullOutputDirectory = outputPath;
             Directory.CreateDirectory(fullOutputDirectory);
             BuildPipeline.BuildAssetBundles(fullOutputDirectory, new[] { bundle }, BuildOptions, platform);
 
-            var manifestPath = Path.Combine(fullOutputDirectory, $"{bundle.assetBundleName}.manifest");
-            var outputDirName = new DirectoryInfo(outputPath).Name;
-            var weirdPath = Path.Combine(fullOutputDirectory, outputDirName);
-            var weirdPathManifest = $"{weirdPath}.manifest";
+            string manifestPath = Path.Combine(fullOutputDirectory, $"{bundle.assetBundleName}.manifest");
+            string outputDirName = new DirectoryInfo(outputPath).Name;
+            string weirdPath = Path.Combine(fullOutputDirectory, outputDirName);
+            string weirdPathManifest = $"{weirdPath}.manifest";
             File.Delete(manifestPath);
             File.Delete(weirdPath);
             File.Delete(weirdPathManifest);

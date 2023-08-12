@@ -1,13 +1,11 @@
-﻿using System;
-using LSDR.Game;
+﻿using LSDR.Game;
 using LSDR.Visual;
-using Torii.Binding;
 using UnityEngine;
 
 namespace LSDR.Bindings
 {
     /// <summary>
-    /// MonoBehaviour used to bind the game's FOV setting to the given Camera.
+    ///     MonoBehaviour used to bind the game's FOV setting to the given Camera.
     /// </summary>
     [RequireComponent(typeof(Camera))]
     [RequireComponent(typeof(PixelateImageEffect))]

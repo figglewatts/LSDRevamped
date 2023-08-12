@@ -12,7 +12,7 @@ namespace Torii.Util
 
         public static implicit operator FixedTimeSince(float ts)
         {
-            return new FixedTimeSince {time = Time.fixedTime - ts};
+            return new FixedTimeSince { time = Time.fixedTime - ts };
         }
 
         public override string ToString() { return ((float)this).ToString(CultureInfo.InvariantCulture); }

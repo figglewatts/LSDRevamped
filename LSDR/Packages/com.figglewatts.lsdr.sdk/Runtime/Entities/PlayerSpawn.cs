@@ -18,7 +18,8 @@ namespace LSDR.SDK.Entities
 
             target.transform.position =
                 new Vector3(transform.position.x, transform.position.y + skinWidth, transform.position.z);
-            if (setOrientation) target.transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
+            if (setOrientation)
+                target.transform.rotation = Quaternion.Euler(x: 0, transform.rotation.eulerAngles.y, z: 0);
         }
     }
 }

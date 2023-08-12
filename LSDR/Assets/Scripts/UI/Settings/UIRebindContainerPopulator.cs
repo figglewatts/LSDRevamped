@@ -101,7 +101,7 @@ namespace LSDR.UI.Settings
         protected GameObject createRebindRow(RebindableActions.ActionBindings actionBindings)
         {
             RebindRow row = Instantiate(Template.gameObject).GetComponent<RebindRow>();
-            row.gameObject.SetActive(true);
+            row.gameObject.SetActive(value: true);
             row.ActionName.text = getActionDisplayString(actionBindings);
             row.Bindings = actionBindings.IndexedBindings;
 
@@ -148,17 +148,17 @@ namespace LSDR.UI.Settings
                 // InputAction has only single binding, perform actions directly without choice modal
                 row.RebindButton.onClick.AddListener(() =>
                 {
-                    Rebinder.InteractiveRebind(actionBindings.IndexedBindings[0], syncBindingsToControlScheme,
+                    Rebinder.InteractiveRebind(actionBindings.IndexedBindings[index: 0], syncBindingsToControlScheme,
                         syncBindingsToControlScheme);
                 });
                 row.ResetButton.onClick.AddListener(() =>
                 {
-                    actionBindings.IndexedBindings[0].ResetBinding();
+                    actionBindings.IndexedBindings[index: 0].ResetBinding();
                     syncBindingsToControlScheme();
                 });
                 row.DeleteButton.onClick.AddListener(() =>
                 {
-                    actionBindings.IndexedBindings[0].DeleteBinding();
+                    actionBindings.IndexedBindings[index: 0].DeleteBinding();
                     syncBindingsToControlScheme();
                 });
             }
@@ -184,7 +184,7 @@ namespace LSDR.UI.Settings
             rebindRow.RebindButton = TemplateRebindButton;
             rebindRow.ResetButton = TemplateResetButton;
             rebindRow.DeleteButton = TemplateDeleteButton;
-            templateGo.SetActive(false);
+            templateGo.SetActive(value: false);
         }
 
 

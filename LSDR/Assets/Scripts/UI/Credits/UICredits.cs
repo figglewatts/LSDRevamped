@@ -38,11 +38,11 @@ namespace LSDR.UI.Credits
             }
         }
 
-        public void FixedUpdate() { UISectionContainer.anchoredPosition += new Vector2(0, ScrollSpeed); }
+        public void FixedUpdate() { UISectionContainer.anchoredPosition += new Vector2(x: 0, ScrollSpeed); }
 
         public void OnEnable()
         {
-            UISectionContainer.anchoredPosition = new Vector2(UISectionContainer.anchoredPosition.x, 0);
+            UISectionContainer.anchoredPosition = new Vector2(UISectionContainer.anchoredPosition.x, y: 0);
             _creditsFinished = false;
         }
 

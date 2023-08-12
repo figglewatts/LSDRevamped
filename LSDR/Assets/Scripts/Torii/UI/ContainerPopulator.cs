@@ -17,8 +17,8 @@ namespace Torii.UI
             Clear();
             foreach (GameObject obj in with)
             {
-                obj.transform.SetParent(transform, false);
-                obj.SetActive(true);
+                obj.transform.SetParent(transform, worldPositionStays: false);
+                obj.SetActive(value: true);
             }
         }
 

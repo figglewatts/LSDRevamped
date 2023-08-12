@@ -5,7 +5,6 @@ using libLSD.Formats;
 using LSDR.Dream;
 using LSDR.Entities.Original;
 using LSDR.SDK;
-using LSDR.Visual;
 using Torii.Graphics;
 using Torii.Resource;
 using Torii.Util;
@@ -16,6 +15,9 @@ namespace LSDR.IO
     [CreateAssetMenu(menuName = "System/LBDFastMeshSystem")]
     public class LBDFastMeshSystem : ScriptableObject
     {
+        private static readonly int _mainTex = Shader.PropertyToID("_MainTex");
+
+        private static int num;
         public Material LBDDiffuse;
         public Material LBDAlpha;
         public Shader Classic;
@@ -24,10 +26,6 @@ namespace LSDR.IO
         public Shader RevampedAlpha;
 
         [NonSerialized] public GameObject[] LBDColliders;
-
-        private static readonly int _mainTex = Shader.PropertyToID("_MainTex");
-
-        private static int num = 0;
 
         public void LoadLBD(string lbdFolder, LegacyTileMode tileMode, int lbdWidth)
         {
@@ -54,7 +52,7 @@ namespace LSDR.IO
                         xMod = 10;
                     }
 
-                    posOffset = new Vector3(xPos * 20 - xMod, 0, yPos * 20);
+                    posOffset = new Vector3(xPos * 20 - xMod, y: 0, yPos * 20);
                 }
 
                 LBD lbd = ResourceManager.Load<LBD>(lbdFile);
@@ -63,7 +61,7 @@ namespace LSDR.IO
                 LBDColliders[i] = lbdCollider;
             }
 
-            foreach (var m in tileMap.TileCache.Values)
+            foreach (FastMesh m in tileMap.TileCache.Values)
             {
                 m.Submit();
             }
@@ -76,7 +74,7 @@ namespace LSDR.IO
 
         private GameObject createLBDTileMap(LBD lbd, Vector3 posOffset, Dictionary<TMDObject, FastMesh> tileCache)
         {
-            List<CombineInstance> colliderMeshes = new List<CombineInstance>();
+            var colliderMeshes = new List<CombineInstance>();
 
             int tileNo = 0;
             for (int i = 0; i < lbd.TileLayout.Length; i++)
@@ -89,7 +87,8 @@ namespace LSDR.IO
                 if (tile.DrawTile)
                 {
                     FastMesh mesh = createTileMesh(tile, lbd.Tiles, tileCache);
-                    var matrix = mesh.AddInstance(new Vector3(x, -tile.TileHeight, y) + posOffset, tileRotation(tile));
+                    FastMesh.Transform matrix = mesh.AddInstance(new Vector3(x, -tile.TileHeight, y) + posOffset,
+                        tileRotation(tile));
                     colliderMeshes.Add(new CombineInstance
                     {
                         mesh = mesh.Mesh,
@@ -113,7 +112,7 @@ namespace LSDR.IO
                     {
                         LBDTile extraTile = lbd.ExtraTiles[curTile.ExtraTileIndex];
                         FastMesh extraTileMesh = createTileMesh(extraTile, lbd.Tiles, tileCache);
-                        var extraMatrix =
+                        FastMesh.Transform extraMatrix =
                             extraTileMesh.AddInstance(new Vector3(x, -extraTile.TileHeight, y) + posOffset,
                                 tileRotation(extraTile));
                         colliderMeshes.Add(new CombineInstance
@@ -147,7 +146,7 @@ namespace LSDR.IO
         {
             GameObject colliderObject = new GameObject($"LBD Collider {num}");
             Mesh combined = new Mesh();
-            combined.CombineMeshes(combineInstances.ToArray(), true);
+            combined.CombineMeshes(combineInstances.ToArray(), mergeSubMeshes: true);
             MeshCollider mc = colliderObject.AddComponent<MeshCollider>();
             mc.sharedMesh = combined;
             colliderObject.tag = "Linkable";
@@ -161,17 +160,17 @@ namespace LSDR.IO
             {
                 case LBDTile.TileDirections.Deg90:
                 {
-                    return Quaternion.AngleAxis(90, Vector3.up);
+                    return Quaternion.AngleAxis(angle: 90, Vector3.up);
                 }
 
                 case LBDTile.TileDirections.Deg180:
                 {
-                    return Quaternion.AngleAxis(180, Vector3.up);
+                    return Quaternion.AngleAxis(angle: 180, Vector3.up);
                 }
 
                 case LBDTile.TileDirections.Deg270:
                 {
-                    return Quaternion.AngleAxis(270, Vector3.up);
+                    return Quaternion.AngleAxis(angle: 270, Vector3.up);
                 }
 
                 default:
@@ -190,7 +189,7 @@ namespace LSDR.IO
             }
 
             Mesh m = LibLSDUnity.MeshFromTMDObject(tileObj);
-            FastMesh fm = new FastMesh(m, new[] {LBDDiffuse, LBDAlpha});
+            FastMesh fm = new FastMesh(m, new[] { LBDDiffuse, LBDAlpha });
             tileCache[tileObj] = fm;
             return fm;
         }

@@ -1,12 +1,12 @@
-﻿using UnityEngine;
-using LSDR.Game;
+﻿using LSDR.Game;
 using Torii.Binding;
 using Torii.UI;
+using UnityEngine;
 
 namespace LSDR.UI.Settings
 {
     /// <summary>
-    /// Script for video settings.
+    ///     Script for video settings.
     /// </summary>
     public class UIVideoSettings : MonoBehaviour
     {

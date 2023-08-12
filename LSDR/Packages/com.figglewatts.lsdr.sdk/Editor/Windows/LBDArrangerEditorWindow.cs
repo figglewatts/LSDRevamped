@@ -14,7 +14,7 @@ namespace LSDR.SDK.Editor.Windows
 
         public List<Transform> ArrangedLBDs = new List<Transform>();
         public LBDLayoutType LayoutType;
-        public Vector2Int LBDDimensions = new Vector2Int(20, 20);
+        public Vector2Int LBDDimensions = new Vector2Int(x: 20, y: 20);
         public int TileWidth;
 
         protected Vector2 _scrollPos;
@@ -29,7 +29,8 @@ namespace LSDR.SDK.Editor.Windows
                 EditorGUILayout.PropertyField(target.FindProperty("LBDDimensions"), new GUIContent("LBD dimensions"));
 
                 if (LayoutType == LBDLayoutType.Horizontal)
-                    TileWidth = EditorGUILayout.IntSlider(new GUIContent("Tile dimension"), TileWidth, 0, 16);
+                    TileWidth = EditorGUILayout.IntSlider(new GUIContent("Tile dimension"), TileWidth, leftValue: 0,
+                        rightValue: 16);
 
                 _scrollPos = EditorGUILayout.BeginScrollView(_scrollPos);
                 {
@@ -59,7 +60,7 @@ namespace LSDR.SDK.Editor.Windows
                     int xMod = 0;
                     if (yPos % 2 == 1) xMod = 10;
 
-                    lbdPos = new Vector3(xPos * LBDDimensions.x - xMod, 0, yPos * LBDDimensions.y);
+                    lbdPos = new Vector3(xPos * LBDDimensions.x - xMod, y: 0, yPos * LBDDimensions.y);
                 }
 
                 transform.position = lbdPos;

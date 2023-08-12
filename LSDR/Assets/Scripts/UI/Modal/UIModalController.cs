@@ -20,8 +20,8 @@ namespace LSDR.UI.Modal
         public void ShowModal(Func<GameObject> createModalFunc, Action onModalClose = null)
         {
             GameObject modalObj = createModalFunc();
-            modalObj.transform.SetParent(transform, false);
-            modalObj.SetActive(true);
+            modalObj.transform.SetParent(transform, worldPositionStays: false);
+            modalObj.SetActive(value: true);
             _modals.Push((onModalClose, modalObj));
             modalShowing = true;
         }

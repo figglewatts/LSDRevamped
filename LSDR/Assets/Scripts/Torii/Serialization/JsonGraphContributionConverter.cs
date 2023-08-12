@@ -2,7 +2,6 @@
 using LSDR.SDK.Data;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using UnityEngine;
 
 namespace Torii.Serialization
 {
@@ -23,7 +22,7 @@ namespace Torii.Serialization
             JsonSerializer serializer)
         {
             JArray arr = JArray.Load(reader);
-            return new GraphContribution(arr[0].ToObject<int>(), arr[1].ToObject<int>());
+            return new GraphContribution(arr[index: 0].ToObject<int>(), arr[index: 1].ToObject<int>());
         }
     }
 }

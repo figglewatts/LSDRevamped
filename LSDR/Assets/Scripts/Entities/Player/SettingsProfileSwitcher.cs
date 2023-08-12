@@ -1,5 +1,4 @@
-﻿using System;
-using LSDR.Game;
+﻿using LSDR.Game;
 using LSDR.InputManagement;
 using UnityEngine;
 

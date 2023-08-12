@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace LSDR.SDK.Editor.AssetImporters
 {
-    [ScriptedImporter(1, "tim")]
+    [ScriptedImporter(version: 1, "tim")]
     public class TIMImporter : ScriptedImporter
     {
         public override void OnImportAsset(AssetImportContext ctx)

@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace LSDR.SDK.Editor.AssetImporters
 {
-    [ScriptedImporter(1, "mom")]
+    [ScriptedImporter(version: 1, "mom")]
     public class MOMImporter : ScriptedImporter
     {
         public Material OpaqueMaterial;
@@ -53,7 +53,8 @@ namespace LSDR.SDK.Editor.AssetImporters
             else
             {
                 AnimationClip[] clips =
-                    createMomWithAnimations(ctx, meshes, momObj, mom, opaqueMaterial, transparentMaterial, assetPrefix);
+                    createMomWithAnimations(ctx, meshes, momObj, mom, opaqueMaterial, transparentMaterial,
+                        assetPrefix);
 
                 // create it
                 AnimatorController controller = new AnimatorController
@@ -110,7 +111,7 @@ namespace LSDR.SDK.Editor.AssetImporters
             momHelper.CreateAnimationObjectHierarchy(animFirstFrame, meshes);
 
             // load the animations
-            AnimationClip[] clips = new AnimationClip[mom.MOS.TODs.Length];
+            var clips = new AnimationClip[mom.MOS.TODs.Length];
             for (int i = 0; i < mom.MOS.TODs.Length; i++)
             {
                 AnimationClip animClip = momHelper.TODToClip(mom.MOS.TODs[i]);

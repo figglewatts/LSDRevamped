@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using Torii.Coroutine;
 using UnityEngine;
 
 namespace Torii.Pooling
 {
-    [CreateAssetMenu(menuName="Torii/PrefabPool")]
+    [CreateAssetMenu(menuName = "Torii/PrefabPool")]
     public class PrefabPool : ScriptableObject, IObjectPool
     {
         public PoolItem Prefab;
@@ -16,25 +15,13 @@ namespace Torii.Pooling
         public bool Persistent;
 
         public string Name;
-        
+        private List<PoolItem> _activeItems;
+
+        private Stack<PoolItem> _pool;
+
         public GameObject PoolObject { get; private set; }
 
         public int Active => _activeItems.Count;
-        
-        private Stack<PoolItem> _pool;
-        private List<PoolItem> _activeItems;
-
-        public void Initialise()
-        {
-            CommonInitialise();
-            populate();
-        }
-
-        public IEnumerator InitialiseCoroutine()
-        {
-            CommonInitialise();
-            yield return populateAsync();
-        }
 
         public GameObject Summon(Vector3 pos, Quaternion rot, Transform parent = null)
         {
@@ -46,14 +33,14 @@ namespace Torii.Pooling
             }
 
             item.transform.SetPositionAndRotation(pos, rot);
-            item.ActiveState(true);
+            item.ActiveState(state: true);
             item.InPool = false;
             return item.gameObject;
         }
 
         public void Return(PoolItem item)
         {
-            item.ActiveState(false);
+            item.ActiveState(state: false);
             _activeItems.Remove(item);
             _pool.Push(item);
             item.InPool = true;
@@ -68,8 +55,30 @@ namespace Torii.Pooling
             }
         }
 
+        public void ActivePoolItemDestroyed(PoolItem item)
+        {
+            // remove the item from the list of active items
+            _activeItems.Remove(item);
+
+            // make sure we create a new one in the pool to replace
+            // the deleted one
+            _pool.Push(create());
+        }
+
+        public void Initialise()
+        {
+            CommonInitialise();
+            populate();
+        }
+
+        public IEnumerator InitialiseCoroutine()
+        {
+            CommonInitialise();
+            yield return populateAsync();
+        }
+
         public IEnumerator ReturnAllCoroutine() { yield return returnAllAsync(); }
-        
+
         public void CommonInitialise()
         {
             PoolObject = new GameObject(Name);
@@ -83,23 +92,13 @@ namespace Torii.Pooling
             _activeItems = new List<PoolItem>();
         }
 
-        public void ActivePoolItemDestroyed(PoolItem item)
-        {
-            // remove the item from the list of active items
-            _activeItems.Remove(item);
-            
-            // make sure we create a new one in the pool to replace
-            // the deleted one
-            _pool.Push(create());
-        }
-
         private PoolItem create(bool activeState = false)
         {
             PoolItem obj = Instantiate(Prefab, Vector3.zero, Quaternion.identity);
             obj.ParentPool = this;
             obj.InPool = true;
             obj.ActiveState(activeState);
-            obj.transform.SetParent(PoolObject.transform, false);
+            obj.transform.SetParent(PoolObject.transform, worldPositionStays: false);
             return obj;
         }
 
@@ -114,7 +113,7 @@ namespace Torii.Pooling
 
         private IEnumerator populateAsync()
         {
-            using (Marathon m = new Marathon(10))
+            using (Marathon m = new Marathon(timeThresholdMs: 10))
             {
                 bool lastYield = false;
                 for (int i = 0; i < Size; i++)
@@ -135,7 +134,7 @@ namespace Torii.Pooling
 
         private IEnumerator returnAllAsync()
         {
-            using (Marathon m = new Marathon(10))
+            using (Marathon m = new Marathon(timeThresholdMs: 10))
             {
                 bool lastYield = false;
                 for (int i = _activeItems.Count - 1; i >= 0; i--)

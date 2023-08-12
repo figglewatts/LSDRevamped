@@ -74,7 +74,7 @@ namespace LSDR.InputManagement
                            {
                                cleanup(op);
                                onRebindSuccess?.Invoke();
-                               if (hasComposite) performRebind(action, bindingIndexes, true);
+                               if (hasComposite) performRebind(action, bindingIndexes, hasComposite: true);
                            });
                 onPrepareRebinding?.Invoke(rebindOp, action.bindings[bindingIndexes.Current]);
                 rebindOp.Start();

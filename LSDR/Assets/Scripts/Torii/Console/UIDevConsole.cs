@@ -20,8 +20,8 @@ namespace Torii.Console
         public InputField CommandInputField;
         public ScrollRect ContentScrollRect;
         private readonly List<string> _commandHistory = new List<string>();
-        private int _commandHistoryPos = -1;
         private readonly Queue<GameObject> _instantiatedOutputRows = new Queue<GameObject>();
+        private int _commandHistoryPos = -1;
 
         private bool _visible;
 
@@ -132,7 +132,8 @@ namespace Torii.Console
 
         private void instantiateOutputRow(string output, LogType type)
         {
-            GameObject outputRow = Instantiate(ConsoleOutputRowPrefab, ConsoleOutputRowContainer.transform, false);
+            GameObject outputRow = Instantiate(ConsoleOutputRowPrefab, ConsoleOutputRowContainer.transform,
+                worldPositionStays: false);
             _instantiatedOutputRows.Enqueue(outputRow);
 
             if (_instantiatedOutputRows.Count > MAX_INSTANTIATED_OUTPUT_ROWS)

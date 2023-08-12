@@ -1,5 +1,4 @@
 using System;
-using UnityEngine;
 
 namespace Torii.UnityEditor
 {
@@ -12,9 +11,9 @@ namespace Torii.UnityEditor
         {
             if (scenePicker == null)
             {
-                return String.Empty;
+                return string.Empty;
             }
-            
+
             return scenePicker.ScenePath;
         }
     }

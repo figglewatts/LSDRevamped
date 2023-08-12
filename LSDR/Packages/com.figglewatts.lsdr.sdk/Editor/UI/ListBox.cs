@@ -11,20 +11,20 @@ namespace LSDR.SDK.Editor.UI
 
         static ListBox()
         {
-            Color textColor = EditorGUIUtility.isProSkin ? new Color(0.7f, 0.7f, 0.7f, 1.0f) : Color.black;
+            Color textColor = EditorGUIUtility.isProSkin ? new Color(r: 0.7f, g: 0.7f, b: 0.7f, a: 1.0f) : Color.black;
 
-            GUIStyleState normal = new GUIStyleState()
+            GUIStyleState normal = new GUIStyleState
             {
                 textColor = textColor
             };
 
-            GUIStyleState selected = new GUIStyleState()
+            GUIStyleState selected = new GUIStyleState
             {
                 textColor = Color.white,
-                background = TextureUtil.CreateColor(new Color(0.349f, 0.537f, 0.812f))
+                background = TextureUtil.CreateColor(new Color(r: 0.349f, g: 0.537f, b: 0.812f))
             };
 
-            _style = new GUIStyle()
+            _style = new GUIStyle
             {
                 normal = normal,
                 hover = normal,
@@ -33,21 +33,21 @@ namespace LSDR.SDK.Editor.UI
                 onNormal = selected,
                 onFocused = selected,
                 onActive = selected,
-                margin = new RectOffset(0, 0, 0, 0),
-                padding = new RectOffset(6, 6, 6, 6),
+                margin = new RectOffset(left: 0, right: 0, top: 0, bottom: 0),
+                padding = new RectOffset(left: 6, right: 6, top: 6, bottom: 6),
                 alignment = TextAnchor.MiddleLeft
             };
 
             Texture2D boxSprite =
                 AssetDatabase.LoadAssetAtPath<Texture2D>(
                     "Packages/com.figglewatts.lsdr.sdk/Assets/box-sprite.png");
-            _boxStyle = new GUIStyle()
+            _boxStyle = new GUIStyle
             {
-                normal = new GUIStyleState()
+                normal = new GUIStyleState
                 {
                     background = boxSprite
                 },
-                border = new RectOffset(4, 4, 4, 4)
+                border = new RectOffset(left: 4, right: 4, top: 4, bottom: 4)
             };
         }
 
@@ -55,7 +55,8 @@ namespace LSDR.SDK.Editor.UI
         {
             GUI.Box(rect, "", _boxStyle);
             float gridHeight = (EditorGUIUtility.singleLineHeight + 4) * contents.Length;
-            return GUI.SelectionGrid(new Rect(rect.x, rect.y, rect.width, gridHeight), selected, contents, 1, _style);
+            return GUI.SelectionGrid(new Rect(rect.x, rect.y, rect.width, gridHeight), selected, contents, xCount: 1,
+                _style);
         }
     }
 }

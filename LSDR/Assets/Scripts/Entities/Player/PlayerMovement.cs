@@ -4,7 +4,6 @@ using LSDR.Game;
 using LSDR.InputManagement;
 using Torii.Audio;
 using Torii.Console;
-using Torii.Resource;
 using Torii.Util;
 using UnityEngine;
 
@@ -114,7 +113,7 @@ namespace LSDR.Entities.Player
                 if (!playedFootstep && progress > 0.5f)
                 {
                     playedFootstep = true;
-                    AudioPlayer.Instance.PlayClip(FootstepClip, false, "SFX");
+                    AudioPlayer.Instance.PlayClip(FootstepClip, loop: false, "SFX");
                 }
 
                 moveController(input, speedUnitsPerSecond);
@@ -127,7 +126,7 @@ namespace LSDR.Entities.Player
             moveController(input, speedUnitsPerSecond);
 
             // if we're sprinting we want to play the footstep sound on the downstep too
-            if (_currentlySprinting) AudioPlayer.Instance.PlayClip(FootstepClip, false, "SFX");
+            if (_currentlySprinting) AudioPlayer.Instance.PlayClip(FootstepClip, loop: false, "SFX");
 
             _currentlyStepping = false;
         }
@@ -235,7 +234,7 @@ namespace LSDR.Entities.Player
         protected (bool, RaycastHit) castController(Vector3 bottomPos, Vector3 topPos, float halfExtent,
             Vector3 direction, float distance)
         {
-            Vector3 boxCenter = bottomPos + ((topPos - bottomPos) / 2);
+            Vector3 boxCenter = bottomPos + (topPos - bottomPos) / 2;
             Vector3 halfExtents = new Vector3(halfExtent, _controller.height / 2, halfExtent);
             bool hitSomething = Physics.BoxCast(boxCenter, halfExtents, direction,
                 out RaycastHit hitInfo, Quaternion.identity, distance);

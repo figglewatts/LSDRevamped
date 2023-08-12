@@ -33,11 +33,11 @@ namespace LSDR.Entities.Dream
 
         private void playerEncountered()
         {
-            DreamSystem.CurrentSequence.LogGraphContributionFromEntity(0, UPPERNESS_PENALTY);
-            ToriiFader.Instance.FadeIn(Color.white, 0.1F, () =>
+            DreamSystem.CurrentSequence.LogGraphContributionFromEntity(dynamicness: 0, UPPERNESS_PENALTY);
+            ToriiFader.Instance.FadeIn(Color.white, duration: 0.1F, () =>
             {
                 Renderer.enabled = false;
-                ToriiFader.Instance.FadeOut(Color.white, 3F, () =>
+                ToriiFader.Instance.FadeOut(Color.white, duration: 3F, () =>
                 {
                     if (gameObject != null) Destroy(gameObject);
                 });

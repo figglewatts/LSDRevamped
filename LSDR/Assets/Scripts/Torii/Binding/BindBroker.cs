@@ -11,23 +11,23 @@ namespace Torii.Binding
     }
 
     /// <summary>
-    /// BindBroker is a class used for being the 'middleman' between data that is bound together.
-    /// You can register data stored in classes which implement the IPropertyWatcher interface, then create bindings
-    /// between properties of these classes, so that when one changes the other changes to match it, and optionally
-    /// vice-versa.
-    /// This is quite a powerful concept, and it used extensively for matching UI element values to internal
-    /// gameplay values (for example in the settings menu).
+    ///     BindBroker is a class used for being the 'middleman' between data that is bound together.
+    ///     You can register data stored in classes which implement the IPropertyWatcher interface, then create bindings
+    ///     between properties of these classes, so that when one changes the other changes to match it, and optionally
+    ///     vice-versa.
+    ///     This is quite a powerful concept, and it used extensively for matching UI element values to internal
+    ///     gameplay values (for example in the settings menu).
     /// </summary>
     public class BindBroker
     {
         // store the bindings
         private readonly Dictionary<string, List<AbstractDataBinding>> _bindings;
-        
+
         // we need to keep track of changes being handled so we don't get into an endless loop of updates
         private readonly Stack<string> _changesBeingHandled;
 
         /// <summary>
-        /// Create a new BindBroker.
+        ///     Create a new BindBroker.
         /// </summary>
         public BindBroker()
         {
@@ -36,51 +36,59 @@ namespace Torii.Binding
         }
 
         /// <summary>
-        /// Register a data class with this BindBroker. You need to register all classes that will be using data
-        /// binding, as otherwise the BindBroker won't know to update values when one changes.
+        ///     Register a data class with this BindBroker. You need to register all classes that will be using data
+        ///     binding, as otherwise the BindBroker won't know to update values when one changes.
         /// </summary>
         /// <param name="watcher">Instance of the class (implementing IPropertyWatcher) to bind.</param>
         public void RegisterData(IPropertyWatcher watcher) { watcher.OnPropertyChange += handleChange; }
 
         /// <summary>
-        /// Deregister a data class with this BindBroker. This is the inverse of <c>RegisterData()</c>.
+        ///     Deregister a data class with this BindBroker. This is the inverse of <c>RegisterData()</c>.
         /// </summary>
         /// <param name="watcher">Instance of the class (implementing IPropertyWatcher) to unbind.</param>
         public void DeregisterData(IPropertyWatcher watcher) { watcher.OnPropertyChange -= handleChange; }
 
         /// <summary>
-        /// Bind a piece of data from one PropertyWatcher to another.
-        ///
-        /// Bind the value of a volume slider to a music volume value, and vice-versa:
-        /// <c>Bind&lt;float&gt;(() => MusicVolumeSlider.value, () => CurrentSettings.MusicVolume, BindingType.TwoWay)</c>
+        ///     Bind a piece of data from one PropertyWatcher to another.
+        ///     Bind the value of a volume slider to a music volume value, and vice-versa:
+        ///     <c>Bind&lt;float&gt;(() => MusicVolumeSlider.value, () => CurrentSettings.MusicVolume, BindingType.TwoWay)</c>
         /// </summary>
-        /// <param name="binder">An expression for the 'binder' value. Must be a property of a class that
-        /// implements IPropertyWatcher.</param>
-        /// <param name="bindee">An expression for the 'bindee' value. Must be a property of a class that
-        /// implements IPropertyWatcher.</param>
-        /// <param name="bindingType">What type of binding this is. Can be one way (to set bindee to binder when
-        /// binder value changes) or two way (to set in either direction).</param>
+        /// <param name="binder">
+        ///     An expression for the 'binder' value. Must be a property of a class that
+        ///     implements IPropertyWatcher.
+        /// </param>
+        /// <param name="bindee">
+        ///     An expression for the 'bindee' value. Must be a property of a class that
+        ///     implements IPropertyWatcher.
+        /// </param>
+        /// <param name="bindingType">
+        ///     What type of binding this is. Can be one way (to set bindee to binder when
+        ///     binder value changes) or two way (to set in either direction).
+        /// </param>
         /// <typeparam name="TType">The type of the value we're binding. Can usually be inferred.</typeparam>
-        public void Bind<TType>(Expression<Func<TType>> binder, Expression<Func<TType>> bindee, BindingType bindingType)
+        public void Bind<TType>(Expression<Func<TType>> binder, Expression<Func<TType>> bindee,
+            BindingType bindingType)
         {
             // get reference to the binder
-            var binderMemberExp = (MemberExpression)binder.Body;
-            IPropertyWatcher binderInstance = Expression.Lambda<Func<IPropertyWatcher>>(binderMemberExp.Expression).Compile()();
+            MemberExpression binderMemberExp = (MemberExpression)binder.Body;
+            IPropertyWatcher binderInstance =
+                Expression.Lambda<Func<IPropertyWatcher>>(binderMemberExp.Expression).Compile()();
             string binderReference = makePropertyReference(binderInstance.GUID, binderMemberExp.Member.Name);
 
             // get reference to the bindee
-            var bindeeMemberExp = (MemberExpression)bindee.Body;
-            IPropertyWatcher bindeeInstance = Expression.Lambda<Func<IPropertyWatcher>>(bindeeMemberExp.Expression).Compile()();
+            MemberExpression bindeeMemberExp = (MemberExpression)bindee.Body;
+            IPropertyWatcher bindeeInstance =
+                Expression.Lambda<Func<IPropertyWatcher>>(bindeeMemberExp.Expression).Compile()();
             string bindeeReference = makePropertyReference(bindeeInstance.GUID, bindeeMemberExp.Member.Name);
 
             // create binder->bindee binding
-            DataBinding<TType> binding = new DataBinding<TType>(binder, bindee, bindeeReference);
+            var binding = new DataBinding<TType>(binder, bindee, bindeeReference);
             createBinding(binderReference, binding);
 
             // if it's two way, create bindee->binder binding
             if (bindingType == BindingType.TwoWay)
             {
-                DataBinding<TType> oppositeBinding = new DataBinding<TType>(bindee, binder, binderReference);
+                var oppositeBinding = new DataBinding<TType>(bindee, binder, binderReference);
                 createBinding(bindeeReference, oppositeBinding);
 
             }
@@ -97,7 +105,7 @@ namespace Torii.Binding
                 // we're now handling this change, add it to the stack
                 _changesBeingHandled.Push(propertyReference);
 
-                foreach (var binding in bindingList)
+                foreach (AbstractDataBinding binding in bindingList)
                 {
 
                     if (_changesBeingHandled.Contains(binding.TargetReference))
@@ -125,7 +133,7 @@ namespace Torii.Binding
             }
             else
             {
-                _bindings[reference] = new List<AbstractDataBinding>(new [] { binding });
+                _bindings[reference] = new List<AbstractDataBinding>(new[] { binding });
             }
         }
 
@@ -134,7 +142,7 @@ namespace Torii.Binding
         // from what instance
         private string makePropertyReference(Guid instance, string propertyName)
         {
-            return instance.ToString() + "." + propertyName;
+            return instance + "." + propertyName;
         }
     }
 }

@@ -1,24 +1,15 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using LSDR.IO;
 using libLSD.Formats;
-using LSDR.Dream;
-using Torii.Resource;
-using UnityEngine;
-using LSDR.Util;
-using LSDR.Visual;
+using LSDR.IO;
 using Torii.Graphics;
-using Torii.Pooling;
-using UnityEngine.Profiling;
+using UnityEngine;
 
 namespace LSDR.Entities.Original
 {
     /// <summary>
-    /// LBDTileMap is a MonoBehaviour used for loading a tilemap of LBD files.
-    /// When given an LBDFolder and a TIX file, it will load all of the LBD files in the folder,
-    /// building GameObjects for each of them.
+    ///     LBDTileMap is a MonoBehaviour used for loading a tilemap of LBD files.
+    ///     When given an LBDFolder and a TIX file, it will load all of the LBD files in the folder,
+    ///     building GameObjects for each of them.
     /// </summary>
     #if UNITY_EDITOR
     [ExecuteInEditMode]
@@ -30,7 +21,7 @@ namespace LSDR.Entities.Original
 
         public void Update()
         {
-            foreach (var fm in TileCache.Values)
+            foreach (FastMesh fm in TileCache.Values)
             {
                 fm.Draw();
             }

@@ -6,8 +6,6 @@ namespace LSDR.Entities.Original
 {
     public class TODAnimation
     {
-        public TOD Tod { get; }
-        public List<Mesh> ObjectTable { get; }
         public Material Material;
 
         public TODAnimation(TOD tod, List<Mesh> objectTable, Material mat)
@@ -16,5 +14,8 @@ namespace LSDR.Entities.Original
             ObjectTable = objectTable;
             Material = mat;
         }
+
+        public TOD Tod { get; }
+        public List<Mesh> ObjectTable { get; }
     }
 }

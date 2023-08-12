@@ -6,14 +6,14 @@ using Torii.Resource;
 namespace LSDR.IO.ResourceHandlers
 {
     /// <summary>
-    /// A ResourceHandler to handle loading LBD files.
+    ///     A ResourceHandler to handle loading LBD files.
     /// </summary>
     public class LBDHandler : IResourceHandler
     {
         public Type HandlerType => typeof(LBD);
 
         /// <summary>
-        /// Load an LBD file from disk.
+        ///     Load an LBD file from disk.
         /// </summary>
         /// <param name="path">The path to the LBD file.</param>
         /// <param name="span">The span ID for how long this resource should be cached.</param>
@@ -24,8 +24,8 @@ namespace LSDR.IO.ResourceHandlers
             {
                 lbd = new LBD(br);
             }
-            
-            Resource<LBD> resource = new Resource<LBD>(lbd, span);
+
+            var resource = new Resource<LBD>(lbd, span);
             ResourceManager.RegisterResource(path, resource);
         }
     }

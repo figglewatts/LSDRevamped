@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using libLSD.Formats;
 using LSDR.SDK.Assets;
 using LSDR.SDK.Editor.Assets;
@@ -12,7 +10,7 @@ using UnityEngine;
 
 namespace LSDR.SDK.Editor.AssetImporters
 {
-    [ScriptedImporter(1, "lbd")]
+    [ScriptedImporter(version: 1, "lbd")]
     public class LBDImporter : ScriptedImporter
     {
         public Material OpaqueMaterial;
@@ -127,13 +125,13 @@ namespace LSDR.SDK.Editor.AssetImporters
             switch (tile.TileDirection)
             {
                 case LBDTile.TileDirections.Deg90:
-                    tileOrientation = Quaternion.AngleAxis(90, Vector3.up);
+                    tileOrientation = Quaternion.AngleAxis(angle: 90, Vector3.up);
                     break;
                 case LBDTile.TileDirections.Deg180:
-                    tileOrientation = Quaternion.AngleAxis(180, Vector3.up);
+                    tileOrientation = Quaternion.AngleAxis(angle: 180, Vector3.up);
                     break;
                 case LBDTile.TileDirections.Deg270:
-                    tileOrientation = Quaternion.AngleAxis(270, Vector3.up);
+                    tileOrientation = Quaternion.AngleAxis(angle: 270, Vector3.up);
                     break;
             }
 

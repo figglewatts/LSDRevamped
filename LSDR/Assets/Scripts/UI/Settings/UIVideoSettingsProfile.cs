@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using LSDR.Game;
 using LSDR.InputManagement;
 using Torii.Binding;
-using Torii.Coroutine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;

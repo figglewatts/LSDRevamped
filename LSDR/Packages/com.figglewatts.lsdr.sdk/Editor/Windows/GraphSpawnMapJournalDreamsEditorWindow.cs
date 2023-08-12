@@ -10,22 +10,12 @@ namespace LSDR.SDK.Editor.Windows
         protected GraphSpawnMap _graphSpawnMap;
         protected DreamJournal _journal;
 
-        public static void Show(GraphSpawnMap map)
-        {
-            GraphSpawnMapJournalDreamsEditorWindow window =
-                GetWindow<GraphSpawnMapJournalDreamsEditorWindow>();
-            window._graphSpawnMap = map;
-            window.titleContent = new GUIContent("Add from journal");
-            window.CenterOnMainWindow();
-            window.Show();
-        }
-
         private void OnGUI()
         {
             EditorGUILayout.BeginVertical();
             {
                 _journal = (DreamJournal)EditorGUILayout.ObjectField(GUIContent.none, _journal, typeof(DreamJournal),
-                    false);
+                    allowSceneObjects: false);
 
                 GUILayout.FlexibleSpace();
 
@@ -50,6 +40,16 @@ namespace LSDR.SDK.Editor.Windows
                 EditorGUILayout.EndHorizontal();
             }
             EditorGUILayout.EndVertical();
+        }
+
+        public static void Show(GraphSpawnMap map)
+        {
+            GraphSpawnMapJournalDreamsEditorWindow window =
+                GetWindow<GraphSpawnMapJournalDreamsEditorWindow>();
+            window._graphSpawnMap = map;
+            window.titleContent = new GUIContent("Add from journal");
+            window.CenterOnMainWindow();
+            window.Show();
         }
     }
 }

@@ -56,8 +56,8 @@ namespace LSDR.UI.Modal
 
         protected GameObject createChoiceButton(IndexedActionBinding binding, BindingChoiceType choiceType)
         {
-            GameObject buttonObj = Instantiate(BindingChoiceButtonPrefab, ButtonContainer, false);
-            buttonObj.SetActive(true);
+            GameObject buttonObj = Instantiate(BindingChoiceButtonPrefab, ButtonContainer, worldPositionStays: false);
+            buttonObj.SetActive(value: true);
             Button button = buttonObj.GetComponent<Button>();
             button.onClick.AddListener(() =>
             {
@@ -98,7 +98,7 @@ namespace LSDR.UI.Modal
                 case BindingChoiceType.Delete:
                     return "clear";
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(choiceType), choiceType, null);
+                    throw new ArgumentOutOfRangeException(nameof(choiceType), choiceType, message: null);
             }
         }
     }

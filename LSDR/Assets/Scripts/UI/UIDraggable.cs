@@ -3,75 +3,75 @@ using UnityEngine.EventSystems;
 
 namespace LSDR.UI
 {
-	/// <summary>
-	/// When attached to a gameobject, make a given transform draggable with the mouse.
-	/// </summary>
-	public class UIDraggable : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
-	{
-		/// <summary>
-		/// The target of this draggable.
-		/// </summary>
-		public Transform Target;
-		
-		private bool isMouseDown = false;
-		private Vector3 startMousePosition;
-		private Vector3 startPosition;
-		
-		/// <summary>
-		/// Should the target return?
-		/// </summary>
-		public bool ShouldReturn;
+    /// <summary>
+    ///     When attached to a gameobject, make a given transform draggable with the mouse.
+    /// </summary>
+    public class UIDraggable : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+    {
+        /// <summary>
+        ///     The target of this draggable.
+        /// </summary>
+        public Transform Target;
 
-		/// <summary>
-		/// The camera's canvas.
-		/// </summary>
-		public Canvas CameraCanvas;
+        /// <summary>
+        ///     Should the target return?
+        /// </summary>
+        public bool ShouldReturn;
 
-		void Start()
-		{
-			if (!Target)
-			{
-				Target = this.gameObject.transform;
-			}
-		}
+        /// <summary>
+        ///     The camera's canvas.
+        /// </summary>
+        public Canvas CameraCanvas;
 
-		public void OnPointerDown(PointerEventData dt)
-		{
-			isMouseDown = true;
+        private bool isMouseDown;
+        private Vector3 startMousePosition;
+        private Vector3 startPosition;
 
-			startPosition = Target.position;
-			startMousePosition = MousePosToCanvasPos(Input.mousePosition);
-		}
+        private void Start()
+        {
+            if (!Target)
+            {
+                Target = gameObject.transform;
+            }
+        }
 
-		public void OnPointerUp(PointerEventData dt)
-		{
-			isMouseDown = false;
+        private void Update()
+        {
+            if (isMouseDown)
+            {
+                Vector3 currentPosition = MousePosToCanvasPos(Input.mousePosition);
 
-			if (ShouldReturn)
-			{
-				Target.position = startPosition;
-			}
-		}
+                Vector3 diff = currentPosition - startMousePosition;
 
-		void Update()
-		{
-			if (isMouseDown)
-			{
-				Vector3 currentPosition = MousePosToCanvasPos(Input.mousePosition);
+                Vector3 pos = startPosition + diff;
 
-				Vector3 diff = currentPosition - startMousePosition;
+                Target.position = pos;
+            }
+        }
 
-				Vector3 pos = startPosition + diff;
+        public void OnPointerDown(PointerEventData dt)
+        {
+            isMouseDown = true;
 
-				Target.position = pos;
-			}
-		}
+            startPosition = Target.position;
+            startMousePosition = MousePosToCanvasPos(Input.mousePosition);
+        }
 
-		private Vector3 MousePosToCanvasPos(Vector3 mousePos)
-		{
-			Vector3 mouse = mousePos;
-			mouse.z = CameraCanvas.planeDistance;
-			return CameraCanvas.worldCamera.ScreenToWorldPoint(mouse);
-		}
-	}
+        public void OnPointerUp(PointerEventData dt)
+        {
+            isMouseDown = false;
+
+            if (ShouldReturn)
+            {
+                Target.position = startPosition;
+            }
+        }
+
+        private Vector3 MousePosToCanvasPos(Vector3 mousePos)
+        {
+            Vector3 mouse = mousePos;
+            mouse.z = CameraCanvas.planeDistance;
+            return CameraCanvas.worldCamera.ScreenToWorldPoint(mouse);
+        }
+    }
 }

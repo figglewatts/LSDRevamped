@@ -5,6 +5,9 @@ namespace LSDR.SDK.Entities
 {
     public class EntityIndex : MonoBehaviour
     {
+        protected static EntityIndex _instance;
+
+        protected readonly Dictionary<string, GameObject> _entities = new Dictionary<string, GameObject>();
         public static EntityIndex Instance
         {
             get
@@ -22,10 +25,6 @@ namespace LSDR.SDK.Entities
                 return _instance;
             }
         }
-
-        protected static EntityIndex _instance;
-
-        protected readonly Dictionary<string, GameObject> _entities = new Dictionary<string, GameObject>();
 
         public void Register(BaseEntity entity)
         {
@@ -56,8 +55,8 @@ namespace LSDR.SDK.Entities
 
         public T GetComponent<T>(string id) where T : Component
         {
-            var obj = Get(id);
-            var component = obj.GetComponent<T>();
+            GameObject obj = Get(id);
+            T component = obj.GetComponent<T>();
             if (component == null)
             {
                 Debug.LogError($"Entity with ID '{id}' did not have component of type {typeof(T)}");
@@ -66,6 +65,9 @@ namespace LSDR.SDK.Entities
             return component;
         }
 
-        public void DeregisterAllEntities() => _entities.Clear();
+        public void DeregisterAllEntities()
+        {
+            _entities.Clear();
+        }
     }
 }

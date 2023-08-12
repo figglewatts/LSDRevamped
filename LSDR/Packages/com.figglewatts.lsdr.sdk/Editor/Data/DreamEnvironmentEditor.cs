@@ -23,7 +23,7 @@ namespace LSDR.SDK.Editor.Data
         {
             serializedObject.Update();
 
-            _showFog = EditorGUILayout.Foldout(_showFog, "Fog", true);
+            _showFog = EditorGUILayout.Foldout(_showFog, "Fog", toggleOnLabelClick: true);
             if (_showFog)
             {
                 EditorGUI.indentLevel++;
@@ -38,7 +38,7 @@ namespace LSDR.SDK.Editor.Data
 
             EditorGUILayout.Space();
 
-            _showSky = EditorGUILayout.Foldout(_showSky, "Sky", true);
+            _showSky = EditorGUILayout.Foldout(_showSky, "Sky", toggleOnLabelClick: true);
             if (_showSky)
             {
                 EditorGUI.indentLevel++;

@@ -24,8 +24,8 @@ namespace Torii.Serialization
             JsonSerializer serializer)
         {
             JArray arr = JArray.Load(reader);
-            return new Color(arr[0].ToObject<float>(), arr[1].ToObject<float>(), 
-                arr[2].ToObject<float>(), arr[3].ToObject<float>());
+            return new Color(arr[index: 0].ToObject<float>(), arr[index: 1].ToObject<float>(),
+                arr[index: 2].ToObject<float>(), arr[index: 3].ToObject<float>());
         }
     }
 }

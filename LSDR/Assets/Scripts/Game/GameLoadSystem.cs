@@ -60,10 +60,10 @@ namespace LSDR.Game
             Screenshotter.Instance.Initialise();
 
             // set the sort order for the fader so the version text appears on top during fades
-            ToriiFader.Instance.SetSortOrder(0);
+            ToriiFader.Instance.SetSortOrder(idx: 0);
 
-            Shader.SetGlobalFloat("_FogStep", 0.08F);
-            Shader.SetGlobalFloat("AffineIntensity", 0.5F);
+            Shader.SetGlobalFloat("_FogStep", value: 0.08F);
+            Shader.SetGlobalFloat("AffineIntensity", value: 0.5F);
 
             ControlSchemeLoaderSystem.LoadSchemes();
             SettingsSystem.Load();

@@ -46,8 +46,8 @@ namespace LSDR.UI.Settings
         /// <param name="mode">Whether we're creating or editing.</param>
         public void Show(ControlSchemeCreatorMode mode)
         {
-            CreatorObject.SetActive(true);
-            SelectorObject.SetActive(false);
+            CreatorObject.SetActive(value: true);
+            SelectorObject.SetActive(value: false);
             _currentlyEditingScheme = ControlSchemeLoader.Current;
             _mode = mode;
             switch (mode)
@@ -61,7 +61,7 @@ namespace LSDR.UI.Settings
 
             UpdateView();
 
-            TopButtonsTabView.SetAllButtonsInteractable(false);
+            TopButtonsTabView.SetAllButtonsInteractable(state: false);
             SettingsApplyButton.interactable = false;
             SettingsBackButton.interactable = false;
         }
@@ -108,7 +108,7 @@ namespace LSDR.UI.Settings
             {
                 case ControlSchemeCreatorMode.Create:
                 {
-                    ControlSchemeLoader.CreateScheme(_currentlyEditingScheme, true);
+                    ControlSchemeLoader.CreateScheme(_currentlyEditingScheme, @select: true);
                     break;
                 }
             }
@@ -132,9 +132,9 @@ namespace LSDR.UI.Settings
         /// </summary>
         public void Hide()
         {
-            CreatorObject.SetActive(false);
-            SelectorObject.SetActive(true);
-            TopButtonsTabView.SetAllButtonsInteractable(true);
+            CreatorObject.SetActive(value: false);
+            SelectorObject.SetActive(value: true);
+            TopButtonsTabView.SetAllButtonsInteractable(state: true);
             SettingsApplyButton.interactable = true;
             SettingsBackButton.interactable = true;
         }

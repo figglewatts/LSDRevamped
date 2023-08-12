@@ -40,14 +40,15 @@ namespace LSDR.Entities.Player
 
         private IEnumerator fall()
         {
-            DreamSystem.EndDream(true);
+            DreamSystem.EndDream(fromFall: true);
 
             Quaternion lookUpRot = Quaternion.AngleAxis(MAX_X_ROTATION, -_targetCamera.transform.right) *
                                    _targetCamera.transform.rotation;
 
             while (true)
             {
-                _targetCamera.transform.rotation = Quaternion.RotateTowards(_targetCamera.transform.rotation, lookUpRot,
+                _targetCamera.transform.rotation = Quaternion.RotateTowards(_targetCamera.transform.rotation,
+                    lookUpRot,
                     ROTATION_SPEED * Time.deltaTime);
                 yield return null;
             }

@@ -1,19 +1,17 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using Torii.Binding;
 using UnityEngine;
 
 namespace Torii.UI
 {
     /// <summary>
-    /// Specialized instance of UnityEngine.UI.Toggle with bindable value.
+    ///     Specialized instance of UnityEngine.UI.Toggle with bindable value.
     /// </summary>
     public class Toggle : UnityEngine.UI.Toggle, IPropertyWatcher
     {
         public new bool isOn
         {
-            get { return base.isOn; }
+            get => base.isOn;
             set
             {
                 base.isOn = value;

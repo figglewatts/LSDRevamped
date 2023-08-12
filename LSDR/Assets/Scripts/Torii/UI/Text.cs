@@ -1,19 +1,17 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using Torii.Binding;
 using UnityEngine;
 
 namespace Torii.UI
 {
     /// <summary>
-    /// Specialized instance of UnityEngine.UI.Text with bindable text.
+    ///     Specialized instance of UnityEngine.UI.Text with bindable text.
     /// </summary>
     public class Text : UnityEngine.UI.Text, IPropertyWatcher
     {
         public new string text
         {
-            get { return base.text; }
+            get => base.text;
             set
             {
                 base.text = value;

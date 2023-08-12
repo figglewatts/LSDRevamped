@@ -5,7 +5,7 @@ using Torii.UI;
 namespace LSDR.UI.Settings
 {
     /// <summary>
-    /// Populate the mod dropdown menu.
+    ///     Populate the mod dropdown menu.
     /// </summary>
     public class UIModDropdownPopulator : DropdownPopulator
     {

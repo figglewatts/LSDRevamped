@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
-using LSDR.Entities.Dream;
 using Torii.Util;
 using UnityEngine;
 
@@ -13,13 +11,12 @@ namespace Torii.Console
 {
     public static class DevConsole
     {
-        private static readonly Dictionary<string, ObjectInfo> _registered = new Dictionary<string, ObjectInfo>();
-
         /// <summary>
-        /// Matches commands in the format:
-        /// Object.Specifier Arguments
+        ///     Matches commands in the format:
+        ///     Object.Specifier Arguments
         /// </summary>
         private const string COMMAND_REGEX = @"^(\w*)\.(\w*)(?: +(.*))?$";
+        private static readonly Dictionary<string, ObjectInfo> _registered = new Dictionary<string, ObjectInfo>();
         private static readonly Regex compiledCommandRegex = new Regex(COMMAND_REGEX);
 
         public static void Initialise()
@@ -29,13 +26,13 @@ namespace Torii.Console
 
         public static ExecutionResult Execute(string statement)
         {
-            var matches = compiledCommandRegex.Match(statement);
+            Match matches = compiledCommandRegex.Match(statement);
             if (matches.Groups.Count < 4)
             {
                 return new ExecutionResult
                 {
                     Failed = true,
-                    Error = new ArgumentException($"Invalid command syntax - syntax is 'Object.Specifier [Arguments]'")
+                    Error = new ArgumentException("Invalid command syntax - syntax is 'Object.Specifier [Arguments]'")
                 };
             }
             ParsedStatement parsedStatement = new ParsedStatement(matches);
@@ -44,24 +41,24 @@ namespace Torii.Console
 
         public static void Register(object obj, string alias = "")
         {
-            var objType = obj.GetType();
-            var key = string.IsNullOrEmpty(alias) ? objType.Name : alias;
+            Type objType = obj.GetType();
+            string key = string.IsNullOrEmpty(alias) ? objType.Name : alias;
             if (_registered.ContainsKey(key))
             {
                 Debug.LogWarning($"DevConsole already contains object '{key}'");
             }
-            
+
             _registered[key] = new ObjectInfo(obj);
         }
 
         public static void Register(Type t, string alias = "")
         {
-            var key = string.IsNullOrEmpty(alias) ? t.Name : alias;
+            string key = string.IsNullOrEmpty(alias) ? t.Name : alias;
             if (_registered.ContainsKey(key))
             {
                 Debug.LogWarning($"DevConsole already contains type '{key}'");
             }
-            
+
             _registered[key] = new ObjectInfo(t);
         }
 
@@ -77,39 +74,41 @@ namespace Torii.Console
 
         public static List<string> Completions(string objFragment)
         {
-            if (!objFragment.Contains('.'))
+            if (!objFragment.Contains(value: '.'))
             {
                 return _registered.Keys.Where(val => val.StartsWith(objFragment)).ToList();
             }
 
-            var split = objFragment.Split('.');
-            var objName = split[0];
-            var specifierFrag = split[1];
-            
+            string[] split = objFragment.Split('.');
+            string objName = split[0];
+            string specifierFrag = split[1];
+
             ObjectInfo obj;
             if (_registered.TryGetValue(objFragment.Split('.')[0], out obj))
             {
                 return Completions(objName, specifierFrag);
             }
-            
+
             return new List<string>();
         }
 
         public static List<string> Completions(string obj, string specifierFragment)
         {
-            var fields = _registered[obj].Fields.Keys.Where(val => val.StartsWith(specifierFragment));
-            var properties = _registered[obj].Properties.Keys.Where(val => val.StartsWith(specifierFragment));
-            var methods = _registered[obj].Methods.Keys.Where(val => val.StartsWith(specifierFragment));
-            
+            IEnumerable<string> fields = _registered[obj].Fields.Keys.Where(val => val.StartsWith(specifierFragment));
+            IEnumerable<string> properties =
+                _registered[obj].Properties.Keys.Where(val => val.StartsWith(specifierFragment));
+            IEnumerable<string> methods =
+                _registered[obj].Methods.Keys.Where(val => val.StartsWith(specifierFragment));
+
             return fields.Concat(properties).Concat(methods).ToList();
         }
-        
+
         private static ExecutionResult execute(ParsedStatement statement)
         {
             ObjectInfo obj;
             if (!_registered.TryGetValue(statement.Object, out obj))
             {
-                return new ExecutionResult()
+                return new ExecutionResult
                 {
                     Error = new ArgumentException($"Unknown object '{statement.Object}'"),
                     Failed = true
@@ -139,7 +138,7 @@ namespace Torii.Console
                 return applyStatementToObjectMethod(statement, obj, method);
             }
 
-            return new ExecutionResult()
+            return new ExecutionResult
             {
                 Error = new KeyNotFoundException(
                     $"Could not find member '{statement.Specifier}' on object '{statement.Object}'"),
@@ -147,23 +146,24 @@ namespace Torii.Console
             };
         }
 
-        private static ExecutionResult applyStatementToObjectField(ParsedStatement statement, ObjectInfo obj, FieldInfo field)
+        private static ExecutionResult applyStatementToObjectField(ParsedStatement statement, ObjectInfo obj,
+            FieldInfo field)
         {
             if (statement.Arguments.Length > 1)
             {
-                return new ExecutionResult()
+                return new ExecutionResult
                 {
                     Error = new ArgumentException($"One argument needed, {statement.Arguments.Length} given"),
                     Failed = true
                 };
             }
-            
+
             if (field.FieldType == typeof(float))
             {
                 float value;
                 if (!parseArg(statement.Arguments[0], out value))
                 {
-                    return new ExecutionResult()
+                    return new ExecutionResult
                     {
                         Error = new FormatException($"Value '{statement.Arguments[0]}' was not a float"),
                         Failed = true
@@ -176,7 +176,7 @@ namespace Torii.Console
                 int value;
                 if (!parseArg(statement.Arguments[0], out value))
                 {
-                    return new ExecutionResult()
+                    return new ExecutionResult
                     {
                         Error = new FormatException($"Value '{statement.Arguments[0]}' was not an int"),
                         Failed = true
@@ -189,7 +189,7 @@ namespace Torii.Console
                 bool value;
                 if (!parseArg(statement.Arguments[0], out value))
                 {
-                    return new ExecutionResult()
+                    return new ExecutionResult
                     {
                         Error = new FormatException($"Value '{statement.Arguments[0]}' was not a bool"),
                         Failed = true
@@ -202,7 +202,7 @@ namespace Torii.Console
                 field.SetValue(obj.Instance, statement.Arguments[0]);
             }
 
-            return new ExecutionResult()
+            return new ExecutionResult
             {
                 Failed = false,
                 Message = $"Set {statement.Object}.{statement.Specifier} to {statement.Arguments[0]}"
@@ -214,19 +214,19 @@ namespace Torii.Console
         {
             if (statement.Arguments.Length > 1)
             {
-                return new ExecutionResult()
+                return new ExecutionResult
                 {
                     Error = new ArgumentException($"One argument needed, {statement.Arguments.Length} given"),
                     Failed = true
                 };
             }
-            
+
             if (property.PropertyType == typeof(float))
             {
                 float value;
                 if (!parseArg(statement.Arguments[0], out value))
                 {
-                    return new ExecutionResult()
+                    return new ExecutionResult
                     {
                         Error = new FormatException($"Value '{statement.Arguments[0]}' was not a float"),
                         Failed = true
@@ -239,7 +239,7 @@ namespace Torii.Console
                 int value;
                 if (!parseArg(statement.Arguments[0], out value))
                 {
-                    return new ExecutionResult()
+                    return new ExecutionResult
                     {
                         Error = new FormatException($"Value '{statement.Arguments[0]}' was not an int"),
                         Failed = true
@@ -252,7 +252,7 @@ namespace Torii.Console
                 bool value;
                 if (!parseArg(statement.Arguments[0], out value))
                 {
-                    return new ExecutionResult()
+                    return new ExecutionResult
                     {
                         Error = new FormatException($"Value '{statement.Arguments[0]}' was not a bool"),
                         Failed = true
@@ -264,8 +264,8 @@ namespace Torii.Console
             {
                 property.SetValue(obj.Instance, statement.Arguments[0]);
             }
-            
-            return new ExecutionResult()
+
+            return new ExecutionResult
             {
                 Failed = false,
                 Message = $"Set {statement.Object}.{statement.Specifier} to {statement.Arguments[0]}"
@@ -278,7 +278,7 @@ namespace Torii.Console
             ParameterInfo[] methodParams = method.GetParameters();
             if (statement.Arguments.Length != methodParams.Length)
             {
-                return new ExecutionResult()
+                return new ExecutionResult
                 {
                     Error = new ArgumentException($"Invalid number of arguments, got: {statement.Arguments.Length}, " +
                                                   $"expected: {method.GetParameters().Length}"),
@@ -286,17 +286,17 @@ namespace Torii.Console
                 };
             }
 
-            List<object> args = new List<object>();
+            var args = new List<object>();
             for (int i = 0; i < statement.Arguments.Length; i++)
             {
-                var param = methodParams[i];
-                
+                ParameterInfo param = methodParams[i];
+
                 if (param.ParameterType == typeof(float))
                 {
                     float value;
                     if (!parseArg(statement.Arguments[i], out value))
                     {
-                        return new ExecutionResult()
+                        return new ExecutionResult
                         {
                             Error = new FormatException($"Value '{statement.Arguments[i]}' was not a float"),
                             Failed = true
@@ -309,7 +309,7 @@ namespace Torii.Console
                     int value;
                     if (!parseArg(statement.Arguments[i], out value))
                     {
-                        return new ExecutionResult()
+                        return new ExecutionResult
                         {
                             Error = new FormatException($"Value '{statement.Arguments[i]}' was not an int"),
                             Failed = true
@@ -322,7 +322,7 @@ namespace Torii.Console
                     bool value;
                     if (!parseArg(statement.Arguments[i], out value))
                     {
-                        return new ExecutionResult()
+                        return new ExecutionResult
                         {
                             Error = new FormatException($"Value '{statement.Arguments[i]}' was not a bool"),
                             Failed = true
@@ -335,10 +335,10 @@ namespace Torii.Console
                     args.Add(statement.Arguments[i]);
                 }
             }
-            
-            var result = method.Invoke(obj.Instance, args.ToArray());
-            
-            return new ExecutionResult()
+
+            object result = method.Invoke(obj.Instance, args.ToArray());
+
+            return new ExecutionResult
             {
                 Failed = false,
                 Message = result != null ? result.ToString() : ""
@@ -347,7 +347,7 @@ namespace Torii.Console
 
         private static bool parseArg(string arg, out bool result)
         {
-            if (!Boolean.TryParse(arg, out result))
+            if (!bool.TryParse(arg, out result))
             {
                 return false;
             }
@@ -357,7 +357,7 @@ namespace Torii.Console
 
         private static bool parseArg(string arg, out int result)
         {
-            if (!Int32.TryParse(arg, NumberStyles.Any, CultureInfo.InvariantCulture, out result))
+            if (!int.TryParse(arg, NumberStyles.Any, CultureInfo.InvariantCulture, out result))
             {
                 return false;
             }
@@ -367,7 +367,7 @@ namespace Torii.Console
 
         private static bool parseArg(string arg, out float result)
         {
-            if (!Single.TryParse(arg, NumberStyles.Any, CultureInfo.InvariantCulture, out result))
+            if (!float.TryParse(arg, NumberStyles.Any, CultureInfo.InvariantCulture, out result))
             {
                 return false;
             }
@@ -389,7 +389,7 @@ namespace Torii.Console
                     Debug.LogError(Error.Message);
                     return;
                 }
-                
+
                 if (!string.IsNullOrEmpty(Message)) Debug.Log(Message);
             }
         }
@@ -402,9 +402,10 @@ namespace Torii.Console
 
             public ParsedStatement(Match regexMatch)
             {
-                Object = regexMatch.Groups[1].Value;
-                Specifier = regexMatch.Groups[2].Value;
-                Arguments = regexMatch.Groups[3].Value.Split(new [] {','}, StringSplitOptions.RemoveEmptyEntries);
+                Object = regexMatch.Groups[groupnum: 1].Value;
+                Specifier = regexMatch.Groups[groupnum: 2].Value;
+                Arguments = regexMatch.Groups[groupnum: 3].Value
+                                      .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                 for (int i = 0; i < Arguments.Length; i++)
                 {
                     Arguments[i] = Arguments[i].Trim();
@@ -414,18 +415,17 @@ namespace Torii.Console
 
         private class ObjectInfo
         {
-            public Dictionary<string, MethodInfo> Methods;
-            public Dictionary<string, FieldInfo> Fields;
-            public Dictionary<string, PropertyInfo> Properties;
-            public object Instance;
-
             private readonly Type[] ALLOWED_TYPES =
             {
                 typeof(string),
                 typeof(bool),
                 typeof(int),
-                typeof(float),
+                typeof(float)
             };
+            public readonly Dictionary<string, FieldInfo> Fields;
+            public readonly object Instance;
+            public readonly Dictionary<string, MethodInfo> Methods;
+            public readonly Dictionary<string, PropertyInfo> Properties;
 
             public ObjectInfo(object obj)
             {
@@ -453,8 +453,8 @@ namespace Torii.Console
 
             private Dictionary<string, T> makeDictionary<T>(IEnumerable<T> members) where T : MemberInfo
             {
-                Dictionary<string, T> result = new Dictionary<string, T>();
-                foreach (var member in members)
+                var result = new Dictionary<string, T>();
+                foreach (T member in members)
                 {
                     result[member.Name] = member;
                 }
@@ -464,10 +464,10 @@ namespace Torii.Console
 
             private void postProcessMethods(Dictionary<string, MethodInfo> methods)
             {
-                List<string> toPrune = new List<string>();
-                foreach (var method in methods)
+                var toPrune = new List<string>();
+                foreach (KeyValuePair<string, MethodInfo> method in methods)
                 {
-                    foreach (var param in method.Value.GetParameters())
+                    foreach (ParameterInfo param in method.Value.GetParameters())
                     {
                         if (!typeIsAllowed(param.ParameterType))
                         {
@@ -479,7 +479,7 @@ namespace Torii.Console
                     }
                 }
 
-                foreach (var prune in toPrune)
+                foreach (string prune in toPrune)
                 {
                     methods.Remove(prune);
                 }
@@ -487,8 +487,8 @@ namespace Torii.Console
 
             private void postProcessFields(Dictionary<string, FieldInfo> fields)
             {
-                List<string> toPrune = new List<string>();
-                foreach (var field in fields)
+                var toPrune = new List<string>();
+                foreach (KeyValuePair<string, FieldInfo> field in fields)
                 {
                     if (!typeIsAllowed(field.Value.FieldType))
                     {
@@ -497,7 +497,7 @@ namespace Torii.Console
                     }
                 }
 
-                foreach (var prune in toPrune)
+                foreach (string prune in toPrune)
                 {
                     fields.Remove(prune);
                 }
@@ -505,8 +505,8 @@ namespace Torii.Console
 
             private void postProcessProperties(Dictionary<string, PropertyInfo> properties)
             {
-                List<string> toPrune = new List<string>();
-                foreach (var property in properties)
+                var toPrune = new List<string>();
+                foreach (KeyValuePair<string, PropertyInfo> property in properties)
                 {
                     if (!typeIsAllowed(property.Value.PropertyType))
                     {
@@ -516,7 +516,7 @@ namespace Torii.Console
                     }
                 }
 
-                foreach (var prune in toPrune)
+                foreach (string prune in toPrune)
                 {
                     properties.Remove(prune);
                 }
@@ -527,6 +527,5 @@ namespace Torii.Console
                 return ALLOWED_TYPES.Contains(t);
             }
         }
-        
     }
 }

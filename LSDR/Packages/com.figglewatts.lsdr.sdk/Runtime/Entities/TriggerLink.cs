@@ -15,7 +15,7 @@ namespace LSDR.SDK.Entities
         public bool PlayLinkSound;
         public bool LockInput;
 
-        protected override Color _editorColour { get; } = new Color(1, 0.6f, 0);
+        protected override Color _editorColour { get; } = new Color(r: 1, g: 0.6f, b: 0);
 
         protected override void onTrigger(Collider player)
         {

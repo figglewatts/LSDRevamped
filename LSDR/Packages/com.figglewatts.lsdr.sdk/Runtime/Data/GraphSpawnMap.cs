@@ -63,7 +63,7 @@ namespace LSDR.SDK.Data
             foreach (Dream dream in journal.Dreams)
             {
                 DreamElement dreamElement = new DreamElement(dream, new Color(Random.value, Random.value,
-                    Random.value, 1));
+                    Random.value, a: 1));
                 Dreams.Add(dreamElement);
             }
 
@@ -73,7 +73,7 @@ namespace LSDR.SDK.Data
         public void AddDream()
         {
             DreamElement dreamElement = new DreamElement(new Color(Random.value, Random.value,
-                Random.value, 1));
+                Random.value, a: 1));
             Dreams.Add(dreamElement);
             _dirty = true;
         }
@@ -115,7 +115,7 @@ namespace LSDR.SDK.Data
             if (_createdTexture && !_dirty && Math.Abs(opacity - _createdOpacity) < float.Epsilon)
                 return _createdTexture;
 
-            Texture2D tex = new Texture2D(GRAPH_SIZE, GRAPH_SIZE, TextureFormat.RGBA32, false)
+            Texture2D tex = new Texture2D(GRAPH_SIZE, GRAPH_SIZE, TextureFormat.RGBA32, mipChain: false)
             {
                 filterMode = FilterMode.Point
             };
@@ -144,7 +144,7 @@ namespace LSDR.SDK.Data
             public Dream Dream;
             public Color Display;
 
-            public DreamElement(Color display) : this(null, display) { }
+            public DreamElement(Color display) : this(dream: null, display) { }
 
             public DreamElement(Dream dream, Color display)
             {

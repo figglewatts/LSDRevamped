@@ -1,4 +1,3 @@
-using System;
 using Torii.Audio;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -33,8 +32,8 @@ namespace LSDR.UI
             if (_trigger != null) return;
 
             _trigger = gameObject.AddComponent<EventTrigger>();
-            EventTrigger.Entry entry = new EventTrigger.Entry {eventID = EventTriggerType.PointerEnter};
-            entry.callback.AddListener((data) =>
+            EventTrigger.Entry entry = new EventTrigger.Entry { eventID = EventTriggerType.PointerEnter };
+            entry.callback.AddListener(data =>
             {
                 if (OnHover != null)
                 {

@@ -99,9 +99,9 @@ namespace LSDR.Lua
                 dynVal =>
                 {
                     Table table = dynVal.Table;
-                    float x = (float)(double)table[1];
-                    float y = (float)(double)table[2];
-                    float z = (float)(double)table[3];
+                    float x = (float)(double)table[key: 1];
+                    float y = (float)(double)table[key: 2];
+                    float z = (float)(double)table[key: 3];
                     return new Vector3(x, y, z);
                 }
             );
@@ -120,36 +120,36 @@ namespace LSDR.Lua
                         {
                             "__add", new Func<Table, Table, Table>((a, b) =>
                             {
-                                DynValue rX = DynValue.NewNumber(a.Get(1).Number + b.Get(1).Number);
-                                DynValue rY = DynValue.NewNumber(a.Get(2).Number + b.Get(2).Number);
-                                DynValue rZ = DynValue.NewNumber(a.Get(3).Number + b.Get(3).Number);
+                                DynValue rX = DynValue.NewNumber(a.Get(key: 1).Number + b.Get(key: 1).Number);
+                                DynValue rY = DynValue.NewNumber(a.Get(key: 2).Number + b.Get(key: 2).Number);
+                                DynValue rZ = DynValue.NewNumber(a.Get(key: 3).Number + b.Get(key: 3).Number);
                                 return new Table(script, rX, rY, rZ);
                             })
                         },
                         {
                             "__sub", new Func<Table, Table, Table>((a, b) =>
                             {
-                                DynValue rX = DynValue.NewNumber(a.Get(1).Number - b.Get(1).Number);
-                                DynValue rY = DynValue.NewNumber(a.Get(2).Number - b.Get(2).Number);
-                                DynValue rZ = DynValue.NewNumber(a.Get(3).Number - b.Get(3).Number);
+                                DynValue rX = DynValue.NewNumber(a.Get(key: 1).Number - b.Get(key: 1).Number);
+                                DynValue rY = DynValue.NewNumber(a.Get(key: 2).Number - b.Get(key: 2).Number);
+                                DynValue rZ = DynValue.NewNumber(a.Get(key: 3).Number - b.Get(key: 3).Number);
                                 return new Table(script, rX, rY, rZ);
                             })
                         },
                         {
                             "__mul", new Func<Table, double, Table>((v, s) =>
                             {
-                                DynValue rX = DynValue.NewNumber(v.Get(1).Number * s);
-                                DynValue rY = DynValue.NewNumber(v.Get(2).Number * s);
-                                DynValue rZ = DynValue.NewNumber(v.Get(3).Number * s);
+                                DynValue rX = DynValue.NewNumber(v.Get(key: 1).Number * s);
+                                DynValue rY = DynValue.NewNumber(v.Get(key: 2).Number * s);
+                                DynValue rZ = DynValue.NewNumber(v.Get(key: 3).Number * s);
                                 return new Table(script, rX, rY, rZ);
                             })
                         },
                         {
                             "__div", new Func<Table, double, Table>((v, s) =>
                             {
-                                DynValue rX = DynValue.NewNumber(v.Get(1).Number / s);
-                                DynValue rY = DynValue.NewNumber(v.Get(2).Number / s);
-                                DynValue rZ = DynValue.NewNumber(v.Get(3).Number / s);
+                                DynValue rX = DynValue.NewNumber(v.Get(key: 1).Number / s);
+                                DynValue rY = DynValue.NewNumber(v.Get(key: 2).Number / s);
+                                DynValue rZ = DynValue.NewNumber(v.Get(key: 3).Number / s);
                                 return new Table(script, rX, rY, rZ);
                             })
                         }
@@ -163,10 +163,10 @@ namespace LSDR.Lua
                 dynVal =>
                 {
                     Table table = dynVal.Table;
-                    float r = (float)(double)table[1];
-                    float g = (float)(double)table[2];
-                    float b = (float)(double)table[3];
-                    float a = (float)(double)table[4];
+                    float r = (float)(double)table[key: 1];
+                    float g = (float)(double)table[key: 2];
+                    float b = (float)(double)table[key: 3];
+                    float a = (float)(double)table[key: 4];
                     return new Color(r, g, b, a);
                 }
             );
@@ -201,7 +201,7 @@ namespace LSDR.Lua
 
         private void createNamespacedStaticAPI<T>(T instance, Script script, string namespace_) where T : ILuaAPI
         {
-            Dictionary<string, MethodInfo> apiTableData = new Dictionary<string, MethodInfo>();
+            var apiTableData = new Dictionary<string, MethodInfo>();
 
             Type t = typeof(T);
 

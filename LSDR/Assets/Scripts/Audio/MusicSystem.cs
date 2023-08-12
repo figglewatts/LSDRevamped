@@ -31,7 +31,7 @@ namespace LSDR.Audio
         {
             AudioClip clip = getRandomSongFromDirectory(dir);
             if (clip == null) return null;
-            return AudioPlayer.Instance.PlayClip(clip, true, "Music");
+            return AudioPlayer.Instance.PlayClip(clip, loop: true, "Music");
         }
 
         /// <summary>
@@ -80,7 +80,8 @@ namespace LSDR.Audio
             string filename = Path.GetFileNameWithoutExtension(filePath);
             if (filename.Contains(" - "))
             {
-                string[] splitFilename = filename.Split(new[] { " - " }, 2, StringSplitOptions.RemoveEmptyEntries);
+                string[] splitFilename =
+                    filename.Split(new[] { " - " }, count: 2, StringSplitOptions.RemoveEmptyEntries);
                 CurrentArtist = splitFilename[0];
                 CurrentSong = splitFilename[1];
             }

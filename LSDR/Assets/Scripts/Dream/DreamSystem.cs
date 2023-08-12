@@ -72,7 +72,7 @@ namespace LSDR.Dream
             // penalise upper score if ending dream from falling
             if (fromFall)
             {
-                CurrentSequence.LogGraphContributionFromEntity(0, FALLING_UPPER_PENALTY);
+                CurrentSequence.LogGraphContributionFromEntity(dynamicness: 0, FALLING_UPPER_PENALTY);
                 SettingsSystem.CanControlPlayer = false;
             }
             else
@@ -122,11 +122,11 @@ namespace LSDR.Dream
             // disable pausing to prevent throwing off timers etc
             PauseSystem.CanPause = false;
 
-            if (playSound) AudioPlayer.Instance.PlayClip(LinkSound, false, "SFX");
+            if (playSound) AudioPlayer.Instance.PlayClip(LinkSound, loop: false, "SFX");
 
             CurrentSequence.Visited.Add(dream);
 
-            ToriiFader.Instance.FadeIn(fadeCol, 1F, () =>
+            ToriiFader.Instance.FadeIn(fadeCol, duration: 1F, () =>
             {
                 // see if we should switch texture sets
                 if (RandUtil.OneIn(CHANCE_TO_SWITCH_TEXTURES_WHEN_LINKING))
@@ -168,8 +168,8 @@ namespace LSDR.Dream
             float secondsInDream = RandUtil.Float(MIN_SECONDS_IN_DREAM, MAX_SECONDS_IN_DREAM);
             _endDreamTimer = Coroutines.Instance.StartCoroutine(EndDreamAfterSeconds(secondsInDream));
 
-            ToriiFader.Instance.FadeIn(Color.black, 3, () => Coroutines.Instance.StartCoroutine(
-                LoadDream(dream, false)));
+            ToriiFader.Instance.FadeIn(Color.black, duration: 3, () => Coroutines.Instance.StartCoroutine(
+                LoadDream(dream, transitioning: false)));
             CurrentSequence = new DreamSequence();
             CurrentSequence.Visited.Add(dream);
         }
@@ -225,7 +225,7 @@ namespace LSDR.Dream
 
             ToriiCursor.Show();
 
-            ToriiFader.Instance.FadeOut(1F);
+            ToriiFader.Instance.FadeOut(duration: 1F);
         }
 
         public IEnumerator LoadDream(SDK.Data.Dream dream, bool transitioning)
@@ -293,7 +293,7 @@ namespace LSDR.Dream
 
             ToriiCursor.Hide();
 
-            ToriiFader.Instance.FadeOut(1F, () => _currentlyTransitioning = false);
+            ToriiFader.Instance.FadeOut(duration: 1F, () => _currentlyTransitioning = false);
         }
 
         [Console]
@@ -338,7 +338,7 @@ namespace LSDR.Dream
         {
             EntityIndex.Instance.Register("__player", Player);
 
-            var camera = GameObject.FindWithTag("MainCamera");
+            GameObject camera = GameObject.FindWithTag("MainCamera");
             if (camera == null) Debug.LogWarning("Unable to find MainCamera in scene");
             EntityIndex.Instance.Register("__camera", camera);
         }
@@ -490,7 +490,7 @@ namespace LSDR.Dream
             if (CurrentDream == null)
                 BeginDream(dream);
             else
-                Transition(Color.black, dream, false);
+                Transition(Color.black, dream, playSound: false);
         }
 
         [Console]

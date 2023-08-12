@@ -10,10 +10,10 @@ namespace LSDR.SDK.Editor.Util
         [MenuItem("LSDR SDK/Toggle fog kind")]
         public static void SwitchFogKind()
         {
-            var existing = Shader.GetGlobalInt(SubtractiveFog);
-            var newFogKind = existing == 1 ? 0 : 1;
+            int existing = Shader.GetGlobalInt(SubtractiveFog);
+            int newFogKind = existing == 1 ? 0 : 1;
             Shader.SetGlobalInt(SubtractiveFog, newFogKind);
-            var fogKindString = newFogKind == 1 ? "Subtractive" : "Additive";
+            string fogKindString = newFogKind == 1 ? "Subtractive" : "Additive";
             Debug.Log($"Set fog kind to: '{fogKindString}'");
         }
     }

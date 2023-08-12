@@ -7,7 +7,7 @@ namespace Torii.Event
     {
         public KeyCode Key;
         public ToriiEvent Event;
-        
+
         public void Update()
         {
             if (Input.GetKeyDown(Key))

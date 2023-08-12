@@ -144,7 +144,7 @@ namespace LSDR.Game
             SetSFXVolume(Settings.SFXVolume);
 
             // set the graphics quality
-            QualitySettings.SetQualityLevel(Settings.CurrentQualityIndex, true);
+            QualitySettings.SetQualityLevel(Settings.CurrentQualityIndex, applyExpensiveChanges: true);
 
             // update any shaders
             TextureSetter.Instance.SetAllShaders(Settings.UseClassicShaders);

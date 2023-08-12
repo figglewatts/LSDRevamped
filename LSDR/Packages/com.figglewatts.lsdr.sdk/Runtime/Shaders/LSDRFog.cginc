@@ -54,6 +54,6 @@ float4 ApplyRevampedFog(float4 color, float4 fogColor)
     finalFogCol = AdditiveFog(finalFogCol, fogColor.rgb, 1.0 - _SubtractiveFog);
     finalFogCol = SubtractiveFog(finalFogCol, fogColor.rgb, _SubtractiveFog);
     #endif
-    
+
     return float4(finalFogCol.rgb, color.a);
 }

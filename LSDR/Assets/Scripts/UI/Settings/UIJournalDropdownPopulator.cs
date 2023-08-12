@@ -5,7 +5,7 @@ using Torii.UI;
 namespace LSDR.UI.Settings
 {
     /// <summary>
-    /// Populate the dream journal dropdown menu.
+    ///     Populate the dream journal dropdown menu.
     /// </summary>
     public class UIJournalDropdownPopulator : DropdownPopulator
     {

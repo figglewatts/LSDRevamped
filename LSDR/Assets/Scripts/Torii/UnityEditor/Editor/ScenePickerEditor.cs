@@ -1,5 +1,4 @@
 using System;
-using Torii.UI;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -12,10 +11,11 @@ namespace Torii.UnityEditor
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             SerializedProperty sceneName = property.FindPropertyRelative("ScenePath");
-            
+
             SceneAsset sceneObject = getScene(sceneName.stringValue);
 
-            Object scene = EditorGUI.ObjectField(position, label, sceneObject, typeof(SceneAsset), true);
+            Object scene = EditorGUI.ObjectField(position, label, sceneObject, typeof(SceneAsset),
+                allowSceneObjects: true);
 
             if (scene == null)
             {
@@ -41,7 +41,7 @@ namespace Torii.UnityEditor
                     return AssetDatabase.LoadAssetAtPath<SceneAsset>(editorScene.path);
                 }
             }
-            
+
             Debug.LogWarning($"Scene '{sceneName}' not added to build -- add it to the build to pick it.");
             return null;
         }

@@ -6,14 +6,14 @@ using UnityEngine;
 namespace LSDR.Visual
 {
     /// <summary>
-    /// Image effect for pixellating a camera.
+    ///     Image effect for pixellating a camera.
     /// </summary>
     [ExecuteInEditMode]
     public class PixelateImageEffect : MonoBehaviour
     {
         public int Height = 64;
-        private int _width;
         private Camera _main;
+        private int _width;
 
         protected void Start()
         {
@@ -31,10 +31,10 @@ namespace LSDR.Visual
             if (_width == 0) return;
 
             src.filterMode = FilterMode.Point;
-            RenderTexture buffer = RenderTexture.GetTemporary(_width, Height, -1);
+            RenderTexture buffer = RenderTexture.GetTemporary(_width, Height, depthBuffer: -1);
             buffer.filterMode = FilterMode.Point;
-            UnityEngine.Graphics.Blit(src, buffer);
-            UnityEngine.Graphics.Blit(buffer, dest);
+            Graphics.Blit(src, buffer);
+            Graphics.Blit(buffer, dest);
             RenderTexture.ReleaseTemporary(buffer);
         }
     }

@@ -45,37 +45,37 @@ namespace LSDR.InputManagement
         /// <summary>
         ///     The name of this control scheme.
         /// </summary>
-        [ProtoMember(1)]
+        [ProtoMember(tag: 1)]
         public string Name { get; set; }
 
         /// <summary>
         ///     The encoded scheme string of this control scheme. Used to save the data.
         /// </summary>
-        [ProtoMember(2)]
+        [ProtoMember(tag: 2)]
         public string SchemeString { get; set; } = "";
 
         /// <summary>
         ///     Whether or not FPS mouselook/strafing is enabled.
         /// </summary>
-        [ProtoMember(3)]
+        [ProtoMember(tag: 3)]
         public bool FpsControls { get; set; }
 
         /// <summary>
         ///     The mouse sensitivity of this control scheme.
         /// </summary>
-        [ProtoMember(4)]
+        [ProtoMember(tag: 4)]
         public float MouseSensitivity { get; set; }
 
         /// <summary>
         ///     Whether or not to invert the Y direction of the Look vector.
         /// </summary>
-        [ProtoMember(5)]
+        [ProtoMember(tag: 5)]
         public bool InvertLookY { get; set; }
 
         /// <summary>
         ///     Whether or not this control scheme is editable in the UI.
         /// </summary>
-        [ProtoMember(6)]
+        [ProtoMember(tag: 6)]
         public bool Editable { get; set; } = true;
 
         public void SyncToInputActions(InputActions inputActions)

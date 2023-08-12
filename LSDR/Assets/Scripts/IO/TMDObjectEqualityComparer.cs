@@ -2,6 +2,7 @@
 using System.Linq;
 using libLSD.Formats;
 using libLSD.Formats.Packets;
+using libLSD.Types;
 
 namespace LSDR.IO
 {
@@ -24,18 +25,18 @@ namespace LSDR.IO
         {
             unchecked
             {
-                var hashCode = obj.Normals.Length;
-                foreach (var norm in obj.Normals)
+                int hashCode = obj.Normals.Length;
+                foreach (TMDNormal norm in obj.Normals)
                 {
                     hashCode = (hashCode * 397) ^ norm.GetHashCode();
                 }
 
-                foreach (var vert in obj.Vertices)
+                foreach (Vec3 vert in obj.Vertices)
                 {
                     hashCode = (hashCode * 397) ^ vert.GetHashCode();
                 }
 
-                foreach (var prim in obj.Primitives)
+                foreach (TMDPrimitivePacket prim in obj.Primitives)
                 {
                     hashCode = (hashCode * 397) ^ tmdPrimitivePacketHashCode(prim);
                 }
@@ -46,7 +47,7 @@ namespace LSDR.IO
 
         private int tmdPrimitivePacketHashCode(TMDPrimitivePacket p)
         {
-            var hashCode = p.Flags.GetHashCode();
+            int hashCode = p.Flags.GetHashCode();
             hashCode = (hashCode * 397) ^ p.Options.GetHashCode();
             hashCode = (hashCode * 397) ^ p.Type.GetHashCode();
             hashCode = (hashCode * 397) ^ p.ILen.GetHashCode();
@@ -56,7 +57,7 @@ namespace LSDR.IO
             ITMDColoredPrimitivePacket coloredPacket = p.PacketData as ITMDColoredPrimitivePacket;
             if (coloredPacket != null)
             {
-                foreach (var col in coloredPacket.Colors)
+                foreach (Vec3 col in coloredPacket.Colors)
                 {
                     hashCode = (hashCode * 397) ^ col.GetHashCode();
                 }
@@ -65,7 +66,7 @@ namespace LSDR.IO
             ITMDLitPrimitivePacket litPacket = p.PacketData as ITMDLitPrimitivePacket;
             if (litPacket != null)
             {
-                foreach (var norm in litPacket.Normals)
+                foreach (int norm in litPacket.Normals)
                 {
                     hashCode = (hashCode * 397) ^ norm.GetHashCode();
                 }
@@ -79,13 +80,13 @@ namespace LSDR.IO
                 hashCode = (hashCode * 397) ^ texturedPacket.Texture.AlphaBlendRate.GetHashCode();
                 hashCode = (hashCode * 397) ^ texturedPacket.ColorLookup.XPosition.GetHashCode();
                 hashCode = (hashCode * 397) ^ texturedPacket.ColorLookup.YPosition.GetHashCode();
-                foreach (var uv in texturedPacket.UVs)
+                foreach (int uv in texturedPacket.UVs)
                 {
                     hashCode = (hashCode * 397) ^ uv.GetHashCode();
                 }
             }
 
-            foreach (var vert in p.PacketData.Vertices)
+            foreach (int vert in p.PacketData.Vertices)
             {
                 hashCode = (hashCode * 397) ^ vert.GetHashCode();
             }

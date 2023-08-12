@@ -11,16 +11,16 @@ namespace LSDR.SDK.Editor.Util
         {
             EditorGUI.BeginProperty(position, GUIContent.none, property);
 
-            var sceneAssetProperty = property.FindPropertyRelative("sceneAsset");
-            var scenePathProperty = property.FindPropertyRelative("scenePath");
+            SerializedProperty sceneAssetProperty = property.FindPropertyRelative("sceneAsset");
+            SerializedProperty scenePathProperty = property.FindPropertyRelative("scenePath");
 
             position = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), label);
             if (sceneAssetProperty != null)
             {
                 EditorGUI.BeginChangeCheck();
-                var value = EditorGUI.ObjectField(position, sceneAssetProperty.objectReferenceValue,
+                Object value = EditorGUI.ObjectField(position, sceneAssetProperty.objectReferenceValue,
                     typeof(SceneAsset),
-                    false);
+                    allowSceneObjects: false);
                 if (EditorGUI.EndChangeCheck())
                 {
                     sceneAssetProperty.objectReferenceValue = value;
