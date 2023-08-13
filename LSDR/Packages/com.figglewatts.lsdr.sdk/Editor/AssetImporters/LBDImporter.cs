@@ -5,13 +5,13 @@ using LSDR.SDK.Assets;
 using LSDR.SDK.Editor.Assets;
 using LSDR.SDK.Visual;
 using UnityEditor;
-using UnityEditor.Experimental.AssetImporters;
+
 using UnityEngine;
 
 namespace LSDR.SDK.Editor.AssetImporters
 {
-    [ScriptedImporter(version: 1, "lbd")]
-    public class LBDImporter : ScriptedImporter
+    [UnityEditor.AssetImporters.ScriptedImporter(version: 1, "lbd")]
+    public class LBDImporter : UnityEditor.AssetImporters.ScriptedImporter
     {
         public Material OpaqueMaterial;
         public Material TransparentMaterial;
@@ -20,7 +20,7 @@ namespace LSDR.SDK.Editor.AssetImporters
 
         protected MeshCombiner _meshCombiner;
 
-        public override void OnImportAsset(AssetImportContext ctx)
+        public override void OnImportAsset(UnityEditor.AssetImporters.AssetImportContext ctx)
         {
             // read the LBD file
             LBD lbd;
@@ -111,7 +111,7 @@ namespace LSDR.SDK.Editor.AssetImporters
             foreach (Mesh lbdMesh in lbdMeshes) DestroyImmediate(lbdMesh);
         }
 
-        protected GameObject createMOM(AssetImportContext ctx, MOM mom, int index)
+        protected GameObject createMOM(UnityEditor.AssetImporters.AssetImportContext ctx, MOM mom, int index)
         {
             return MOMImporter.ImportMOMAsset(ctx, mom, OpaqueMaterial, TransparentMaterial, $"MOM{index}");
         }

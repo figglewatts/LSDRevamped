@@ -1,10 +1,10 @@
 using UnityEditor;
-using UnityEditor.Experimental.AssetImporters;
+
 
 namespace LSDR.SDK.Editor.AssetImporters
 {
     [CustomEditor(typeof(MOMImporter))]
-    public class MOMImporterEditor : ScriptedImporterEditor
+    public class MOMImporterEditor : UnityEditor.AssetImporters.ScriptedImporterEditor
     {
         public override void OnInspectorGUI()
         {

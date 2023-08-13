@@ -2,15 +2,15 @@ using System.IO;
 using libLSD.Formats;
 using LSDR.SDK.Assets;
 using UnityEditor;
-using UnityEditor.Experimental.AssetImporters;
+
 using UnityEngine;
 
 namespace LSDR.SDK.Editor.AssetImporters
 {
-    [ScriptedImporter(version: 1, "tim")]
-    public class TIMImporter : ScriptedImporter
+    [UnityEditor.AssetImporters.ScriptedImporter(version: 1, "tim")]
+    public class TIMImporter : UnityEditor.AssetImporters.ScriptedImporter
     {
-        public override void OnImportAsset(AssetImportContext ctx)
+        public override void OnImportAsset(UnityEditor.AssetImporters.AssetImportContext ctx)
         {
             // read the TIM file
             TIM tim;

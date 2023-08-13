@@ -3,18 +3,18 @@ using System.IO;
 using libLSD.Formats;
 using LSDR.SDK.Animation;
 using UnityEditor.Animations;
-using UnityEditor.Experimental.AssetImporters;
+
 using UnityEngine;
 
 namespace LSDR.SDK.Editor.AssetImporters
 {
-    [ScriptedImporter(version: 1, "mom")]
-    public class MOMImporter : ScriptedImporter
+    [UnityEditor.AssetImporters.ScriptedImporter(version: 1, "mom")]
+    public class MOMImporter : UnityEditor.AssetImporters.ScriptedImporter
     {
         public Material OpaqueMaterial;
         public Material TransparentMaterial;
 
-        public override void OnImportAsset(AssetImportContext ctx)
+        public override void OnImportAsset(UnityEditor.AssetImporters.AssetImportContext ctx)
         {
             // read the MOM file
             MOM mom;
@@ -27,7 +27,7 @@ namespace LSDR.SDK.Editor.AssetImporters
             ctx.SetMainObject(momObj);
         }
 
-        public static GameObject ImportMOMAsset(AssetImportContext ctx,
+        public static GameObject ImportMOMAsset(UnityEditor.AssetImporters.AssetImportContext ctx,
             MOM mom,
             Material opaqueMaterial,
             Material transparentMaterial,
@@ -93,7 +93,7 @@ namespace LSDR.SDK.Editor.AssetImporters
             return momObj;
         }
 
-        protected static AnimationClip[] createMomWithAnimations(AssetImportContext ctx,
+        protected static AnimationClip[] createMomWithAnimations(UnityEditor.AssetImporters.AssetImportContext ctx,
             List<Mesh> meshes,
             GameObject momObj,
             MOM mom,

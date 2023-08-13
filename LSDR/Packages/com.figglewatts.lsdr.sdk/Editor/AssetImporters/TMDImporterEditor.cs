@@ -1,11 +1,11 @@
 using UnityEditor;
-using UnityEditor.Experimental.AssetImporters;
+
 
 namespace LSDR.SDK.Editor.AssetImporters
 {
     [CustomEditor(typeof(TMDImporter))]
     [CanEditMultipleObjects]
-    public class TMDImporterEditor : ScriptedImporterEditor
+    public class TMDImporterEditor : UnityEditor.AssetImporters.ScriptedImporterEditor
     {
         public override void OnInspectorGUI()
         {

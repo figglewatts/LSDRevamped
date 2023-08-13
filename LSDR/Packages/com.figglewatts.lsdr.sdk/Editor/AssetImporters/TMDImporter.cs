@@ -3,20 +3,20 @@ using System.IO;
 using libLSD.Formats;
 using LSDR.SDK.Visual;
 using UnityEditor;
-using UnityEditor.Experimental.AssetImporters;
+
 using UnityEngine;
 
 namespace LSDR.SDK.Editor.AssetImporters
 {
-    [ScriptedImporter(version: 1, "tmd")]
-    public class TMDImporter : ScriptedImporter
+    [UnityEditor.AssetImporters.ScriptedImporter(version: 1, "tmd")]
+    public class TMDImporter : UnityEditor.AssetImporters.ScriptedImporter
     {
         public Material OpaqueMaterial;
         public Material TransparentMaterial;
 
         protected MeshCombiner _meshCombiner;
 
-        public override void OnImportAsset(AssetImportContext ctx)
+        public override void OnImportAsset(UnityEditor.AssetImporters.AssetImportContext ctx)
         {
             // read the TMD file
             TMD tmd;
