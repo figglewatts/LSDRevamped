@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using LSDR.Audio;
 using LSDR.InputManagement;
 using LSDR.SDK.Data;
 using LSDR.SDK.Visual;
@@ -28,6 +29,7 @@ namespace LSDR.Game
 
         public ModLoaderSystem ModLoaderSystem;
         public ControlSchemeLoaderSystem ControlSchemeLoader;
+        public MusicSystem MusicSystem;
 
         public ToriiEvent OnSettingsApply;
 
@@ -138,6 +140,9 @@ namespace LSDR.Game
 
             // set retro shader affine intensity
             Shader.SetGlobalFloat("_AffineIntensity", Settings.AffineIntensity);
+
+            // apply original soundtrack
+            MusicSystem.UseOriginalSongs(Settings.UseOriginalSoundtrack);
 
             // set volumes
             SetMusicVolume(Settings.MusicVolume);

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using LSDR.SDK.Audio;
 using UnityEngine;
 
 namespace LSDR.SDK.Data
@@ -27,6 +28,9 @@ namespace LSDR.SDK.Data
 
         [Tooltip("The prefab that comprises this dream.")]
         public GameObject DreamPrefab;
+
+        [Tooltip("The song library this dream uses to play music.")]
+        public AbstractSongLibrary SongLibrary;
 
         public DreamEnvironment ChooseEnvironment(int dayNum)
         {

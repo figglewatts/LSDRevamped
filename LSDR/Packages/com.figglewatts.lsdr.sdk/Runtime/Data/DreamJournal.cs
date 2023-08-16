@@ -26,6 +26,11 @@ namespace LSDR.SDK.Data
             return RandUtil.RandomListElement(LinkableDreams.Where(d => d != current));
         }
 
+        public int GetDreamIndex(Dream dream)
+        {
+            return Dreams.IndexOf(dream);
+        }
+
         public Dream GetFirstDream()
         {
             List<Dream> firstDayDreams = Dreams.Where(d => d.FirstDay).ToList();

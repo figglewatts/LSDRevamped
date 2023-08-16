@@ -7,6 +7,8 @@ using LSDR.Entities.Player;
 using LSDR.Game;
 using LSDR.InputManagement;
 using LSDR.SDK;
+using LSDR.SDK.Audio;
+using LSDR.SDK.Data;
 using LSDR.SDK.DreamControl;
 using LSDR.SDK.Entities;
 using LSDR.SDK.Util;
@@ -59,7 +61,6 @@ namespace LSDR.Dream
         [NonSerialized] protected string _forcedSpawnID;
         [NonSerialized] protected float _lastPlayerYRotation;
         [NonSerialized] protected bool _spawnedInAtLeastOnce; // true if we've been in a dream yet
-        [NonSerialized] public AudioSource MusicSource;
         [NonSerialized] public GameObject Player;
         public SDK.Data.Dream CurrentDream { get; protected set; }
         public GameObject CurrentDreamInstance { get; protected set; }
@@ -121,6 +122,8 @@ namespace LSDR.Dream
 
             // disable pausing to prevent throwing off timers etc
             PauseSystem.CanPause = false;
+
+            MusicSystem.StopSong();
 
             if (playSound) AudioPlayer.Instance.PlayClip(LinkSound, loop: false, "SFX");
 
@@ -209,8 +212,6 @@ namespace LSDR.Dream
         {
             Debug.Log("Loading title screen");
 
-            if (MusicSource != null && MusicSource.isPlaying) MusicSource.Stop();
-
             TextureSetter.Instance.DeregisterAllMaterials();
             EntityIndex.Instance.DeregisterAllEntities();
 
@@ -253,7 +254,15 @@ namespace LSDR.Dream
                 yield return loadSceneOp;
             }
 
-            if (MusicSource != null && MusicSource.isPlaying && !loadingSameDream) MusicSource.Stop();
+            // reroll song style, update song library, switch to next song based on graph position
+            MusicSystem.OriginalSongLibrary.DreamNumber = SettingsSystem.CurrentJournal.GetDreamIndex(CurrentDream);
+            MusicSystem.SetSongStyle((SongStyle)(GameSave.CurrentJournalSave.DayNumber % (int)SongStyle.COUNT));
+            MusicSystem.CurrentSongLibrary = CurrentDream.SongLibrary;
+            int songNumber = GameSave.CurrentJournalSave.DayNumber == 1
+                ? 0
+                : GameSave.CurrentJournalSave.LastGraphY * GraphSpawnMap.GRAPH_SIZE +
+                  GameSave.CurrentJournalSave.LastGraphX;
+            MusicSystem.NextSong(songNumber);
 
             Debug.Log("Registering entities...");
             Player = GameObject.FindWithTag("Player");
@@ -294,14 +303,6 @@ namespace LSDR.Dream
             ToriiCursor.Hide();
 
             ToriiFader.Instance.FadeOut(duration: 1F, () => _currentlyTransitioning = false);
-        }
-
-        [Console]
-        public void SkipSong()
-        {
-            if (CurrentDream == null) return;
-
-            OnSongChange.Raise();
         }
 
         protected Color fadeColorFromCurrentSequence()
@@ -355,6 +356,8 @@ namespace LSDR.Dream
 
             // disable pausing to prevent throwing off timers etc
             PauseSystem.CanPause = false;
+
+            MusicSystem.StopSong();
 
             Debug.Log("Ending dream");
 
@@ -436,6 +439,28 @@ namespace LSDR.Dream
 #region Console Commands
 
         [Console]
+        public void SkipSong()
+        {
+            if (CurrentDream == null) return;
+
+            MusicSystem.NextSong(GameSave.CurrentJournalSave.DayNumber);
+        }
+
+        [Console]
+        public void SetSongStyle(int style)
+        {
+            if (CurrentDream == null) return;
+            if (style < 0 || style > (int)SongStyle.COUNT)
+            {
+                Debug.LogError($"Invalid song style '{style}', needs to be 0-6");
+            }
+
+            SongStyle songStyle = (SongStyle)style;
+            Debug.Log($"Switching song style to: {songStyle.ToString()}");
+            MusicSystem.SetSongStyle(songStyle);
+        }
+
+        [Console]
         public void ListDreamEnvironments()
         {
             if (CurrentDream == null) return;
@@ -491,19 +516,6 @@ namespace LSDR.Dream
                 BeginDream(dream);
             else
                 Transition(Color.black, dream, playSound: false);
-        }
-
-        [Console]
-        public void PlaySong(string songPath)
-        {
-            ToriiAudioClip clip = ResourceManager.Load<ToriiAudioClip>(PathUtil.Combine(
-                Application.streamingAssetsPath,
-                "music",
-                songPath), "scene");
-            MusicSource.Stop();
-            MusicSource.clip = clip;
-            MusicSource.loop = true;
-            MusicSource.Play();
         }
 
 #endregion

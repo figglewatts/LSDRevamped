@@ -13,6 +13,8 @@ namespace LSDR.UI.Settings
     {
         public SettingsSystem Settings;
 
+        public Toggle UseOriginalSoundtrackToggle;
+
         /// <summary>
         ///     Reference to the music volume slider. Set in inspector.
         /// </summary>
@@ -30,10 +32,12 @@ namespace LSDR.UI.Settings
             // register data with the settings bind broker
             Settings.SettingsBindBroker.RegisterData(MusicVolumeSlider);
             Settings.SettingsBindBroker.RegisterData(SFXVolumeSlider);
+            Settings.SettingsBindBroker.RegisterData(UseOriginalSoundtrackToggle);
 
             // set to initial values from currently loaded settings
             MusicVolumeSlider.value = Settings.Settings.MusicVolume;
             SFXVolumeSlider.value = Settings.Settings.SFXVolume;
+            UseOriginalSoundtrackToggle.isOn = Settings.Settings.UseOriginalSoundtrack;
 
             // add value change listeners
             MusicVolumeSlider.onValueChanged.AddListener(Settings.SetMusicVolume);
@@ -44,6 +48,8 @@ namespace LSDR.UI.Settings
                 () => Settings.Settings.MusicVolume, BindingType.TwoWay);
             Settings.SettingsBindBroker.Bind(() => SFXVolumeSlider.value,
                 () => Settings.Settings.SFXVolume, BindingType.TwoWay);
+            Settings.SettingsBindBroker.Bind(() => UseOriginalSoundtrackToggle.isOn,
+                () => Settings.Settings.UseOriginalSoundtrack, BindingType.TwoWay);
         }
 
         public void SoundTest() { AudioPlayer.Instance.PlayClip(SoundTestClip, mixerGroup: "SFX"); }

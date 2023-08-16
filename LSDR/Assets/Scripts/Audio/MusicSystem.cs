@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using LSDR.SDK.Audio;
 using LSDR.SDK.Util;
 using Torii.Audio;
 using Torii.Resource;
@@ -12,84 +13,50 @@ namespace LSDR.Audio
     [CreateAssetMenu(menuName = "System/MusicSystem")]
     public class MusicSystem : ScriptableObject
     {
-        private string _currentSongFilename;
-        public string CurrentSong { get; private set; }
-        public string CurrentArtist { get; private set; }
+        public Action<SongAsset> OnSongChange;
 
-        public void Awake()
+        public SongAsset CurrentSong { get; protected set; }
+
+        public AbstractSongLibrary CurrentSongLibrary
         {
-            CurrentArtist = "No artist";
-            CurrentSong = "No song";
+            get => _usingOriginalSongs ? OriginalSongLibrary : _currentSongLibrary;
+            set => _currentSongLibrary = value;
         }
 
-        /// <summary>
-        ///     Play a random song from the given directory and return the AudioSource playing the song.
-        /// </summary>
-        /// <param name="dir">The directory to use.</param>
-        /// <returns>The AudioSource that is playing the song. Null if an error occurred.</returns>
-        public AudioSource PlayRandomSongFromDirectory(string dir)
+        public OriginalSongLibrary OriginalSongLibrary;
+
+        protected AbstractSongLibrary _currentSongLibrary;
+        protected bool _usingOriginalSongs = false;
+        protected SongStyle _songStyle = SongStyle.Standard;
+        protected int _lastDayNumber = 1;
+
+        public void UseOriginalSongs(bool useOriginalSongs)
         {
-            AudioClip clip = getRandomSongFromDirectory(dir);
-            if (clip == null) return null;
-            return AudioPlayer.Instance.PlayClip(clip, loop: true, "Music");
+            // we want to change songs if we are playing, and if the value given here is different
+            bool shouldChangeSong = MusicPlayer.Instance.IsPlaying && _usingOriginalSongs != useOriginalSongs;
+            _usingOriginalSongs = useOriginalSongs;
+            if (shouldChangeSong) NextSong(_lastDayNumber);
         }
 
-        /// <summary>
-        ///     Play a random song from the given directory using a given AudioSource.
-        /// </summary>
-        /// <param name="dir">The directory to use.</param>
-        /// <returns>The AudioSource that is playing the song. Null if an error occurred.</returns>
-        public AudioSource PlayRandomSongFromDirectory(AudioSource source, string dir)
+        public void NextSong(int dayNumber)
         {
-            AudioClip clip = getRandomSongFromDirectory(dir);
-            if (clip == null) return null;
-            source.clip = clip;
-            source.Play();
-            return source;
+            CurrentSong = CurrentSongLibrary.GetSong(_songStyle, dayNumber);
+            _lastDayNumber = dayNumber;
+            MusicPlayer.Instance.PlaySong(CurrentSong);
+            OnSongChange?.Invoke(CurrentSong);
         }
 
-        private AudioClip getRandomSongFromDirectory(string dir)
+        public void StopSong()
         {
-            string[] files = Directory.GetFiles(dir, "*.ogg", SearchOption.AllDirectories);
-            if (files.Length == 0)
-            {
-                Debug.LogWarning($"Music directory '{dir}' did not contain any OGG files, cannot play music.");
-                CurrentArtist = "No artist";
-                CurrentSong = "No song";
-                return null;
-            }
-
-            // handle case where directory only contains 1 file - we'd want to just play it again instead of
-            // excluding it and causing no song to play next
-            IEnumerable<string> filesToChooseFrom =
-                files.Length == 1 ? files : files.Where(f => !f.Equals(_currentSongFilename));
-
-            string randomFile = RandUtil.RandomListElement(filesToChooseFrom);
-            _currentSongFilename = randomFile;
-
-            setMetadataFromFilePath(randomFile);
-            Debug.Log($"Now playing: {CurrentSong} by {CurrentArtist}");
-
-            return ResourceManager.Load<ToriiAudioClip>(randomFile, "scene");
+            MusicPlayer.Instance.StopSong();
+            CurrentSong = null;
+            OnSongChange?.Invoke(null);
         }
 
-        private void setMetadataFromFilePath(string filePath)
+        public void SetSongStyle(SongStyle style)
         {
-            if (filePath == null) return;
-
-            string filename = Path.GetFileNameWithoutExtension(filePath);
-            if (filename.Contains(" - "))
-            {
-                string[] splitFilename =
-                    filename.Split(new[] { " - " }, count: 2, StringSplitOptions.RemoveEmptyEntries);
-                CurrentArtist = splitFilename[0];
-                CurrentSong = splitFilename[1];
-            }
-            else
-            {
-                CurrentArtist = "Unknown artist";
-                CurrentSong = filename;
-            }
+            _songStyle = style;
+            if (MusicPlayer.Instance.IsPlaying) NextSong(_lastDayNumber);
         }
     }
 }

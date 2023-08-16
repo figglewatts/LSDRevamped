@@ -37,6 +37,7 @@ namespace LSDR.Game
             EnableFootstepSounds = true;
             MusicVolume = 1F;
             SFXVolume = 1F;
+            UseOriginalSoundtrack = true;
             GUID = Guid.NewGuid();
 
             Profiles = new List<SettingsProfile>();
@@ -370,6 +371,18 @@ namespace LSDR.Game
             {
                 _sfxVolume = value;
                 NotifyPropertyChange(nameof(SFXVolume));
+            }
+        }
+
+        private bool _useOriginalSoundtrack;
+
+        public bool UseOriginalSoundtrack
+        {
+            get => _useOriginalSoundtrack;
+            set
+            {
+                _useOriginalSoundtrack = value;
+                NotifyPropertyChange(nameof(UseOriginalSoundtrack));
             }
         }
 

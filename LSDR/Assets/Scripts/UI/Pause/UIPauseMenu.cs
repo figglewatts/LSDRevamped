@@ -1,6 +1,8 @@
-﻿using LSDR.Audio;
+﻿using System;
+using LSDR.Audio;
 using LSDR.Dream;
 using LSDR.Game;
+using LSDR.SDK.Audio;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,7 +22,13 @@ namespace LSDR.UI
 
         public void OnEnable()
         {
-            UpdateSongText();
+            MusicSystem.OnSongChange += UpdateSongText;
+            UpdateSongText(MusicSystem.CurrentSong);
+        }
+
+        public void OnDisable()
+        {
+            MusicSystem.OnSongChange -= UpdateSongText;
         }
 
         public void ReturnToMenu()
@@ -34,10 +42,17 @@ namespace LSDR.UI
             Application.Quit();
         }
 
-        public void UpdateSongText()
+        public void UpdateSongText(SongAsset currentSong)
         {
-            SongNameTextElement.text = MusicSystem.CurrentSong;
-            SongArtistTextElement.text = MusicSystem.CurrentArtist;
+            if (currentSong == null)
+            {
+                SongNameTextElement.text = "No song playing";
+                SongArtistTextElement.text = "";
+                return;
+            }
+
+            SongNameTextElement.text = MusicSystem.CurrentSong.Name;
+            SongArtistTextElement.text = MusicSystem.CurrentSong.Author;
         }
     }
 }
