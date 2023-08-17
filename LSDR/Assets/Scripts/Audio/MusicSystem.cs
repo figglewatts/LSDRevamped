@@ -19,7 +19,7 @@ namespace LSDR.Audio
 
         public AbstractSongLibrary CurrentSongLibrary
         {
-            get => _usingOriginalSongs ? OriginalSongLibrary : _currentSongLibrary;
+            get => (_usingOriginalSongs || _currentSongLibrary == null) ? OriginalSongLibrary : _currentSongLibrary;
             set => _currentSongLibrary = value;
         }
 
