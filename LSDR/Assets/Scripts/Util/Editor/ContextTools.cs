@@ -67,7 +67,7 @@ namespace LSDR.Util
                 AudioClip clipAsset = AssetDatabase.LoadAssetAtPath<AudioClip>(songAsset);
                 existingAsset.Clip = clipAsset;
                 existingAsset.Author = "OutSide Directors Company";
-                existingAsset.Name = songFileNameWithoutExtension;
+                existingAsset.Name = $"{stgName} {songFileNameWithoutExtension}";
                 styleLists[songStyle].Songs.Add(existingAsset);
                 EditorUtility.SetDirty(styleLists[songStyle]);
             }

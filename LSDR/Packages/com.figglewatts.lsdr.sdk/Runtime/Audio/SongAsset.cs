@@ -8,5 +8,7 @@ namespace LSDR.SDK.Audio
         public string Name;
         public string Author;
         public AudioClip Clip;
+
+        public bool IsSilent => Clip == null;
     }
 }

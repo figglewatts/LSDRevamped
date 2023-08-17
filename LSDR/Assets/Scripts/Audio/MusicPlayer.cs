@@ -40,6 +40,8 @@ namespace LSDR.Audio
 
             yield return new WaitForSeconds(0.5f);
 
+            if (song.IsSilent) yield break;
+
             _source.volume = 1;
             _source.clip = song.Clip;
             _source.Play();
