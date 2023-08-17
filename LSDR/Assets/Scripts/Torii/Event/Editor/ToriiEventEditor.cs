@@ -1,5 +1,4 @@
-﻿using Torii.Event;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 
 namespace Torii.Event

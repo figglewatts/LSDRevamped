@@ -1,19 +1,17 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using Torii.Binding;
 using UnityEngine;
 
 namespace Torii.UI
 {
     /// <summary>
-    /// Specialized instance of UnityEngine.UI.Slider with bindable value.
+    ///     Specialized instance of UnityEngine.UI.Slider with bindable value.
     /// </summary>
     public class Slider : UnityEngine.UI.Slider, IPropertyWatcher
     {
         public new float value
         {
-            get { return base.value; }
+            get => base.value;
             set
             {
                 base.value = value;

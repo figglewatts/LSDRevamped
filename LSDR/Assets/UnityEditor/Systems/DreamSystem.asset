@@ -3,27 +3,18 @@
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 03874fa18cce409ca5074d9405aa94ae, type: 3}
   m_Name: DreamSystem
   m_EditorClassIdentifier: 
-  DreamScene:
-    ScenePath: dream
   TitleScene:
     ScenePath: titlescreen
-  SkyBackground: {fileID: 2100000, guid: 33c8328eaeb7fc343941cbd5355573af, type: 2}
-  Classic: {fileID: 4800000, guid: fe8e4f4161764dc78aa58349a000520d, type: 3}
-  ClassicAlpha: {fileID: 4800000, guid: 1fc0454db12b4d5886f533893f6c1ad2, type: 3}
-  Revamped: {fileID: 4800000, guid: fa599da3674b45b997aac6d674d44f16, type: 3}
-  RevampedAlpha: {fileID: 4800000, guid: 4447576b287640c49f0579700f3daf19, type: 3}
-  JournalLoader: {fileID: 11400000, guid: 0110fc1016f1f9544869de97eccd3a19, type: 2}
-  TextureSetSystem: {fileID: 11400000, guid: 7d5150cc6ee2df74ab6098ba27e6ff89, type: 2}
-  LevelLoader: {fileID: 11400000, guid: bc20cf5febfe91b47968485d177078dc, type: 2}
-  LBDLoader: {fileID: 11400000, guid: 942e1c1e78d439a48886632ef98484ae, type: 2}
+  SkyBackground: {fileID: 2100000, guid: b82d26c658026a145bb5f43b5009c0da, type: 2}
   GameSave: {fileID: 11400000, guid: dc1612e2640a30c4491ae5d369fea962, type: 2}
   Control: {fileID: 11400000, guid: 405c546a29ee78f4fa5e7480a11557a4, type: 2}
   SettingsSystem: {fileID: 11400000, guid: 12ecd5989d3bcc549bcacf027048a5bd, type: 2}

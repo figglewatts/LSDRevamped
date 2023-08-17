@@ -4,7 +4,7 @@ using UnityEngine.UI;
 namespace Torii.Console
 {
     /// <summary>
-    /// An output row in the console.
+    ///     An output row in the console.
     /// </summary>
     public class UIDevConsoleOutputRow : MonoBehaviour
     {

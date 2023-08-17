@@ -2,32 +2,32 @@
 
 namespace Torii.Util
 {
-	/// <summary>
-	/// If attached to a GameObject, won't destroy it on scene load. Also ensures that there isn't an existing
-	/// instance of the GameObject already in the newly loaded scene.
-	/// </summary>
-	public class DontDestroy : MonoBehaviour
-	{
-		void Awake()
-		{
-			// make sure there isn't another one
-			GameObject obj = GameObject.Find(this.gameObject.name);
-			if (!obj){ return; }
+    /// <summary>
+    ///     If attached to a GameObject, won't destroy it on scene load. Also ensures that there isn't an existing
+    ///     instance of the GameObject already in the newly loaded scene.
+    /// </summary>
+    public class DontDestroy : MonoBehaviour
+    {
+        private void Awake()
+        {
+            // make sure there isn't another one
+            GameObject obj = GameObject.Find(gameObject.name);
+            if (!obj) { return; }
 
-			int myId = this.gameObject.GetInstanceID();
-			int otherId = obj.GetInstanceID();
+            int myId = gameObject.GetInstanceID();
+            int otherId = obj.GetInstanceID();
 
-			if (myId == otherId){ return; }
-			
-			if (myId > otherId)
-			{
-				DestroyImmediate(this.gameObject);
-			}
-		}
+            if (myId == otherId) { return; }
 
-		void Start()
-		{
-			DontDestroyOnLoad(this.gameObject);
-		}
-	}
+            if (myId > otherId)
+            {
+                DestroyImmediate(gameObject);
+            }
+        }
+
+        private void Start()
+        {
+            DontDestroyOnLoad(gameObject);
+        }
+    }
 }

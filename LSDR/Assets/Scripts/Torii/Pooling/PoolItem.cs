@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Torii.Pooling
 {
@@ -9,16 +8,6 @@ namespace Torii.Pooling
         public IObjectPool ParentPool { get; set; }
 
         public bool InPool { get; set; } = true;
-        
-        public void ActiveState(bool state)
-        {
-            gameObject.SetActive(state);
-        }
-
-        public void Return()
-        {
-            ParentPool.Return(this);
-        }
 
         private void OnDestroy()
         {
@@ -30,6 +19,16 @@ namespace Torii.Pooling
                 //Debug.Log("ITEM DESTROYED");
                 //ParentPool.ActivePoolItemDestroyed(this);
             }
+        }
+
+        public void ActiveState(bool state)
+        {
+            gameObject.SetActive(state);
+        }
+
+        public void Return()
+        {
+            ParentPool.Return(this);
         }
     }
 }

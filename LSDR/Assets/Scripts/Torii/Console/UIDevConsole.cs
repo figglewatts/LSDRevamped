@@ -1,7 +1,5 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using Torii.Event;
 using UnityEngine;
@@ -12,30 +10,31 @@ namespace Torii.Console
 {
     public class UIDevConsole : MonoBehaviour
     {
+        public const int MAX_INSTANTIATED_OUTPUT_ROWS = 500;
         public UIDevConsoleStyle Style;
         public GameObject ConsoleOutputRowPrefab;
         public ToriiEvent OnConsoleOpen;
         public ToriiEvent OnConsoleClose;
-        
+
         public GameObject ConsoleOutputRowContainer;
         public InputField CommandInputField;
         public ScrollRect ContentScrollRect;
+        private readonly List<string> _commandHistory = new List<string>();
+        private readonly Queue<GameObject> _instantiatedOutputRows = new Queue<GameObject>();
+        private int _commandHistoryPos = -1;
 
         private bool _visible;
-        private readonly List<string> _commandHistory = new List<string>();
-        private int _commandHistoryPos = -1;
+
+        public void Awake() { Application.logMessageReceived += LogHandler; }
 
         public void Start()
         {
             _visible = gameObject.activeSelf;
-            
+
             CommandInputField.onEndEdit.AddListener(val =>
             {
                 // submit command on press enter
-                if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
-                {
-                    commandSubmit(val);
-                }
+                if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)) commandSubmit(val);
             });
 
             DevConsole.Register(this);
@@ -44,73 +43,53 @@ namespace Torii.Console
         public void Update()
         {
             if (EventSystem.current.currentSelectedGameObject != CommandInputField.gameObject) return;
-            
+
             // print completions on tab
-            if (Input.GetKeyDown(KeyCode.Tab))
-            {
-                PrintCompletions(CommandInputField.text);
-            }
-                
+            if (Input.GetKeyDown(KeyCode.Tab)) PrintCompletions(CommandInputField.text);
+
             // cycle command history with up/down arrows
             if (Input.GetKeyDown(KeyCode.UpArrow))
-            {
                 CycleCommandHistory(_commandHistoryPos + 1);
-            }
-            else if (Input.GetKeyDown(KeyCode.DownArrow))
-            {
-                CycleCommandHistory(_commandHistoryPos - 1);
-            }
+            else if (Input.GetKeyDown(KeyCode.DownArrow)) CycleCommandHistory(_commandHistoryPos - 1);
         }
 
         public void OnDestroy() { Application.logMessageReceived -= LogHandler; }
-        
+
         [Console]
         public void Clear()
         {
-            foreach (Transform child in ConsoleOutputRowContainer.transform)
-            {
-                Destroy(child.gameObject);
-            }
+            foreach (Transform child in ConsoleOutputRowContainer.transform) Destroy(child.gameObject);
         }
 
         public void CycleCommandHistory(int idx)
         {
             if (_commandHistory.Count == 0) return;
-            
-            if (idx < 0)
-            {
-                idx = 0;
-            }
+
+            if (idx < 0) idx = 0;
 
             if (idx > _commandHistory.Count - 1)
             {
                 CommandInputField.text = "";
                 idx = _commandHistory.Count - 1;
             }
-            
-            var command = _commandHistory[idx];
+
+            string command = _commandHistory[idx];
             CommandInputField.text = command;
             _commandHistoryPos = idx;
         }
 
         public void PrintCompletions(string command)
         {
-            var completions = DevConsole.Completions(command);
+            List<string> completions = DevConsole.Completions(command);
             StringBuilder sb = new StringBuilder("Available commands: ");
-            if (completions.Count == 0)
-            {
-                sb.Append("None!");
-            }
+            if (completions.Count == 0) sb.Append("None!");
 
-            sb.Append(String.Join(", ", completions));
+            sb.Append(string.Join(", ", completions));
 
             Debug.Log(sb.ToString());
         }
 
-        public void ToggleVisible()
-        {
-            SetVisible(!_visible);
-        }
+        public void ToggleVisible() { SetVisible(!_visible); }
 
         public void SetVisible(bool visible)
         {
@@ -126,14 +105,12 @@ namespace Torii.Console
                 OnConsoleOpen.Raise();
             }
             else
-            {
                 OnConsoleClose.Raise();
-            }
         }
 
         private void commandSubmit(string command)
         {
-            var result = DevConsole.Execute(command);
+            DevConsole.ExecutionResult result = DevConsole.Execute(command);
             result.Log();
             CommandInputField.text = string.Empty;
             selectInputField();
@@ -152,10 +129,15 @@ namespace Torii.Console
             instantiateOutputRow(logString, type);
             if (gameObject.activeSelf) StartCoroutine(updateScrollRect());
         }
-        
+
         private void instantiateOutputRow(string output, LogType type)
         {
-            GameObject outputRow = Instantiate(ConsoleOutputRowPrefab, ConsoleOutputRowContainer.transform, false);
+            GameObject outputRow = Instantiate(ConsoleOutputRowPrefab, ConsoleOutputRowContainer.transform,
+                worldPositionStays: false);
+            _instantiatedOutputRows.Enqueue(outputRow);
+
+            if (_instantiatedOutputRows.Count > MAX_INSTANTIATED_OUTPUT_ROWS)
+                Destroy(_instantiatedOutputRows.Dequeue());
 
             UIDevConsoleOutputRow outputRowScript = outputRow.GetComponent<UIDevConsoleOutputRow>();
             outputRowScript.OutputMessage = output;
@@ -198,10 +180,10 @@ namespace Torii.Console
                 }
             }
         }
-        
+
         /// <summary>
-        /// Used because ScrollRect takes a frame to update, so we need to wait for that
-        /// before we set the scrollbar position to the bottom
+        ///     Used because ScrollRect takes a frame to update, so we need to wait for that
+        ///     before we set the scrollbar position to the bottom
         /// </summary>
         private IEnumerator updateScrollRect()
         {
@@ -210,7 +192,7 @@ namespace Torii.Console
         }
     }
 
-    [CreateAssetMenu(menuName="Torii/DevConsoleStyle")]
+    [CreateAssetMenu(menuName = "Torii/DevConsoleStyle")]
     public class UIDevConsoleStyle : ScriptableObject
     {
         public Color LogMessageColor = Color.white;

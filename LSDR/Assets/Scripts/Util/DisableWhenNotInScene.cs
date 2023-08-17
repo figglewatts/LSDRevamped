@@ -1,4 +1,3 @@
-using System;
 using Torii.UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -17,7 +16,7 @@ namespace LSDR.Util
         {
             if (SceneManager.GetActiveScene().name != Scene)
             {
-                gameObject.SetActive(false);
+                gameObject.SetActive(value: false);
             }
         }
     }

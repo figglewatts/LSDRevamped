@@ -15,26 +15,15 @@ Shader "LSDR/ClassicDiffuse"
         {
             ZTest LEqual
 
-
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
             #pragma multi_compile_instancing
             #pragma multi_compile_fog
+
+            #define LSDR_CLASSIC
+            #define LSDR_CUTOUT_ALPHA
             #include "LSDR.cginc"
-
-            v2f vert(appdata v)
-            {
-                return classicVert(v);
-            }
-
-            sampler2D _MainTex;
-            fixed4 _Tint;
-
-            fragOut frag(v2f input)
-            {
-                return classicFragCutout(input, _MainTex, _Tint);
-            }
             ENDCG
         }
     }

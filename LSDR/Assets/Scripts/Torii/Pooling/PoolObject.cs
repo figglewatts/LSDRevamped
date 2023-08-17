@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace Torii.Pooling
@@ -6,8 +5,8 @@ namespace Torii.Pooling
     [ExecuteInEditMode] // to handle OnDestroy callbacks in editor
     public class PoolObject : MonoBehaviour
     {
+        public bool IsDestroyed;
         public IObjectPool ParentPool;
-        public bool IsDestroyed = false;
 
         public void OnDestroy()
         {

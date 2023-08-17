@@ -1,52 +1,57 @@
-﻿using System;
-using LSDR.Game;
+﻿using LSDR.Game;
 using Torii.Audio;
 using Torii.Binding;
-using UnityEngine;
 using Torii.UI;
+using UnityEngine;
 
 namespace LSDR.UI.Settings
 {
-	/// <summary>
-	/// Script for audio settings in LSDR main menu and pause menu.
-	/// </summary>
-	public class UIAudioSettings : MonoBehaviour
-	{
-		public SettingsSystem Settings;
-		
-		/// <summary>
-		/// Reference to the music volume slider. Set in inspector.
-		/// </summary>
-		public Slider MusicVolumeSlider;
+    /// <summary>
+    ///     Script for audio settings in LSDR main menu and pause menu.
+    /// </summary>
+    public class UIAudioSettings : MonoBehaviour
+    {
+        public SettingsSystem Settings;
 
-		/// <summary>
-		/// Reference to the SFX volume slider. Set in inspector.
-		/// </summary>
-		public Slider SFXVolumeSlider;
+        public Toggle UseOriginalSoundtrackToggle;
 
-		public AudioClip SoundTestClip;
+        /// <summary>
+        ///     Reference to the music volume slider. Set in inspector.
+        /// </summary>
+        public Slider MusicVolumeSlider;
 
-		public void Start()
-		{
-			// register data with the settings bind broker
-			Settings.SettingsBindBroker.RegisterData(MusicVolumeSlider);
-			Settings.SettingsBindBroker.RegisterData(SFXVolumeSlider);
+        /// <summary>
+        ///     Reference to the SFX volume slider. Set in inspector.
+        /// </summary>
+        public Slider SFXVolumeSlider;
 
-			// set to initial values from currently loaded settings
-			MusicVolumeSlider.value = Settings.Settings.MusicVolume;
-			SFXVolumeSlider.value = Settings.Settings.SFXVolume;
+        public AudioClip SoundTestClip;
 
-			// add value change listeners
-			MusicVolumeSlider.onValueChanged.AddListener(Settings.SetMusicVolume);
-			SFXVolumeSlider.onValueChanged.AddListener(Settings.SetSFXVolume);
+        public void Start()
+        {
+            // register data with the settings bind broker
+            Settings.SettingsBindBroker.RegisterData(MusicVolumeSlider);
+            Settings.SettingsBindBroker.RegisterData(SFXVolumeSlider);
+            Settings.SettingsBindBroker.RegisterData(UseOriginalSoundtrackToggle);
 
-			// bind the data
-			Settings.SettingsBindBroker.Bind(() => MusicVolumeSlider.value,
-				() => Settings.Settings.MusicVolume, BindingType.TwoWay);
-			Settings.SettingsBindBroker.Bind(() => SFXVolumeSlider.value,
-				() => Settings.Settings.SFXVolume, BindingType.TwoWay);
-		}
+            // set to initial values from currently loaded settings
+            MusicVolumeSlider.value = Settings.Settings.MusicVolume;
+            SFXVolumeSlider.value = Settings.Settings.SFXVolume;
+            UseOriginalSoundtrackToggle.isOn = Settings.Settings.UseOriginalSoundtrack;
 
-		public void SoundTest() { AudioPlayer.Instance.PlayClip(SoundTestClip, mixerGroup: "SFX"); }
-	}
+            // add value change listeners
+            MusicVolumeSlider.onValueChanged.AddListener(Settings.SetMusicVolume);
+            SFXVolumeSlider.onValueChanged.AddListener(Settings.SetSFXVolume);
+
+            // bind the data
+            Settings.SettingsBindBroker.Bind(() => MusicVolumeSlider.value,
+                () => Settings.Settings.MusicVolume, BindingType.TwoWay);
+            Settings.SettingsBindBroker.Bind(() => SFXVolumeSlider.value,
+                () => Settings.Settings.SFXVolume, BindingType.TwoWay);
+            Settings.SettingsBindBroker.Bind(() => UseOriginalSoundtrackToggle.isOn,
+                () => Settings.Settings.UseOriginalSoundtrack, BindingType.TwoWay);
+        }
+
+        public void SoundTest() { AudioPlayer.Instance.PlayClip(SoundTestClip, mixerGroup: "SFX"); }
+    }
 }

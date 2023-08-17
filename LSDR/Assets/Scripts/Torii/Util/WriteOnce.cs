@@ -3,17 +3,17 @@
 namespace Torii.Util
 {
     /// <summary>
-    /// Only write to a value once.
+    ///     Only write to a value once.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public sealed class WriteOnce<T>
     {
-        private bool _hasBeenSet = false;
+        private bool _hasBeenSet;
 
         private T _value;
         public T Value
         {
-            get { return _value; }
+            get => _value;
             set
             {
                 if (!_hasBeenSet)

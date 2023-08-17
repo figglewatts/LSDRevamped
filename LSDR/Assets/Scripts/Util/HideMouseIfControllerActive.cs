@@ -1,51 +1,24 @@
-using System;
-using InControl;
+using LSDR.InputManagement;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace LSDR.Util
 {
     public class HideMouseIfControllerActive : MonoBehaviour
     {
-        private Vector3 lastMousePos;
-        
-        public void Start()
+        public ControlSchemeLoaderSystem ControlScheme;
+
+        public void OnEnable()
         {
-            checkActiveDeviceController(InputManager.ActiveDevice);
-            InputManager.OnActiveDeviceChanged += checkActiveDeviceController;
-            InputManager.OnDeviceDetached += checkActiveDeviceController;
-            lastMousePos = Input.mousePosition;
+            checkActiveDeviceController(ControlScheme.LastUsedDevice);
+            ControlScheme.OnLastUsedDeviceChanged += checkActiveDeviceController;
         }
 
-        public void Update()
+        private void OnDisable()
         {
-            reactivateMouseIfMoved();
+            if (ControlScheme != null) ControlScheme.OnLastUsedDeviceChanged -= checkActiveDeviceController;
         }
 
-        private void reactivateMouseIfMoved()
-        {
-            Vector3 mouseDelta = Input.mousePosition - lastMousePos;
-            if (Cursor.visible == false && mouseDelta.sqrMagnitude > 1)
-            {
-                Cursor.visible = true;
-            }
-
-            lastMousePos = Input.mousePosition;
-        }
-
-        private bool deviceIsController(InputDevice device)
-        {
-            return !device.Name.Equals("None", StringComparison.InvariantCulture);
-        }
-
-        private void checkActiveDeviceController(InputDevice device)
-        {
-            Cursor.visible = !deviceIsController(InputManager.ActiveDevice);
-        }
-
-        private void OnDestroy()
-        {
-            InputManager.OnActiveDeviceChanged -= checkActiveDeviceController;
-            InputManager.OnDeviceDetached -= checkActiveDeviceController;
-        }
+        private void checkActiveDeviceController(InputDevice device) { Cursor.visible = device is Mouse; }
     }
 }

@@ -1,145 +1,174 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using InControl;
+using System.Linq;
 using LSDR.InputManagement;
+using LSDR.UI.Modal;
 using Torii.UI;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using Text = UnityEngine.UI.Text;
 
 namespace LSDR.UI.Settings
 {
     /// <summary>
-    /// Populate the control rebind menu container.
+    ///     Populate the control rebind menu container.
     /// </summary>
     public class UIRebindContainerPopulator : ContainerPopulator
     {
-        /// <summary>
-        /// A single item in the Rebind container.
-        /// </summary>
-        protected internal class RebindItem : MonoBehaviour
-        {
-            /// <summary>
-            /// The name of the action.
-            /// </summary>
-            public Text ActionName;
+        public ControlSchemeLoaderSystem ControlScheme;
 
-            /// <summary>
-            /// The primary button to rebind.
-            /// </summary>
-            public Button ActionAButton;
-
-            /// <summary>
-            /// The secondary button to rebind.
-            /// </summary>
-            public Button ActionBButton;
-        }
-
+        [Header("External stuff")]
+        public UIRebinder Rebinder;
+        public GameObject BindingChoiceModalPrefab;
         public RectTransform Template;
         public Text TemplateActionName;
-        public Button TemplateActionAButton;
-        public Button TemplateActionBButton;
+        public Button TemplateRebindButton;
+        public Button TemplateResetButton;
+        public Button TemplateDeleteButton;
+
+        protected ControlScheme _editingScheme;
+        protected InputActions _inputActions;
+        protected RebindableActions _internalRepresentation;
+        protected bool _validTemplate = true;
 
         /// <summary>
-        /// Get/set the scheme we're currently editing.
+        ///     Get/set the scheme we're currently editing.
         /// </summary>
         public ControlScheme EditingScheme
         {
-            get { return _editingScheme; }
+            get => _editingScheme;
             set
             {
+                Debug.Log("Setting editing scheme");
                 _editingScheme = value;
-                PopulateRebindContainer();
+                if (gameObject.activeInHierarchy) populateRebindContainer();
             }
         }
 
-        [SerializeField] private ControlScheme _editingScheme;
+        protected void Awake() { setupRebindRowTemplate(); }
 
-        private bool _validTemplate = true;
-
-        void Awake() { setupTemplate(); }
-
-        void Start()
+        protected void Start()
         {
-            if (_validTemplate) PopulateRebindContainer();
+            if (_validTemplate) populateRebindContainer();
         }
 
-        /// <summary>
-        /// Populate the container with rebind actions.
-        /// </summary>
-        public void PopulateRebindContainer()
+        protected UIBindingChoiceModal createBindingChoiceModal()
         {
-            List<GameObject> population = new List<GameObject>();
-            foreach (var action in _editingScheme.Actions.Actions)
+            return Instantiate(BindingChoiceModalPrefab).GetComponent<UIBindingChoiceModal>();
+        }
+
+        protected void refreshInternalRepresentation()
+        {
+            if (_editingScheme == null) return;
+
+            if (_inputActions == null) _inputActions = new InputActions();
+            _inputActions.LoadBindingOverridesFromJson(_editingScheme.SchemeString);
+            _internalRepresentation = new RebindableActions(_inputActions);
+        }
+
+        protected void syncBindingsToControlScheme()
+        {
+            _editingScheme.SyncToInputActions(_inputActions);
+            populateRebindContainer();
+        }
+
+        // populate the container with the rows for each action
+        protected void populateRebindContainer()
+        {
+            if (_editingScheme == null) return;
+
+            refreshInternalRepresentation();
+
+            var population = new List<GameObject>();
+            foreach (RebindableActions.ActionBindings bindingList in _internalRepresentation)
             {
-                population.Add(createRebindRow(action));
+                population.Add(createRebindRow(bindingList));
             }
 
             Populate(population);
         }
 
-        // create a single rebinding row
-        private GameObject createRebindRow(PlayerAction action)
+
+        // get the display string for the action overall (including a rundown of all bindings)
+        protected string getActionDisplayString(RebindableActions.ActionBindings actionBindings)
         {
-            RebindItem row = Instantiate(Template.gameObject, transform, true).GetComponent<RebindItem>();
-            row.gameObject.SetActive(true);
-            row.ActionName.text = action.Name;
-            row.ActionAButton.GetComponentInChildren<Text>().text = getBindingName(action.Bindings, 0);
-            row.ActionBButton.GetComponentInChildren<Text>().text = getBindingName(action.Bindings, 1);
-            row.ActionAButton.onClick.AddListener(() =>
-                rebindAction(action, row.ActionAButton, getBindingSource(action.Bindings, 0)));
-            row.ActionBButton.onClick.AddListener(() =>
-                rebindAction(action, row.ActionBButton, getBindingSource(action.Bindings, 1)));
-            row.gameObject.SetActive(false);
-            return row.gameObject;
+            string actionName = actionBindings.Action.name;
+            string bindings = string.Join(", ", actionBindings.IndexedBindings.Select(ab => ab.GetDisplayString()));
+            return $"{actionName} ({bindings})";
         }
 
-        // perform the rebind action
-        private void rebindAction(PlayerAction action, Button rebindButton, BindingSource binding)
+        // create a single rebinding row
+        protected GameObject createRebindRow(RebindableActions.ActionBindings actionBindings)
         {
-            action.ListenOptions = ControlActions.DefaultListenOptions;
-            action.ListenOptions.OnBindingAdded += (playerAction, source) => PopulateRebindContainer();
-            action.ListenOptions.OnBindingRejected += (playerAction, source, rejectionType) =>
+            RebindRow row = Instantiate(Template.gameObject).GetComponent<RebindRow>();
+            row.gameObject.SetActive(value: true);
+            row.ActionName.text = getActionDisplayString(actionBindings);
+            row.Bindings = actionBindings.IndexedBindings;
+
+            // hook up the rebinding buttons
+            if (row.HasMultiple)
             {
-                rebindButton.GetComponentInChildren<Text>().text = source.Name;
-            };
-            action.ListenOptions.OnBindingFound += (playerAction, source) =>
-            {
-                if (source == new KeyBindingSource(Key.Delete) ||
-                    source == new DeviceBindingSource(InputControlType.Select))
+                // InputAction has multiple bindings, hook up to present the user with a choice modal
+                row.RebindButton.onClick.AddListener(() =>
                 {
-                    playerAction.StopListeningForBinding();
-                    rebindButton.GetComponentInChildren<Text>().text = binding != null ? binding.Name : "<unbound>";
-                    return false;
-                }
-
-                return true;
-            };
-
-            if (binding != null)
-            {
-                action.ListenForBindingReplacing(binding);
+                    UIModalController.Instance.ShowModal(() =>
+                    {
+                        UIBindingChoiceModal bindingChoiceModal = createBindingChoiceModal();
+                        bindingChoiceModal.ProvideActionBindings(actionBindings,
+                            UIBindingChoiceModal.BindingChoiceType.Rebind);
+                        bindingChoiceModal.ProvideCancelAction(Rebinder.CancelAction);
+                        return bindingChoiceModal.gameObject;
+                    }, syncBindingsToControlScheme);
+                });
+                row.ResetButton.onClick.AddListener(() =>
+                {
+                    UIModalController.Instance.ShowModal(() =>
+                    {
+                        UIBindingChoiceModal bindingChoiceModal = createBindingChoiceModal();
+                        bindingChoiceModal.ProvideActionBindings(actionBindings,
+                            UIBindingChoiceModal.BindingChoiceType.Reset);
+                        bindingChoiceModal.ProvideCancelAction(Rebinder.CancelAction);
+                        return bindingChoiceModal.gameObject;
+                    }, syncBindingsToControlScheme);
+                });
+                row.DeleteButton.onClick.AddListener(() =>
+                {
+                    UIModalController.Instance.ShowModal(() =>
+                    {
+                        UIBindingChoiceModal bindingChoiceModal = createBindingChoiceModal();
+                        bindingChoiceModal.ProvideActionBindings(actionBindings,
+                            UIBindingChoiceModal.BindingChoiceType.Delete);
+                        bindingChoiceModal.ProvideCancelAction(Rebinder.CancelAction);
+                        return bindingChoiceModal.gameObject;
+                    }, syncBindingsToControlScheme);
+                });
             }
             else
             {
-                action.ListenForBinding();
+                // InputAction has only single binding, perform actions directly without choice modal
+                row.RebindButton.onClick.AddListener(() =>
+                {
+                    Rebinder.InteractiveRebind(actionBindings.IndexedBindings[index: 0], syncBindingsToControlScheme,
+                        syncBindingsToControlScheme);
+                });
+                row.ResetButton.onClick.AddListener(() =>
+                {
+                    actionBindings.IndexedBindings[index: 0].ResetBinding();
+                    syncBindingsToControlScheme();
+                });
+                row.DeleteButton.onClick.AddListener(() =>
+                {
+                    actionBindings.IndexedBindings[index: 0].DeleteBinding();
+                    syncBindingsToControlScheme();
+                });
             }
-
-            rebindButton.GetComponentInChildren<Text>().text = "<rebinding>";
-            Debug.Log($"Rebinding action: {action.Name}");
+            return row.gameObject;
         }
 
-        private BindingSource getBindingSource(ReadOnlyCollection<BindingSource> bindings, int index)
-        {
-            return bindings.Count > index ? bindings[index] : null;
-        }
-
-        private string getBindingName(ReadOnlyCollection<BindingSource> bindings, int index)
-        {
-            return bindings.Count > index ? bindings[index].Name : "<unbound>";
-        }
-
-        private void setupTemplate()
+        /// <summary>
+        ///     Set up the
+        /// </summary>
+        protected void setupRebindRowTemplate()
         {
             if (!Template)
             {
@@ -148,13 +177,36 @@ namespace LSDR.UI.Settings
                 return;
             }
 
+            _validTemplate = true;
             GameObject templateGo = Template.gameObject;
-            templateGo.SetActive(true);
-            RebindItem rebindItem = templateGo.AddComponent<RebindItem>();
-            rebindItem.ActionName = TemplateActionName;
-            rebindItem.ActionAButton = TemplateActionAButton;
-            rebindItem.ActionBButton = TemplateActionBButton;
-            templateGo.SetActive(false);
+            RebindRow rebindRow = templateGo.AddComponent<RebindRow>();
+            rebindRow.ActionName = TemplateActionName;
+            rebindRow.RebindButton = TemplateRebindButton;
+            rebindRow.ResetButton = TemplateResetButton;
+            rebindRow.DeleteButton = TemplateDeleteButton;
+            templateGo.SetActive(value: false);
+        }
+
+
+        /// <summary>
+        ///     A row in the rebind container. Used for rebinding an entire action (which may have multiple bindings).
+        /// </summary>
+        protected class RebindRow : MonoBehaviour
+        {
+            /// <summary>
+            ///     The name of the action.
+            /// </summary>
+            public Text ActionName;
+
+            public Button RebindButton;
+
+            public Button ResetButton;
+
+            public Button DeleteButton;
+
+            public List<IndexedActionBinding> Bindings;
+
+            public bool HasMultiple => Bindings?.Count > 0;
         }
     }
 }

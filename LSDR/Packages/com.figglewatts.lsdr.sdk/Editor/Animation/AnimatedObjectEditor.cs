@@ -1,5 +1,5 @@
 using LSDR.SDK.Animation;
-using LSDR.SDK.Editor.GUI;
+using LSDR.SDK.Editor.UI;
 using UnityEditor;
 using UnityEngine;
 
@@ -8,11 +8,11 @@ namespace LSDR.SDK.Editor.Animation
     [CustomEditor(typeof(AnimatedObject))]
     public class AnimatedObjectEditor : UnityEditor.Editor
     {
+        protected bool _animationsFoldoutOpen = true;
         protected Animator _animator;
-        protected AnimatedObject _target;
 
         protected int _currentlyPlayingAnimation = -1;
-        protected bool _animationsFoldoutOpen = true;
+        protected AnimatedObject _target;
 
         public void OnEnable()
         {
@@ -30,7 +30,7 @@ namespace LSDR.SDK.Editor.Animation
         {
             serializedObject.Update();
 
-            var clips = getClips();
+            AnimationClip[] clips = getClips();
 
             _animationsFoldoutOpen = EditorGUILayout.Foldout(_animationsFoldoutOpen, "Animations");
             if (_animationsFoldoutOpen)
@@ -50,12 +50,13 @@ namespace LSDR.SDK.Editor.Animation
         {
             EditorGUILayout.BeginHorizontal();
             {
-                GUILayout.Space(10);
-                EditorGUILayout.LabelField(EditorGUIUtility.IconContent("AnimationClip Icon"), GUILayout.Width(20));
+                GUILayout.Space(pixels: 10);
+                EditorGUILayout.LabelField(EditorGUIUtility.IconContent("AnimationClip Icon"),
+                    GUILayout.Width(width: 20));
                 EditorGUILayout.LabelField(clip.name);
 
                 if (ToggleButton.OnGUI(_currentlyPlayingAnimation == clipIndex,
-                    EditorGUIUtility.IconContent("PlayButton"), GUILayout.Width(30)))
+                        EditorGUIUtility.IconContent("PlayButton"), GUILayout.Width(width: 30)))
                 {
                     if (_currentlyPlayingAnimation == clipIndex)
                     {
@@ -96,17 +97,17 @@ namespace LSDR.SDK.Editor.Animation
 
         protected void resetAnimation()
         {
-            var clip = getClip(_currentlyPlayingAnimation);
-            clip.SampleAnimation(_target.gameObject, 0);
-            _animator.Play(clip.name, 0, 0f);
-            _animator.Update(0);
+            AnimationClip clip = getClip(_currentlyPlayingAnimation);
+            clip.SampleAnimation(_target.gameObject, time: 0);
+            _animator.Play(clip.name, layer: 0, normalizedTime: 0f);
+            _animator.Update(deltaTime: 0);
         }
 
         protected void updateAnimationPreview()
         {
             if (_currentlyPlayingAnimation == -1) return;
 
-            var clip = getClip(_currentlyPlayingAnimation);
+            AnimationClip clip = getClip(_currentlyPlayingAnimation);
             clip.SampleAnimation(_target.gameObject, Time.deltaTime);
             _animator.Update(Time.deltaTime);
         }

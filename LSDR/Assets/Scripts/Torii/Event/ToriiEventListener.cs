@@ -7,7 +7,7 @@ namespace Torii.Event
     public class ToriiEventListener : MonoBehaviour
     {
         public ToriiEvent Event;
-        
+
         public UnityEvent Response;
 
         private void OnEnable()

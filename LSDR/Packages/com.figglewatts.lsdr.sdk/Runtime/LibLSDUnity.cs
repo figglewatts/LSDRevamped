@@ -1,14 +1,16 @@
 using System.Collections.Generic;
+using System.Linq;
 using libLSD.Formats;
 using libLSD.Formats.Packets;
 using libLSD.Types;
+using LSDR.SDK.Assets;
 using UnityEngine;
 
-namespace LSDR.SDK.IO
+namespace LSDR.SDK
 {
     /// <summary>
-    /// Contains numerous utility methods for converting data in original game format to formats Unity likes.
-    /// Utilises LibLSD to do this.
+    ///     Contains numerous utility methods for converting data in original game format to formats Unity likes.
+    ///     Utilises LibLSD to do this.
     /// </summary>
     public static class LibLSDUnity
     {
@@ -16,21 +18,11 @@ namespace LSDR.SDK.IO
         public const int VRAM_WIDTH = 2056;
         public const int VRAM_HEIGHT = 512;
 
-        /// <summary>
-        /// A struct to store data from a PS1 TIM file.
-        /// </summary>
-        public struct TimData
-        {
-            public IColor[,] Colors;
-            public int Width;
-            public int Height;
-        }
-
         public static List<GameObject> CreateGameObjectsFromMOM(MOM mom, Material mat)
         {
-            var meshes = CreateMeshesFromTMD(mom.TMD);
-            List<GameObject> meshObjects = new List<GameObject>();
-            foreach (var mesh in meshes)
+            List<Mesh> meshes = CreateMeshesFromTMD(mom.TMD);
+            var meshObjects = new List<GameObject>();
+            foreach (Mesh mesh in meshes)
             {
                 GameObject meshObj = new GameObject($"mesh {meshObjects.Count}");
                 MeshRenderer mr = meshObj.AddComponent<MeshRenderer>();
@@ -44,17 +36,18 @@ namespace LSDR.SDK.IO
         }
 
         /// <summary>
-        /// Create a list of meshes based on the contents of a TMD model file.
+        ///     Create a list of meshes based on the contents of a TMD model file.
         /// </summary>
         /// <param name="tmd">The loaded TMD to use.</param>
+        /// <param name="uvMaterialOverrides">Optional - the list of UV material overrides to apply.</param>
         /// <returns>The loaded list of meshes.</returns>
-        public static List<Mesh> CreateMeshesFromTMD(TMD tmd)
+        public static List<Mesh> CreateMeshesFromTMD(TMD tmd, List<UVMaterialOverride> uvMaterialOverrides = null)
         {
-            List<Mesh> meshList = new List<Mesh>();
+            var meshList = new List<Mesh>();
 
-            foreach (var obj in tmd.ObjectTable)
+            foreach (TMDObject obj in tmd.ObjectTable)
             {
-                Mesh m = MeshFromTMDObject(obj);
+                Mesh m = MeshFromTMDObject(obj, uvMaterialOverrides);
                 meshList.Add(m);
             }
 
@@ -62,23 +55,44 @@ namespace LSDR.SDK.IO
         }
 
         /// <summary>
-        /// Create a mesh from an object stored inside a TMD model file.
+        ///     Create a mesh from an object stored inside a TMD model file.
         /// </summary>
         /// <param name="obj">The TMD object to create a mesh from.</param>
+        /// <param name="uvMaterialOverrides">Optional - the list of UV material overrides to apply.</param>
         /// <returns>The Mesh created from the object.</returns>
-        public static Mesh MeshFromTMDObject(TMDObject obj)
+        public static Mesh MeshFromTMDObject(TMDObject obj, List<UVMaterialOverride> uvMaterialOverrides = null)
         {
             // create the mesh, and lists of vertices, normals, colors, uvs, and indices
             Mesh result = new Mesh();
-            List<Vector3> verts = new List<Vector3>();
-            List<Vector3> normals = new List<Vector3>();
-            List<Color32> colors = new List<Color32>();
-            List<Vector2> uvs = new List<Vector2>();
-            List<int> indices = new List<int>();
-            List<int> alphaBlendIndices = new List<int>(); // alpha blended polygons are stored in a submesh
+            var verts = new List<Vector3>();
+            var normals = new List<Vector3>();
+            var colors = new List<Color32>();
+            var uvs = new List<Vector2>();
+            var indices = new List<int>();
+            var alphaBlendIndices = new List<int>(); // alpha blended polygons are stored in a submesh
+
+            // material overrides are also stored in submeshes
+            List<List<int>> materialOverrideIndices = uvMaterialOverrides == null
+                ? new List<List<int>>()
+                : new List<List<int>>(uvMaterialOverrides.Select(o => new List<int>()));
+
+            // local function used to check if a set of UV coords has a material override
+            bool uvHasOverride(Vector2 uv, out int overrideIndex)
+            {
+                for (int i = 0; i < uvMaterialOverrides.Count; i++)
+                {
+                    if (uvMaterialOverrides[i].UVRect.Contains(uv))
+                    {
+                        overrideIndex = i;
+                        return true;
+                    }
+                }
+                overrideIndex = -1;
+                return false;
+            }
 
             // TMD objects are built from 'primitives'
-            foreach (var prim in obj.Primitives)
+            foreach (TMDPrimitivePacket prim in obj.Primitives)
             {
                 // currently only polygon primitives are supported
                 if (prim.Type != TMDPrimitivePacket.Types.POLYGON) continue;
@@ -95,7 +109,7 @@ namespace LSDR.SDK.IO
                 ITMDLitPrimitivePacket litPrimitivePacket = prim.PacketData as ITMDLitPrimitivePacket;
 
                 // for each vertex in the primitive
-                List<int> polyIndices = new List<int>();
+                var polyIndices = new List<int>();
                 int[] packetIndices = new int[primitivePacket.Vertices.Length];
                 for (int i = 0; i < primitivePacket.Vertices.Length; i++)
                 {
@@ -138,7 +152,7 @@ namespace LSDR.SDK.IO
                         // calculate which texture page we're on
                         int texPage = texturedPrimitivePacket.Texture.TexturePageNumber;
 
-                        int texPageXPos = ((texPage % 16) * 128) - 640;
+                        int texPageXPos = texPage % 16 * 128 - 640;
                         int texPageYPos = texPage < 16 ? 256 : 0;
 
                         // derive UV coords from the texture page
@@ -151,6 +165,16 @@ namespace LSDR.SDK.IO
                             (vramYPos - 0.5f) / VRAM_HEIGHT; // half-texel correction to prevent bleeding
 
                         vertUV = new Vector2(uCoord, vCoord);
+
+                        // handle UV material overrides
+                        if (uvMaterialOverrides != null && uvHasOverride(vertUV, out int materialOverrideIndex))
+                        {
+                            // make sure we're adding this primitive to the correct submesh for the override
+                            indicesList = materialOverrideIndices[materialOverrideIndex];
+
+                            // map the UV to the overridden material
+                            vertUV = uvMaterialOverrides[materialOverrideIndex].MapUVInRect(vertUV);
+                        }
                     }
 
                     // add all computed aspects of vertex to lists
@@ -200,179 +224,58 @@ namespace LSDR.SDK.IO
             result.uv = uvs.ToArray();
 
             // regular mesh
-            if (indices.Count >= 3)
-            {
-                result.SetTriangles(indices, 0, false, 0);
-            }
+            result.subMeshCount = 2;
+            result.SetTriangles(indices, submesh: 0, calculateBounds: false, baseVertex: 0);
 
             // alpha blended mesh
-            if (alphaBlendIndices.Count >= 3)
+            result.SetTriangles(alphaBlendIndices, submesh: 1, calculateBounds: false, baseVertex: 0);
+
+            // material override meshes
+            if (uvMaterialOverrides != null)
             {
-                result.subMeshCount = 2;
-                result.SetTriangles(alphaBlendIndices, 1, false, 0);
+                for (int i = 0; i < uvMaterialOverrides.Count; i++)
+                {
+                    result.subMeshCount++; // inc submesh so we have empty submeshes
+
+                    // ignore materials without any indices
+                    if (materialOverrideIndices[i].Count == 0) continue;
+                    result.SetTriangles(materialOverrideIndices[i].ToArray(), 2 + i, calculateBounds: false,
+                        baseVertex: 0);
+                }
             }
 
             return result;
         }
 
         /// <summary>
-        /// Create an LBD tilemap GameObject from an LSD level tileset.
-        /// </summary>
-        /// <param name="lbd">The loaded LBD file.</param>
-        /// <returns>A GameObject containing loaded meshes for all tiles in their layout.</returns>
-        public static GameObject CreateLBDTileMap(LBD lbd)
-        {
-            GameObject lbdTilemap = new GameObject("LBD TileMap");
-            List<CombineInstance>
-                meshesCreated = new List<CombineInstance>(); // we're combining meshes into a collision mesh
-
-            // for each tile in the tilemap
-            int tileNo = 0;
-            foreach (LBDTile tile in lbd.TileLayout)
-            {
-                int x = tileNo / lbd.Header.TileWidth;
-                int y = tileNo % lbd.Header.TileWidth;
-
-                // create an LBD tile if we should draw it
-                if (tile.DrawTile)
-                {
-                    GameObject lbdTile = createLBDTile(tile, lbd.ExtraTiles, x, y, lbd.Tiles, meshesCreated);
-                    lbdTile.transform.SetParent(lbdTilemap.transform);
-                }
-
-                tileNo++;
-            }
-
-            // combine all tiles into mesh for efficient collision
-            Mesh combined = new Mesh();
-            combined.CombineMeshes(meshesCreated.ToArray(), true);
-            MeshCollider mc = lbdTilemap.AddComponent<MeshCollider>();
-            mc.sharedMesh = combined;
-
-            return lbdTilemap;
-        }
-
-        // create an LBD tile GameObject
-        private static GameObject createLBDTile(LBDTile tile,
-            LBDTile[] extraTiles,
-            int x,
-            int y,
-            TMD tilesTmd,
-            List<CombineInstance> meshesCreated)
-        {
-            // create the GameObject for the base tile
-            GameObject lbdTile = createSingleLBDTile(tile, x, y, tilesTmd, meshesCreated);
-
-            // now see if it has any extra tiles, and create those
-            LBDTile curTile = tile;
-            int i = 0;
-            while (curTile.ExtraTileIndex >= 0 && i <= 1)
-            {
-                LBDTile extraTile = extraTiles[curTile.ExtraTileIndex];
-                GameObject extraTileObj = createSingleLBDTile(extraTile, x, y, tilesTmd, meshesCreated);
-                extraTileObj.transform.SetParent(lbdTile.transform, true); // parent them to original tile
-                curTile = extraTile;
-                i++;
-            }
-
-            return lbdTile;
-        }
-
-        // create a single LBD tile GameObject (not including extra tiles)
-        private static GameObject createSingleLBDTile(LBDTile tile,
-            int x,
-            int y,
-            TMD tilesTmd,
-            List<CombineInstance> meshesCreated)
-        {
-            // create the GameObject and add/setup necessary components
-            GameObject lbdTile = new GameObject($"Tile {tile.TileType}");
-            MeshFilter mf = lbdTile.AddComponent<MeshFilter>();
-            MeshRenderer mr = lbdTile.AddComponent<MeshRenderer>();
-            TMDObject tileObj = tilesTmd.ObjectTable[tile.TileType];
-            Mesh tileMesh = MeshFromTMDObject(tileObj);
-            mf.mesh = tileMesh;
-
-            // the renderer needs to use virtual PSX Vram as its materials
-            //mr.sharedMaterials = new[] {PsxVram.VramMaterial, PsxVram.VramAlphaBlendMaterial};
-
-            // rotate the tile based on its direction
-            switch (tile.TileDirection)
-            {
-                case LBDTile.TileDirections.Deg90:
-                {
-                    lbdTile.transform.Rotate(Vector3.up, 90);
-                    break;
-                }
-                case LBDTile.TileDirections.Deg180:
-                {
-                    lbdTile.transform.Rotate(Vector3.up, 180);
-                    break;
-                }
-                case LBDTile.TileDirections.Deg270:
-                {
-                    lbdTile.transform.Rotate(Vector3.up, 270);
-                    break;
-                }
-            }
-
-            // set the tile's height
-            lbdTile.transform.position = new Vector3(x, -tile.TileHeight, y);
-
-            // make a CombineInstance for combining all tiles into one mesh later on
-            var localToWorldMatrix = lbdTile.transform.localToWorldMatrix;
-            CombineInstance combine = new CombineInstance()
-            {
-                mesh = tileMesh,
-                transform = localToWorldMatrix,
-                subMeshIndex = 0
-            };
-            meshesCreated.Add(combine);
-
-            // if tile has transparent part, do the same for the transparent mesh
-            if (tileMesh.subMeshCount > 1)
-            {
-                CombineInstance combineTrans = new CombineInstance()
-                {
-                    mesh = tileMesh,
-                    transform = localToWorldMatrix,
-                    subMeshIndex = 1
-                };
-                meshesCreated.Add(combineTrans);
-            }
-
-            return lbdTile;
-        }
-
-        /// <summary>
-        /// Get a Unity Texture2D from a loaded TIX image archive.
+        ///     Get a Unity Texture2D from a loaded TIX image archive.
         /// </summary>
         /// <param name="tix">The TIX file loaded.</param>
         /// <returns>A Texture2D containing all images inside the TIX archive laid out as if in VRAM.</returns>
         public static Texture2D GetTextureFromTIX(TIX tix)
         {
             // create a texture 2D with the required format
-            Texture2D tex = new Texture2D(VRAM_WIDTH, VRAM_HEIGHT, TextureFormat.ARGB32, false)
+            Texture2D tex = new Texture2D(VRAM_WIDTH, VRAM_HEIGHT, TextureFormat.ARGB32, mipChain: false)
             {
                 wrapMode = TextureWrapMode.Clamp, filterMode = FilterMode.Point, mipMapBias = -0.5f, anisoLevel = 2
             };
 
             // fill the texture with a white colour
-            Color[] fill = new Color[VRAM_WIDTH * VRAM_HEIGHT];
+            var fill = new Color[VRAM_WIDTH * VRAM_HEIGHT];
             for (int i = 0; i < fill.Length; i++)
             {
-                fill[i] = new Color(1, 1, 1, 1);
+                fill[i] = new Color(r: 1, g: 1, b: 1, a: 1);
             }
 
             tex.SetPixels(fill);
             tex.Apply();
 
             // for each image within the archive, load it and paint it on the 'canvas' we created above
-            foreach (var chunk in tix.Chunks)
+            foreach (TIXChunk chunk in tix.Chunks)
             {
-                foreach (var tim in chunk.TIMs)
+                foreach (TIM tim in chunk.TIMs)
                 {
-                    var image = GetImageDataFromTIM(tim);
+                    TimData image = GetImageDataFromTIM(tim);
                     int actualXPos = (tim.PixelData.XPosition - 320) * 2;
                     int actualYPos = 512 - tim.PixelData.YPosition - image.Height;
 
@@ -385,7 +288,7 @@ namespace LSDR.SDK.IO
         }
 
         /// <summary>
-        /// Load a PS1 TIM image to a Unity Texture2D.
+        ///     Load a PS1 TIM image to a Unity Texture2D.
         /// </summary>
         /// <param name="tim">The loaded TIM image.</param>
         /// <param name="clutIndex">The index of the CLUT to get the texture from.</param>
@@ -397,7 +300,7 @@ namespace LSDR.SDK.IO
             TimData data = GetImageDataFromTIM(tim, clutIndex);
 
             // create a texture with the required format
-            Texture2D tex = new Texture2D(data.Width, data.Height, TextureFormat.ARGB32, false)
+            Texture2D tex = new Texture2D(data.Width, data.Height, TextureFormat.ARGB32, mipChain: false)
             {
                 wrapMode = TextureWrapMode.Clamp, filterMode = FilterMode.Point
             };
@@ -410,7 +313,7 @@ namespace LSDR.SDK.IO
         }
 
         /// <summary>
-        /// Get the pixels and width/height from a loaded TIM.
+        ///     Get the pixels and width/height from a loaded TIM.
         /// </summary>
         /// <param name="tim">The loaded TIM.</param>
         /// <param name="clutIndex">The index of the CLUT to get the texture from.</param>
@@ -419,13 +322,13 @@ namespace LSDR.SDK.IO
         {
             TimData data;
             data.Colors = tim.GetImage(clutIndex);
-            data.Width = data.Colors.GetLength(1);
-            data.Height = data.Colors.GetLength(0);
+            data.Width = data.Colors.GetLength(dimension: 1);
+            data.Height = data.Colors.GetLength(dimension: 0);
             return data;
         }
 
         /// <summary>
-        /// Convert a TimData struct to an array of Colors to be used for setting pixels in a texture.
+        ///     Convert a TimData struct to an array of Colors to be used for setting pixels in a texture.
         /// </summary>
         /// <param name="data">The TimData to use.</param>
         /// <param name="flip">Whether or not to flip the image.</param>
@@ -433,7 +336,7 @@ namespace LSDR.SDK.IO
         public static Color[] TimDataToColors(TimData data, bool flip = true)
         {
             // create the array
-            Color[] imageData = new Color[data.Colors.Length];
+            var imageData = new Color[data.Colors.Length];
 
             // iterate through each pixel and create its entry in the array
             int i = 0;
@@ -465,6 +368,16 @@ namespace LSDR.SDK.IO
             }
 
             return imageData;
+        }
+
+        /// <summary>
+        ///     A struct to store data from a PS1 TIM file.
+        /// </summary>
+        public struct TimData
+        {
+            public IColor[,] Colors;
+            public int Width;
+            public int Height;
         }
     }
 }

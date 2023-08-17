@@ -1,28 +1,27 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using SimpleJSON;
 using Torii.Exceptions;
-using Torii.UI;
 using Torii.Util;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Torii.Resource
 {
     /// <summary>
-    /// ResourceManager is used to load/cache resources at runtime.
+    ///     ResourceManager is used to load/cache resources at runtime.
     /// </summary>
     public static class ResourceManager
     {
         // the cache of loaded resources, indexed by path they were loaded from
         private static readonly Dictionary<string, GenericResource> _resources;
-        
+
         // the resource handlers to use by Type
         private static readonly Dictionary<Type, IResourceHandler> _handlers;
-        
+
         // special handling for Unity text assets
         private static readonly Dictionary<Type, ITextAssetHandler> _textAssetProcessors;
-        
+
         // the loaded ResourceLifespans
         private static readonly ResourceLifespans _lifespans;
 
@@ -30,7 +29,7 @@ namespace Torii.Resource
         //private static readonly string lifespansDataFileName = "resourcelifespans.json";
 
         /// <summary>
-        /// Statically initialize the ResourceManager.
+        ///     Statically initialize the ResourceManager.
         /// </summary>
         static ResourceManager()
         {
@@ -41,7 +40,7 @@ namespace Torii.Resource
         }
 
         /// <summary>
-        /// Remove all resources with the given lifespan from the cache.
+        ///     Remove all resources with the given lifespan from the cache.
         /// </summary>
         /// <param name="span">The lifespan, for example "level".</param>
         /// <exception cref="ArgumentException">If the lifespan didn't exist.</exception>
@@ -51,8 +50,8 @@ namespace Torii.Resource
             int spanID = _lifespans[span];
 
             // get the list of resources to remove
-            List<string> toRemove = new List<string>();
-            foreach (var res in _resources)
+            var toRemove = new List<string>();
+            foreach (KeyValuePair<string, GenericResource> res in _resources)
             {
                 if (res.Value.Lifespan == spanID)
                 {
@@ -70,7 +69,7 @@ namespace Torii.Resource
                         _resources.Remove(key);
                         break;
                     case ResourceType.Unity:
-                        Resources.UnloadAsset((UnityEngine.Object)_resources[key].GetData());
+                        Resources.UnloadAsset((Object)_resources[key].GetData());
                         _resources.Remove(key);
                         break;
                 }
@@ -78,7 +77,7 @@ namespace Torii.Resource
         }
 
         /// <summary>
-        /// Unity assets are handled differently. This unloads all unused Unity resources.
+        ///     Unity assets are handled differently. This unloads all unused Unity resources.
         /// </summary>
         public static void ClearUnusedUnityAssets()
         {
@@ -86,7 +85,7 @@ namespace Torii.Resource
         }
 
         /// <summary>
-        /// Load a resource with type T from a location on disk. Loads it for global lifespan.
+        ///     Load a resource with type T from a location on disk. Loads it for global lifespan.
         /// </summary>
         /// <param name="path">The path to the resource.</param>
         /// <typeparam name="T">The type of the resource.</typeparam>
@@ -97,7 +96,7 @@ namespace Torii.Resource
         }
 
         /// <summary>
-        /// Load a resource with type T from a location on disk, and give it a lifespan.
+        ///     Load a resource with type T from a location on disk, and give it a lifespan.
         /// </summary>
         /// <param name="path">The path to the resource.</param>
         /// <param name="span">The lifespan of the resource.</param>
@@ -110,7 +109,7 @@ namespace Torii.Resource
         }
 
         /// <summary>
-        /// Load a resource with type T from a location on disk, and give it a lifespan with an ID.
+        ///     Load a resource with type T from a location on disk, and give it a lifespan with an ID.
         /// </summary>
         /// <param name="path">The path to the resource.</param>
         /// <param name="span">The lifespan of the resource.</param>
@@ -121,7 +120,7 @@ namespace Torii.Resource
         public static T Load<T>(string path, int span)
         {
             Resource<T> res;
-            
+
             // check the cache first, as this would be cheaper
             if (checkCache(path, out res)) return res.Data;
 
@@ -150,7 +149,7 @@ namespace Torii.Resource
         }
 
         /// <summary>
-        /// Load a resource from Unity's Resources.
+        ///     Load a resource from Unity's Resources.
         /// </summary>
         /// <param name="path">The path to the resource (in Unity's assets).</param>
         /// <typeparam name="T">The type of the resource.</typeparam>
@@ -161,7 +160,7 @@ namespace Torii.Resource
         }
 
         /// <summary>
-        /// Load a resource from Unity's resource.
+        ///     Load a resource from Unity's resource.
         /// </summary>
         /// <param name="path">The path to the resource (in Unity's assets).</param>
         /// <param name="span">The lifespan to give this resource.</param>
@@ -174,7 +173,7 @@ namespace Torii.Resource
         }
 
         /// <summary>
-        /// Load a resource from Unity's resource.
+        ///     Load a resource from Unity's resource.
         /// </summary>
         /// <param name="path">The path to the resource (in Unity's assets).</param>
         /// <param name="span">The lifespan to give this resource.</param>
@@ -201,7 +200,7 @@ namespace Torii.Resource
                 {
                     throw new ToriiResourceLoadException("Unable to load resource: '" + path + "'", typeof(T));
                 }
-                
+
                 res = new Resource<T>(span)
                 {
                     Data = (T)handler.Process(textAsset)
@@ -230,7 +229,7 @@ namespace Torii.Resource
         }
 
         /// <summary>
-        /// Used to register a loaded resource into the cache. Only call this from within custom resource handlers.
+        ///     Used to register a loaded resource into the cache. Only call this from within custom resource handlers.
         /// </summary>
         /// <param name="path">The path of the resource you're loading.</param>
         /// <param name="r">The instance of the resource loaded.</param>
@@ -240,7 +239,7 @@ namespace Torii.Resource
         }
 
         /// <summary>
-        /// Register a new resource handler.
+        ///     Register a new resource handler.
         /// </summary>
         /// <param name="handler">An instance of the handler.</param>
         public static void RegisterHandler(IResourceHandler handler)
@@ -249,7 +248,7 @@ namespace Torii.Resource
         }
 
         /// <summary>
-        /// Register a new text asset processor.
+        ///     Register a new text asset processor.
         /// </summary>
         /// <param name="handler">An instance of the text asset handler.</param>
         public static void RegisterTextAssetProcessor(ITextAssetHandler handler)

@@ -7,7 +7,7 @@ using Torii.Resource;
 namespace LSDR.IO.ResourceHandlers
 {
     /// <summary>
-    /// Load a TIX texture archive from disk into a Texture2D.
+    ///     Load a TIX texture archive from disk into a Texture2D.
     /// </summary>
     public class TIXTexture2DHandler : IResourceHandler
     {
@@ -22,7 +22,7 @@ namespace LSDR.IO.ResourceHandlers
             }
 
             TIXTexture2D tixTex = new TIXTexture2D(tix);
-            Resource<TIXTexture2D> resource = new Resource<TIXTexture2D>(tixTex, span);
+            var resource = new Resource<TIXTexture2D>(tixTex, span);
             ResourceManager.RegisterResource(path, resource);
         }
     }

@@ -1,23 +1,18 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 namespace Torii.Resource
 {
     /// <summary>
-    /// Store a resource with a given type.
+    ///     Store a resource with a given type.
     /// </summary>
     /// <typeparam name="T">The type of the resource.</typeparam>
     public class Resource<T> : GenericResource
     {
         /// <summary>
-        /// The data stored on this resource.
+        ///     The data stored on this resource.
         /// </summary>
         public T Data;
-        
+
         /// <summary>
-        /// Create a new resource with some data, a lifespan, and a type.
+        ///     Create a new resource with some data, a lifespan, and a type.
         /// </summary>
         /// <param name="data">The data to store on this resource.</param>
         /// <param name="lifespan">This resource's lifespan ID.</param>
@@ -28,7 +23,7 @@ namespace Torii.Resource
         }
 
         /// <summary>
-        /// Create an empty resource.
+        ///     Create an empty resource.
         /// </summary>
         /// <param name="lifespan">The lifespan.</param>
         /// <param name="type">What kind of resource it is.</param>
@@ -38,7 +33,7 @@ namespace Torii.Resource
         }
 
         /// <summary>
-        /// Get this resource's data.
+        ///     Get this resource's data.
         /// </summary>
         /// <returns>This resource's data.</returns>
         public override object GetData()

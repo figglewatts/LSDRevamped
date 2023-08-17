@@ -5,9 +5,9 @@ namespace Torii.Coroutine
 {
     public class Marathon : IDisposable
     {
-        private readonly float _timeThresholdMs;
         private readonly Stopwatch _stopwatch;
-        
+        private readonly float _timeThresholdMs;
+
         public Marathon(float timeThresholdMs)
         {
             _timeThresholdMs = timeThresholdMs;
@@ -15,12 +15,17 @@ namespace Torii.Coroutine
             _stopwatch.Start();
         }
 
+        public void Dispose()
+        {
+            _stopwatch.Stop();
+        }
+
         public bool Run(Action action, bool lastResult)
         {
             if (lastResult) _stopwatch.Start();
 
             action();
-            
+
             if (_stopwatch.ElapsedMilliseconds > _timeThresholdMs)
             {
                 _stopwatch.Reset();
@@ -28,11 +33,6 @@ namespace Torii.Coroutine
             }
 
             return false;
-        }
-        
-        public void Dispose()
-        {
-            _stopwatch.Stop();
         }
     }
 }

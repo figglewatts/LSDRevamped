@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using LSDR.Game;
-using Torii.UI;
+﻿using Torii.UI;
 using UnityEngine;
 
 namespace LSDR.UI.Title
@@ -14,10 +11,10 @@ namespace LSDR.UI.Title
 
         public void ShowTitleScreen()
         {
-            LoadingIcon.SetActive(false);
-            Background.SetActive(false);
-            MainMenu.SetActive(true);
-            ToriiFader.Instance.FadeOut(Color.black, 5, null, 1);
+            LoadingIcon.SetActive(value: false);
+            Background.SetActive(value: false);
+            MainMenu.SetActive(value: true);
+            ToriiFader.Instance.FadeOut(Color.black, duration: 5, onFinish: null, initialAlpha: 1);
         }
     }
 }

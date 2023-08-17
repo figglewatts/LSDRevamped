@@ -3,13 +3,19 @@
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9b35e6c0cc5bd4d499900083673fe5d0, type: 3}
   m_Name: GameLoadSystem
   m_EditorClassIdentifier: 
-  OnGameDataLoaded: {fileID: 11400000, guid: e299a6f2b9b55d84cbef028b2f403127, type: 2}
-  LBDTilePool: {fileID: 11400000, guid: 4a10cf5eb4b06594eabec4c9f10b6d6f, type: 2}
+  ModLoaderSystem: {fileID: 11400000, guid: 56103b5e57f0e7e4693f2f9a6d478368, type: 2}
+  ControlSchemeLoaderSystem: {fileID: 11400000, guid: 405c546a29ee78f4fa5e7480a11557a4,
+    type: 2}
+  SettingsSystem: {fileID: 11400000, guid: 12ecd5989d3bcc549bcacf027048a5bd, type: 2}
+  GameSaveSystem: {fileID: 11400000, guid: dc1612e2640a30c4491ae5d369fea962, type: 2}
+  DreamSystem: {fileID: 11400000, guid: 7980ba7eb97e9a54a9e6fd65c8a8d2a3, type: 2}
+  OnGameLoaded: {fileID: 11400000, guid: 1812e240addef4e0d9d43cfb70be6143, type: 2}

@@ -1,5 +1,5 @@
 using System.IO;
-using LSDR.Entities.Dream;
+using LSDR.SDK;
 using Torii.Util;
 
 namespace LSDR.Util
@@ -8,7 +8,7 @@ namespace LSDR.Util
     {
         public static string GetTIXPathFromLBDPath(string lbdPath, TextureSet textureSet)
         {
-            var lbdFolder = lbdPath;
+            string lbdFolder = lbdPath;
             if (File.Exists(lbdPath))
             {
                 lbdFolder = Path.GetDirectoryName(lbdPath);

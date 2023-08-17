@@ -4,7 +4,6 @@ using LSDR.Game;
 using LSDR.InputManagement;
 using Torii.Audio;
 using Torii.Console;
-using Torii.Resource;
 using Torii.Util;
 using UnityEngine;
 
@@ -17,6 +16,7 @@ namespace LSDR.Entities.Player
         public ControlSchemeLoaderSystem ControlScheme;
         public DreamSystem DreamSystem;
         public Transform Camera;
+        public AudioClip FootstepClip;
 
         [Console] public float GravityMultiplier = 1f;
         [Console] public float LinkDelay = 1.7F;
@@ -26,75 +26,74 @@ namespace LSDR.Entities.Player
         [Console] public float StepTimeSeconds = 0.25f;
 
         [Console] public float HeadBobAmount = 0.1f;
+        [Console] public bool DebugLog;
+        public bool CanLink = true;
 
-        private CharacterController _controller;
-        private Vector3 _stepDir;
-        private FixedTimeSince _timeColliding;
-        private FixedTimeSince _lastInputTime;
-        private bool _canLink = true;
-        private bool _currentlyStepping;
-        private bool _currentlySprinting;
-        private Coroutine _stepCoroutine;
-
-        private float _sineStep;
+        protected CharacterController _controller;
+        protected bool _currentlySprinting;
+        protected bool _currentlyStepping;
 
         // TODO: better footstep sounds
-        private ToriiAudioClip _footstepClip;
+        protected float _initialCameraOffset;
+        protected Vector2 _inputDir;
+        protected bool _inputLocked;
+        protected Vector2 _lockedInput;
+
+        protected FixedTimeSince _timeColliding;
 
         public void Start()
         {
             _controller = GetComponent<CharacterController>();
-            _footstepClip = ResourceManager.Load<ToriiAudioClip>(
-                PathUtil.Combine(Application.streamingAssetsPath, "sfx", "SE_00003.ogg"), "global");
 
-            // this is the amount we want to travel along the head bob sine wave every second
-            _sineStep = 2 * Mathf.PI / StepTimeSeconds;
+            _initialCameraOffset = _controller.height;
+
             resetHeadbob();
 
             DevConsole.Register(this);
         }
 
-        public void OnDestroy() { DevConsole.Deregister(this); }
-
         public void Update()
         {
             // if we're not grounded we want to apply gravity
-            if (!_controller.isGrounded)
-            {
+            if (!_controller.isGrounded && Settings.PlayerGravity)
                 _controller.Move(Physics.gravity * (GravityMultiplier * Time.deltaTime));
-            }
 
             // exit early if movement is disabled
-            if (!Settings.CanControlPlayer) return;
+            if (!_inputLocked && !Settings.CanControlPlayer) return;
 
-            Vector2 inputDir = getInputDirection();
+            _inputDir = getInputDirection();
 
-            if (inputDir == Vector2.zero && !_currentlyStepping)
+            if (_inputDir == Vector2.zero && !_currentlyStepping)
             {
                 // reset head bob if we're not moving
                 resetHeadbob();
             }
 
             // check to see if we should sprint
-            if (ControlScheme.Current.Actions.Run.IsPressed && canStartSprinting())
-            {
-                _currentlySprinting = true;
-            }
+            if (ControlScheme.InputActions.Game.Run.IsPressed() && canStartSprinting()) _currentlySprinting = true;
 
             // perform a single step
-            if (!_currentlyStepping && inputDir.sqrMagnitude > 0)
+            if (!_currentlyStepping && _inputDir.sqrMagnitude > 0)
             {
                 float moveSpeed = _currentlySprinting ? RunMoveSpeed : WalkMoveSpeed;
-                _stepCoroutine = StartCoroutine(takeStep(inputDir, moveSpeed));
+                StartCoroutine(takeStep(_inputDir, moveSpeed));
             }
 
             // if run is not pressed and no movement keys are pressed, we should no longer sprint
-            if (!ControlScheme.Current.Actions.Run.IsPressed
-                && !ControlScheme.Current.Actions.MoveY.IsPressed && !ControlScheme.Current.Actions.MoveX.IsPressed)
-            {
+            if (!ControlScheme.InputActions.Game.Run.IsPressed()
+                && !ControlScheme.InputActions.Game.Move.IsPressed())
                 _currentlySprinting = false;
-            }
         }
+
+        public void OnDestroy() { DevConsole.Deregister(this); }
+
+        public void SetInputLock()
+        {
+            _inputLocked = true;
+            _lockedInput = _inputDir;
+        }
+
+        public void ClearInputLock() { _inputLocked = false; }
 
         private IEnumerator takeStep(Vector2 input, float speedUnitsPerSecond)
         {
@@ -114,7 +113,7 @@ namespace LSDR.Entities.Player
                 if (!playedFootstep && progress > 0.5f)
                 {
                     playedFootstep = true;
-                    AudioPlayer.Instance.PlayClip(_footstepClip, false, "SFX");
+                    AudioPlayer.Instance.PlayClip(FootstepClip, loop: false, "SFX");
                 }
 
                 moveController(input, speedUnitsPerSecond);
@@ -127,10 +126,7 @@ namespace LSDR.Entities.Player
             moveController(input, speedUnitsPerSecond);
 
             // if we're sprinting we want to play the footstep sound on the downstep too
-            if (_currentlySprinting)
-            {
-                AudioPlayer.Instance.PlayClip(_footstepClip, false, "SFX");
-            }
+            if (_currentlySprinting) AudioPlayer.Instance.PlayClip(FootstepClip, loop: false, "SFX");
 
             _currentlyStepping = false;
         }
@@ -147,16 +143,16 @@ namespace LSDR.Entities.Player
             // scale it so it's not massive
             yAddition *= HeadBobAmount;
 
-            float newCameraY = (_controller.height / 2f) + yAddition;
+            float newCameraY = _initialCameraOffset + yAddition;
             Camera.localPosition = new Vector3(Camera.localPosition.x, newCameraY, Camera.localPosition.z);
         }
 
         /// <summary>
-        /// Reset the head bob sine wave position to the start.
+        ///     Reset the head bob sine wave position to the start.
         /// </summary>
         private void resetHeadbob()
         {
-            Camera.localPosition = new Vector3(Camera.localPosition.x, _controller.height / 2f, Camera.localPosition.z);
+            Camera.localPosition = new Vector3(Camera.localPosition.x, _initialCameraOffset, Camera.localPosition.z);
         }
 
         private void moveController(Vector2 input, float speedUnitsPerSecond)
@@ -171,16 +167,14 @@ namespace LSDR.Entities.Player
                 moveAmount = Vector3.zero;
 
                 // check to see if we should link
-                if (_timeColliding > LinkDelay && _canLink)
+                if (_timeColliding > LinkDelay && CanLink)
                 {
-                    _canLink = false;
-                    DreamSystem.Transition(RandUtil.RandColor());
+                    CanLink = false;
+                    DreamSystem.Transition();
                 }
             }
             else
-            {
                 _timeColliding = 0;
-            }
 
             // apply the movement speed
             moveAmount *= speedUnitsPerSecond;
@@ -190,62 +184,94 @@ namespace LSDR.Entities.Player
         }
 
         /// <summary>
-        /// Perform a bunch of checks to see if we are trying to move into a wall.
+        ///     Perform a bunch of checks to see if we are trying to move into a wall.
         /// </summary>
         /// <param name="desiredMove">The vector we're trying to move along.</param>
         /// <returns>True if we are moving into a wall, false otherwise.</returns>
         private bool movingIntoWall(Vector3 desiredMove)
         {
-            float stepTopYPos = (transform.position.y - _controller.height / 2f) + _controller.stepOffset +
+            float stepTopYPos = transform.position.y + _controller.radius + _controller.stepOffset +
                                 _controller.skinWidth;
             Vector3 stepTopPos = new Vector3(transform.position.x, stepTopYPos, transform.position.z);
-            Vector3 capsuleTop = new Vector3(transform.position.x, transform.position.y + _controller.height / 2f,
+            Vector3 capsuleBottom = new Vector3(transform.position.x,
+                transform.position.y + _controller.radius + _controller.skinWidth,
                 transform.position.z);
-            Vector3 capsuleBottom = new Vector3(transform.position.x, transform.position.y - _controller.height / 2f,
+            Vector3 capsuleTop = new Vector3(transform.position.x,
+                capsuleBottom.y + _controller.height - _controller.radius,
                 transform.position.z);
 
-            RaycastHit hit;
-            bool hitAboveStepHeight = Physics.CapsuleCast(stepTopPos, capsuleTop, _controller.radius, desiredMove,
-                out hit,
-                _controller.skinWidth * 2);
-            if (hit.collider == null) return false;
-            if (hitAboveStepHeight && !hit.collider.isTrigger) return true;
+            if (DebugLog)
+                Debug.Log($"1. StepTop: {stepTopPos}, CapsuleBottom: {capsuleBottom}, CapsuleTop: {capsuleTop}");
 
-            bool hitSomething = Physics.CapsuleCast(capsuleBottom, capsuleTop, _controller.radius, desiredMove, out hit,
+            (bool hitAboveStepHeight, RaycastHit hit) = castController(stepTopPos, capsuleTop, _controller.radius,
+                desiredMove, _controller.skinWidth * 2);
+            if (DebugLog)
+            {
+                Debug.Log(
+                    $"2. hitAboveStepHeight: {hitAboveStepHeight}, collider: {hit.collider}, norm: {hit.normal}");
+            }
+
+            if (hitAboveStepHeight && !hit.collider.isTrigger && hit.normal.y >= -0.1f) return true;
+
+            bool hitSomething;
+            (hitSomething, hit) = castController(capsuleBottom, capsuleTop, _controller.radius, desiredMove,
                 _controller.skinWidth * 2);
             Vector3 axis = Vector3.Cross(transform.up, desiredMove);
-            bool hitOverSlopeLimit =
-                hitSomething && Vector3.SignedAngle(hit.normal, transform.up, axis) > _controller.slopeLimit;
+            float slopeAngle = Vector3.SignedAngle(hit.normal, transform.up, axis);
+            bool hitOverSlopeLimit = hitSomething && slopeAngle > _controller.slopeLimit;
             bool hitSeemsLikeAStep = hit.normal.y < 0.1f || hit.distance < 1E-06;
 
-            return !hit.collider.isTrigger && hitOverSlopeLimit && !hitSeemsLikeAStep;
+            if (DebugLog)
+            {
+                Debug.Log(
+                    $"3. hitSomething: {hitSomething}, hitNormal: {hit.normal}, slopeAngle: {slopeAngle}, " +
+                    $"hitOverSlope: {hitOverSlopeLimit}, hitSeemsLikeAStep: {hitSeemsLikeAStep}");
+            }
+
+            return hit.collider && !hit.collider.isTrigger && hitOverSlopeLimit && !hitSeemsLikeAStep;
+        }
+
+        protected (bool, RaycastHit) castController(Vector3 bottomPos, Vector3 topPos, float halfExtent,
+            Vector3 direction, float distance)
+        {
+            Vector3 boxCenter = bottomPos + (topPos - bottomPos) / 2;
+            Vector3 halfExtents = new Vector3(halfExtent, _controller.height / 2, halfExtent);
+            bool hitSomething = Physics.BoxCast(boxCenter, halfExtents, direction,
+                out RaycastHit hitInfo, Quaternion.identity, distance);
+            return (hitSomething, hitInfo);
         }
 
         private Vector2 getInputDirection()
         {
+            if (Time.timeScale <= 0) return Vector2.zero;
+
+            // handle input lock
+            if (_inputLocked) return _lockedInput;
+
             // if we can't control the player return zero for input direction
             if (!Settings.CanControlPlayer) return Vector2.zero;
+
             // get vector axes from input system
-            float moveDirFrontBack = ControlScheme.Current.Actions.MoveY;
-            float moveDirLeftRight = ControlScheme.Current.FpsControls ? ControlScheme.Current.Actions.MoveX : 0f;
-            Vector2 input = new Vector2(moveDirLeftRight, moveDirFrontBack);
+            Vector2 move = ControlScheme.InputActions.Game.Move.ReadValue<Vector2>();
+            move.x = ControlScheme.Current.FpsControls ? move.x : 0;
 
-            // normalize input if it exceeds 1 in combined length (for diagonal movement)
-            if (input.sqrMagnitude > 1)
-            {
-                input.Normalize();
-            }
+            // no partial movement
+            if (move.x > 0) move.x = 1;
+            else if (move.x < 0) move.x = -1;
+            if (move.y > 0) move.y = 1;
+            else if (move.y < 0) move.y = -1;
 
-            return input;
+            return move;
         }
 
         /// <summary>
-        /// We can start sprinting if we're moving on the X axis (strafing) or if we're moving forwards.
+        ///     We can start sprinting if we're moving on the X axis (strafing) or if we're moving forwards.
         /// </summary>
         /// <returns>True if we can start sprinting, false otherwise.</returns>
         private bool canStartSprinting()
         {
-            return ControlScheme.Current.Actions.MoveX.IsPressed || ControlScheme.Current.Actions.MoveY.Value > 0;
+            Vector2 move = ControlScheme.InputActions.Game.Move.ReadValue<Vector2>();
+            return move.x != 0 || move.y > 0;
         }
     }
 }

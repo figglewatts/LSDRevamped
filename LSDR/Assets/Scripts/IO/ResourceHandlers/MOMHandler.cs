@@ -6,14 +6,14 @@ using Torii.Resource;
 namespace LSDR.IO.ResourceHandlers
 {
     /// <summary>
-    /// A ResourceHandler to handle loading MOM files.
+    ///     A ResourceHandler to handle loading MOM files.
     /// </summary>
     public class MOMHandler : IResourceHandler
     {
         public Type HandlerType => typeof(MOM);
 
         /// <summary>
-        /// Load a MOM file from disk.
+        ///     Load a MOM file from disk.
         /// </summary>
         /// <param name="path">The path to the MOM file.</param>
         /// <param name="span">The span ID for how long this resource should be cached.</param>
@@ -24,8 +24,8 @@ namespace LSDR.IO.ResourceHandlers
             {
                 mom = new MOM(br);
             }
-            
-            Resource<MOM> resource = new Resource<MOM>(mom, span);
+
+            var resource = new Resource<MOM>(mom, span);
             ResourceManager.RegisterResource(path, resource);
         }
     }

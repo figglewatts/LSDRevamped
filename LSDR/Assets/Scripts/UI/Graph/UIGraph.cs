@@ -1,72 +1,71 @@
 ﻿using System.Collections.Generic;
 using LSDR.Dream;
-using LSDR.Entities.Dream;
 using LSDR.Game;
 using UnityEngine;
 
 namespace LSDR.UI.Graph
 {
-	/// <summary>
-	/// The dream graph.
-	/// </summary>
-	public class UIGraph : MonoBehaviour
-	{
-		public Transform GraphSquareContainer;
-		public GameSaveSystem GameSave;
+    /// <summary>
+    ///     The dream graph.
+    /// </summary>
+    public class UIGraph : MonoBehaviour
+    {
+        public Transform GraphSquareContainer;
+        public GameSaveSystem GameSave;
 
-		private GameObject _graphSquarePrefab;
-		private List<Vector2> _squaresAlreadyInstantiated;
-		private List<GameObject> _instantiatedObjects;
+        private GameObject _graphSquarePrefab;
+        private List<GameObject> _instantiatedObjects;
+        private List<Vector2> _squaresAlreadyInstantiated;
 
-		public void Awake()
-		{
-			_graphSquarePrefab = Resources.Load<GameObject>("Prefabs/UI/GraphSquare");
-			_squaresAlreadyInstantiated = new List<Vector2>();
-			_instantiatedObjects = new List<GameObject>();
-		}
+        public void Awake()
+        {
+            _graphSquarePrefab = Resources.Load<GameObject>("Prefabs/UI/GraphSquare");
+            _squaresAlreadyInstantiated = new List<Vector2>();
+            _instantiatedObjects = new List<GameObject>();
+        }
 
-		public void OnEnable() { InstantiateGraphSquares(); }
+        public void OnEnable() { InstantiateGraphSquares(); }
 
-		public void InstantiateGraphSquares()
-		{
-			foreach (GameObject go in _instantiatedObjects) Destroy(go);
-			_instantiatedObjects.Clear();
-		
-			_squaresAlreadyInstantiated.Clear();
-			var coords = getGraphCoords();
-			for (int i = 0; i < coords.Length; i++)
-			{
-				bool mostRecent = i == coords.Length - 1;
-				InstantiateGraphSquare(coords[i], mostRecent);
-				_squaresAlreadyInstantiated.Add(coords[i]);
-			}
-		}
+        public void InstantiateGraphSquares()
+        {
+            foreach (GameObject go in _instantiatedObjects) Destroy(go);
+            _instantiatedObjects.Clear();
 
-		private Vector2[] getGraphCoords()
-		{
-			Vector2[] coords = new Vector2[GameSave.CurrentJournalSave.SequenceData.Count];
-			for(int i = 0; i < GameSave.CurrentJournalSave.SequenceData.Count; i++)
-			{
-				var seq = GameSave.CurrentJournalSave.SequenceData[i];
-				coords[i] = new Vector2(seq.DynamicScore, seq.UpperScore);
-			}
+            _squaresAlreadyInstantiated.Clear();
+            Vector2[] coords = getGraphCoords();
+            for (int i = 0; i < coords.Length; i++)
+            {
+                bool mostRecent = i == coords.Length - 1;
+                InstantiateGraphSquare(coords[i], mostRecent);
+                _squaresAlreadyInstantiated.Add(coords[i]);
+            }
+        }
 
-			return coords;
-		}
+        private Vector2[] getGraphCoords()
+        {
+            var coords = new Vector2[GameSave.CurrentJournalSave.SequenceData.Count];
+            for (int i = 0; i < GameSave.CurrentJournalSave.SequenceData.Count; i++)
+            {
+                DreamSequence seq = GameSave.CurrentJournalSave.SequenceData[i];
+                coords[i] = seq.EvaluateGraphPosition();
+            }
 
-		private void InstantiateGraphSquare(Vector2 pos, bool mostRecent)
-		{
-			GameObject square = (GameObject)Instantiate(_graphSquarePrefab, GraphSquareContainer, false);
-			UIGraphSquare squareScript = square.GetComponent<UIGraphSquare>();
-			squareScript.Position = pos;
-			squareScript.MostRecent = mostRecent;
+            return coords;
+        }
 
-			foreach (Vector2 gs in _squaresAlreadyInstantiated)
-			{
-				if (pos == gs) squareScript.ColourModifier--;
-			}
+        private void InstantiateGraphSquare(Vector2 pos, bool mostRecent)
+        {
+            GameObject square = Instantiate(_graphSquarePrefab, GraphSquareContainer, worldPositionStays: false);
+            UIGraphSquare squareScript = square.GetComponent<UIGraphSquare>();
+            squareScript.Position = pos;
+            squareScript.MostRecent = mostRecent;
 
-			_instantiatedObjects.Add(square);
-		}
-	}
+            foreach (Vector2 gs in _squaresAlreadyInstantiated)
+            {
+                if (pos == gs) squareScript.ColourModifier--;
+            }
+
+            _instantiatedObjects.Add(square);
+        }
+    }
 }

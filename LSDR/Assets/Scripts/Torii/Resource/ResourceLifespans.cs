@@ -1,19 +1,17 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Torii.Resource
 {
     /// <summary>
-    /// Used to store resource lifespans and map them to IDs.
+    ///     Used to store resource lifespans and map them to IDs.
     /// </summary>
     public class ResourceLifespans
     {
         private readonly Dictionary<string, int> _lifespans; // resource names to IDs
 
         /// <summary>
-        /// Create a new lifespan storage object. Comes with two default lifespans 'global' and 'scene'.
+        ///     Create a new lifespan storage object. Comes with two default lifespans 'global' and 'scene'.
         /// </summary>
         public ResourceLifespans()
         {
@@ -23,26 +21,7 @@ namespace Torii.Resource
         }
 
         /// <summary>
-        /// Create a new lifespan. IDs auto increment starting at 2.
-        /// </summary>
-        /// <param name="name">The name of this lifespan.</param>
-        public void CreateLifespan(string name)
-        {
-            _lifespans[name] = _lifespans.Count;
-        }
-
-        /// <summary>
-        /// Check to see if a lifespan exists.
-        /// </summary>
-        /// <param name="name">The name of the lifespan.</param>
-        /// <returns>True if it existed, false otherwise.</returns>
-        public bool LifespanExists(string name)
-        {
-            return _lifespans.ContainsKey(name);
-        }
-
-        /// <summary>
-        /// Array accessor for lifespans.
+        ///     Array accessor for lifespans.
         /// </summary>
         /// <param name="name">The name of this lifespan.</param>
         /// <exception cref="ArgumentException">If the lifespan did not exist.</exception>
@@ -52,11 +31,30 @@ namespace Torii.Resource
             {
                 if (!LifespanExists(name))
                 {
-                    throw new ArgumentException("Lifespan " + name + " not created. Check resourcelifespans.json", 
+                    throw new ArgumentException("Lifespan " + name + " not created. Check resourcelifespans.json",
                         nameof(name));
                 }
                 return _lifespans[name];
             }
+        }
+
+        /// <summary>
+        ///     Create a new lifespan. IDs auto increment starting at 2.
+        /// </summary>
+        /// <param name="name">The name of this lifespan.</param>
+        public void CreateLifespan(string name)
+        {
+            _lifespans[name] = _lifespans.Count;
+        }
+
+        /// <summary>
+        ///     Check to see if a lifespan exists.
+        /// </summary>
+        /// <param name="name">The name of the lifespan.</param>
+        /// <returns>True if it existed, false otherwise.</returns>
+        public bool LifespanExists(string name)
+        {
+            return _lifespans.ContainsKey(name);
         }
     }
 }

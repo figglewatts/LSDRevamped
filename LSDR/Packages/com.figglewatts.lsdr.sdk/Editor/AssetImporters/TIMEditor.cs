@@ -1,3 +1,4 @@
+using LSDR.SDK.Assets;
 using UnityEditor;
 using UnityEngine;
 
@@ -12,7 +13,7 @@ namespace LSDR.SDK.Editor.AssetImporters
         {
             if (Event.current.type == EventType.Repaint)
             {
-                EditorGUI.DrawPreviewTexture(r, ((TIMAsset)serializedObject.targetObject).Palettes[0], null,
+                EditorGUI.DrawPreviewTexture(r, ((TIMAsset)serializedObject.targetObject).Palettes[0], mat: null,
                     ScaleMode.ScaleToFit);
             }
         }

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Security;
-using ProtoBuf;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using ProtoBuf;
 using ProtoBuf.Meta;
 using Torii.Util;
 using UnityEngine;
@@ -13,40 +13,43 @@ using ProtoBufSerializer = ProtoBuf.Serializer;
 namespace Torii.Serialization
 {
     /// <summary>
-    /// ToriiSerializer is used to serialize/deserialize data to/from both JSON and protobuf.
+    ///     ToriiSerializer is used to serialize/deserialize data to/from both JSON and protobuf.
     /// </summary>
     public class ToriiSerializer
     {
         private readonly JsonSerializer _json; // reference to JSON serializer
-        
+
         // map types to serializer settings
         private readonly Dictionary<Type, JsonSerializerSettings> _serializationSettingsTypeMap;
-        
+
         static ToriiSerializer()
         {
             // add some protobuf converters for common Unity3D types
-            RuntimeTypeModel.Default.Add(typeof(Vector3), true).Add("x").Add("y").Add("z");
-            RuntimeTypeModel.Default.Add(typeof(Quaternion), true).Add("x").Add("y").Add("z").Add("w");
-            RuntimeTypeModel.Default.Add(typeof(Color), true).Add("r").Add("g").Add("b").Add("a");
+            RuntimeTypeModel.Default.Add(typeof(Vector3), applyDefaultBehaviour: true).Add("x").Add("y").Add("z");
+            RuntimeTypeModel.Default.Add(typeof(Quaternion), applyDefaultBehaviour: true).Add("x").Add("y").Add("z")
+                            .Add("w");
+            RuntimeTypeModel.Default.Add(typeof(Color), applyDefaultBehaviour: true).Add("r").Add("g").Add("b")
+                            .Add("a");
         }
 
         /// <summary>
-        /// Create a new Serializer
+        ///     Create a new Serializer
         /// </summary>
         public ToriiSerializer()
         {
             _json = new JsonSerializer();
             _serializationSettingsTypeMap = new Dictionary<Type, JsonSerializerSettings>();
-            
+
             // add some JSON converters for common Unity3D types
             _json.Converters.Add(new JsonVector3Converter());
             _json.Converters.Add(new JsonQuaternionConverter());
             _json.Converters.Add(new JsonColorConverter());
             _json.Converters.Add(new StringEnumConverter());
+            _json.Converters.Add(new JsonGraphContributionConverter());
         }
 
         /// <summary>
-        /// Register JSON serialization settings for a given type.
+        ///     Register JSON serialization settings for a given type.
         /// </summary>
         /// <param name="t">The type.</param>
         /// <param name="settings">The settings.</param>
@@ -56,7 +59,7 @@ namespace Torii.Serialization
         }
 
         /// <summary>
-        /// Deserialize a JSON file to a given type.
+        ///     Deserialize a JSON file to a given type.
         /// </summary>
         /// <param name="filePath">The path to the JSON file.</param>
         /// <typeparam name="T">The type to deserialize to.</typeparam>
@@ -64,7 +67,7 @@ namespace Torii.Serialization
         public T JsonDeserialize<T>(string filePath) where T : class { return jsonDeserialize<T>(filePath); }
 
         /// <summary>
-        /// Deserialize a data file. If file has .json extension, then JSON is deserialized, otherwise protobuf.
+        ///     Deserialize a data file. If file has .json extension, then JSON is deserialized, otherwise protobuf.
         /// </summary>
         /// <param name="filePath">The path to the data.</param>
         /// <typeparam name="T">The type to deserialize to.</typeparam>
@@ -78,10 +81,7 @@ namespace Torii.Serialization
             {
                 return jsonDeserialize<T>(filePath);
             }
-            else
-            {
-                return protoBufDeserialize<T>(filePath);
-            }
+            return protoBufDeserialize<T>(filePath);
         }
 
         // deserialize from JSON
@@ -131,7 +131,8 @@ namespace Torii.Serialization
             }
             catch (JsonException e)
             {
-                Debug.LogError($"Deserialization error: Could not deserialize from \"{filePath}\", JSON was in unexpected format: {e.Message}");
+                Debug.LogError(
+                    $"Deserialization error: Could not deserialize from \"{filePath}\", JSON was in unexpected format: {e.Message}");
                 Debug.LogException(e);
                 return null;
             }
@@ -143,7 +144,7 @@ namespace Torii.Serialization
             // try to deserialize from protobuf, and log any errors that occur
             try
             {
-                using (var file = File.OpenRead(filePath))
+                using (FileStream file = File.OpenRead(filePath))
                 {
                     return ProtoBufSerializer.Deserialize<T>(file);
                 }
@@ -183,15 +184,16 @@ namespace Torii.Serialization
             }
             catch (IOException e)
             {
-                Debug.LogError($"Deserialization error: Could not deserialize from \"{filePath}\", an error occurred opening the file");
+                Debug.LogError(
+                    $"Deserialization error: Could not deserialize from \"{filePath}\", an error occurred opening the file");
                 Debug.LogException(e);
                 return null;
             }
         }
 
         /// <summary>
-        /// Serialize some data to a file. If the data object has attribute JsonObjectAttribute, then it's serialized
-        /// to JSON, and if it has ProtoContractAttribute then it's serialized to protobuf.
+        ///     Serialize some data to a file. If the data object has attribute JsonObjectAttribute, then it's serialized
+        ///     to JSON, and if it has ProtoContractAttribute then it's serialized to protobuf.
         /// </summary>
         /// <param name="obj">The object to serialize.</param>
         /// <param name="filePath">The file to serialize to.</param>
@@ -205,7 +207,7 @@ namespace Torii.Serialization
             {
                 return jsonSerialize(obj, filePath);
             }
-            else if (AttributeUtil.HasAttribute<ProtoContractAttribute>(tType))
+            if (AttributeUtil.HasAttribute<ProtoContractAttribute>(tType))
             {
                 return protoBufSerialize(obj, filePath);
             }
@@ -260,7 +262,8 @@ namespace Torii.Serialization
             }
             catch (SecurityException e)
             {
-                Debug.LogError($"Serialization error: Could not serialize to \"{filePath}\", caller has incorrect permission");
+                Debug.LogError(
+                    $"Serialization error: Could not serialize to \"{filePath}\", caller has incorrect permission");
                 Debug.LogException(e);
                 return false;
             }
@@ -275,14 +278,15 @@ namespace Torii.Serialization
             // try to serialize, log any errors if they occurred
             try
             {
-                using (var file = File.Create(filePath))
+                using (FileStream file = File.Create(filePath))
                 {
                     ProtoBufSerializer.Serialize(file, obj);
                 }
             }
             catch (UnauthorizedAccessException e)
             {
-                Debug.LogError($"Serialization error: Could not serialize to \"{filePath}\", incorrect permission or readonly file");
+                Debug.LogError(
+                    $"Serialization error: Could not serialize to \"{filePath}\", incorrect permission or readonly file");
                 Debug.LogException(e);
             }
             catch (ArgumentException e)
@@ -292,18 +296,21 @@ namespace Torii.Serialization
             }
             catch (DirectoryNotFoundException e)
             {
-                Debug.LogError($"Serialization error: Could not serialize to \"{filePath}\", directory not found or path invalid");
+                Debug.LogError(
+                    $"Serialization error: Could not serialize to \"{filePath}\", directory not found or path invalid");
                 Debug.LogException(e);
             }
             catch (IOException e)
             {
-                Debug.LogError($"Serialization error: Could not serialize to \"{filePath}\", error occurred creating the file");
+                Debug.LogError(
+                    $"Serialization error: Could not serialize to \"{filePath}\", error occurred creating the file");
                 Debug.LogException(e);
 
             }
             catch (NotSupportedException e)
             {
-                Debug.LogError($"Serialization error: Could not serialize to \"{filePath}\", path is in invalid format");
+                Debug.LogError(
+                    $"Serialization error: Could not serialize to \"{filePath}\", path is in invalid format");
                 Debug.LogException(e);
             }
 
@@ -341,6 +348,5 @@ namespace Torii.Serialization
             _json.TypeNameAssemblyFormatHandling = settings.TypeNameAssemblyFormatHandling;
             _json.TypeNameHandling = settings.TypeNameHandling;
         }
-
     }
 }

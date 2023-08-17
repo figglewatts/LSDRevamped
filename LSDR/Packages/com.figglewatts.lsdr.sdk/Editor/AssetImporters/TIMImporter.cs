@@ -1,16 +1,16 @@
 using System.IO;
 using libLSD.Formats;
-using LSDR.SDK.IO;
+using LSDR.SDK.Assets;
 using UnityEditor;
-using UnityEditor.Experimental.AssetImporters;
+
 using UnityEngine;
 
 namespace LSDR.SDK.Editor.AssetImporters
 {
-    [ScriptedImporter(version: 1, ext: "tim")]
-    public class TIMImporter : ScriptedImporter
+    [UnityEditor.AssetImporters.ScriptedImporter(version: 1, "tim")]
+    public class TIMImporter : UnityEditor.AssetImporters.ScriptedImporter
     {
-        public override void OnImportAsset(AssetImportContext ctx)
+        public override void OnImportAsset(UnityEditor.AssetImporters.AssetImportContext ctx)
         {
             // read the TIM file
             TIM tim;
@@ -20,19 +20,19 @@ namespace LSDR.SDK.Editor.AssetImporters
             }
 
             // create the TIM asset
-            var timAsset = ScriptableObject.CreateInstance<TIMAsset>();
+            TIMAsset timAsset = ScriptableObject.CreateInstance<TIMAsset>();
 
-            var assetName = Path.GetFileNameWithoutExtension(ctx.assetPath);
+            string assetName = Path.GetFileNameWithoutExtension(ctx.assetPath);
 
             // load the palettes
-            var numberOfCLUTs = tim.ColorLookup?.NumberOfCLUTs ?? 1;
+            int numberOfCLUTs = tim.ColorLookup?.NumberOfCLUTs ?? 1;
             timAsset.Palettes = new Texture2D[numberOfCLUTs];
             for (int i = 0; i < numberOfCLUTs; i++)
             {
-                var paletteTex = LibLSDUnity.GetTextureFromTIM(tim, i);
+                Texture2D paletteTex = LibLSDUnity.GetTextureFromTIM(tim, i);
                 timAsset.Palettes[i] = paletteTex;
 
-                var paletteThumbnail = AssetPreview.GetMiniThumbnail(paletteTex);
+                Texture2D paletteThumbnail = AssetPreview.GetMiniThumbnail(paletteTex);
 
                 if (i == 0)
                 {

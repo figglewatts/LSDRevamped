@@ -10,7 +10,7 @@ namespace Torii.Util
 
         public static implicit operator float(TimeSince ts) { return Time.time - ts.time; }
 
-        public static implicit operator TimeSince(float ts) { return new TimeSince {time = Time.time - ts}; }
+        public static implicit operator TimeSince(float ts) { return new TimeSince { time = Time.time - ts }; }
 
         public override string ToString() { return ((float)this).ToString(CultureInfo.InvariantCulture); }
     }

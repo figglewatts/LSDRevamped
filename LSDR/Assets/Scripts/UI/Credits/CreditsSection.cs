@@ -7,11 +7,11 @@ namespace LSDR.UI.Credits
     [JsonObject]
     public class CreditsSection
     {
-        public string SectionTitle;
-        public string SectionImagePath;
         public List<string> Names;
-        
-        [DefaultValue(true)]
+        public string SectionImagePath;
+        public string SectionTitle;
+
+        [DefaultValue(value: true)]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public bool SortNames;
     }

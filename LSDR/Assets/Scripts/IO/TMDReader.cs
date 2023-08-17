@@ -2,31 +2,31 @@ using System.Collections.Generic;
 using libLSD.Formats;
 using libLSD.Formats.Packets;
 using libLSD.Types;
-using LSDR.SDK.IO;
+using LSDR.SDK;
 using UnityEngine;
 
 namespace LSDR.IO
 {
     /// <summary>
-    /// TMDReader is used to load/create meshes from PSX TMD files.
+    ///     TMDReader is used to load/create meshes from PSX TMD files.
     /// </summary>
     public class TMDReader
     {
         // default list capacity, used to avoid resizing lists a lot
         private const int DEFAULT_LIST_CAPACITY = 64;
+        private List<int> _alphaBlendIndices;
+        private List<Color32> _colors;
+        private List<int> _indices;
+        private List<Vector3> _normals;
+        private readonly List<int> _packetIndices;
+        private List<int> _polyIndices;
+        private List<Vector2> _uvs;
 
         // cached instances of lists to use when building a mesh
         private List<Vector3> _verts;
-        private List<Vector3> _normals;
-        private List<Color32> _colors;
-        private List<Vector2> _uvs;
-        private List<int> _indices;
-        private List<int> _alphaBlendIndices;
-        private List<int> _packetIndices;
-        private List<int> _polyIndices;
 
         /// <summary>
-        /// Create a new instance of TMDReader.
+        ///     Create a new instance of TMDReader.
         /// </summary>
         public TMDReader()
         {
@@ -44,7 +44,7 @@ namespace LSDR.IO
         {
             Mesh mesh = new Mesh();
 
-            foreach (var obj in tmd.ObjectTable)
+            foreach (TMDObject obj in tmd.ObjectTable)
             {
                 Mesh objMesh = CreateTMDObjectMesh(obj);
             }
@@ -56,7 +56,7 @@ namespace LSDR.IO
         {
             clearCachedLists();
 
-            foreach (var prim in obj.Primitives)
+            foreach (TMDPrimitivePacket prim in obj.Primitives)
             {
                 // currently only polygon primitives are supported
                 if (prim.Type != TMDPrimitivePacket.Types.POLYGON) continue;
@@ -113,7 +113,7 @@ namespace LSDR.IO
                         // calculate which texture page we're on
                         int texPage = texturedPrimitivePacket.Texture.TexturePageNumber;
 
-                        int texPageXPos = ((texPage % 16) * 128) - 640;
+                        int texPageXPos = texPage % 16 * 128 - 640;
                         int texPageYPos = texPage < 16 ? 256 : 0;
 
                         // derive UV coords from the texture page
@@ -126,11 +126,11 @@ namespace LSDR.IO
                         vertUV = new Vector2(uCoord, vCoord);
 
                         // check for overlapping UVs and fix them slightly
-                        foreach (var uv in _uvs)
+                        foreach (Vector2 uv in _uvs)
                         {
                             if (uv.Equals(vertUV))
                             {
-                                vertUV += new Vector2(0.0001f, 0.0001f);
+                                vertUV += new Vector2(x: 0.0001f, y: 0.0001f);
                             }
                         }
                     }
@@ -145,29 +145,29 @@ namespace LSDR.IO
                 // we want to add extra indices if this primitive is a quad (to triangulate)
                 bool isQuad = (prim.Options & TMDPrimitivePacket.OptionsFlags.Quad) != 0;
 
-                _polyIndices.Add(_packetIndices[0]);
-                _polyIndices.Add(_packetIndices[1]);
-                _polyIndices.Add(_packetIndices[2]);
+                _polyIndices.Add(_packetIndices[index: 0]);
+                _polyIndices.Add(_packetIndices[index: 1]);
+                _polyIndices.Add(_packetIndices[index: 2]);
 
                 if (isQuad)
                 {
-                    _polyIndices.Add(_packetIndices[2]);
-                    _polyIndices.Add(_packetIndices[1]);
-                    _polyIndices.Add(_packetIndices[3]);
+                    _polyIndices.Add(_packetIndices[index: 2]);
+                    _polyIndices.Add(_packetIndices[index: 1]);
+                    _polyIndices.Add(_packetIndices[index: 3]);
                 }
 
                 // if this primitive is double sided we want to add more vertices with opposite winding order
                 if ((prim.Flags & TMDPrimitivePacket.PrimitiveFlags.DoubleSided) != 0)
                 {
-                    _polyIndices.Add(_packetIndices[1]);
-                    _polyIndices.Add(_packetIndices[0]);
-                    _polyIndices.Add(_packetIndices[2]);
+                    _polyIndices.Add(_packetIndices[index: 1]);
+                    _polyIndices.Add(_packetIndices[index: 0]);
+                    _polyIndices.Add(_packetIndices[index: 2]);
 
                     if (isQuad)
                     {
-                        _polyIndices.Add(_packetIndices[1]);
-                        _polyIndices.Add(_packetIndices[2]);
-                        _polyIndices.Add(_packetIndices[3]);
+                        _polyIndices.Add(_packetIndices[index: 1]);
+                        _polyIndices.Add(_packetIndices[index: 2]);
+                        _polyIndices.Add(_packetIndices[index: 3]);
                     }
                 }
 
@@ -180,19 +180,19 @@ namespace LSDR.IO
             result.SetVertices(_verts);
             result.SetNormals(_normals);
             result.SetColors(_colors);
-            result.SetUVs(0, _uvs);
+            result.SetUVs(channel: 0, _uvs);
 
             // regular mesh
             if (_indices.Count >= 3)
             {
-                result.SetTriangles(_indices, 0, false, 0);
+                result.SetTriangles(_indices, submesh: 0, calculateBounds: false, baseVertex: 0);
             }
 
             // alpha blended mesh
             if (_alphaBlendIndices.Count >= 3)
             {
                 result.subMeshCount = 2;
-                result.SetTriangles(_alphaBlendIndices, 1, false, 0);
+                result.SetTriangles(_alphaBlendIndices, submesh: 1, calculateBounds: false, baseVertex: 0);
             }
 
             return result;
@@ -206,7 +206,7 @@ namespace LSDR.IO
             _uvs = new List<Vector2>(defaultCapacity);
             _indices = new List<int>(defaultCapacity);
             _alphaBlendIndices = new List<int>(defaultCapacity);
-            _polyIndices = new List<int>(12); // at most can hold double sided quad
+            _polyIndices = new List<int>(capacity: 12); // at most can hold double sided quad
         }
 
         private void clearCachedLists()

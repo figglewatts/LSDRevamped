@@ -1,9 +1,10 @@
 using System;
 using System.IO;
-using LSDR.Lua;
+using LSDR.SDK.Lua;
 using Torii.Console;
 using Torii.Util;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace LSDR.Visual
 {
@@ -11,27 +12,25 @@ namespace LSDR.Visual
     {
         private const string SCREENSHOT_DIR = "screenshots";
 
-        public override void Init()
-        {
-            DevConsole.Register(this);
-            LuaEngine.RegisterGlobalObject(this);
-        }
-
         public void Update()
         {
-            if (Input.GetKeyUp(KeyCode.F9))
-            {
-                TakeScreenshot();
-            }
+            if (Keyboard.current[Key.F9].wasPressedThisFrame) TakeScreenshot();
+        }
+
+        public void Initialise()
+        {
+            DevConsole.Register(this);
+            LuaManager.Managed.RegisterGlobalObject(this);
         }
 
         [Console]
         public void TakeScreenshot()
         {
             string filename = $"{DateTime.Now:yy-MM-dd-HH-mm-ss}.png";
-            var screenshotDir = PathUtil.Combine(Application.persistentDataPath, SCREENSHOT_DIR);
+            string screenshotDir = PathUtil.Combine(Application.persistentDataPath, SCREENSHOT_DIR);
             Directory.CreateDirectory(screenshotDir);
-            ScreenCapture.CaptureScreenshot(PathUtil.Combine(Application.persistentDataPath, SCREENSHOT_DIR, filename));
+            ScreenCapture.CaptureScreenshot(PathUtil.Combine(Application.persistentDataPath, SCREENSHOT_DIR,
+                filename));
             Debug.Log("Captured screenshot");
         }
     }

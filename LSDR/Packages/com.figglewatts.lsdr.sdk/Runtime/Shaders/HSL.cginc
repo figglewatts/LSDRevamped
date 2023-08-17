@@ -3,7 +3,7 @@ float Epsilon = 1e-10;
 float3 rgb2hcv(float3 RGB)
 {
     // Based on work by Sam Hocevar and Emil Persson
-    float4 P = lerp(float4(RGB.bg, -1.0, 2.0/3.0), float4(RGB.gb, 0.0, -1.0/3.0), step(RGB.b, RGB.g));
+    float4 P = lerp(float4(RGB.bg, -1.0, 2.0 / 3.0), float4(RGB.gb, 0.0, -1.0 / 3.0), step(RGB.b, RGB.g));
     float4 Q = lerp(float4(P.xyw, RGB.r), float4(RGB.r, P.yzx), step(P.x, RGB.r));
     float C = Q.x - min(Q.w, Q.y);
     float H = abs((Q.w - Q.y) / (6 * C + Epsilon) + Q.z);

@@ -23,7 +23,8 @@ namespace Torii.Serialization
             JsonSerializer serializer)
         {
             JArray arr = JArray.Load(reader);
-            return new Vector3(arr[0].ToObject<float>(), arr[1].ToObject<float>(), arr[2].ToObject<float>());
+            return new Vector3(arr[index: 0].ToObject<float>(), arr[index: 1].ToObject<float>(),
+                arr[index: 2].ToObject<float>());
         }
     }
 }

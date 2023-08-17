@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using LSDR.Game;
 using Newtonsoft.Json;
@@ -10,17 +9,11 @@ namespace LSDR.UI.Title
 {
     public class UIUpdateChecker : MonoBehaviour
     {
-        public Text NewVersionText;
-        
         private const string LATEST_VERSION_URL =
             "https://itch.io/api/1/x/wharf/latest?target=figglewatts/lsd-revamped&channel_name=windows";
+        public Text NewVersionText;
 
         public void Start() { StartCoroutine(checkIsLatestVersion()); }
-
-        private class VersionResponse
-        {
-            public string latest { get; set; }
-        }
 
         private IEnumerator checkIsLatestVersion()
         {
@@ -46,8 +39,13 @@ namespace LSDR.UI.Title
 
         private bool isLatestVersion(string latestVersion)
         {
-            var buildNumber = typeof(GameLoadSystem).Assembly.GetName().Version.ToString();
+            string buildNumber = typeof(GameLoadSystem).Assembly.GetName().Version.ToString();
             return latestVersion.Equals(buildNumber);
+        }
+
+        private class VersionResponse
+        {
+            public string latest { get; }
         }
     }
 }

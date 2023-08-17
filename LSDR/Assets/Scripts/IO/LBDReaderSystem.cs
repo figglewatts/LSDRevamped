@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using libLSD.Formats;
-using LSDR.SDK.IO;
+using LSDR.SDK;
 using Torii.Pooling;
 using UnityEngine;
 
@@ -10,36 +10,36 @@ namespace LSDR.IO
     public class LBDReaderSystem : ScriptableObject
     {
         public const int MAX_POSSIBLE_TILES = 54930;
+        private static readonly int _mainTex = Shader.PropertyToID("_MainTex");
 
         public Material LBDDiffuse;
         public Material LBDAlpha;
 
         /// <summary>
-        /// The PrefabPool to use for LBD tiles.
+        ///     The PrefabPool to use for LBD tiles.
         /// </summary>
         public PrefabPool LBDTilePool;
 
         private TMDReader _tmdReader;
-        private static readonly int _mainTex = Shader.PropertyToID("_MainTex");
 
         public void OnEnable() { _tmdReader = new TMDReader(); }
 
         public void UseTIX(TIX tix)
         {
-            var tex = LibLSDUnity.GetTextureFromTIX(tix);
+            Texture2D tex = LibLSDUnity.GetTextureFromTIX(tix);
             LBDDiffuse.SetTexture(_mainTex, tex);
             LBDAlpha.SetTexture(_mainTex, tex);
         }
 
         /// <summary>
-        /// Create an LBD tilemap GameObject from an LSD level tileset.
+        ///     Create an LBD tilemap GameObject from an LSD level tileset.
         /// </summary>
         /// <param name="lbd">The loaded LBD file.</param>
         /// <returns>A GameObject containing loaded meshes for all tiles in their layout.</returns>
         public GameObject CreateLBDTileMap(LBD lbd, Dictionary<TMDObject, Mesh> cache)
         {
             GameObject lbdTilemap = new GameObject("LBD TileMap");
-            List<CombineInstance>
+            var
                 meshesCreated = new List<CombineInstance>(); // we're combining meshes into a collision mesh
 
             // for each tile in the tilemap
@@ -61,7 +61,7 @@ namespace LSDR.IO
 
             // combine all tiles into mesh for efficient collision
             Mesh combined = new Mesh();
-            combined.CombineMeshes(meshesCreated.ToArray(), true);
+            combined.CombineMeshes(meshesCreated.ToArray(), mergeSubMeshes: true);
             MeshCollider mc = lbdTilemap.AddComponent<MeshCollider>();
             mc.sharedMesh = combined;
 
@@ -89,7 +89,8 @@ namespace LSDR.IO
             {
                 LBDTile extraTile = extraTiles[curTile.ExtraTileIndex];
                 GameObject extraTileObj = createSingleLBDTile(extraTile, x, y, tilesTmd, meshesCreated, cache);
-                extraTileObj.transform.SetParent(lbdTile.transform, true); // parent them to original tile
+                extraTileObj.transform.SetParent(lbdTile.transform,
+                    worldPositionStays: true); // parent them to original tile
                 curTile = extraTile;
                 i++;
             }
@@ -111,17 +112,17 @@ namespace LSDR.IO
             {
                 case LBDTile.TileDirections.Deg90:
                 {
-                    tileRot = Quaternion.AngleAxis(90, Vector3.up);
+                    tileRot = Quaternion.AngleAxis(angle: 90, Vector3.up);
                     break;
                 }
                 case LBDTile.TileDirections.Deg180:
                 {
-                    tileRot = Quaternion.AngleAxis(180, Vector3.up);
+                    tileRot = Quaternion.AngleAxis(angle: 180, Vector3.up);
                     break;
                 }
                 case LBDTile.TileDirections.Deg270:
                 {
-                    tileRot = Quaternion.AngleAxis(270, Vector3.up);
+                    tileRot = Quaternion.AngleAxis(angle: 270, Vector3.up);
                     break;
                 }
             }
@@ -145,14 +146,14 @@ namespace LSDR.IO
             mf.sharedMesh = tileMesh;
 
             // the renderer needs to use virtual PSX Vram as its materials
-            mr.sharedMaterials = new[] {LBDDiffuse, LBDAlpha};
+            mr.sharedMaterials = new[] { LBDDiffuse, LBDAlpha };
 
             // set the tile's height
             lbdTile.transform.position = new Vector3(x, -tile.TileHeight, y);
 
             // make a CombineInstance for combining all tiles into one mesh later on
-            var localToWorldMatrix = lbdTile.transform.localToWorldMatrix;
-            CombineInstance combine = new CombineInstance()
+            Matrix4x4 localToWorldMatrix = lbdTile.transform.localToWorldMatrix;
+            CombineInstance combine = new CombineInstance
             {
                 mesh = tileMesh,
                 transform = localToWorldMatrix,
@@ -163,7 +164,7 @@ namespace LSDR.IO
             // if tile has transparent part, do the same for the transparent mesh
             if (tileMesh.subMeshCount > 1)
             {
-                CombineInstance combineTrans = new CombineInstance()
+                CombineInstance combineTrans = new CombineInstance
                 {
                     mesh = tileMesh,
                     transform = localToWorldMatrix,

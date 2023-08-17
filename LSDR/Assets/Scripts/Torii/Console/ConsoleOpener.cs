@@ -1,18 +1,16 @@
-using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Torii.Console
 {
     public class ConsoleOpener : MonoBehaviour
     {
-        public const KeyCode ConsoleKey = KeyCode.BackQuote;
+        public const Key ConsoleKey = Key.Backquote;
         public UIDevConsole Console;
-
-        public void Awake() { Application.logMessageReceived += Console.LogHandler; }
 
         public void Update()
         {
-            if (Input.GetKeyDown(ConsoleKey))
+            if (Keyboard.current[ConsoleKey].wasPressedThisFrame)
             {
                 Console.ToggleVisible();
             }

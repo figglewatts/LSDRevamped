@@ -8,11 +8,10 @@ namespace Torii.UI
 {
     public class ToriiFader : MonoSingleton<ToriiFader>
     {
-        private RawImage _fadeImage;
-        private Canvas _fadeCanvas;
-
         private UnityEngine.Coroutine _currentFade;
         private Action _currentOnFinish;
+        private Canvas _fadeCanvas;
+        private RawImage _fadeImage;
 
         public override void Init()
         {
@@ -23,7 +22,7 @@ namespace Torii.UI
             CanvasScaler scaler = fadeCanvas.AddComponent<CanvasScaler>();
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Expand;
-            
+
             GameObject fadeImage = new GameObject("FadeImage");
             fadeImage.transform.parent = fadeCanvas.transform;
             _fadeImage = fadeImage.AddComponent<RawImage>();
@@ -40,27 +39,27 @@ namespace Torii.UI
 
         public void FadeIn(float duration, Action onFinish = null)
         {
-            beginFade(fadeTo(1, duration, onFinish));
+            beginFade(fadeTo(targetOpacity: 1, duration, onFinish));
         }
 
         public void FadeIn(Color color, float duration, Action onFinish = null, float initialAlpha = -1)
         {
             _fadeImage.color = new Color(color.r, color.g, color.b,
-                Math.Abs(initialAlpha - (-1)) < float.Epsilon ? _fadeImage.color.a : initialAlpha);
-            
+                Math.Abs(initialAlpha - -1) < float.Epsilon ? _fadeImage.color.a : initialAlpha);
+
             FadeIn(duration, onFinish);
         }
 
         public void FadeOut(float duration, Action onFinish = null)
         {
-            beginFade(fadeTo(0, duration, onFinish));
+            beginFade(fadeTo(targetOpacity: 0, duration, onFinish));
         }
 
         public void FadeOut(Color color, float duration, Action onFinish = null, float initialAlpha = -1)
         {
             _fadeImage.color = new Color(color.r, color.g, color.b,
-                Math.Abs(initialAlpha - (-1)) < float.Epsilon ? _fadeImage.color.a : initialAlpha);
-            
+                Math.Abs(initialAlpha - -1) < float.Epsilon ? _fadeImage.color.a : initialAlpha);
+
             FadeOut(duration, onFinish);
         }
 
@@ -69,7 +68,7 @@ namespace Torii.UI
             // if there was an existing fade, stop it and execute its callback if it existed
             if (_currentFade != null) StopCoroutine(_currentFade);
             _currentOnFinish?.Invoke();
-            
+
             _currentFade = StartCoroutine(fade);
         }
 
@@ -93,10 +92,10 @@ namespace Torii.UI
                 // blend
                 color.a = Mathf.Lerp(startOpacity, targetOpacity, blend);
                 _fadeImage.color = color;
-                
+
                 yield return null;
             }
-            
+
             _currentOnFinish = null;
             _currentFade = null;
             onFinish?.Invoke();

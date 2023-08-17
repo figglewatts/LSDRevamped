@@ -1,18 +1,18 @@
 using UnityEditor;
-using UnityEditor.Experimental.AssetImporters;
+
 
 namespace LSDR.SDK.Editor.AssetImporters
 {
     [CustomEditor(typeof(TMDImporter))]
     [CanEditMultipleObjects]
-    public class TMDImporterEditor : ScriptedImporterEditor
+    public class TMDImporterEditor : UnityEditor.AssetImporters.ScriptedImporterEditor
     {
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
 
-            var opaqueMaterialProperty = serializedObject.FindProperty("OpaqueMaterial");
-            var transparentMaterialProperty = serializedObject.FindProperty("TransparentMaterial");
+            SerializedProperty opaqueMaterialProperty = serializedObject.FindProperty("OpaqueMaterial");
+            SerializedProperty transparentMaterialProperty = serializedObject.FindProperty("TransparentMaterial");
 
             EditorGUILayout.PropertyField(opaqueMaterialProperty);
             EditorGUILayout.PropertyField(transparentMaterialProperty);

@@ -10,8 +10,11 @@ namespace Torii.Util
 
         public static implicit operator int(FramesSince ts) { return Time.frameCount - ts.frames; }
 
-        public static implicit operator FramesSince(int ts) { return new FramesSince {frames = Time.frameCount - ts}; }
-        
+        public static implicit operator FramesSince(int ts)
+        {
+            return new FramesSince { frames = Time.frameCount - ts };
+        }
+
         public override string ToString() { return ((int)this).ToString(CultureInfo.InvariantCulture); }
     }
 }

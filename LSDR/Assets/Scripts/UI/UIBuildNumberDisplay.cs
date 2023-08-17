@@ -3,16 +3,15 @@ using UnityEngine.UI;
 
 namespace LSDR.UI
 {
-	/// <summary>
-	/// Display the build number on text at the top of the screen.
-	/// </summary>
+    /// <summary>
+    ///     Display the build number on text at the top of the screen.
+    /// </summary>
     public class UIBuildNumberDisplay : MonoBehaviour
-	{
-		public Text BuildNumberText;
+    {
+        public Text BuildNumberText;
 
-        void Start()
-        {
-            BuildNumberText.text = typeof(UIBuildNumberDisplay).Assembly.GetName().Version.ToString();
-        }
+        private void Start() { BuildNumberText.text = getVersionString(); }
+
+        protected string getVersionString() { return Application.version; }
     }
 }

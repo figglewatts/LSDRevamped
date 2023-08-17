@@ -1,17 +1,13 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 
 namespace Torii.Exceptions
 {
     /// <summary>
-    /// An exception that is thrown when there is an error loading a resource.
+    ///     An exception that is thrown when there is an error loading a resource.
     /// </summary>
     public class ToriiResourceLoadException : Exception
     {
-        public Type ResourceType { get; private set; }
-
-        public ToriiResourceLoadException(Type resourceType) : base()
+        public ToriiResourceLoadException(Type resourceType)
         {
             ResourceType = resourceType;
         }
@@ -21,9 +17,12 @@ namespace Torii.Exceptions
             ResourceType = resourceType;
         }
 
-        public ToriiResourceLoadException(string message, Exception innerException, Type resourceType) : base(message, innerException)
+        public ToriiResourceLoadException(string message, Exception innerException, Type resourceType) : base(message,
+            innerException)
         {
             ResourceType = resourceType;
         }
+
+        public Type ResourceType { get; private set; }
     }
 }

@@ -1,16 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace Torii.UI
 {
     /// <summary>
-    /// Used to populate a UI container with GameObjects.
+    ///     Used to populate a UI container with GameObjects.
     /// </summary>
     public class ContainerPopulator : MonoBehaviour, IPopulator<GameObject>
     {
         /// <summary>
-        /// Put these GameObjects in the container.
+        ///     Put these GameObjects in the container.
         /// </summary>
         /// <param name="with">The GameObjects to put in the container.</param>
         public void Populate(List<GameObject> with)
@@ -18,12 +17,13 @@ namespace Torii.UI
             Clear();
             foreach (GameObject obj in with)
             {
-                obj.SetActive(true);
+                obj.transform.SetParent(transform, worldPositionStays: false);
+                obj.SetActive(value: true);
             }
         }
 
         /// <summary>
-        /// Remove the GameObjects from the container.
+        ///     Remove the GameObjects from the container.
         /// </summary>
         public void Clear()
         {

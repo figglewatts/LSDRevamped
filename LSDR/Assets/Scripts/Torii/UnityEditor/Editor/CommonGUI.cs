@@ -8,7 +8,7 @@ namespace Torii.UnityEditor
     {
         public static string BrowseForFile(string dialogTitle, string[] filters, string existingValue)
         {
-            GUI.FocusControl(null);
+            GUI.FocusControl(name: null);
             string filePath = EditorUtility.OpenFilePanelWithFilters(dialogTitle, "", filters);
 
             if (string.IsNullOrEmpty(filePath))
@@ -22,41 +22,43 @@ namespace Torii.UnityEditor
                     "Ok");
                 return existingValue;
             }
-        
+
             // now remove everything before StreamingAssets path
-            var indexOf = filePath.IndexOf("StreamingAssets", StringComparison.Ordinal) + "StreamingAssets".Length;
+            int indexOf = filePath.IndexOf("StreamingAssets", StringComparison.Ordinal) + "StreamingAssets".Length;
             return filePath.Substring(indexOf);
         }
 
         public static string BrowseForFolder(string dialogTitle, string existingValue)
         {
-            GUI.FocusControl(null);
+            GUI.FocusControl(name: null);
             string folderPath = EditorUtility.OpenFolderPanel(dialogTitle, "", "");
 
             if (string.IsNullOrEmpty(folderPath))
             {
                 return existingValue;
             }
-            
+
             if (!folderPath.Contains("StreamingAssets"))
             {
-                EditorUtility.DisplayDialog("Directory error", "Your directory must be in the 'StreamingAssets' directory!",
+                EditorUtility.DisplayDialog("Directory error",
+                    "Your directory must be in the 'StreamingAssets' directory!",
                     "Ok");
                 return existingValue;
             }
-        
+
             // now remove everything before StreamingAssets path
-            var indexOf = folderPath.IndexOf("StreamingAssets", StringComparison.Ordinal) + "StreamingAssets".Length;
+            int indexOf = folderPath.IndexOf("StreamingAssets", StringComparison.Ordinal) + "StreamingAssets".Length;
             return folderPath.Substring(indexOf);
         }
 
-        public static string BrowseFileField(GUIContent content, string existingValue, string dialogTitle, string[] filters = null)
+        public static string BrowseFileField(GUIContent content, string existingValue, string dialogTitle,
+            string[] filters = null)
         {
             EditorGUILayout.BeginHorizontal();
             string result = EditorGUILayout.TextField(
                 content,
                 existingValue);
-            if (GUILayout.Button("Browse", GUILayout.Width(60)))
+            if (GUILayout.Button("Browse", GUILayout.Width(width: 60)))
             {
                 result = BrowseForFile(dialogTitle, filters, existingValue);
             }
@@ -70,7 +72,7 @@ namespace Torii.UnityEditor
             string result = EditorGUILayout.TextField(
                 content,
                 existingValue);
-            if (GUILayout.Button("Browse", GUILayout.Width(60)))
+            if (GUILayout.Button("Browse", GUILayout.Width(width: 60)))
             {
                 result = BrowseForFolder(dialogTitle, existingValue);
             }
@@ -85,7 +87,7 @@ namespace Torii.UnityEditor
         {
             Rect textFieldPosition = new Rect(position.x, position.y, position.width - 60, position.height);
             string result = EditorGUI.TextField(textFieldPosition, existingValue);
-            Rect buttonPosition = new Rect(position.x + position.width - 60, position.y, 60, position.height);
+            Rect buttonPosition = new Rect(position.x + position.width - 60, position.y, width: 60, position.height);
             if (GUI.Button(buttonPosition, "Browse"))
             {
                 result = BrowseForFile(dialogTitle, filters, existingValue);
@@ -98,7 +100,7 @@ namespace Torii.UnityEditor
         {
             Rect textFieldPosition = new Rect(position.x, position.y, position.width - 60, position.height);
             string result = EditorGUI.TextField(textFieldPosition, existingValue);
-            Rect buttonPosition = new Rect(position.x + position.width - 60, position.y, 60, position.height);
+            Rect buttonPosition = new Rect(position.x + position.width - 60, position.y, width: 60, position.height);
             if (GUI.Button(buttonPosition, "Browse"))
             {
                 result = BrowseForFolder(dialogTitle, existingValue);

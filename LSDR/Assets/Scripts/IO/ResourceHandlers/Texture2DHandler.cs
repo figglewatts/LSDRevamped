@@ -6,7 +6,7 @@ using UnityEngine;
 namespace LSDR.IO.ResourceHandlers
 {
     /// <summary>
-    /// Load a PNG image from disk.
+    ///     Load a PNG image from disk.
     /// </summary>
     public class Texture2DHandler : IResourceHandler
     {
@@ -16,7 +16,7 @@ namespace LSDR.IO.ResourceHandlers
         {
             string fullFilePath = path;
             string extension = Path.GetExtension(fullFilePath);
-            
+
             // make sure the extension is correct
             if (string.IsNullOrEmpty(extension))
             {
@@ -29,14 +29,14 @@ namespace LSDR.IO.ResourceHandlers
             }
 
             byte[] fileData = File.ReadAllBytes(fullFilePath);
-            
+
             // (2, 2) is temporary power of 2 size; next line will resize automatically
-            Texture2D tex = new Texture2D(2, 2, TextureFormat.ARGB32, false); 
+            Texture2D tex = new Texture2D(width: 2, height: 2, TextureFormat.ARGB32, mipChain: false);
             tex.LoadImage(fileData);
             tex.filterMode = FilterMode.Point;
             tex.mipMapBias = 0F;
-    
-            Resource<Texture2D> resource = new Resource<Texture2D>(tex, span);
+
+            var resource = new Resource<Texture2D>(tex, span);
             ResourceManager.RegisterResource(path, resource);
         }
     }

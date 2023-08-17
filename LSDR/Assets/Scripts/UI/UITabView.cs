@@ -1,19 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace LSDR.UI
 {
     /// <summary>
-    /// Creates a UI view with 'tabs' enabling different content game objects.
+    ///     Creates a UI view with 'tabs' enabling different content game objects.
     /// </summary>
     public class UITabView : MonoBehaviour
     {
         public List<Button> TabButtons = new List<Button>();
         public List<RectTransform> TabViews = new List<RectTransform>();
 
-        public int StartOnTab = 0;
+        public int StartOnTab;
 
         public void Start()
         {
@@ -43,24 +42,24 @@ namespace LSDR.UI
                 return;
             }
 
-            TabViews[StartOnTab].gameObject.SetActive(true);
+            TabViews[StartOnTab].gameObject.SetActive(value: true);
             disableAllExcept(StartOnTab);
 
             for (int i = 0; i < TabButtons.Count; i++)
             {
-                var iCopy = i;
+                int iCopy = i;
                 TabButtons[i].onClick.AddListener(() => onTabButtonClick(iCopy));
             }
         }
 
         public void OnEnable()
         {
-            TabViews[StartOnTab].gameObject.SetActive(true);
+            TabViews[StartOnTab].gameObject.SetActive(value: true);
             disableAllExcept(StartOnTab);
         }
 
         /// <summary>
-        /// Set all of the tab buttons to a state.
+        ///     Set all of the tab buttons to a state.
         /// </summary>
         /// <param name="state">The state to set.</param>
         public void SetAllButtonsInteractable(bool state)
@@ -70,7 +69,7 @@ namespace LSDR.UI
 
         private void onTabButtonClick(int i)
         {
-            TabViews[i].gameObject.SetActive(true);
+            TabViews[i].gameObject.SetActive(value: true);
             disableAllExcept(i);
         }
 
@@ -79,7 +78,7 @@ namespace LSDR.UI
             for (int i = 0; i < TabViews.Count; i++)
             {
                 if (i == thisOne) continue;
-                else TabViews[i].gameObject.SetActive(false);
+                TabViews[i].gameObject.SetActive(value: false);
             }
         }
     }

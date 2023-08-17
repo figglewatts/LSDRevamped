@@ -6,7 +6,7 @@ using Torii.Resource;
 namespace LSDR.IO.ResourceHandlers
 {
     /// <summary>
-    /// Load a TIX texture archive from disk.
+    ///     Load a TIX texture archive from disk.
     /// </summary>
     public class TIXHandler : IResourceHandler
     {
@@ -19,8 +19,8 @@ namespace LSDR.IO.ResourceHandlers
             {
                 tix = new TIX(br);
             }
-            
-            Resource<TIX> resource = new Resource<TIX>(tix, span);
+
+            var resource = new Resource<TIX>(tix, span);
             ResourceManager.RegisterResource(path, resource);
         }
     }

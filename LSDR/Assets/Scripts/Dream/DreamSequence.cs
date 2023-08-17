@@ -1,47 +1,82 @@
 using System.Collections.Generic;
 using System.Linq;
-using ProtoBuf;
+using LSDR.SDK.Data;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace LSDR.Dream
 {
     /// <summary>
-    /// A DreamSequence is a sequence of dreams visited in a day of play.
+    ///     A DreamSequence is a sequence of dreams visited in a day of play.
     /// </summary>
-    [ProtoContract]
+    [JsonObject]
     public class DreamSequence
     {
         /// <summary>
-        /// The list of visited dreams this day.
+        ///     The list of visited dreams this day.
         /// </summary>
-        [ProtoMember(1)]
-        public readonly List<Dream> Visited = new List<Dream>();
+        public readonly List<VisitedDream> Visited = new List<VisitedDream>();
 
-        /// <summary>
-        /// The total upper score across all of the visited dreams.
-        /// </summary>
-        [ProtoIgnore]
-        public int UpperScore { get { return Mathf.Clamp(Visited.Sum(d => d.Upperness) + UpperModifier, -9, 9); } }
+        [JsonProperty] protected List<GraphContribution> _areaGraphContributions = new List<GraphContribution>();
+        [JsonProperty] protected List<GraphContribution> _entityGraphContributions = new List<GraphContribution>();
 
-        /// <summary>
-        /// The total dynamic score across all of the visited dreams.
-        /// </summary>
-        [ProtoIgnore]
-        public int DynamicScore
+        public void LogGraphContributionFromArea(int dynamicness, int upperness)
         {
-            get { return Mathf.Clamp(Visited.Sum(d => d.Dynamicness) + DynamicModifier, -9, 9); }
+            _areaGraphContributions.Add(new GraphContribution(dynamicness, upperness));
         }
-        
-        /// <summary>
-        /// Additional points to add to the upper score.
-        /// </summary>
-        [ProtoMember(2)]
-        public int UpperModifier;
-        
-        /// <summary>
-        /// Additional points to add to the dynamic score.
-        /// </summary>
-        [ProtoMember(3)]
-        public int DynamicModifier;
+
+        public void LogGraphContributionFromEntity(int dynamicness, int upperness)
+        {
+            _entityGraphContributions.Add(new GraphContribution(dynamicness, upperness));
+        }
+
+        public Vector2Int EvaluateGraphPosition()
+        {
+            Vector2Int areaContribution = evaluateContributionList(_areaGraphContributions);
+            Vector2Int entityContribution = evaluateContributionList(_entityGraphContributions);
+            Vector2Int unclampedContribution = (areaContribution + entityContribution) / 2;
+            return correctOutOfGraphBounds(unclampedContribution);
+        }
+
+        protected Vector2Int correctOutOfGraphBounds(Vector2Int contribution)
+        {
+            int correctComponent(int component)
+            {
+                if (component < -9) return 9;
+                if (component > 9) return -9;
+                return component;
+            }
+
+            return new Vector2Int(correctComponent(contribution.x), correctComponent(contribution.y));
+        }
+
+        protected Vector2Int evaluateContributionList(List<GraphContribution> contributions)
+        {
+            if (contributions.Count == 0)
+            {
+                return Vector2Int.zero;
+            }
+
+            Vector2Int averageContribution = new Vector2Int(
+                (int)contributions.Average(c => c.Dynamic),
+                (int)contributions.Average(c => c.Upper));
+            Vector2Int lastContributionEvaluation = evaluateContribution(contributions.Last());
+            return averageContribution + lastContributionEvaluation;
+        }
+
+        protected Vector2Int evaluateContribution(GraphContribution contribution)
+        {
+            return new Vector2Int(evaluateContributionComponent(contribution.Dynamic),
+                evaluateContributionComponent(contribution.Upper));
+        }
+
+        protected int evaluateContributionComponent(int contributionValue)
+        {
+            if (contributionValue <= -6) return -2;
+            if (contributionValue <= -3) return -1;
+            if (contributionValue <= 2) return 0;
+            if (contributionValue <= 5) return 1;
+            return 2;
+        }
     }
 }

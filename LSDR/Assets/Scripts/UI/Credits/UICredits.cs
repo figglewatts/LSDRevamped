@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using LSDR.InputManagement;
 using Torii.Event;
@@ -10,6 +9,7 @@ namespace LSDR.UI.Credits
 {
     public class UICredits : MonoBehaviour
     {
+        public const string CREDITS_FILE_PATH = "credits.json";
         public GameObject UICreditsSectionPrefab;
         public GameObject UITitleTextPrefab;
         public GameObject UIEndCapObject;
@@ -18,30 +18,19 @@ namespace LSDR.UI.Credits
         public ToriiEvent OnCreditsEnd;
         public ControlSchemeLoaderSystem Controls;
 
-        public const string CREDITS_FILE_PATH = "credits.json";
-        
         private readonly ToriiSerializer _serializer = new ToriiSerializer();
-        private bool _creditsFinished = false;
+        private bool _creditsFinished;
 
-        public void Start()
-        {
-            load();
-        }
-
-        public void OnEnable()
-        {
-            UISectionContainer.anchoredPosition = new Vector2(UISectionContainer.anchoredPosition.x, 0);
-            _creditsFinished = false;
-        }
+        public void Start() { load(); }
 
         public void Update()
         {
-            if (Controls.Current.Actions.Run.WasPressed)
+            if (Controls.InputActions.Game.Run.IsPressed())
             {
                 OnCreditsEnd.Raise();
                 _creditsFinished = true;
             }
-            
+
             if (!_creditsFinished && UISectionContainer.anchoredPosition.y > UISectionContainer.rect.height + 500)
             {
                 OnCreditsEnd.Raise();
@@ -49,23 +38,23 @@ namespace LSDR.UI.Credits
             }
         }
 
-        public void FixedUpdate()
+        public void FixedUpdate() { UISectionContainer.anchoredPosition += new Vector2(x: 0, ScrollSpeed); }
+
+        public void OnEnable()
         {
-            UISectionContainer.anchoredPosition += new Vector2(0, ScrollSpeed);
+            UISectionContainer.anchoredPosition = new Vector2(UISectionContainer.anchoredPosition.x, y: 0);
+            _creditsFinished = false;
         }
 
         private void load()
         {
-            List<CreditsSection> creditsSections =
+            var creditsSections =
                 _serializer.Deserialize<List<CreditsSection>>(PathUtil.Combine(Application.streamingAssetsPath,
                     CREDITS_FILE_PATH));
 
             addObject(UITitleTextPrefab);
-            
-            foreach (var section in creditsSections)
-            {
-                createSection(section);
-            }
+
+            foreach (CreditsSection section in creditsSections) createSection(section);
 
             addObject(UIEndCapObject);
         }

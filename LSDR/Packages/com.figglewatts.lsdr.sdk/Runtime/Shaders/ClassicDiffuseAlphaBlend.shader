@@ -16,25 +16,15 @@ Shader "LSDR/ClassicDiffuseAlphaBlend"
             Blend SrcAlpha OneMinusSrcAlpha
             ZWrite On
             ZTest LEqual
+            
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
             #pragma multi_compile_instancing
             #pragma multi_compile_fog
+
+            #define LSDR_CLASSIC
             #include "LSDR.cginc"
-
-            v2f vert(appdata v)
-            {
-                return classicVert(v);
-            }
-
-            sampler2D _MainTex;
-            fixed4 _Tint;
-
-            fragOut frag(v2f input)
-            {
-                return classicFrag(input, _MainTex, _Tint);
-            }
             ENDCG
         }
     }

@@ -1,8 +1,9 @@
+using LSDR.SDK.Lua;
 using UnityEngine;
 
 namespace LSDR.Lua
 {
-    public class ColorAPI
+    public class ColorAPI : ILuaAPI
     {
         public static Color Red => Color.red;
         public static Color Black => Color.black;
@@ -14,5 +15,6 @@ namespace LSDR.Lua
         public static Color Magenta => Color.magenta;
         public static Color White => Color.white;
         public static Color Yellow => Color.yellow;
+        public void Register(ILuaEngine engine) { }
     }
 }

@@ -1,44 +1,11 @@
-#include "HSL.cginc"
 #include "UnityCG.cginc"
+#include "LSDRFog.cginc"
 
-uniform int _SubtractiveFog;
 uniform float _AffineIntensity;
+uniform float _RenderCutoffAdjustment;
 uniform int _TextureSet;
 
-float GetFogEnd()
-{
-    float der = -1 / unity_FogParams.z;
-    return unity_FogParams.w * der;
-}
-
-float GetFogAmount(float distance)
-{
-    #if defined(FOG_LINEAR)
-    float baseFogAmt = saturate(distance * unity_FogParams.z + unity_FogParams.w);
-    float quantized = round(baseFogAmt / 0.1) * 0.1;
-    return quantized;
-    #else
-    return 1;
-    #endif
-}
-
-float4 ApplyFog(half4 color, float amount)
-{
-    float3 hslFogCol = rgb2hsl(unity_FogColor.rgb);
-    
-    // modify lightness based on fog amount
-    hslFogCol.z = lerp(hslFogCol.z, _SubtractiveFog, amount);
-  
-    // convert back into RGB
-    float3 modifiedFogCol = hsl2rgb(hslFogCol);
-    
-    // perform addition/subtraction based on the fog mode
-    float3 finalFogCol = ((color.rgb - (1 - modifiedFogCol)) * _SubtractiveFog) + ((color.rgb + modifiedFogCol) * !_SubtractiveFog);
-    
-    color.rgb = lerp(finalFogCol, color.rgb, amount);
-    return color;
-}
-
+const static float BRIGHTNESS = 1.2;
 
 // incoming vertices
 struct appdata
@@ -50,277 +17,193 @@ struct appdata
     UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
-struct v2f
+struct vertdata
 {
     float4 pos : SV_POSITION;
     half4 color : COLOR0;
     float2 uv_MainTex : TEXCOORD0;
-    half3 normal : TEXCOORD1;
-    float fogAmount : FOG;
-    float depth : SV_Depth;
+    float4 clipPos : TEXCOORD1;
+};
+
+struct fragdata
+{
+    vertdata data;
+    float distance : FOG;
+    float3 worldPos : TEXCOORD2;
 };
 
 struct fragOut
 {
     fixed4 color : SV_Target;
-    float depth : SV_Depth;
 };
 
-v2f classicVert(appdata v)
+fragdata vert(appdata v)
 {
-    v2f output;
-                
+    fragdata output;
+
     UNITY_SETUP_INSTANCE_ID(v);
-    
+
+    // color and UVs
+    output.data.uv_MainTex = v.uv;
+    output.data.color = v.color;
+
+    output.worldPos = mul(unity_ObjectToWorld, float4(v.position.xyz, 1)).xyz;
+    output.distance = length(UnityObjectToViewPos(v.position));
+
+    #if defined(LSDR_CLASSIC)
     // vertex snapping
     float4 snapToPixel = UnityObjectToClipPos(v.position);
     snapToPixel.xyz = snapToPixel.xyz / snapToPixel.w;
     snapToPixel.x = floor(160 * snapToPixel.x) / 160;
     snapToPixel.y = floor(120 * snapToPixel.y) / 120;
     snapToPixel.xyz *= snapToPixel.w;
-    output.pos = snapToPixel;
-    
-    // vertex color
-    output.color = v.color;
-    
-    float distance = length(UnityObjectToViewPos(v.position));
-    
+    output.data.pos = snapToPixel;
+
     // affine texture mapping
-    output.uv_MainTex = v.uv;
-    output.uv_MainTex *= distance + (v.position.w * _AffineIntensity * 8) / distance / 2;
-    output.normal = distance + (v.position.w * _AffineIntensity * 8) / distance / 2;
-    
-    // fog amount
-    float3 objPos = mul(unity_ObjectToWorld, float4(0, 0, 0, 1)).xyz;
-    float cameraDist = length(_WorldSpaceCameraPos - objPos);
-    output.fogAmount = GetFogAmount(cameraDist);
-    
-    // depth
-    float depth = (distance - _ProjectionParams.y) / (_ProjectionParams.z - _ProjectionParams.y);
-    output.depth = 1 - depth;
-    
-    if (cameraDist > GetFogEnd())
+    output.data.clipPos = UnityObjectToClipPos(v.position);
+    output.data.clipPos.w += 0.25;
+    output.data.clipPos.w = lerp(1, output.data.clipPos.w, _AffineIntensity);
+    output.data.uv_MainTex *= output.data.clipPos.w;
+    #else
+    output.data.pos = UnityObjectToClipPos(v.position);
+    output.data.clipPos = 1;
+    #endif
+
+    if (output.distance > GetFogEnd() + _RenderCutoffAdjustment)
     {
-        output.pos = float4(0, 0, 0, 1);
+        output.data.pos.z = -1000;
     }
-    
+
     return output;
 }
 
-v2f revampedVert(appdata v)
-{
-    v2f output;
-    
-    UNITY_SETUP_INSTANCE_ID(v);
-    
-    output.pos = UnityObjectToClipPos(v.position);
-    output.color = v.color;
-    output.uv_MainTex = v.uv;
-    output.normal = 0;
-    
-    // fog amount
-    float3 objPos = mul(unity_ObjectToWorld, float4(0, 0, 0, 1)).xyz;
-    float3 camPos = _WorldSpaceCameraPos;
-    float cameraDist = length(camPos - objPos);
-    output.fogAmount = GetFogAmount(cameraDist);
-    
-    // depth
-    float distance = length(UnityObjectToViewPos(v.position));
-    float depth = (distance - _ProjectionParams.y) / (_ProjectionParams.z - _ProjectionParams.y);
-    output.depth = 1 - depth;
-    
-    if (cameraDist > GetFogEnd())
-    {
-        output.pos = float4(0, 0, 0, 1);
-    }
-    
-    return output;
-}
-
-fragOut classicFragCutout(v2f input, sampler2D mainTex, fixed4 tint)
+#if defined(LSDR_TEXTURE_SET)
+fragOut lsdrFrag(fragdata input, sampler2D mainTexA, sampler2D mainTexB, sampler2D mainTexC, sampler2D mainTexD,
+                 fixed4 tint)
+#else
+fragOut lsdrFrag(fragdata input, sampler2D mainTex, fixed4 tint)
+#endif
 {
     fragOut output;
-    
-    half4 output_col = tex2D(mainTex, input.uv_MainTex / input.normal.x);
-    
-    // alpha cutout
+    half4 output_col;
+
+    #if defined(LSDR_CLASSIC)
+    float2 uvs = input.data.uv_MainTex / input.data.clipPos.w;
+    #else
+    float2 uvs = input.data.uv_MainTex;
+    #endif
+
+    // handle reading texture colour
+    #if defined(LSDR_TEXTURE_SET)
+    if (_TextureSet == 2) output_col = tex2D(mainTexB, uvs);
+    else if (_TextureSet == 3) output_col = tex2D(mainTexC, uvs);
+    else if (_TextureSet == 4) output_col = tex2D(mainTexD, uvs);
+    else output_col = tex2D(mainTexA, uvs);
+    #else
+    output_col = tex2D(mainTex, uvs);
+    #endif
+
+    #if defined(LSDR_CUTOUT_ALPHA)
     if (output_col.a <= 0.1) discard;
-    
+    #endif
+
     // apply vertex color
-    output_col *= input.color;
-    
+    output_col *= (input.data.color * 1.3);
+
     // apply tint
     output_col *= tint;
-    
+
     // apply fog
-    output_col = ApplyFog(output_col, input.fogAmount);
-    
-    output.color = output_col;
-    output.depth = input.depth;
-    
+    #if defined(LSDR_CLASSIC)
+    // operate on floored versions of coords to produce grid effect
+    float4 fogColor = FogColor(length(int3(input.worldPos) - int3(_WorldSpaceCameraPos)));
+    output_col = ApplyClassicFog(output_col, fogColor);
+    #else
+    const float4 fogColor = FogColor(input.distance);
+    output_col = ApplyRevampedFog(output_col, fogColor);
+    #endif
+
+    output.color = output_col * BRIGHTNESS;
+
     return output;
 }
 
-fragOut classicFrag(v2f input, sampler2D mainTex, fixed4 tint)
+#if defined(LSDR_WATER)
+sampler2D _MainTextureA;
+sampler2D _MainTextureB;
+sampler2D _MainTextureC;
+sampler2D _MainTextureD;
+sampler2D _WaterPaletteA;
+sampler2D _WaterPaletteB;
+sampler2D _WaterPaletteC;
+sampler2D _WaterPaletteD;
+fixed4 _Tint;
+float _AnimationSpeed;
+float _Alpha;
+
+fragOut frag(fragdata input)
 {
     fragOut output;
-    
-    half4 output_col = tex2D(mainTex, input.uv_MainTex / input.normal.x);
-    
-    if (output_col.a == 0) discard;
-    
-    // apply vertex color
-    output_col *= input.color;
-    
-    // apply tint
-    output_col *= tint;
-    
-    // apply fog
-    output_col = ApplyFog(output_col, input.fogAmount);
-    
-    output.color = output_col;
-    output.depth = input.depth;
-    
-    return output;
-}
 
-fragOut revampedFragCutout(v2f input, sampler2D mainTex, fixed4 tint)
-{
-    fragOut output;
-    
-    half4 output_col = tex2D(mainTex, input.uv_MainTex);
-                
-    // alpha cutout
-    if (output_col.a <= 0.1) discard;
-    
-    // apply vertex color
-    output_col *= input.color;
-    
-    // apply tint
-    output_col *= tint;
-    
-    // apply fog
-    output_col = ApplyFog(output_col, input.fogAmount);
-    
-    output.color = output_col;
-    output.depth = input.depth;
-    
-    return output;
-}
+#if defined(LSDR_CLASSIC)
+    float2 uvs = input.data.uv_MainTex / input.data.clipPos.w;
+#else
+    float2 uvs = input.data.uv_MainTex;
+#endif
 
-fragOut revampedFrag(v2f input, sampler2D mainTex, fixed4 tint)
-{
-    fragOut output;
-    
-    half4 output_col = tex2D(mainTex, input.uv_MainTex);
-    
-    if (output_col.a == 0) discard;
-    
-    // apply vertex color
-    output_col *= input.color;
-    
-    // apply tint
-    output_col *= tint;
-    
-    // apply fog
-    output_col = ApplyFog(output_col, input.fogAmount);
-    
-    output.color = output_col;
-    output.depth = input.depth;
-    
-    return output;
-}
 
-float4 revampedFragSetCutout(v2f input, sampler2D mainTexA, sampler2D mainTexB, sampler2D mainTexC, sampler2D mainTexD, fixed4 tint)
-{
-    half4 output;
-                
-    // choose texture
-    if (_TextureSet == 2) output = tex2D(mainTexB, input.uv_MainTex);
-    else if (_TextureSet == 3) output = tex2D(mainTexC, input.uv_MainTex);
-    else if (_TextureSet == 4) output = tex2D(mainTexD, input.uv_MainTex);
-    else output = tex2D(mainTexA, input.uv_MainTex);
-    
-    // alpha cutout
-    if (output.a <= 0.1) discard;
-    
-    // apply vertex color
-    output *= input.color;
-    
-    // apply tint
-    output *= tint;
-    
-    // apply fog
-    output = ApplyFog(output, input.fogAmount);
-    
-    return output;
-}
+    half4 waterMap;
+    if (_TextureSet == 2) waterMap = tex2D(_MainTextureB, uvs);
+    else if (_TextureSet == 3) waterMap = tex2D(_MainTextureC, uvs);
+    else if (_TextureSet == 4) waterMap = tex2D(_MainTextureD, uvs);
+    else waterMap = tex2D(_MainTextureA, uvs);
 
-float4 revampedFragSet(v2f input, sampler2D mainTexA, sampler2D mainTexB, sampler2D mainTexC, sampler2D mainTexD, fixed4 tint)
-{
-    half4 output;
-                
-    // choose texture
-    if (_TextureSet == 2) output = tex2D(mainTexB, input.uv_MainTex);
-    else if (_TextureSet == 3) output = tex2D(mainTexC, input.uv_MainTex);
-    else if (_TextureSet == 4) output = tex2D(mainTexD, input.uv_MainTex);
-    else output = tex2D(mainTexA, input.uv_MainTex);
-    
-    // apply vertex color
-    output *= input.color;
-    
-    // apply tint
-    output *= tint;
-    
-    // apply fog
-    output = ApplyFog(output, input.fogAmount);
-    
-    return output;
-}
+    float paletteIdx = (waterMap.r - _Time[0] * _AnimationSpeed) % 1.0;
 
-float4 classicFragSetCutout(v2f input, sampler2D mainTexA, sampler2D mainTexB, sampler2D mainTexC, sampler2D mainTexD, fixed4 tint)
-{
-    half4 output;
-                
-    // choose texture
-    if (_TextureSet == 2) output = tex2D(mainTexB, input.uv_MainTex / input.normal.x);
-    else if (_TextureSet == 3) output = tex2D(mainTexC, input.uv_MainTex / input.normal.x);
-    else if (_TextureSet == 4) output = tex2D(mainTexD, input.uv_MainTex / input.normal.x);
-    else output = tex2D(mainTexA, input.uv_MainTex / input.normal.x);
-    
-    // alpha cutout
-    if (output.a <= 0.1) discard;
-    
-    // apply vertex color
-    output *= input.color;
-    
-    // apply tint
-    output *= tint;
-    
-    // apply fog
-    output = ApplyFog(output, input.fogAmount);
-    
-    return output;
-}
+    half4 output_col;
+    if (_TextureSet == 2) output_col = tex2D(_WaterPaletteB, float2(paletteIdx, 0.5));
+    else if (_TextureSet == 3) output_col = tex2D(_WaterPaletteC, float2(paletteIdx, 0.5));
+    else if (_TextureSet == 4) output_col = tex2D(_WaterPaletteD, float2(paletteIdx, 0.5));
+    else output_col = tex2D(_WaterPaletteA, float2(paletteIdx, 0.5));
 
-float4 classicFragSet(v2f input, sampler2D mainTexA, sampler2D mainTexB, sampler2D mainTexC, sampler2D mainTexD, fixed4 tint)
-{
-    half4 output;
-                
-    // choose texture
-    if (_TextureSet == 2) output = tex2D(mainTexB, input.uv_MainTex / input.normal.x);
-    else if (_TextureSet == 3) output = tex2D(mainTexC, input.uv_MainTex / input.normal.x);
-    else if (_TextureSet == 4) output = tex2D(mainTexD, input.uv_MainTex / input.normal.x);
-    else output = tex2D(mainTexA, input.uv_MainTex / input.normal.x);
-    
     // apply vertex color
-    output *= input.color;
-    
+    output_col *= (input.data.color * 1.3);
+
     // apply tint
-    output *= tint;
-    
+    output_col *= _Tint;
+
     // apply fog
-    output = ApplyFog(output, input.fogAmount);
-    
+#if defined(LSDR_CLASSIC)
+    // operate on floored versions of coords to produce grid effect
+    float4 fogColor = FogColor(length(int3(input.worldPos) - int3(_WorldSpaceCameraPos)));
+    output_col = ApplyClassicFog(output_col, fogColor);
+#else
+    const float4 fogColor = FogColor(input.distance);
+    output_col = ApplyRevampedFog(output_col, fogColor);
+#endif
+
+    output.color = output_col * BRIGHTNESS;
+    output.color.a = min(_Alpha, waterMap.a);
+
     return output;
 }
+#elif defined(LSDR_TEXTURE_SET)
+sampler2D _MainTexA;
+sampler2D _MainTexB;
+sampler2D _MainTexC;
+sampler2D _MainTexD;
+fixed4 _Tint;
+
+fragOut frag(fragdata input)
+{
+    return lsdrFrag(input, _MainTexA, _MainTexB, _MainTexC, _MainTexD, _Tint);
+}
+#else
+sampler2D _MainTex;
+fixed4 _Tint;
+
+fragOut frag(fragdata input)
+{
+    return lsdrFrag(input, _MainTex, _Tint);
+}
+#endif

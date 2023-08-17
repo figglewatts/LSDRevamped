@@ -1,29 +1,30 @@
-﻿using UnityEngine;
-using System.IO;
-using LSDR.Util;
-using Torii.Audio;
-using Torii.Resource;
-using Torii.Util;
+﻿using LSDR.Game;
+using UnityEngine;
 
 namespace LSDR.UI.Title
 {
-	/// <summary>
-	/// Randomly plays a song from the title screen music folder.
-	/// TODO: refactor UIMainMenuMusic to define these songs somewhere? Instead of just having them in a folder
-	/// </summary>
-	public class UIMainMenuMusic : MonoBehaviour
-	{
-		public AudioSource source;
+    public class UIMainMenuMusic : MonoBehaviour
+    {
+        public AudioSource source;
+        public AudioClip NormalMusic;
+        public AudioClip KanjiMusic;
+        public AudioClip DownerMusic;
+        public AudioClip UpperMusic;
+        public GameSaveSystem GameSave;
 
-		void Start()
-		{
-			string[] titleScreenSongs =
-				Directory.GetFiles(PathUtil.Combine(Application.streamingAssetsPath, "music", "title"), "*.ogg");
-			int songHandle = RandUtil.Int(titleScreenSongs.Length);
-			var toriiAudioClip = ResourceManager.Load<ToriiAudioClip>(titleScreenSongs[songHandle], "global");
-			source.clip = toriiAudioClip.Clip;
-			source.loop = true;
-			source.Play();
-		}
-	}
+        public void PlayMusic()
+        {
+            int dayNumMod = GameSave.CurrentJournalSave.DayNumber % 41;
+            if (dayNumMod <= 10)
+                source.clip = NormalMusic;
+            else if (dayNumMod <= 20)
+                source.clip = KanjiMusic;
+            else if (dayNumMod <= 30)
+                source.clip = DownerMusic;
+            else if (dayNumMod <= 40) source.clip = UpperMusic;
+
+            source.loop = true;
+            source.Play();
+        }
+    }
 }

@@ -1,28 +1,29 @@
-using LSDR.Dream;
-using LSDR.Entities.Dream;
-using LSDR.Entities.Original;
 using LSDR.Lua.Proxies;
+using LSDR.SDK;
+using LSDR.SDK.Entities;
+using LSDR.SDK.Lua;
 using LSDR.Visual;
 using MoonSharp.Interpreter;
 
 namespace LSDR.Lua
 {
-    public class LSDAPI
+    public class LSDAPI : ILuaAPI
     {
-        static LSDAPI()
+        public void Register(ILuaEngine engine)
         {
             // register proxies
             UserData.RegisterProxyType<ScreenshotterProxy, Screenshotter>(screenshotter =>
                 new ScreenshotterProxy(screenshotter));
             UserData.RegisterProxyType<InteractiveObjectProxy, InteractiveObject>(r => new InteractiveObjectProxy(r));
-            UserData.RegisterProxyType<DreamSystemProxy, DreamSystem>(r => new DreamSystemProxy(r));
+            //UserData.RegisterProxyType<DreamSystemProxy, DreamSystem>(r => new DreamSystemProxy(r));
 
             // register types
-            UserData.RegisterType<TODAnimation>();
-            UserData.RegisterType<TextureSet>();
-            LuaEngine.RegisterGlobalObject(UserData.CreateStatic<TextureSet>(), "TextureSet");
+            engine.RegisterEnum<TextureSet>();
         }
 
-        public static void Register() { }
+        public static BaseEntity GetEntity(string id)
+        {
+            return EntityIndex.Instance.Get(id).GetComponent<BaseEntity>();
+        }
     }
 }

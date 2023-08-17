@@ -1,21 +1,22 @@
+using System.Collections.Generic;
 using System.IO;
 using libLSD.Formats;
-using LSDR.SDK.IO;
+using LSDR.SDK.Visual;
 using UnityEditor;
-using UnityEditor.Experimental.AssetImporters;
+
 using UnityEngine;
 
 namespace LSDR.SDK.Editor.AssetImporters
 {
-    [ScriptedImporter(version: 1, ext: "tmd")]
-    public class TMDImporter : ScriptedImporter
+    [UnityEditor.AssetImporters.ScriptedImporter(version: 1, "tmd")]
+    public class TMDImporter : UnityEditor.AssetImporters.ScriptedImporter
     {
         public Material OpaqueMaterial;
         public Material TransparentMaterial;
-        
+
         protected MeshCombiner _meshCombiner;
 
-        public override void OnImportAsset(AssetImportContext ctx)
+        public override void OnImportAsset(UnityEditor.AssetImporters.AssetImportContext ctx)
         {
             // read the TMD file
             TMD tmd;
@@ -25,8 +26,8 @@ namespace LSDR.SDK.Editor.AssetImporters
             }
 
             // create data for combining into single mesh
-            var meshes = LibLSDUnity.CreateMeshesFromTMD(tmd);
-            _meshCombiner = new MeshCombiner(new[] {"opaque", "transparent"});
+            List<Mesh> meshes = LibLSDUnity.CreateMeshesFromTMD(tmd);
+            _meshCombiner = new MeshCombiner();
             _meshCombiner.SetSubmeshSettings("opaque", useMatrices: false);
             _meshCombiner.SetSubmeshSettings("transparent", useMatrices: false);
             foreach (Mesh tmdObj in meshes)
@@ -34,7 +35,7 @@ namespace LSDR.SDK.Editor.AssetImporters
                 _meshCombiner.Add(new CombineInstance
                 {
                     mesh = tmdObj,
-                    subMeshIndex = 0,
+                    subMeshIndex = 0
                 }, "opaque");
 
                 // if it has a transparent part, we need to add it
@@ -57,6 +58,7 @@ namespace LSDR.SDK.Editor.AssetImporters
             MeshFilter mf = meshObj.AddComponent<MeshFilter>();
             mf.sharedMesh = combinedMesh;
             MeshRenderer mr = meshObj.AddComponent<MeshRenderer>();
+            meshObj.AddComponent<ShaderSetter>();
 
             if (combinedMesh.subMeshCount > 1)
             {
@@ -83,7 +85,7 @@ namespace LSDR.SDK.Editor.AssetImporters
             ctx.AddObjectToAsset("TMD Mesh", combinedMesh);
 
             // clean up unused assets
-            foreach (var tmdMesh in meshes)
+            foreach (Mesh tmdMesh in meshes)
             {
                 DestroyImmediate(tmdMesh);
             }

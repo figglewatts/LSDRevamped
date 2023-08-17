@@ -11,13 +11,12 @@ namespace Torii.Audio
 {
     public class AudioPlayer : MonoSingleton<AudioPlayer>
     {
+        private const string MIXER_PATH = "Mixers/MasterMixer";
         public int MaxChannels = 10;
+
+        private List<AudioSource> _channels;
         public int _channelsAvailable => _channels.Count(c => !c.isPlaying);
         public AudioSource FreeChannel => _channels.First(c => !c.isPlaying);
-        
-        private List<AudioSource> _channels;
-        
-        private const string MIXER_PATH = "Mixers/MasterMixer";
 
         public override void Init()
         {
@@ -47,7 +46,7 @@ namespace Torii.Audio
 
         public AudioSource PlayClip(AudioClip clip, bool loop = false, string mixerGroup = null)
         {
-            var channel = _channelsAvailable == 0 ? addChannel() : FreeChannel;
+            AudioSource channel = _channelsAvailable == 0 ? addChannel() : FreeChannel;
             if (channel == null)
             {
                 Debug.LogWarning($"Unable to play audio clip '{clip.name}', no channels available");
