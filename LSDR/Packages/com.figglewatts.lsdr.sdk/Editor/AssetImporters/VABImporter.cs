@@ -53,7 +53,10 @@ namespace LSDR.SDK.Editor.AssetImporters
             {
                 string samplePathName = $"Sample{sampleNum}.wav";
                 string samplePath = Path.Combine(fullOutputPath, samplePathName);
-                WaveUtil.WriteWave(samplePath, sample.SampleData, 1, SampleRate);
+                if (!File.Exists(samplePath))
+                {
+                    WaveUtil.WriteWave(samplePath, sample.SampleData, 1, SampleRate);
+                }
 
                 string sampleAssetPath = DirectoryUtil.MakePathAssetsRelative(samplePath);
                 AssetDatabase.ImportAsset(sampleAssetPath);
