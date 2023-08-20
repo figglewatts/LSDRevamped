@@ -256,7 +256,7 @@ namespace LSDR.Dream
 
             // reroll song style, update song library, switch to next song based on graph position
             MusicSystem.OriginalSongLibrary.DreamNumber = SettingsSystem.CurrentJournal.GetDreamIndex(CurrentDream);
-            MusicSystem.SetSongStyle((SongStyle)(GameSave.CurrentJournalSave.DayNumber % (int)SongStyle.COUNT));
+            MusicSystem.SetSongStyle((SongStyle)((GameSave.CurrentJournalSave.DayNumber - 1) % (int)SongStyle.COUNT));
             MusicSystem.CurrentSongLibrary = CurrentDream.SongLibrary;
             int songNumber = GameSave.CurrentJournalSave.DayNumber == 1
                 ? 0

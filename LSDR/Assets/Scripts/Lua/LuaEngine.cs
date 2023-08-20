@@ -36,7 +36,7 @@ namespace LSDR.Lua
                 {
                     ScriptLoader = new FileSystemScriptLoader(),
                     DebugPrint = Debug.Log,
-                    UseLuaErrorLocations = true,
+                    UseLuaErrorLocations = false,
                 }
             };
 
