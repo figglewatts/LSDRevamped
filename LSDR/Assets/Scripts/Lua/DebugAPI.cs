@@ -1,11 +1,13 @@
+using System;
 using LSDR.SDK.Lua;
+using MoonSharp.Interpreter;
 using UnityEngine;
 
 namespace LSDR.Lua
 {
     public class MiscAPI : ILuaAPI
     {
-        public void Register(ILuaEngine engine) { }
+        public void Register(ILuaEngine engine, Script script) { }
 
         public static void Log(string msg) { Debug.Log(msg); }
 
