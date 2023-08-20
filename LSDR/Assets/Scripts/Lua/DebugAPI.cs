@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace LSDR.Lua
 {
-    public class MiscAPI : ILuaAPI
+    public class DebugAPI : ILuaAPI
     {
         public void Register(ILuaEngine engine, Script script) { }
 

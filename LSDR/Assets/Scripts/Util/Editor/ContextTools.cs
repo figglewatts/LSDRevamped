@@ -11,6 +11,63 @@ namespace LSDR.Util
 {
     public static class ContextTools
     {
+        [MenuItem("Assets/LSDR/Hook up revamped songs")]
+        public static void HookUpRevampedSongs()
+        {
+            const string validPath = "Assets/UnityEditor/Resources/Sound/Music";
+            const string songNameRegex = @"^(.*?) - (.*)$";
+
+            var projectPath = getProjectWindowActiveFolderPath();
+            if (!projectPath.StartsWith(validPath))
+            {
+                Debug.LogError($"You need to be in {validPath} to use this, currently: {projectPath}");
+                return;
+            }
+
+            string listAssetPath = $"{projectPath}/RevampedSongList.asset";
+            var listAsset = AssetDatabase.LoadAssetAtPath<SongListAsset>(listAssetPath);
+            if (listAsset == null)
+            {
+                listAsset = ScriptableObject.CreateInstance<SongListAsset>();
+                AssetDatabase.CreateAsset(listAsset, listAssetPath);
+                listAsset.Songs = new List<SongAsset>();
+            }
+            listAsset.Songs.Clear();
+
+            foreach (var clipAssetPath in Directory.GetFiles(projectPath, "*.ogg", SearchOption.AllDirectories))
+            {
+                var clipFileName = Path.GetFileNameWithoutExtension(clipAssetPath);
+
+                var songNameMatch = Regex.Match(clipFileName, songNameRegex);
+                if (songNameMatch.Length <= 1)
+                {
+                    Debug.LogError("Invalid song name, path: " + clipAssetPath);
+                }
+                string songAuthor = songNameMatch.Groups[1].Value;
+                string songName = songNameMatch.Groups[2].Value;
+
+                var songAssetPath = $"{projectPath}/{clipFileName}Song.asset";
+                var songAsset = AssetDatabase.LoadAssetAtPath<SongAsset>(songAssetPath);
+
+                // create song asset for song if not exists
+                if (songAsset == null)
+                {
+                    songAsset = ScriptableObject.CreateInstance<SongAsset>();
+                    AssetDatabase.CreateAsset(songAsset, songAssetPath);
+                }
+                AudioClip clipAsset = AssetDatabase.LoadAssetAtPath<AudioClip>(clipAssetPath);
+                songAsset.Clip = clipAsset;
+                songAsset.Author = songAuthor;
+                songAsset.Name = songName;
+                listAsset.Songs.Add(songAsset);
+                EditorUtility.SetDirty(listAsset);
+                EditorUtility.SetDirty(songAsset);
+            }
+
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+        }
+
         [MenuItem("Assets/LSDR/Hook up original songs")]
         public static void HookUpOriginalSongs()
         {

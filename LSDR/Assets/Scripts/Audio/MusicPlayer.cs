@@ -12,7 +12,7 @@ namespace LSDR.Audio
 {
     public class MusicPlayer : MonoSingleton<MusicPlayer>
     {
-        public bool IsPlaying => _source.isPlaying;
+        public bool IsPlaying => _source && _source.isPlaying;
 
         protected AudioSource _source;
 
@@ -38,9 +38,9 @@ namespace LSDR.Audio
         {
             if (IsPlaying) yield return stopSong();
 
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSecondsRealtime(0.5f);
 
-            if (song.IsSilent) yield break;
+            if (song == null || song.IsSilent) yield break;
 
             _source.volume = 1;
             _source.clip = song.Clip;
@@ -54,9 +54,9 @@ namespace LSDR.Audio
             float fadeTimeSeconds = 1;
             while (t < fadeTimeSeconds)
             {
-                _source.volume = t / fadeTimeSeconds;
+                _source.volume = 1 - (t / fadeTimeSeconds);
                 yield return null;
-                t += Time.deltaTime;
+                t += Time.unscaledDeltaTime;
             }
             _source.Stop();
         }

@@ -1,5 +1,7 @@
+using System;
 using LSDR.Lua.Proxies;
 using LSDR.SDK;
+using LSDR.SDK.Audio;
 using LSDR.SDK.Entities;
 using LSDR.SDK.Lua;
 using LSDR.Visual;
@@ -9,7 +11,7 @@ namespace LSDR.Lua
 {
     public class LSDAPI : ILuaAPI
     {
-        public void Register(ILuaEngine engine)
+        public void Register(ILuaEngine engine, Script script)
         {
             // register proxies
             UserData.RegisterProxyType<ScreenshotterProxy, Screenshotter>(screenshotter =>
@@ -19,6 +21,9 @@ namespace LSDR.Lua
 
             // register types
             engine.RegisterEnum<TextureSet>();
+            engine.RegisterEnum<SongStyle>();
+            UserData.RegisterType<SongAsset>();
+            UserData.RegisterType<SongListAsset>();
         }
 
         public static BaseEntity GetEntity(string id)

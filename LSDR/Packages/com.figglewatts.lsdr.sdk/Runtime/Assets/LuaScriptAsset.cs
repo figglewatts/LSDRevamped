@@ -40,5 +40,19 @@ namespace LSDR.SDK.Assets
                 Debug.LogError($"Lua Script Runtime Error: {e.DecoratedMessage}");
             }
         }
+
+        public T HandleLuaErrorsFor<T>(Func<T> action)
+        {
+            try
+            {
+                return action();
+            }
+            catch (ScriptRuntimeException e)
+            {
+                Debug.LogError($"Lua Script Runtime Error: {e.DecoratedMessage}");
+                Debug.LogException(e);
+                return default;
+            }
+        }
     }
 }

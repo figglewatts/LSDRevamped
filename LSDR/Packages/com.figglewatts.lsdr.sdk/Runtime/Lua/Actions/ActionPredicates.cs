@@ -1,3 +1,4 @@
+using System;
 using MoonSharp.Interpreter;
 
 namespace LSDR.SDK.Lua.Actions
@@ -12,7 +13,8 @@ namespace LSDR.SDK.Lua.Actions
         //     var lengthSeconds = (animation.Tod.Header.NumberOfFrames + 3) * resolutionSeconds * numberOfPlays;
         //     return new WaitForSecondsPredicate(lengthSeconds);
         // }
-        public void Register(ILuaEngine engine) { }
+        public void Register(ILuaEngine engine, Script script) { }
+
         public static IPredicate Default() { return new GenericPredicate(() => true); }
 
         public static IPredicate WaitForSeconds(float numSeconds) { return new WaitForSecondsPredicate(numSeconds); }

@@ -260,8 +260,8 @@ namespace LSDR.Dream
             MusicSystem.CurrentSongLibrary = CurrentDream.SongLibrary;
             int songNumber = GameSave.CurrentJournalSave.DayNumber == 1
                 ? 0
-                : GameSave.CurrentJournalSave.LastGraphY * GraphSpawnMap.GRAPH_SIZE +
-                  GameSave.CurrentJournalSave.LastGraphX;
+                : (GameSave.CurrentJournalSave.LastGraphY + 9) * GraphSpawnMap.GRAPH_SIZE +
+                  (GameSave.CurrentJournalSave.LastGraphX + 9);
             MusicSystem.NextSong(songNumber);
 
             Debug.Log("Registering entities...");
@@ -443,7 +443,7 @@ namespace LSDR.Dream
         {
             if (CurrentDream == null) return;
 
-            MusicSystem.NextSong(GameSave.CurrentJournalSave.DayNumber);
+            MusicSystem.NextSong(RandUtil.Int(100));
         }
 
         [Console]

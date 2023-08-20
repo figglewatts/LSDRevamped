@@ -19,6 +19,7 @@ namespace LSDR.SDK.Audio
 
         public override SongAsset GetSong(SongStyle style, int songNumber)
         {
+            Debug.Log(style);
             var dreamSongs = OriginalDreams[DreamNumber];
             switch (style)
             {

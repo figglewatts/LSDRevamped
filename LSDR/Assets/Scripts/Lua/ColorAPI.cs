@@ -1,4 +1,6 @@
+using System;
 using LSDR.SDK.Lua;
+using MoonSharp.Interpreter;
 using UnityEngine;
 
 namespace LSDR.Lua
@@ -15,6 +17,7 @@ namespace LSDR.Lua
         public static Color Magenta => Color.magenta;
         public static Color White => Color.white;
         public static Color Yellow => Color.yellow;
-        public void Register(ILuaEngine engine) { }
+
+        public void Register(ILuaEngine engine, Script script) { }
     }
 }

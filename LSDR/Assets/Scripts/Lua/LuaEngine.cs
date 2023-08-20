@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using LSDR.SDK.Lua;
 using LSDR.SDK.Lua.Actions;
@@ -33,15 +35,17 @@ namespace LSDR.Lua
                 Options =
                 {
                     ScriptLoader = new FileSystemScriptLoader(),
-                    DebugPrint = Debug.Log
+                    DebugPrint = Debug.Log,
+                    UseLuaErrorLocations = true,
                 }
             };
 
-            createStaticAPI(new UnityAPI(), script);
-            createStaticAPI(new MiscAPI(), script);
+            createNamespacedStaticAPI(new UnityAPI(), script, "Unity");
+            createNamespacedStaticAPI(new DebugAPI(), script, "Debug");
             createStaticAPI(new LSDAPI(), script);
             createNamespacedStaticAPI(new ActionPredicates(), script, "Condition");
             createNamespacedStaticAPI(new ColorAPI(), script, "Color");
+            createNamespacedStaticAPI(new RandomAPI(), script, "Random");
 
             createRegisteredGlobalObjects(script);
 
@@ -191,24 +195,38 @@ namespace LSDR.Lua
 
         private void createStaticAPI<T>(T instance, Script script) where T : ILuaAPI
         {
-            Type t = typeof(T);
+            instance.Register(this, script);
+            foreach (var method in typeof(T).GetMethods(BindingFlags.Static |
+                                                        BindingFlags.Public))
+            {
+                var methodParams = method.GetParameters();
+                var delegateType = method.ReturnType == typeof(void)
+                    ? Expression.GetActionType(methodParams.Select(p => p.ParameterType).ToArray())
+                    : Expression.GetFuncType(methodParams.Select(p => p.ParameterType)
+                                                         .Concat(new[] { method.ReturnType }).ToArray());
 
-            instance.Register(this);
-
-            MethodInfo[] api = t.GetMethods(BindingFlags.Instance | BindingFlags.Public);
-            foreach (MethodInfo method in api) script.Globals[method.Name] = method;
+                var del = method.CreateDelegate(delegateType);
+                script.Globals[method.Name] = del;
+            }
         }
 
         private void createNamespacedStaticAPI<T>(T instance, Script script, string namespace_) where T : ILuaAPI
         {
-            var apiTableData = new Dictionary<string, MethodInfo>();
+            instance.Register(this, script);
+            var apiTableData = new Dictionary<string, Delegate>();
 
-            Type t = typeof(T);
+            foreach (var method in typeof(T).GetMethods(BindingFlags.Static |
+                                                        BindingFlags.Public))
+            {
+                var methodParams = method.GetParameters();
+                var delegateType = method.ReturnType == typeof(void)
+                    ? Expression.GetActionType(methodParams.Select(p => p.ParameterType).ToArray())
+                    : Expression.GetFuncType(methodParams.Select(p => p.ParameterType)
+                                                         .Concat(new[] { method.ReturnType }).ToArray());
 
-            instance.Register(this);
-
-            MethodInfo[] api = t.GetMethods(BindingFlags.Static | BindingFlags.Public);
-            foreach (MethodInfo method in api) apiTableData[method.Name] = method;
+                var del = method.CreateDelegate(delegateType);
+                apiTableData[method.Name] = del;
+            }
 
             DynValue apiTable = DynValue.FromObject(script, apiTableData);
             script.Globals[namespace_] = apiTable;
