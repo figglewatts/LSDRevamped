@@ -5,7 +5,7 @@ uniform float _AffineIntensity;
 uniform float _RenderCutoffAdjustment;
 uniform int _TextureSet;
 
-const static float BRIGHTNESS = 1.2;
+const static float BRIGHTNESS = 1.6;
 
 // incoming vertices
 struct appdata
