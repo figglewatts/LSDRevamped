@@ -44,7 +44,7 @@ namespace Torii.Audio
             }
         }
 
-        public AudioSource PlayClip(AudioClip clip, bool loop = false, string mixerGroup = null)
+        public AudioSource PlayClip(AudioClip clip, bool loop = false, float pitch = 1, string mixerGroup = null)
         {
             AudioSource channel = _channelsAvailable == 0 ? addChannel() : FreeChannel;
             if (channel == null)
@@ -60,6 +60,7 @@ namespace Torii.Audio
 
             channel.loop = loop;
             channel.clip = clip;
+            channel.pitch = pitch;
             channel.Play();
 
             return channel;

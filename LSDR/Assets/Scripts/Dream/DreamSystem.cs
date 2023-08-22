@@ -125,7 +125,7 @@ namespace LSDR.Dream
 
             MusicSystem.StopSong();
 
-            if (playSound) AudioPlayer.Instance.PlayClip(LinkSound, loop: false, "SFX");
+            if (playSound) AudioPlayer.Instance.PlayClip(LinkSound, loop: false, mixerGroup: "SFX");
 
             CurrentSequence.Visited.Add(dream);
 

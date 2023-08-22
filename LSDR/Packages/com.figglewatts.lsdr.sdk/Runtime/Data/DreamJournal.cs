@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using LSDR.SDK.Audio;
 using LSDR.SDK.Util;
 using UnityEngine;
 
@@ -18,6 +19,9 @@ namespace LSDR.SDK.Data
 
         [Tooltip("Map determining where the player spawns for each graph space.")]
         public GraphSpawnMap GraphSpawnMap;
+
+        [Tooltip("The footstep index to use for this journal.")]
+        public AbstractFootstepIndex FootstepIndex;
 
         public IEnumerable<Dream> LinkableDreams => Dreams.Where(d => d.Linkable);
 

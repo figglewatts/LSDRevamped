@@ -2,6 +2,7 @@ using System.Collections;
 using LSDR.Dream;
 using LSDR.Game;
 using LSDR.InputManagement;
+using LSDR.SDK.Audio;
 using Torii.Audio;
 using Torii.Console;
 using Torii.Util;
@@ -113,7 +114,7 @@ namespace LSDR.Entities.Player
                 if (!playedFootstep && progress > 0.5f)
                 {
                     playedFootstep = true;
-                    AudioPlayer.Instance.PlayClip(FootstepClip, loop: false, "SFX");
+                    playFootstepSound();
                 }
 
                 moveController(input, speedUnitsPerSecond);
@@ -126,7 +127,7 @@ namespace LSDR.Entities.Player
             moveController(input, speedUnitsPerSecond);
 
             // if we're sprinting we want to play the footstep sound on the downstep too
-            if (_currentlySprinting) AudioPlayer.Instance.PlayClip(FootstepClip, loop: false, "SFX");
+            if (_currentlySprinting) playFootstepSound();
 
             _currentlyStepping = false;
         }
@@ -229,6 +230,31 @@ namespace LSDR.Entities.Player
             }
 
             return hit.collider && !hit.collider.isTrigger && hitOverSlopeLimit && !hitSeemsLikeAStep;
+        }
+
+        protected void playFootstepSound()
+        {
+            var footstep = getFootstepSound();
+            if (footstep == null || footstep.Sound == null) return;
+            AudioPlayer.Instance.PlayClip(footstep.Sound, loop: false, pitch: footstep.Pitch, mixerGroup: "SFX");
+        }
+
+        protected Footstep getFootstepSound()
+        {
+            Vector3 capsuleBottom = new Vector3(transform.position.x,
+                transform.position.y + _controller.radius + _controller.skinWidth,
+                transform.position.z);
+            Vector3 capsuleTop = new Vector3(transform.position.x,
+                capsuleBottom.y + _controller.height - _controller.radius,
+                transform.position.z);
+
+            (bool hitSomething, RaycastHit hit) = castController(capsuleBottom, capsuleTop, _controller.radius,
+                -transform.up,
+                1);
+
+            if (!hitSomething || Settings.CurrentJournal.FootstepIndex == null) return null;
+
+            return Settings.CurrentJournal.FootstepIndex.GetFootstep(hit);
         }
 
         protected (bool, RaycastHit) castController(Vector3 bottomPos, Vector3 topPos, float halfExtent,

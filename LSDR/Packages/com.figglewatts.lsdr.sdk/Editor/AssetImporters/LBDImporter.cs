@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using libLSD.Formats;
 using LSDR.SDK.Assets;
 using LSDR.SDK.Editor.Assets;
+using LSDR.SDK.Entities;
 using LSDR.SDK.Visual;
 using UnityEditor;
-
 using UnityEngine;
 
 namespace LSDR.SDK.Editor.AssetImporters
@@ -92,6 +93,10 @@ namespace LSDR.SDK.Editor.AssetImporters
                 col.sharedMesh = combinedMesh;
                 col.convex = false;
             }
+
+            LBDChunk chunk = meshObj.AddComponent<LBDChunk>();
+            chunk.ID = Path.GetFileNameWithoutExtension(ctx.assetPath);
+            chunk.Tiles = lbd.TileLayout.Select(t => new LBDChunk.LBDTileData(t)).ToArray();
 
             // and set the outputs
             ctx.AddObjectToAsset("LBD Object", meshObj);

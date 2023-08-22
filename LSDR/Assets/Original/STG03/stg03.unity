@@ -43,7 +43,7 @@ RenderSettings:
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 11
+  serializedVersion: 12
   m_GIWorkflowMode: 1
   m_GISettings:
     serializedVersion: 2
@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -118,6 +118,8 @@ NavMeshSettings:
     manualTileSize: 0
     tileSize: 256
     accuratePlacement: 0
+    maxJobWorkers: 0
+    preserveTilesOutsideBounds: 0
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
@@ -128,6 +130,31 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 8759732038566135055, guid: d5e3912a0f8654eb09d1e0d86eb326eb,
+        type: 3}
+      propertyPath: DrawDebug
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8759732038776161170, guid: d5e3912a0f8654eb09d1e0d86eb326eb,
+        type: 3}
+      propertyPath: DrawDebug
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8759732038815350783, guid: d5e3912a0f8654eb09d1e0d86eb326eb,
+        type: 3}
+      propertyPath: DrawDebug
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8759732038904862418, guid: d5e3912a0f8654eb09d1e0d86eb326eb,
+        type: 3}
+      propertyPath: DrawDebug
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8759732039216112734, guid: d5e3912a0f8654eb09d1e0d86eb326eb,
+        type: 3}
+      propertyPath: DrawDebug
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8954320120267517032, guid: d5e3912a0f8654eb09d1e0d86eb326eb,
         type: 3}
       propertyPath: m_Name
