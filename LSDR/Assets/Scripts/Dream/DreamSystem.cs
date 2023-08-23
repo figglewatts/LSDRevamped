@@ -62,6 +62,7 @@ namespace LSDR.Dream
         [NonSerialized] protected float _lastPlayerYRotation;
         [NonSerialized] protected bool _spawnedInAtLeastOnce; // true if we've been in a dream yet
         [NonSerialized] public GameObject Player;
+        [NonSerialized] protected SDK.Data.Dream _nextDream = null;
         public SDK.Data.Dream CurrentDream { get; protected set; }
         public GameObject CurrentDreamInstance { get; protected set; }
         public DreamSequence CurrentSequence { get; protected set; }
@@ -101,6 +102,12 @@ namespace LSDR.Dream
             CurrentSequence.LogGraphContributionFromEntity(dynamicness, upperness);
         }
 
+        public void SetNextLinkDream(SDK.Data.Dream dream, string spawnPointID = null)
+        {
+            SetNextSpawn(spawnPointID);
+            _nextDream = dream;
+        }
+
         public void Transition(Color fadeCol,
             SDK.Data.Dream dream = null,
             bool playSound = true,
@@ -110,6 +117,15 @@ namespace LSDR.Dream
             if (!_canTransition) return;
             _canTransition = false;
 
+            // prefer given dream, but fall back to _nextDream if not given (and it is set)
+            if (dream == null && _nextDream != null)
+            {
+                dream = _nextDream;
+
+                // set _nextDream to null as we'll be transitioning out of the TriggerLink that caused this
+                _nextDream = null;
+            }
+
             if (dream == null) dream = SettingsSystem.CurrentJournal.GetLinkable(CurrentDream);
 
             Debug.Log($"Linking to {dream.Name}");
@@ -117,7 +133,7 @@ namespace LSDR.Dream
             _currentlyTransitioning = true;
 
             SettingsSystem.CanControlPlayer = false;
-            _forcedSpawnID = spawnPointID;
+            OverrideNextSpawn(spawnPointID);
             if (lockControls) Player.GetComponent<PlayerMovement>().SetInputLock();
 
             // disable pausing to prevent throwing off timers etc
@@ -164,7 +180,7 @@ namespace LSDR.Dream
 
         public void BeginDream(SDK.Data.Dream dream)
         {
-            _forcedSpawnID = null;
+            SetNextSpawn(null); // don't force a spawn point
             _canTransition = true;
 
             // start a timer to end the dream
@@ -175,6 +191,24 @@ namespace LSDR.Dream
                 LoadDream(dream, transitioning: false)));
             CurrentSequence = new DreamSequence();
             CurrentSequence.Visited.Add(dream);
+        }
+
+        /// <summary>
+        /// Set the next spawn point ID. Doesn't check for null etc.
+        /// </summary>
+        /// <param name="spawnPointID"></param>
+        public void SetNextSpawn(string spawnPointID)
+        {
+            _forcedSpawnID = spawnPointID;
+        }
+
+        /// <summary>
+        /// Override the next spawn point ID. Will only set if given value is not null or empty (so won't set to null/empty).
+        /// </summary>
+        /// <param name="spawnPointID"></param>
+        public void OverrideNextSpawn(string spawnPointID)
+        {
+            if (!string.IsNullOrWhiteSpace(spawnPointID)) _forcedSpawnID = spawnPointID;
         }
 
         /// <summary>
@@ -262,7 +296,7 @@ namespace LSDR.Dream
                 ? 0
                 : (GameSave.CurrentJournalSave.LastGraphY + 9) * GraphSpawnMap.GRAPH_SIZE +
                   (GameSave.CurrentJournalSave.LastGraphX + 9);
-            MusicSystem.NextSong(songNumber);
+            if (!loadingSameDream) MusicSystem.NextSong(songNumber);
 
             Debug.Log("Registering entities...");
             Player = GameObject.FindWithTag("Player");
@@ -280,6 +314,7 @@ namespace LSDR.Dream
             // if we're not transitioning (via a link) then set the orientation
             // because we're beginning the dream
             spawnPlayerInDream(transitioning == false);
+            _forcedSpawnID = null; // reset forced spawn ID as we're now in different dream so last value is irrelevant
 
             Debug.Log("Choosing environment...");
             dream.ChooseEnvironment(GameSave.CurrentJournalSave.DayNumber).Apply();
@@ -447,6 +482,27 @@ namespace LSDR.Dream
         }
 
         [Console]
+        public void ListEntities()
+        {
+            Debug.Log("Listing entities:");
+            int entityCount = 0;
+            foreach (var entityId in EntityIndex.Instance.GetEntityIDs())
+            {
+                Debug.Log(entityId);
+                entityCount++;
+            }
+            Debug.Log($"Total: {entityCount} entities");
+
+        }
+
+        [Console]
+        public void TelePlayer(string id)
+        {
+            var destObj = EntityIndex.Instance.Get(id);
+            Player.transform.position = destObj.transform.position;
+        }
+
+        [Console]
         public void SetSongStyle(int style)
         {
             if (CurrentDream == null) return;
@@ -499,6 +555,17 @@ namespace LSDR.Dream
                     TextureSetter.Instance.TextureSet = TextureSet.Upper;
                     break;
             }
+        }
+
+        [Console]
+        public void ListDreams()
+        {
+            Debug.Log("Listing dreams:");
+            foreach (var dream in SettingsSystem.CurrentJournal.Dreams)
+            {
+                Debug.Log(dream.Name);
+            }
+            Debug.Log($"Total: {SettingsSystem.CurrentJournal.Dreams.Count} dreams");
         }
 
         [Console]

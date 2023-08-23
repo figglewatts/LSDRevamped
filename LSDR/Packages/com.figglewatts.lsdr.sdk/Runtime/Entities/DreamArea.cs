@@ -15,5 +15,7 @@ namespace LSDR.SDK.Entities
             DreamControlManager.Managed.LogGraphContributionFromArea(GraphContribution.Dynamic,
                 GraphContribution.Upper);
         }
+
+        protected override void onTriggerExit(Collider player) { }
     }
 }

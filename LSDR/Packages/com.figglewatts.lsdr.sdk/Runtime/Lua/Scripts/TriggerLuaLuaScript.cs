@@ -5,21 +5,25 @@ namespace LSDR.SDK.Lua
 {
     public class TriggerLuaLuaScript : AbstractStartUpdateLuaScript
     {
-        public const string TRIGGER_FUNCTION_NAME = "onTrigger";
-
         private DynValue _triggerFunc;
+        private DynValue _triggerExitFunc;
 
-        public TriggerLuaLuaScript(ILuaEngine engine, LuaScriptAsset asset) : base(engine, asset)
+        public TriggerLuaLuaScript(ILuaEngine engine, LuaScriptAsset asset, string triggerFunctionName,
+            string triggerExitFunctionName) : base(engine,
+            asset)
         {
-            loadTriggerFunctions();
+            loadTriggerFunctions(triggerFunctionName, triggerExitFunctionName);
             Start();
         }
 
         public void OnTrigger() { _scriptAsset.HandleLuaErrorsFor(() => { Script.Call(_triggerFunc); }); }
 
-        private void loadTriggerFunctions()
+        public void OnTriggerExit() { _scriptAsset.HandleLuaErrorsFor(() => { Script.Call(_triggerExitFunc); }); }
+
+        private void loadTriggerFunctions(string triggerFunctionName, string triggerExitFunctionName)
         {
-            _triggerFunc = Script.Globals.Get(TRIGGER_FUNCTION_NAME);
+            _triggerFunc = Script.Globals.Get(triggerFunctionName);
+            _triggerExitFunc = Script.Globals.Get(triggerExitFunctionName);
         }
     }
 }

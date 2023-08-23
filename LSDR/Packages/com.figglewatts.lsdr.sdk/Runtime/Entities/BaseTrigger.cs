@@ -9,6 +9,7 @@ namespace LSDR.SDK.Entities
 
         protected BoxCollider _collider;
         protected bool _triggered;
+        protected bool _exitTriggered;
 
         protected abstract Color _editorColour { get; }
 
@@ -41,6 +42,20 @@ namespace LSDR.SDK.Entities
             _triggered = true;
         }
 
+        public void OnTriggerExit(Collider other)
+        {
+            // ignore if already triggered and in only once mode
+            if (OnlyOnce && _exitTriggered) return;
+
+            // ignore if not player
+            if (!other.gameObject.CompareTag("Player")) return;
+
+            onTriggerExit(other);
+            _exitTriggered = true;
+        }
+
         protected abstract void onTrigger(Collider player);
+
+        protected abstract void onTriggerExit(Collider player);
     }
 }

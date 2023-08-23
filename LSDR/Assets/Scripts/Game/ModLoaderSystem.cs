@@ -9,6 +9,8 @@ namespace LSDR.Game
     [CreateAssetMenu(menuName = "System/ModLoaderSystem")]
     public class ModLoaderSystem : ScriptableObject
     {
+        public List<LSDRevampedMod> BuiltInMods;
+
         protected readonly List<LSDRevampedMod> _loadedMods = new List<LSDRevampedMod>();
         public IEnumerable<LSDRevampedMod> Mods => _loadedMods;
 
@@ -36,6 +38,8 @@ namespace LSDR.Game
             }
 
             ensureDirectory();
+
+            _loadedMods.AddRange(BuiltInMods);
 
             string[] modFiles = Directory.GetFiles(_modsDirectory, "*.lsdrmod", SearchOption.AllDirectories);
             foreach (string modFile in modFiles)

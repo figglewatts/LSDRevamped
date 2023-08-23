@@ -4,6 +4,7 @@ using System.Text;
 using Torii.Event;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace Torii.Console
@@ -34,7 +35,8 @@ namespace Torii.Console
             CommandInputField.onEndEdit.AddListener(val =>
             {
                 // submit command on press enter
-                if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)) commandSubmit(val);
+                if (Keyboard.current.enterKey.wasPressedThisFrame ||
+                    Keyboard.current.numpadEnterKey.wasPressedThisFrame) commandSubmit(val);
             });
 
             DevConsole.Register(this);
@@ -45,12 +47,12 @@ namespace Torii.Console
             if (EventSystem.current.currentSelectedGameObject != CommandInputField.gameObject) return;
 
             // print completions on tab
-            if (Input.GetKeyDown(KeyCode.Tab)) PrintCompletions(CommandInputField.text);
+            if (Keyboard.current.tabKey.wasPressedThisFrame) PrintCompletions(CommandInputField.text);
 
             // cycle command history with up/down arrows
-            if (Input.GetKeyDown(KeyCode.UpArrow))
+            if (Keyboard.current.upArrowKey.wasPressedThisFrame)
                 CycleCommandHistory(_commandHistoryPos + 1);
-            else if (Input.GetKeyDown(KeyCode.DownArrow)) CycleCommandHistory(_commandHistoryPos - 1);
+            else if (Keyboard.current.downArrowKey.wasPressedThisFrame) CycleCommandHistory(_commandHistoryPos - 1);
         }
 
         public void OnDestroy() { Application.logMessageReceived -= LogHandler; }

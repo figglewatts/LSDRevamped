@@ -18,8 +18,6 @@ namespace LSDR.SDK.Audio
             int xPos = (int)(hitPositionWorldspace.x - lbdChunk.transform.position.x + 0.5f);
             int yPos = (int)(hitPositionWorldspace.z - lbdChunk.transform.position.z + 0.5f);
 
-            Debug.Log($"lbd footstep on: {xPos}, {yPos}");
-
             if (xPos < 0 || xPos >= 20 || yPos < 0 || yPos >= 20) return Fallback;
 
             int footstepKey = lbdChunk.Tiles[xPos * 20 + yPos].FootstepSoundAndCollision & 0x7F;

@@ -123,7 +123,8 @@ fragOut lsdrFrag(fragdata input, sampler2D mainTex, fixed4 tint)
     output_col = ApplyRevampedFog(output_col, fogColor);
     #endif
 
-    output.color = output_col * BRIGHTNESS;
+    output_col.rgb *= BRIGHTNESS;
+    output.color = output_col;
 
     return output;
 }

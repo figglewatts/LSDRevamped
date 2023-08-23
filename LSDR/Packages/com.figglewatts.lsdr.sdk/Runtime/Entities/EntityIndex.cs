@@ -26,6 +26,8 @@ namespace LSDR.SDK.Entities
             }
         }
 
+        public IEnumerable<string> GetEntityIDs() => _entities.Keys;
+
         public void Register(BaseEntity entity)
         {
             Register(entity.ID, entity.gameObject);

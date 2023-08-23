@@ -1,3 +1,4 @@
+using LSDR.Entities.Player;
 using LSDR.SDK.Entities;
 using MoonSharp.Interpreter;
 using UnityEngine;
@@ -10,6 +11,8 @@ namespace LSDR.Lua.Proxies
         public GameObjectProxy(GameObject target) : base(target) { }
 
         public InteractiveObject InteractiveObject => getAs<InteractiveObject>();
+        public PlayerMovement PlayerMovement => getAs<PlayerMovement>();
+        public PlayerCameraRotation PlayerCamera => getAs<PlayerCameraRotation>();
 
         protected T getAs<T>() where T : MonoBehaviour
         {

@@ -20,5 +20,7 @@ namespace LSDR.SDK.DreamControl
 
         void LogGraphContributionFromArea(int dynamicness, int upperness);
         void LogGraphContributionFromEntity(int dynamicness, int upperness);
+
+        void SetNextLinkDream(Dream dream, string spawnPointID = null);
     }
 }

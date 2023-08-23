@@ -7,6 +7,8 @@ namespace LSDR.SDK.Entities
     public class TriggerLua : BaseTrigger
     {
         public LuaScriptAsset Script;
+        public string TriggerFunctionName = "onTrigger";
+        public string TriggerExitFunctionName = "onTriggerExit";
 
         protected TriggerLuaLuaScript _luaScript;
 
@@ -16,9 +18,19 @@ namespace LSDR.SDK.Entities
         {
             base.Start();
 
-            if (Script) _luaScript = new TriggerLuaLuaScript(LuaManager.Managed, Script);
+            if (Script)
+                _luaScript = new TriggerLuaLuaScript(LuaManager.Managed, Script, TriggerFunctionName,
+                    TriggerExitFunctionName);
         }
 
-        protected override void onTrigger(Collider player) { _luaScript.OnTrigger(); }
+        protected override void onTrigger(Collider player)
+        {
+            _luaScript.OnTrigger();
+        }
+
+        protected override void onTriggerExit(Collider player)
+        {
+            _luaScript.OnTriggerExit();
+        }
     }
 }
