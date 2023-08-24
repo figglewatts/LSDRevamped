@@ -31,8 +31,8 @@ namespace LSDR.Dream
     public class DreamSystem : ScriptableObject, IDreamController
     {
         protected const float CHANCE_TO_SWITCH_TEXTURES_WHEN_LINKING = 2;
-        protected const float MIN_SECONDS_IN_DREAM = 90;
-        protected const float MAX_SECONDS_IN_DREAM = 600;
+        protected const float MIN_SECONDS_IN_DREAM = 60;
+        protected const float MAX_SECONDS_IN_DREAM = 240;
         protected const int FALLING_UPPER_PENALTY = -9;
         protected const float FADE_OUT_SECS_REGULAR = 3;
         protected const float FADE_OUT_SECS_FALL = 2.5f;
