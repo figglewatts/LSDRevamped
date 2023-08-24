@@ -73,6 +73,8 @@ namespace LSDR.Dream
             // penalise upper score if ending dream from falling
             if (fromFall)
             {
+                var pitch = RandUtil.RandomArrayElement(new[] { 0.25f, 0.5f });
+                AudioPlayer.Instance.PlayClip(LinkSound, loop: false, pitch: pitch, mixerGroup: "SFX");
                 CurrentSequence.LogGraphContributionFromEntity(dynamicness: 0, FALLING_UPPER_PENALTY);
                 SettingsSystem.CanControlPlayer = false;
             }
@@ -141,7 +143,11 @@ namespace LSDR.Dream
 
             MusicSystem.StopSong();
 
-            if (playSound) AudioPlayer.Instance.PlayClip(LinkSound, loop: false, mixerGroup: "SFX");
+            if (playSound)
+            {
+                var pitch = RandUtil.RandomArrayElement(new[] { 0.5f, 1, 2 });
+                AudioPlayer.Instance.PlayClip(LinkSound, loop: false, pitch: pitch, mixerGroup: "SFX");
+            }
 
             CurrentSequence.Visited.Add(dream);
 
