@@ -30,12 +30,11 @@ namespace LSDR.Dream
     [CreateAssetMenu(menuName = "System/DreamSystem")]
     public class DreamSystem : ScriptableObject, IDreamController
     {
-        // one in every 6 links switches texture sets
-        protected const float CHANCE_TO_SWITCH_TEXTURES_WHEN_LINKING = 6;
+        protected const float CHANCE_TO_SWITCH_TEXTURES_WHEN_LINKING = 2;
         protected const float MIN_SECONDS_IN_DREAM = 90;
         protected const float MAX_SECONDS_IN_DREAM = 600;
         protected const int FALLING_UPPER_PENALTY = -9;
-        protected const float FADE_OUT_SECS_REGULAR = 5;
+        protected const float FADE_OUT_SECS_REGULAR = 3;
         protected const float FADE_OUT_SECS_FALL = 2.5f;
         protected const float FADE_OUT_SECS_FORCE = 1;
         public ScenePicker TitleScene;
@@ -80,14 +79,15 @@ namespace LSDR.Dream
             else
                 SettingsSystem.PlayerGravity = false;
 
-            ToriiFader.Instance.FadeIn(Color.black, fromFall ? FADE_OUT_SECS_FALL : FADE_OUT_SECS_REGULAR, () =>
-            {
-                CurrentDream = null;
-                GameSave.CurrentJournalSave.SequenceData.Add(CurrentSequence);
-                GameSave.Save();
-                _dreamIsEnding = false;
-                Coroutines.Instance.StartCoroutine(ReturnToTitle());
-            });
+            ToriiFader.Instance.FadeIn(fadeColorFromCurrentSequence(),
+                fromFall ? FADE_OUT_SECS_FALL : FADE_OUT_SECS_REGULAR, () =>
+                {
+                    CurrentDream = null;
+                    GameSave.CurrentJournalSave.SequenceData.Add(CurrentSequence);
+                    GameSave.Save();
+                    _dreamIsEnding = false;
+                    Coroutines.Instance.StartCoroutine(ReturnToTitle());
+                });
 
             commonEndDream();
         }
