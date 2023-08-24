@@ -37,6 +37,11 @@ namespace LSDR.SDK.Lua.Actions
             return newAction;
         }
 
+        public LuaAsyncAction ThenWaitUntil(IPredicate predicate)
+        {
+            return Then(() => { }).Until(predicate);
+        }
+
         public void ThenFinish() { _runner.Begin(LuaAsyncActionRunner.LuaAsyncActionRunnerMode.OneShot); }
 
         public void ThenLoop() { _runner.Begin(LuaAsyncActionRunner.LuaAsyncActionRunnerMode.Looping); }

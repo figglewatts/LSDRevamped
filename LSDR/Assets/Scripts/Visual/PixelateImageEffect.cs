@@ -22,6 +22,8 @@ namespace LSDR.Visual
 
         protected void Update()
         {
+            if (_main == null) return;
+
             float ratio = _main.pixelWidth / (float)_main.pixelHeight;
             _width = Mathf.RoundToInt(Height * ratio);
         }

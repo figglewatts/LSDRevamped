@@ -25,7 +25,7 @@ namespace LSDR.SDK.Lua.Actions
             // if we're not running or there is no root action, don't update
             if (!_running || _rootAction == null) return;
 
-            // if the timescale is zero we don't want to run (kindof a hack... doesn't support slower/faster)
+            // if the timescale is zero we don't want to run
             if (Math.Abs(Time.timeScale) < float.Epsilon) return;
 
             // start the first predicate in the sequence
@@ -104,6 +104,7 @@ namespace LSDR.SDK.Lua.Actions
         {
             _running = false;
             _firstPredicateBegun = false;
+            _actionsToRun = null;
         }
 
         private void switchToAction(LuaAsyncAction next)

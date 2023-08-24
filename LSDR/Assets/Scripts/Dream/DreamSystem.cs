@@ -301,6 +301,8 @@ namespace LSDR.Dream
             Debug.Log("Registering entities...");
             Player = GameObject.FindWithTag("Player");
             if (Player == null) Debug.LogError("Unable to find player in scene!");
+            Player.GetComponent<PlayerMovement>().StopExternalInput();
+            Player.GetComponent<PlayerRotation>().StopExternalInput();
             registerCommonEntities();
 
             OnLevelPreLoad.Raise();

@@ -17,6 +17,7 @@ namespace LSDR.Entities.Player
         public ControlSchemeLoaderSystem ControlScheme;
         public DreamSystem DreamSystem;
         public Transform Camera;
+        public PlayerRotation Rotation;
         public AudioClip FootstepClip;
 
         [Console] public float GravityMultiplier = 1f;
@@ -34,11 +35,13 @@ namespace LSDR.Entities.Player
         protected bool _currentlySprinting;
         protected bool _currentlyStepping;
 
-        // TODO: better footstep sounds
         protected float _initialCameraOffset;
         protected Vector2 _inputDir;
         protected bool _inputLocked;
         protected Vector2 _lockedInput;
+
+        protected bool _externalInput;
+        protected Vector2 _externalInputDirection;
 
         protected FixedTimeSince _timeColliding;
 
@@ -87,6 +90,20 @@ namespace LSDR.Entities.Player
         }
 
         public void OnDestroy() { DevConsole.Deregister(this); }
+
+        public void UseExternalInput(Vector2 direction)
+        {
+            _externalInput = true;
+            _externalInputDirection = direction;
+            Settings.CanMouseLook = false;
+        }
+
+        public void StopExternalInput()
+        {
+            _externalInput = false;
+            _externalInputDirection = Vector2.zero;
+            Settings.CanMouseLook = true;
+        }
 
         public void SetInputLock()
         {
@@ -280,6 +297,9 @@ namespace LSDR.Entities.Player
             // get vector axes from input system
             Vector2 move = ControlScheme.InputActions.Game.Move.ReadValue<Vector2>();
             move.x = ControlScheme.Current.FpsControls ? move.x : 0;
+
+            // handle input from external sources (i.e. Lua scripts controlling the player)
+            if (_externalInput) move = _externalInputDirection;
 
             // no partial movement
             if (move.x > 0) move.x = 1;

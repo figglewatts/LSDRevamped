@@ -47,8 +47,6 @@ namespace LSDR.SDK.Entities
             // if we're not on an LBD tile, or we're on the same tile as before - do nothing
             if (lbdIndex == -1 || _lastLbdIndex == lbdIndex) return;
 
-            Debug.Log("Moved to another LBD tile - influencing graph");
-
             // check to see if we have graph data for this LBD tile
             if (lbdIndex >= LBDGraphData.Count)
             {

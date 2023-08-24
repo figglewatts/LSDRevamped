@@ -22,6 +22,7 @@ namespace LSDR.Lua
             UserData.RegisterProxyType<PlayerMovementProxy, PlayerMovement>(e => new PlayerMovementProxy(e));
             UserData.RegisterProxyType<PlayerCameraRotationProxy, PlayerCameraRotation>(e =>
                 new PlayerCameraRotationProxy(e));
+            UserData.RegisterProxyType<PlayerMovementProxy, PlayerMovement>(e => new PlayerMovementProxy(e));
             //UserData.RegisterProxyType<DreamSystemProxy, DreamSystem>(r => new DreamSystemProxy(r));
 
             // register types

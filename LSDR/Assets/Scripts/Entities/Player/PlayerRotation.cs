@@ -17,6 +17,21 @@ namespace LSDR.Entities.Player
         /// </summary>
         public float RotationSpeed;
 
+        protected bool _externalInput = false;
+        protected float _externalInputValue;
+
+        public void UseExternalInput(float inputValue)
+        {
+            _externalInput = true;
+            _externalInputValue = inputValue;
+        }
+
+        public void StopExternalInput()
+        {
+            _externalInput = false;
+            _externalInputValue = 0;
+        }
+
         private void FixedUpdate()
         {
             // if we can control the player and we're not currently in FPS control mode
@@ -24,6 +39,7 @@ namespace LSDR.Entities.Player
             {
                 // apply a rotation equal to the current move amount
                 float rotAmount = ControlScheme.InputActions.Game.Move.ReadValue<Vector2>().x;
+                if (_externalInput) rotAmount = _externalInputValue;
                 Vector3 transformRotation = transform.rotation.eulerAngles;
                 transformRotation.y += rotAmount * RotationSpeed * Time.deltaTime;
                 transform.rotation = Quaternion.Euler(transformRotation);

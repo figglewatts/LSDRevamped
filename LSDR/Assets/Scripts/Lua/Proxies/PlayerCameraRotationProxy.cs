@@ -7,5 +7,11 @@ namespace LSDR.Lua.Proxies
     {
         [MoonSharpHidden]
         public PlayerCameraRotationProxy(PlayerCameraRotation target) : base(target) { }
+
+        public bool Enabled
+        {
+            get => _target.enabled;
+            set => _target.enabled = value;
+        }
     }
 }
