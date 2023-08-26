@@ -14,6 +14,12 @@ namespace Torii.Console
             {
                 Console.ToggleVisible();
             }
+
+            // TODO: remove dev bindings
+            if (Keyboard.current[Key.Digit1].wasPressedThisFrame)
+            {
+                DevConsole.Execute("DreamSystem.LoadDreamSpawn Bright Moon Cottage,4thFloorSpawn");
+            }
         }
     }
 }

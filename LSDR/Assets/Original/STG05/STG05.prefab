@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1684274276815916457}
   - component: {fileID: 3208633932601471473}
   m_Layer: 0
-  m_Name: PlayerSpawnNaturalWorldTunnel
+  m_Name: EntranceFromNaturalWorld
   m_TagString: Untagged
   m_Icon: {fileID: 4422084297763085224, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -57,7 +57,7 @@ GameObject:
   - component: {fileID: 1736273696796808090}
   - component: {fileID: 1736273696796808085}
   m_Layer: 0
-  m_Name: PlayerSpawn
+  m_Name: 317c2c9d-41b6-4536-9c27-93fd338fcec2
   m_TagString: Untagged
   m_Icon: {fileID: 4422084297763085224, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -244,7 +244,7 @@ GameObject:
   - component: {fileID: 5386058370666141045}
   - component: {fileID: 6813009485421540601}
   m_Layer: 0
-  m_Name: TriggerLinkNaturalWorldTunnel
+  m_Name: 46b8a86a-f408-44ad-8ad9-045897208a4c
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -297,6 +297,7 @@ MonoBehaviour:
   ForceFadeColor: 1
   PlayLinkSound: 0
   LockInput: 1
+  AffectsLinksWithin: 0
 --- !u!1001 &1736273695225386929
 PrefabInstance:
   m_ObjectHideFlags: 0

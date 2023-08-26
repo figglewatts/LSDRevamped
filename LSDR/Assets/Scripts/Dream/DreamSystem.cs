@@ -115,7 +115,7 @@ namespace LSDR.Dream
         public void Transition(Color fadeCol,
             SDK.Data.Dream dream = null,
             bool playSound = true,
-            bool lockControls = false,
+            bool lockControls = true,
             string spawnPointID = null)
         {
             if (!_canTransition) return;
@@ -139,6 +139,9 @@ namespace LSDR.Dream
             SettingsSystem.CanControlPlayer = false;
             OverrideNextSpawn(spawnPointID);
             if (lockControls) Player.GetComponent<PlayerMovement>().SetInputLock();
+
+            // save the last Y rotation for the player, so we can set it back to this when we load the next dream
+            _lastPlayerYRotation = Player.transform.rotation.eulerAngles.y;
 
             // disable pausing to prevent throwing off timers etc
             PauseSystem.CanPause = false;
@@ -481,7 +484,7 @@ namespace LSDR.Dream
             {
                 // make sure we only try to do this if we've already dreamed (i.e. we have a last Y rotation)
                 // otherwise, we'll be overwriting the Y rotation of the spawn point chosen
-                if (_spawnedInAtLeastOnce)
+                if (_spawnedInAtLeastOnce && !setOrientation)
                 {
                     // set the last Y rotation to what it was before
                     Player.transform.rotation = Quaternion.Euler(Player.transform.rotation.x, _lastPlayerYRotation,
@@ -603,6 +606,23 @@ namespace LSDR.Dream
                 BeginDream(dream);
             else
                 Transition(Color.black, dream, playSound: false);
+        }
+
+        [Console]
+        public void LoadDreamSpawn(string dreamName, string spawnId)
+        {
+            SDK.Data.Dream dream = SettingsSystem.CurrentJournal.Dreams.FirstOrDefault(d =>
+                d.Name.Equals(dreamName, StringComparison.InvariantCulture));
+            if (dream == null)
+            {
+                Debug.LogError($"Unable to load dream: no such dream '{dreamName}' in " +
+                               $"journal '{SettingsSystem.CurrentJournal.Name}'");
+            }
+
+            if (CurrentDream == null)
+                BeginDream(dream);
+            else
+                Transition(Color.black, dream, playSound: false, spawnPointID: spawnId);
         }
 
 #endregion
