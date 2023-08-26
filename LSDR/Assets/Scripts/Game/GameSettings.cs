@@ -284,6 +284,18 @@ namespace LSDR.Game
             }
         }
 
+        private bool _longDrawDistance;
+
+        public bool LongDrawDistance
+        {
+            get => _longDrawDistance;
+            set
+            {
+                _longDrawDistance = value;
+                NotifyPropertyChange(nameof(LongDrawDistance));
+            }
+        }
+
 #endregion
 
 #region Mod Settings

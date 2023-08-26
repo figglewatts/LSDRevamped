@@ -72,7 +72,7 @@ namespace LSDR.SDK.Data
         protected static readonly int _skyColorPropertyId = Shader.PropertyToID("_SkyColor");
         protected static readonly int _fogColorPropertyId = Shader.PropertyToID("_FogColor");
 
-        public void Apply()
+        public void Apply(bool longDrawDistance)
         {
             Material skyMaterial = new Material(Shader.Find("LSDR/GradientSky"));
             skyMaterial.SetFloat(_fogHeightPropertyId, FogHeight);
@@ -84,7 +84,7 @@ namespace LSDR.SDK.Data
             RenderSettings.fog = true;
             RenderSettings.fogColor = FogColor;
             RenderSettings.fogStartDistance = FogStartDistance;
-            RenderSettings.fogEndDistance = FogEndDistance;
+            RenderSettings.fogEndDistance = longDrawDistance ? FogEndDistance * 3 : FogEndDistance;
             RenderSettings.fogMode = FogMode.Linear;
             Shader.SetGlobalInt(_subtractiveFogPropertyId, SubtractiveFog ? 1 : 0);
         }

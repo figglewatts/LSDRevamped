@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using LSDR.Audio;
+using LSDR.Dream;
 using LSDR.InputManagement;
 using LSDR.SDK.Data;
 using LSDR.SDK.Visual;
@@ -30,6 +31,7 @@ namespace LSDR.Game
         public ModLoaderSystem ModLoaderSystem;
         public ControlSchemeLoaderSystem ControlSchemeLoader;
         public MusicSystem MusicSystem;
+        public DreamSystem DreamSystem;
 
         public ToriiEvent OnSettingsApply;
 
@@ -153,6 +155,9 @@ namespace LSDR.Game
 
             // update any shaders
             TextureSetter.Instance.SetAllShaders(Settings.UseClassicShaders);
+
+            // draw distance
+            DreamSystem.ApplyEnvironment();
 
             Settings.UpdateCurrentProfile();
 

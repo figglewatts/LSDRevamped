@@ -16,6 +16,7 @@ namespace LSDR.UI.Settings
         public Toggle UsePixelationShaderToggle;
         public Toggle FullscreenToggle;
         public Toggle LimitFramerateToggle;
+        public Toggle DrawDistanceToggle;
         public Slider FOVSlider;
         public Slider AffineSlider;
         public Dropdown ResolutionDropdown;
@@ -31,6 +32,7 @@ namespace LSDR.UI.Settings
             Settings.SettingsBindBroker.RegisterData(ResolutionDropdown);
             Settings.SettingsBindBroker.RegisterData(QualityDropdown);
             Settings.SettingsBindBroker.RegisterData(AffineSlider);
+            Settings.SettingsBindBroker.RegisterData(DrawDistanceToggle);
 
             UseClassicShadersToggle.isOn = Settings.Settings.UseClassicShaders;
             UsePixelationShaderToggle.isOn = Settings.Settings.UsePixelationShader;
@@ -40,6 +42,7 @@ namespace LSDR.UI.Settings
             ResolutionDropdown.value = Settings.Settings.CurrentResolutionIndex;
             QualityDropdown.value = Settings.Settings.CurrentQualityIndex;
             AffineSlider.value = Settings.Settings.AffineIntensity;
+            DrawDistanceToggle.isOn = Settings.Settings.LongDrawDistance;
 
             Settings.SettingsBindBroker.Bind(() => UseClassicShadersToggle.isOn,
                 () => Settings.Settings.UseClassicShaders, BindingType.TwoWay);
@@ -58,6 +61,8 @@ namespace LSDR.UI.Settings
                 () => Settings.Settings.LimitFramerate, BindingType.TwoWay);
             Settings.SettingsBindBroker.Bind(() => AffineSlider.value,
                 () => Settings.Settings.AffineIntensity,
+                BindingType.TwoWay);
+            Settings.SettingsBindBroker.Bind(() => DrawDistanceToggle.isOn, () => Settings.Settings.LongDrawDistance,
                 BindingType.TwoWay);
 
             Settings.Settings.ApplyCurrentProfile();

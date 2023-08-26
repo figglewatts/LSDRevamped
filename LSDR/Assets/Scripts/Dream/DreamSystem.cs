@@ -63,6 +63,7 @@ namespace LSDR.Dream
         [NonSerialized] protected bool _spawnedInAtLeastOnce; // true if we've been in a dream yet
         [NonSerialized] public GameObject Player;
         [NonSerialized] protected SDK.Data.Dream _nextDream = null;
+        [NonSerialized] protected DreamEnvironment _currentEnvironment;
         public SDK.Data.Dream CurrentDream { get; protected set; }
         public GameObject CurrentDreamInstance { get; protected set; }
         public DreamSequence CurrentSequence { get; protected set; }
@@ -236,6 +237,12 @@ namespace LSDR.Dream
             });
         }
 
+        public void ApplyEnvironment()
+        {
+            if (_currentEnvironment == null) return;
+            _currentEnvironment.Apply(SettingsSystem.Settings.LongDrawDistance);
+        }
+
         public IEnumerator EndDreamAfterSeconds(float seconds)
         {
             yield return new WaitForSeconds(seconds);
@@ -326,7 +333,8 @@ namespace LSDR.Dream
             _forcedSpawnID = null; // reset forced spawn ID as we're now in different dream so last value is irrelevant
 
             Debug.Log("Choosing environment...");
-            dream.ChooseEnvironment(GameSave.CurrentJournalSave.DayNumber).Apply();
+            _currentEnvironment = dream.ChooseEnvironment(GameSave.CurrentJournalSave.DayNumber);
+            ApplyEnvironment();
 
             SettingsSystem.CanControlPlayer = true;
             SettingsSystem.CanMouseLook = true;
@@ -546,7 +554,7 @@ namespace LSDR.Dream
                 return;
             }
 
-            CurrentDream.Environments[idx].Apply();
+            CurrentDream.Environments[idx].Apply(SettingsSystem.Settings.LongDrawDistance);
         }
 
         [Console]

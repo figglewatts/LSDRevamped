@@ -107,7 +107,7 @@ namespace LSDR.SDK.Editor.Data
 
             _oldRenderSettings = new RenderSettings();
 
-            dreamEnvironment.Apply();
+            dreamEnvironment.Apply(false);
         }
 
         protected void destroyPreview()

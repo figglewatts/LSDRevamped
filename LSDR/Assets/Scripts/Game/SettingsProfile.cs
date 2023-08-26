@@ -12,6 +12,7 @@ namespace LSDR.Game
         public string Name;
         public bool UseClassicShaders;
         public bool UsePixelationShader;
+        public bool LongDrawDistance;
 
         public SettingsProfile() { }
 
@@ -27,6 +28,7 @@ namespace LSDR.Game
             LimitFramerate = settings.LimitFramerate;
             FOV = settings.FOV;
             AffineIntensity = settings.AffineIntensity;
+            LongDrawDistance = settings.LongDrawDistance;
         }
 
         public void ApplyTo(GameSettings settings)
@@ -36,6 +38,7 @@ namespace LSDR.Game
             settings.LimitFramerate = LimitFramerate;
             settings.FOV = FOV;
             settings.AffineIntensity = AffineIntensity;
+            settings.LongDrawDistance = LongDrawDistance;
         }
 
         public static List<SettingsProfile> CreateDefaultProfiles()
@@ -49,7 +52,8 @@ namespace LSDR.Game
                     UsePixelationShader = true,
                     LimitFramerate = false,
                     FOV = 50,
-                    AffineIntensity = 0.4f
+                    AffineIntensity = 0.4f,
+                    LongDrawDistance = false,
                 },
                 new SettingsProfile
                 {
@@ -58,7 +62,8 @@ namespace LSDR.Game
                     UsePixelationShader = false,
                     LimitFramerate = false,
                     FOV = 50,
-                    AffineIntensity = 0.4f
+                    AffineIntensity = 0.4f,
+                    LongDrawDistance = true,
                 }
             };
         }
