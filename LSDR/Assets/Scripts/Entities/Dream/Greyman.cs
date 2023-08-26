@@ -9,7 +9,7 @@ namespace LSDR.Entities.Dream
     {
         public const int UPPERNESS_PENALTY = -9;
         public float MoveSpeed = 0.5f;
-        public float FlashDistance = 4;
+        public float FlashDistance = 2;
         public DreamSystem DreamSystem;
         public MeshRenderer Renderer;
 
