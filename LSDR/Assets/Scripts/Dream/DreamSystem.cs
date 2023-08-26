@@ -145,7 +145,7 @@ namespace LSDR.Dream
 
             if (playSound)
             {
-                var pitch = RandUtil.RandomArrayElement(new[] { 0.5f, 1, 2 });
+                var pitch = RandUtil.RandomArrayElement(new[] { 0.25f, 0.5f, 1, 2 });
                 AudioPlayer.Instance.PlayClip(LinkSound, loop: false, pitch: pitch, mixerGroup: "SFX");
             }
 

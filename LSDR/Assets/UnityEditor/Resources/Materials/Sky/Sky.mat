@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: STG13
-  m_Shader: {fileID: 4800000, guid: cef4c7806c7d4603ad17025c3d387ad1, type: 3}
+  m_Name: Sky
+  m_Shader: {fileID: 4800000, guid: 794fef2c2b9f4b7d91e11f67f029db3f, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -43,26 +43,6 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _MainTexA:
-        m_Texture: {fileID: 633310261564741514, guid: 46c2a51351585664abc3c45fc3409ecd,
-          type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _MainTexB:
-        m_Texture: {fileID: 633310261564741514, guid: 5a8da68352f38554499443cfdf6305fa,
-          type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _MainTexC:
-        m_Texture: {fileID: 633310261564741514, guid: 43486854c7d1ceb42a1ec1e449e34b4b,
-          type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _MainTexD:
-        m_Texture: {fileID: 633310261564741514, guid: 95a21653b164cff45a376c6182cd95f6,
-          type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -80,6 +60,8 @@ Material:
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
+    - _FogGradient: 0.2
+    - _FogHeight: 0
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
@@ -95,5 +77,6 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _Tint: {r: 1, g: 1, b: 1, a: 1}
+    - _FogColor: {r: 1, g: 1, b: 1, a: 1}
+    - _SkyColor: {r: 0, g: 0.5, b: 0.5, a: 1}
   m_BuildTextureStacks: []
