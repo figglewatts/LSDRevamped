@@ -11,6 +11,13 @@ namespace LSDR.Util
 {
     public static class ContextTools
     {
+        [MenuItem("LSDR SDK/Save assets")]
+        public static void SaveAssets()
+        {
+            AssetDatabase.Refresh();
+            AssetDatabase.SaveAssets();
+        }
+
         [MenuItem("Assets/LSDR/Hook up revamped songs")]
         public static void HookUpRevampedSongs()
         {
@@ -127,6 +134,7 @@ namespace LSDR.Util
                 existingAsset.Name = $"{stgName} {songFileNameWithoutExtension}";
                 styleLists[songStyle].Songs.Add(existingAsset);
                 EditorUtility.SetDirty(styleLists[songStyle]);
+                EditorUtility.SetDirty(existingAsset);
             }
 
             AssetDatabase.SaveAssets();

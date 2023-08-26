@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using LSDR.Audio;
+using LSDR.Entities.Dream;
 using LSDR.Entities.Player;
 using LSDR.Game;
 using LSDR.InputManagement;
@@ -336,6 +337,9 @@ namespace LSDR.Dream
             playerMovement.CanLink = true;
             playerMovement.ClearInputLock();
             _canTransition = true;
+
+            // tell grey man spawner we're in a new dream
+            Player.GetComponent<GreymanSpawner>().OnNewDream();
 
             OnLevelLoad.Raise();
             OnSongChange.Raise();

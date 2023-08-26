@@ -8,13 +8,12 @@ namespace LSDR.Entities.Dream
 {
     public class GreymanSpawner : MonoBehaviour
     {
-        private const float MIN_WAIT_BETWEEN_SPAWN_CHANCES_SECONDS = 5;
-        private const float MAX_WAIT_BETWEEN_SPAWN_CHANCES_SECONDS = 10;
-        private const float CHANCE_FOR_GREYMAN = 20;
+        private const float MIN_WAIT_BETWEEN_SPAWN_CHANCES_SECONDS = 1;
+        private const float MAX_WAIT_BETWEEN_SPAWN_CHANCES_SECONDS = 5;
+        private const float CHANCE_FOR_GREYMAN = 10;
         public DreamSystem DreamSystem;
         public GameObject GreymanPrefab;
         public float GreymanSpawnDistance = 10;
-        private bool _hasSpawnedGreyman;
         private Coroutine _rollForGreymanCoroutine;
 
         private GameObject _spawnedGreyman;
@@ -43,21 +42,32 @@ namespace LSDR.Entities.Dream
             _spawnedGreyman = Instantiate(GreymanPrefab, spawnPos, Quaternion.identity);
         }
 
+        public void OnNewDream()
+        {
+            // see if we can scare the player by loading into a grey man spawn ;)
+            RollSpawn();
+        }
+
         public IEnumerator RollForGreyman()
         {
-            _hasSpawnedGreyman = false;
             while (true)
             {
-                if (DreamSystem.CurrentDream.GreyMan && RandUtil.OneIn(CHANCE_FOR_GREYMAN) && !_hasSpawnedGreyman)
-                {
-                    Spawn();
-                    _hasSpawnedGreyman = true;
-                }
+                RollSpawn();
 
                 yield return new WaitForSeconds(RandUtil.Float(MIN_WAIT_BETWEEN_SPAWN_CHANCES_SECONDS,
                     MAX_WAIT_BETWEEN_SPAWN_CHANCES_SECONDS));
             }
             // ReSharper disable once IteratorNeverReturns
+        }
+
+        public void RollSpawn()
+        {
+            bool shouldSpawnGreyMan = RandUtil.OneIn(CHANCE_FOR_GREYMAN);
+            Debug.Log($"rolled for greyman, got: ${shouldSpawnGreyMan}");
+            if (DreamSystem.CurrentDream.GreyMan && RandUtil.OneIn(CHANCE_FOR_GREYMAN))
+            {
+                Spawn();
+            }
         }
     }
 }
