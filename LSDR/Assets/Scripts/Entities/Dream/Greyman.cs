@@ -7,7 +7,6 @@ namespace LSDR.Entities.Dream
     [RequireComponent(typeof(MeshRenderer))]
     public class Greyman : MonoBehaviour
     {
-        public const int UPPERNESS_PENALTY = -9;
         public float MoveSpeed = 0.5f;
         public float FlashDistance = 2;
         public DreamSystem DreamSystem;
@@ -33,7 +32,7 @@ namespace LSDR.Entities.Dream
 
         private void playerEncountered()
         {
-            DreamSystem.CurrentSequence.LogGraphContributionFromEntity(dynamicness: 0, UPPERNESS_PENALTY);
+            DreamSystem.CurrentSequence.LogGraphContributionFromEntity(-10, -10);
             ToriiFader.Instance.FadeIn(Color.white, duration: 0.1F, () =>
             {
                 Renderer.enabled = false;

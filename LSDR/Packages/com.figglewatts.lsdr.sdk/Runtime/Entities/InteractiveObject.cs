@@ -21,8 +21,6 @@ namespace LSDR.SDK.Entities
         protected const float UPDATE_INTERVAL = 0.25f;
 
         public LuaScriptAsset Script;
-        public bool HasGraphContribution = true;
-        public GraphContribution GraphContribution;
         public InteractionType InteractionKind;
         public float InteractionDistance = 3;
         protected Animator _animator;
@@ -116,8 +114,6 @@ namespace LSDR.SDK.Entities
         protected void interact()
         {
             _luaScript.Interact();
-            DreamControlManager.Managed.LogGraphContributionFromEntity(GraphContribution.Dynamic,
-                GraphContribution.Upper);
             _interacted = true;
         }
     }
