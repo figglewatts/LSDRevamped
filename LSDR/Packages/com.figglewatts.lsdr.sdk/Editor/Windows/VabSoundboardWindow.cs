@@ -4,7 +4,7 @@ using LSDR.SDK.Assets;
 using UnityEditor;
 using UnityEngine;
 
-namespace LSDR.SDK.Editor.Util
+namespace LSDR.SDK.Editor.Windows
 {
     public class VabSoundboardWindow : EditorWindow
     {

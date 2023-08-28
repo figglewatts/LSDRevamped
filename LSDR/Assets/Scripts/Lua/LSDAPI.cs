@@ -1,8 +1,11 @@
 using System;
+using LSDR.Dream;
 using LSDR.Entities.Player;
 using LSDR.Lua.Proxies;
 using LSDR.SDK;
 using LSDR.SDK.Audio;
+using LSDR.SDK.Data;
+using LSDR.SDK.DreamControl;
 using LSDR.SDK.Entities;
 using LSDR.SDK.Lua;
 using LSDR.Visual;
@@ -23,13 +26,16 @@ namespace LSDR.Lua
             UserData.RegisterProxyType<PlayerCameraRotationProxy, PlayerCameraRotation>(e =>
                 new PlayerCameraRotationProxy(e));
             UserData.RegisterProxyType<PlayerMovementProxy, PlayerMovement>(e => new PlayerMovementProxy(e));
-            //UserData.RegisterProxyType<DreamSystemProxy, DreamSystem>(r => new DreamSystemProxy(r));
+            UserData.RegisterProxyType<DreamSystemProxy, DreamSystem>(r => new DreamSystemProxy(r));
+            UserData.RegisterProxyType<DreamAudioProxy, DreamAudio>(e => new DreamAudioProxy(e));
+            UserData.RegisterProxyType<DreamProxy, SDK.Data.Dream>(e => new DreamProxy(e));
 
             // register types
             engine.RegisterEnum<TextureSet>();
             engine.RegisterEnum<SongStyle>();
             UserData.RegisterType<SongAsset>();
             UserData.RegisterType<SongListAsset>();
+            UserData.RegisterType<DreamEnvironment>();
         }
 
         public static GameObject GetEntity(string id)

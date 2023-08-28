@@ -28,6 +28,8 @@ namespace LSDR.SDK.Editor.Animation
 
         public override void OnInspectorGUI()
         {
+            DrawDefaultInspector();
+
             serializedObject.Update();
 
             AnimationClip[] clips = getClips();

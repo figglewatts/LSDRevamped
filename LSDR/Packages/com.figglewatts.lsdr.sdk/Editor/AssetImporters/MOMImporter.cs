@@ -3,7 +3,6 @@ using System.IO;
 using libLSD.Formats;
 using LSDR.SDK.Animation;
 using UnityEditor.Animations;
-
 using UnityEngine;
 
 namespace LSDR.SDK.Editor.AssetImporters
@@ -46,6 +45,7 @@ namespace LSDR.SDK.Editor.AssetImporters
 
             // create a GameObject for the MOM
             GameObject momObj = new GameObject($"{assetPrefix}MOM");
+            momObj.SetActive(false);
 
             bool hasAnimations = mom.MOS.NumberOfTODs > 0 && mom.MOS.TODs[0].Frames.Length > 0;
             if (!hasAnimations)
@@ -85,7 +85,8 @@ namespace LSDR.SDK.Editor.AssetImporters
                 }
 
                 // add components to the root object
-                momObj.AddComponent<AnimatedObject>();
+                var animatedObj = momObj.AddComponent<AnimatedObject>();
+                animatedObj.Clips = clips;
                 momObj.GetComponent<Animator>().runtimeAnimatorController = controller;
             }
 

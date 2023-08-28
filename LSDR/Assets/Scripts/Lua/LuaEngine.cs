@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using LSDR.Dream;
 using LSDR.SDK.Lua;
 using LSDR.SDK.Lua.Actions;
 using MoonSharp.Interpreter;
@@ -15,7 +16,7 @@ namespace LSDR.Lua
     {
         protected readonly Dictionary<string, object> _registeredObjects;
 
-        public LuaEngine()
+        public LuaEngine(DreamSystem dreamSystem)
         {
             _registeredObjects = new Dictionary<string, object>();
 
@@ -23,6 +24,8 @@ namespace LSDR.Lua
             UserData.RegisterAssembly();
             UserData.RegisterType<LuaAsyncActionRunner>();
             UserData.RegisterType<LuaAsyncAction>();
+
+            _registeredObjects["DreamSystem"] = dreamSystem;
 
             // create converters
             createConverters();

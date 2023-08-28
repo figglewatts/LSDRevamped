@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Reflection;
+using LSDR.Audio;
 using LSDR.Dream;
 using LSDR.InputManagement;
 using LSDR.IO.ResourceHandlers;
 using LSDR.Lua;
+using LSDR.SDK.Audio;
 using LSDR.SDK.DreamControl;
 using LSDR.SDK.Lua;
 using LSDR.Visual;
@@ -47,9 +49,12 @@ namespace LSDR.Game
 
             DreamSystem.Initialise();
 
-            LuaManager.ProvideManaged(new LuaEngine());
+            // hook up interfaces to SDK
+            LuaManager.ProvideManaged(new LuaEngine(DreamSystem));
             DreamControlManager.ProvideManaged(DreamSystem);
+            MixerGroupProviderManager.ProvideManaged(new MixerGroupProvider());
 
+            // register old resource handlers, possibly can be removed
             TResourceManager.RegisterHandler(new LBDHandler());
             TResourceManager.RegisterHandler(new TIXHandler());
             TResourceManager.RegisterHandler(new Texture2DHandler());

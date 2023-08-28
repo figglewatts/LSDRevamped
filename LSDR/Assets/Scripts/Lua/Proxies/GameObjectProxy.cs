@@ -16,8 +16,39 @@ namespace LSDR.Lua.Proxies
         public PlayerCameraRotation PlayerCamera => getAs<PlayerCameraRotation>();
         public LuaAsyncActionRunner Action => getAs<LuaAsyncActionRunner>();
 
-        public Vector3 WorldPosition => _target.transform.position;
+        public Vector3 WorldPosition
+        {
+            get => _target.transform.position;
+            set => _target.transform.position = value;
+        }
+
+        public Vector3 LocalPosition
+        {
+            get => _target.transform.localPosition;
+            set => _target.transform.localPosition = value;
+        }
+
+        public Vector3 WorldRotation
+        {
+            get => _target.transform.rotation.eulerAngles;
+            set => _target.transform.rotation = Quaternion.Euler(value);
+        }
+
+        public Vector3 LocalRotation
+        {
+            get => _target.transform.localRotation.eulerAngles;
+            set => _target.transform.localRotation = Quaternion.Euler(value);
+        }
+
+        public Vector3 Scale
+        {
+            get => _target.transform.localScale;
+            set => _target.transform.localScale = value;
+        }
+
         public Vector3 ForwardDirection => _target.transform.forward;
+        public Vector3 RightDirection => _target.transform.right;
+        public Vector3 UpDirection => _target.transform.up;
 
         public void SetActive(bool active)
         {
