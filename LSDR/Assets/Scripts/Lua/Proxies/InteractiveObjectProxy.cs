@@ -17,6 +17,8 @@ namespace LSDR.Lua.Proxies
         public Vector3 Up => _gameObject.transform.up;
         public Vector3 Right => _gameObject.transform.right;
 
+        public GameObject GameObject => _gameObject;
+
 #endregion
 
 #region Functions

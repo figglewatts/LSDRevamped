@@ -22,6 +22,8 @@ namespace LSDR.Entities.Dream
         {
             DevConsole.Register(this);
 
+            if (!DreamSystem.InDream) return;
+
             if (_rollForGreymanCoroutine != null) StopCoroutine(_rollForGreymanCoroutine);
 
             _rollForGreymanCoroutine = StartCoroutine(RollForGreyman());

@@ -51,7 +51,7 @@ namespace LSDR.SDK.Visual
             }
         }
 
-        public void Start()
+        public void Awake()
         {
             _classicShader = Shader.Find("LSDR/ClassicDiffuseSet");
             _classicAlphaShader = Shader.Find("LSDR/ClassicDiffuseSetAlphaBlend");

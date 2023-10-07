@@ -20,5 +20,7 @@ namespace LSDR.Lua
         public static Color ColorRGBA(float r, float g, float b, float a) => new Color(r, g, b, a);
 
         public static float DeltaTime() { return Time.deltaTime; }
+
+        public static float CurrentTime() { return Time.realtimeSinceStartup; }
     }
 }

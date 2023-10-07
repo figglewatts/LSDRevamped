@@ -27,15 +27,12 @@ namespace LSDR.SDK.Entities
         protected float _t = 0;
         protected GameObject _player;
 
-        public void Awake()
-        {
-            _audioSource = GetComponent<AudioSource>();
-            _audioSource.outputAudioMixerGroup = MixerGroupProviderManager.Managed.GetMixerGroup("SFX");
-        }
-
         public override void Start()
         {
             base.Start();
+
+            _audioSource = GetComponent<AudioSource>();
+            _audioSource.outputAudioMixerGroup = MixerGroupProviderManager.Managed.GetMixerGroup("SFX");
 
             _player = EntityIndex.Instance.Get("__player");
         }

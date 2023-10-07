@@ -48,7 +48,7 @@ namespace LSDR.SDK.Entities
 
         public void Update()
         {
-            _luaScript.Update();
+            _luaScript?.Update();
 
             _t += Time.deltaTime;
             if (_t > UPDATE_INTERVAL)
@@ -113,7 +113,7 @@ namespace LSDR.SDK.Entities
 
         protected void interact()
         {
-            _luaScript.Interact();
+            _luaScript?.Interact();
             _interacted = true;
         }
     }

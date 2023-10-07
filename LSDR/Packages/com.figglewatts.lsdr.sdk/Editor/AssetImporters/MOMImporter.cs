@@ -75,6 +75,11 @@ namespace LSDR.SDK.Editor.AssetImporters
                 controller.AddLayer(layer);
                 ctx.AddObjectToAsset($"{assetPrefix}AnimatorController", controller);
 
+                // add default state
+                AnimatorState idleState = layer.stateMachine.AddState("idle");
+                idleState.hideFlags = HideFlags.HideInHierarchy;
+                ctx.AddObjectToAsset($"{assetPrefix}AnimatorControllerStateIdle", idleState);
+
                 // add the clips to it
                 foreach (AnimationClip clip in clips)
                 {

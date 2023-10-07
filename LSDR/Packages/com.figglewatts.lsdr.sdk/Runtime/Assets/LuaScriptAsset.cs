@@ -19,11 +19,14 @@ namespace LSDR.SDK.Assets
             }
             catch (InternalErrorException e)
             {
-                Console.WriteLine(e.ToString());
+                Debug.LogError(e.ToString());
+                throw new LuaException("Internal error", e);
             }
             catch (SyntaxErrorException e)
             {
-                Console.WriteLine($"Lua Syntax Error: {e.DecoratedMessage}");
+                var message = $"Lua Script ({this}) Syntax Error: {e.DecoratedMessage}";
+                Debug.LogError(message);
+                throw new LuaException(message, e);
             }
 
             return baseApi;
@@ -37,7 +40,9 @@ namespace LSDR.SDK.Assets
             }
             catch (ScriptRuntimeException e)
             {
-                Debug.LogError($"Lua Script Runtime Error: {e.DecoratedMessage}");
+                var message = $"Lua Script ({this}) Runtime Error: {e.DecoratedMessage}";
+                Debug.LogError(message);
+                throw new LuaException(message, e);
             }
         }
 
@@ -49,8 +54,9 @@ namespace LSDR.SDK.Assets
             }
             catch (ScriptRuntimeException e)
             {
-                Debug.LogError($"Lua Script Runtime Error: {e.DecoratedMessage}");
-                Debug.LogException(e);
+                var message = $"Lua Script ({this}) Runtime Error: {e.DecoratedMessage}";
+                Debug.LogError(message);
+                Debug.LogException(new LuaException(message, e));
                 return default;
             }
         }

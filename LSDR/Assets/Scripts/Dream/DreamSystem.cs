@@ -68,6 +68,8 @@ namespace LSDR.Dream
         public GameObject CurrentDreamInstance { get; protected set; }
         public DreamSequence CurrentSequence { get; protected set; }
 
+        public bool InDream => CurrentDream != null;
+
         public void EndDream(bool fromFall = false)
         {
             if (_dreamIsEnding) return;
@@ -395,11 +397,11 @@ namespace LSDR.Dream
 
         protected void registerCommonEntities()
         {
-            EntityIndex.Instance.Register("__player", Player);
+            EntityIndex.Instance.Register("__player", Player, force: true);
 
             GameObject camera = GameObject.FindWithTag("MainCamera");
             if (camera == null) Debug.LogWarning("Unable to find MainCamera in scene");
-            EntityIndex.Instance.Register("__camera", camera);
+            EntityIndex.Instance.Register("__camera", camera, force: true);
         }
 
         protected void commonEndDream()

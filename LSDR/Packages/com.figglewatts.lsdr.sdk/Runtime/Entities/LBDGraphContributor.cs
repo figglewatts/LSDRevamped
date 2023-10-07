@@ -22,14 +22,18 @@ namespace LSDR.SDK.Entities
         protected Transform _player;
 
         protected float _t;
+        protected IDreamController _dreamController;
 
         public void Start()
         {
             _player = EntityIndex.Instance.Get("__player").transform;
+            _dreamController = DreamControlManager.Managed;
         }
 
         public void Update()
         {
+            if (!_dreamController.InDream) return;
+
             _t += Time.deltaTime;
             if (_player != null && _t > UPDATE_INTERVAL)
             {

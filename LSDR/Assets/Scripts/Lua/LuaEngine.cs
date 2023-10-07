@@ -106,9 +106,9 @@ namespace LSDR.Lua
                 dynVal =>
                 {
                     Table table = dynVal.Table;
-                    float x = (float)(double)table[key: 1];
-                    float y = (float)(double)table[key: 2];
-                    float z = (float)(double)table[key: 3];
+                    float x = (float)(double)table["x"];
+                    float y = (float)(double)table["y"];
+                    float z = (float)(double)table["z"];
                     return new Vector3(x, y, z);
                 }
             );
@@ -118,50 +118,55 @@ namespace LSDR.Lua
                     DynValue x = DynValue.NewNumber(vector.x);
                     DynValue y = DynValue.NewNumber(vector.y);
                     DynValue z = DynValue.NewNumber(vector.z);
-                    DynValue dynVal = DynValue.NewTable(script, x, y, z);
-                    dynVal.Table.MetaTable = DynValue.FromObject(script, new Dictionary<string, object>
+                    Table vec = new Table(script)
                     {
+                        ["x"] = x,
+                        ["y"] = y,
+                        ["z"] = z,
+                        MetaTable = DynValue.FromObject(script, new Dictionary<string, object>
                         {
-                            "__tostring", new Func<Table, string>(t => $"({x}, {y}, {z})")
-                        },
-                        {
-                            "__add", new Func<Table, Table, Table>((a, b) =>
                             {
-                                DynValue rX = DynValue.NewNumber(a.Get(key: 1).Number + b.Get(key: 1).Number);
-                                DynValue rY = DynValue.NewNumber(a.Get(key: 2).Number + b.Get(key: 2).Number);
-                                DynValue rZ = DynValue.NewNumber(a.Get(key: 3).Number + b.Get(key: 3).Number);
-                                return new Table(script, rX, rY, rZ);
-                            })
-                        },
-                        {
-                            "__sub", new Func<Table, Table, Table>((a, b) =>
+                                "__tostring", new Func<Table, string>(t => $"({x}, {y}, {z})")
+                            },
                             {
-                                DynValue rX = DynValue.NewNumber(a.Get(key: 1).Number - b.Get(key: 1).Number);
-                                DynValue rY = DynValue.NewNumber(a.Get(key: 2).Number - b.Get(key: 2).Number);
-                                DynValue rZ = DynValue.NewNumber(a.Get(key: 3).Number - b.Get(key: 3).Number);
-                                return new Table(script, rX, rY, rZ);
-                            })
-                        },
-                        {
-                            "__mul", new Func<Table, double, Table>((v, s) =>
+                                "__add", new Func<Table, Table, Table>((a, b) =>
+                                {
+                                    DynValue rX = DynValue.NewNumber(a.Get(key: "x").Number + b.Get(key: "x").Number);
+                                    DynValue rY = DynValue.NewNumber(a.Get(key: "y").Number + b.Get(key: "y").Number);
+                                    DynValue rZ = DynValue.NewNumber(a.Get(key: "z").Number + b.Get(key: "z").Number);
+                                    return new Table(script, rX, rY, rZ);
+                                })
+                            },
                             {
-                                DynValue rX = DynValue.NewNumber(v.Get(key: 1).Number * s);
-                                DynValue rY = DynValue.NewNumber(v.Get(key: 2).Number * s);
-                                DynValue rZ = DynValue.NewNumber(v.Get(key: 3).Number * s);
-                                return new Table(script, rX, rY, rZ);
-                            })
-                        },
-                        {
-                            "__div", new Func<Table, double, Table>((v, s) =>
+                                "__sub", new Func<Table, Table, Table>((a, b) =>
+                                {
+                                    DynValue rX = DynValue.NewNumber(a.Get(key: "x").Number - b.Get(key: "x").Number);
+                                    DynValue rY = DynValue.NewNumber(a.Get(key: "y").Number - b.Get(key: "y").Number);
+                                    DynValue rZ = DynValue.NewNumber(a.Get(key: "z").Number - b.Get(key: "z").Number);
+                                    return new Table(script, rX, rY, rZ);
+                                })
+                            },
                             {
-                                DynValue rX = DynValue.NewNumber(v.Get(key: 1).Number / s);
-                                DynValue rY = DynValue.NewNumber(v.Get(key: 2).Number / s);
-                                DynValue rZ = DynValue.NewNumber(v.Get(key: 3).Number / s);
-                                return new Table(script, rX, rY, rZ);
-                            })
-                        }
-                    }).Table;
-                    return dynVal;
+                                "__mul", new Func<Table, double, Table>((v, s) =>
+                                {
+                                    DynValue rX = DynValue.NewNumber(v.Get(key: "x").Number * s);
+                                    DynValue rY = DynValue.NewNumber(v.Get(key: "y").Number * s);
+                                    DynValue rZ = DynValue.NewNumber(v.Get(key: "z").Number * s);
+                                    return new Table(script, rX, rY, rZ);
+                                })
+                            },
+                            {
+                                "__div", new Func<Table, double, Table>((v, s) =>
+                                {
+                                    DynValue rX = DynValue.NewNumber(v.Get(key: "x").Number / s);
+                                    DynValue rY = DynValue.NewNumber(v.Get(key: "y").Number / s);
+                                    DynValue rZ = DynValue.NewNumber(v.Get(key: "z").Number / s);
+                                    return new Table(script, rX, rY, rZ);
+                                })
+                            }
+                        }).Table
+                    };
+                    return DynValue.FromObject(script, vec);
                 }
             );
 
@@ -170,10 +175,10 @@ namespace LSDR.Lua
                 dynVal =>
                 {
                     Table table = dynVal.Table;
-                    float r = (float)(double)table[key: 1];
-                    float g = (float)(double)table[key: 2];
-                    float b = (float)(double)table[key: 3];
-                    float a = (float)(double)table[key: 4];
+                    float r = (float)(double)table[key: "r"];
+                    float g = (float)(double)table[key: "g"];
+                    float b = (float)(double)table[key: "b"];
+                    float a = (float)(double)table[key: "a"];
                     return new Color(r, g, b, a);
                 }
             );
@@ -184,14 +189,20 @@ namespace LSDR.Lua
                     DynValue g = DynValue.NewNumber(color.g);
                     DynValue b = DynValue.NewNumber(color.b);
                     DynValue a = DynValue.NewNumber(color.a);
-                    DynValue dynVal = DynValue.NewTable(script, r, g, b, a);
-                    dynVal.Table.MetaTable = DynValue.FromObject(script, new Dictionary<string, object>
+                    Table colorTable = new Table(script)
                     {
+                        ["r"] = r,
+                        ["g"] = g,
+                        ["b"] = b,
+                        ["a"] = a,
+                        MetaTable = DynValue.FromObject(script, new Dictionary<string, object>
                         {
-                            "__tostring", new Func<Table, string>(t => $"(R: {r}, G: {g}, B: {b}, A: {a})")
-                        }
-                    }).Table;
-                    return dynVal;
+                            {
+                                "__tostring", new Func<Table, string>(t => $"(R: {r}, G: {g}, B: {b}, A: {a})")
+                            }
+                        }).Table
+                    };
+                    return DynValue.FromObject(script, colorTable);
                 }
             );
         }

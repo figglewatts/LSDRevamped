@@ -5,6 +5,8 @@ namespace LSDR.SDK.DreamControl
 {
     public interface IDreamController
     {
+        public bool InDream { get; }
+
         void Transition(Color fadeCol,
             Dream dream = null,
             bool playSound = true,

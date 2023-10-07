@@ -1,4 +1,5 @@
-﻿using Torii.Event;
+﻿using LSDR.SDK.Entities;
+using Torii.Event;
 using UnityEngine;
 
 namespace LSDR.Game
@@ -7,6 +8,8 @@ namespace LSDR.Game
     {
         public GameLoadSystem GameLoadSystem;
         public ToriiEvent OnGameLaunch;
+
+        public bool Testing = false;
 
         public void Start()
         {
@@ -21,6 +24,16 @@ namespace LSDR.Game
             #endif
 
             StartCoroutine(GameLoadSystem.LoadGameCoroutine());
+
+            if (Testing)
+            {
+                var player = GameObject.FindWithTag("Player");
+                EntityIndex.Instance.Register("__player", player);
+
+                GameObject camera = GameObject.FindWithTag("MainCamera");
+                if (camera == null) Debug.LogWarning("Unable to find MainCamera in scene");
+                EntityIndex.Instance.Register("__camera", camera);
+            }
         }
     }
 }

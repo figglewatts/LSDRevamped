@@ -53,6 +53,9 @@ namespace LSDR.SDK.Editor.AssetImporters
                 string trackPathName = $"{seqAsset.name}-{soundfontVariant.name}.wav";
                 string trackPath = Path.Combine(fullOutputPath, trackPathName);
 
+                string trackAssetPath = DirectoryUtil.MakePathAssetsRelative(trackPath);
+                loadedTrackAssetPaths.Add(trackAssetPath);
+
                 if (!File.Exists(trackPath))
                 {
                     // create the synth stuff to render the track
@@ -65,11 +68,9 @@ namespace LSDR.SDK.Editor.AssetImporters
                     // render and save the track
                     short[] trackSamples = sequencer.Render();
                     WaveUtil.WriteWave(trackPath, trackSamples, 2, 44100);
-                }
 
-                string trackAssetPath = DirectoryUtil.MakePathAssetsRelative(trackPath);
-                AssetDatabase.ImportAsset(trackAssetPath);
-                loadedTrackAssetPaths.Add(trackAssetPath);
+                    AssetDatabase.ImportAsset(trackAssetPath);
+                }
             }
 
             // hook up the track variations

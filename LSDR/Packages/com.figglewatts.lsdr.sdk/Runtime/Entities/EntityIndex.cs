@@ -33,9 +33,9 @@ namespace LSDR.SDK.Entities
             Register(entity.ID, entity.gameObject);
         }
 
-        public void Register(string id, GameObject entity)
+        public void Register(string id, GameObject entity, bool force = false)
         {
-            if (_entities.ContainsKey(id))
+            if (_entities.ContainsKey(id) && !force)
             {
                 Debug.LogError($"Unable to register entity '{entity}': duplicate entity ID '{id}'");
                 return;
