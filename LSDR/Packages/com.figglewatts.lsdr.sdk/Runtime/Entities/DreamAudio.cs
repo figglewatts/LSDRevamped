@@ -18,6 +18,7 @@ namespace LSDR.SDK.Entities
         public float PlayClipForSeconds = 0;
         public float DelayBeforePlayingSeconds = 0;
         public bool WaitUntilAudibleBeforePlaying = true;
+        public bool Loop = false;
         public bool ControlledWithScript = false;
 
         protected AudioSource _audioSource;
@@ -27,10 +28,8 @@ namespace LSDR.SDK.Entities
         protected float _t = 0;
         protected GameObject _player;
 
-        public override void Start()
+        public override void Init()
         {
-            base.Start();
-
             _audioSource = GetComponent<AudioSource>();
             _audioSource.outputAudioMixerGroup = MixerGroupProviderManager.Managed.GetMixerGroup("SFX");
 
@@ -83,11 +82,19 @@ namespace LSDR.SDK.Entities
             _audioSource.loop = false;
             _audioSource.pitch = Pitch;
             _audioSource.volume = Volume;
+            _audioSource.loop = Loop;
         }
 
         public void StartPlaying()
         {
-            _audioPlayerCoroutine = StartCoroutine(audioPlayer());
+            if (Loop)
+            {
+                _audioSource.Play();
+            }
+            else
+            {
+                _audioPlayerCoroutine = StartCoroutine(audioPlayer());
+            }
         }
 
         public void StopPlaying()

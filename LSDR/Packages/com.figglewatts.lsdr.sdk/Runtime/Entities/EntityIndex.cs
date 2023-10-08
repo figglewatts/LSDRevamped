@@ -44,6 +44,18 @@ namespace LSDR.SDK.Entities
             _entities[id] = entity;
         }
 
+        public void AllRegistered()
+        {
+            foreach (var obj in _entities.Values)
+            {
+                var entity = obj.GetComponent<BaseEntity>();
+                if (entity != null)
+                {
+                    entity.Init();
+                }
+            }
+        }
+
         public GameObject Get(string id)
         {
             if (!_entities.ContainsKey(id))

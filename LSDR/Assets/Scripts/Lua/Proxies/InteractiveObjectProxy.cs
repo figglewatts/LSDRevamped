@@ -23,49 +23,63 @@ namespace LSDR.Lua.Proxies
 
 #region Functions
 
-        // public void PlayAnimation(int index)
-        // {
-        //     if (index >= _target.Data.Animations.Count)
-        //     {
-        //         Debug.LogWarning($"Unable to play animation {index} on object '{_gameObject.name}', " +
-        //                          $"object only has {_target.Data.Animations.Count} animations");
-        //         return;
-        //     }
-        //
-        //     _target.Animator.Play(_target.Data.Animations[index]);
-        // }
-        //
-        // public TODAnimation GetAnimation(int index)
-        // {
-        //     if (index >= _target.Data.Animations.Count)
-        //     {
-        //         Debug.LogWarning($"Unable to get animation {index} on object '{_gameObject.name}', " +
-        //                          $"object only has {_target.Data.Animations.Count} animations");
-        //         return null;
-        //     }
-        //
-        //     return _target.Data.Animations[index];
-        // }
-        //
-        // public void PauseAnimation() { _target.Animator.Pause(); }
-        //
-        // public void ResumeAnimation() { _target.Animator.Resume(); }
-        //
-        // public void StopAnimation() { _target.Animator.Stop(); }
-        //
-        // public void PlayAudio(ToriiAudioClip clip) { _target.AudioSource.PlayOneShot(clip); }
-        //
-        // public void SetPosition(Vector3 position) { _gameObject.transform.position = position; }
-        //
-        // public void Translate(Vector3 vec) { _gameObject.transform.Translate(vec, Space.Self); }
-        //
-        // public void SetRotation(Vector3 euler) { _gameObject.transform.eulerAngles = euler; }
-        //
-        // public void Rotate(Vector3 euler) { _gameObject.transform.Rotate(euler); }
-        //
-        // public void RotateAngleAxis(float angle, Vector3 axis) { _gameObject.transform.Rotate(axis, angle); }
-        //
-        // public void SetScale(Vector3 scale) { _gameObject.transform.localScale = scale; }
+        public void PlayAnimation(int index)
+        {
+            if (index >= _target.AnimatedObject.Clips.Length)
+            {
+                Debug.LogWarning($"Unable to play animation {index} on object '{_gameObject.name}', " +
+                                 $"object only has {_target.AnimatedObject.Clips.Length} animations");
+                return;
+            }
+
+            _target.Animator.enabled = true;
+            _target.Animator.Play(_target.AnimatedObject.Clips[index].name);
+        }
+
+        public void ResumeAnimation() { _target.Animator.enabled = true; }
+
+        public void StopAnimation() { _target.Animator.enabled = false; }
+
+        public bool MoveTowards(Vector3 worldPosition, float speed)
+        {
+            var toTarget = (worldPosition - _target.transform.position);
+            if (toTarget.magnitude < 0.001)
+            {
+                _target.transform.position = worldPosition;
+                return true;
+            }
+            var toTargetDirection = toTarget.normalized;
+            MoveInDirection(toTargetDirection, speed);
+            return false;
+        }
+
+        public void MoveInDirection(Vector3 worldDirection, float speed)
+        {
+            var moveVec = worldDirection * speed * Time.deltaTime;
+            _target.transform.position += moveVec;
+        }
+
+        public void LookAt(Vector3 worldPosition)
+        {
+            _target.transform.LookAt(-worldPosition, _target.transform.up);
+        }
+
+        public bool LookTowards(Vector3 worldPosition, float speed)
+        {
+            var current = _target.transform.rotation;
+            var toTarget = (worldPosition - _target.transform.position).normalized;
+            var desired = Quaternion.LookRotation(toTarget, _target.transform.up);
+
+            if (Quaternion.Dot(current, desired) > 0.99f)
+            {
+                // we are basically already at the rotation
+                _target.transform.rotation = desired;
+                return true;
+            }
+
+            _target.transform.rotation = Quaternion.RotateTowards(current, desired, speed * Time.deltaTime);
+            return false;
+        }
 
 #endregion
     }

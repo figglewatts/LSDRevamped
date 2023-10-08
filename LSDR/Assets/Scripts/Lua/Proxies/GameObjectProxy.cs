@@ -16,6 +16,8 @@ namespace LSDR.Lua.Proxies
         public PlayerCameraRotation PlayerCamera => getAs<PlayerCameraRotation>();
         public LuaAsyncActionRunner Action => getAs<LuaAsyncActionRunner>();
 
+        public DreamAudio DreamAudio => getAs<DreamAudio>();
+
         public Vector3 WorldPosition
         {
             get => _target.transform.position;
@@ -54,6 +56,10 @@ namespace LSDR.Lua.Proxies
         {
             _target.SetActive(active);
         }
+
+        // TODO: PositionToWorld(Vector3 position)
+
+        // TODO: PositionFromWorld(Vector3 worldPosition)
 
         protected T getAs<T>() where T : MonoBehaviour
         {

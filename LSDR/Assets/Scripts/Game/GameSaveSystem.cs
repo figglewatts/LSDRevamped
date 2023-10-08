@@ -26,7 +26,7 @@ namespace LSDR.Game
 
         private string _saveDataDirectory => PathUtil.Combine(Application.persistentDataPath, "saves");
 
-        public GameSaveData.JournalSaveData CurrentJournalSave => Data.Journal(SettingsSystem.CurrentJournal);
+        public GameSaveData.JournalSaveData CurrentJournalSave => Data?.Journal(SettingsSystem.CurrentJournal);
 
         public void OnEnable() { Directory.CreateDirectory(_saveDataDirectory); }
 

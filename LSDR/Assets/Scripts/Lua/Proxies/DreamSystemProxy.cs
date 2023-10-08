@@ -1,6 +1,8 @@
 ﻿using LSDR.Dream;
 using LSDR.SDK;
+using LSDR.SDK.Visual;
 using MoonSharp.Interpreter;
+using UnityEngine;
 
 namespace LSDR.Lua.Proxies
 {
@@ -14,17 +16,63 @@ namespace LSDR.Lua.Proxies
 
         public int DayNumber => _target.GameSave.CurrentJournalSave.DayNumber;
 
-        // EndDream()
+        protected static Color? _transitionColor;
+        protected static bool _transitionSound;
+        protected static string _transitionSpawnID;
+        protected static SDK.Data.Dream _transitionDream;
 
-        // LogGraphContributionFromArea/FromEntity()
+        public void SetNextTransitionColor(Color? color)
+        {
+            _transitionColor = color;
+        }
 
-        // Transition()
+        public void SetTransitionSounds(bool sounds)
+        {
+            _transitionSound = sounds;
+        }
 
-        // SwitchTextures()
+        public void SetNextTransitionSpawnID(string spawnID)
+        {
+            _transitionSpawnID = spawnID;
+        }
+
+        public void SetNextTransitionDream(SDK.Data.Dream dream)
+        {
+            _transitionDream = dream;
+        }
+
+        public void LogGraphContributionFromEntity(int dynamicness, int upperness)
+        {
+            _target.LogGraphContributionFromEntity(dynamicness, upperness);
+        }
+
+        public void TransitionToDream()
+        {
+            if (_transitionColor == null)
+            {
+                _target.Transition(_transitionDream, _transitionSound, lockControls: false, _transitionSpawnID);
+            }
+            else
+            {
+                _target.Transition(_transitionColor.Value, _transitionDream, _transitionSound, lockControls: false,
+                    _transitionSpawnID);
+            }
+            _transitionColor = null;
+            _transitionSpawnID = null;
+            _transitionDream = null;
+        }
+
+        public void EndDream()
+        {
+            _transitionColor = null;
+            _transitionSpawnID = null;
+            _transitionDream = null;
+            _target.EndDream();
+        }
 
         public void SetTextureSet(TextureSet set)
         {
-            // TODO
+            TextureSetter.Instance.TextureSet = set;
         }
     }
 }

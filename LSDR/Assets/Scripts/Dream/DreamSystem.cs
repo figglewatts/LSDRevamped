@@ -68,6 +68,8 @@ namespace LSDR.Dream
         public GameObject CurrentDreamInstance { get; protected set; }
         public DreamSequence CurrentSequence { get; protected set; }
 
+        public int CurrentDay => GameSave.CurrentJournalSave?.DayNumber ?? 1;
+
         public bool InDream => CurrentDream != null;
 
         public void EndDream(bool fromFall = false)
@@ -98,13 +100,38 @@ namespace LSDR.Dream
             commonEndDream();
         }
 
+        public void SetCanControlPlayer(bool state)
+        {
+            SettingsSystem.CanControlPlayer = state;
+        }
+
+        public DreamJournal GetCurrentJournal()
+        {
+            return SettingsSystem.CurrentJournal;
+        }
+
+        public List<SDK.Data.Dream> GetDreamsFromJournal()
+        {
+            return SettingsSystem.CurrentJournal.Dreams;
+        }
+
         public void LogGraphContributionFromArea(int dynamicness, int upperness)
         {
+            if (CurrentSequence == null)
+            {
+                Debug.LogWarning("Attempting to log contribution with no sequence");
+                return;
+            }
             CurrentSequence.LogGraphContributionFromArea(dynamicness, upperness);
         }
 
         public void LogGraphContributionFromEntity(int dynamicness, int upperness)
         {
+            if (CurrentSequence == null)
+            {
+                Debug.LogWarning("Attempting to log contribution with no sequence");
+                return;
+            }
             CurrentSequence.LogGraphContributionFromEntity(dynamicness, upperness);
         }
 
@@ -122,6 +149,8 @@ namespace LSDR.Dream
         {
             if (!_canTransition) return;
             _canTransition = false;
+
+            if (CurrentSequence == null) Debug.LogWarning("transitioning dreams with no sequence");
 
             // prefer given dream, but fall back to _nextDream if not given (and it is set)
             if (dream == null && _nextDream != null)
@@ -156,7 +185,7 @@ namespace LSDR.Dream
                 AudioPlayer.Instance.PlayClip(LinkSound, loop: false, pitch: pitch, mixerGroup: "SFX");
             }
 
-            CurrentSequence.Visited.Add(dream);
+            CurrentSequence?.Visited.Add(dream);
 
             ToriiFader.Instance.FadeIn(fadeCol, duration: 1F, () =>
             {
@@ -293,9 +322,10 @@ namespace LSDR.Dream
             if (CurrentDream != null)
             {
                 Destroy(CurrentDreamInstance);
-                TextureSetter.Instance.DeregisterAllMaterials();
-                EntityIndex.Instance.DeregisterAllEntities();
             }
+
+            TextureSetter.Instance.DeregisterAllMaterials();
+            EntityIndex.Instance.DeregisterAllEntities();
 
             bool loadingSameDream = CurrentDream == dream;
             CurrentDream = dream;
@@ -307,6 +337,13 @@ namespace LSDR.Dream
                 yield return loadSceneOp;
             }
 
+            Debug.Log("Registering entities...");
+            Player = GameObject.FindWithTag("Player");
+            if (Player == null) Debug.LogError("Unable to find player in scene!");
+            registerCommonEntities();
+
+            EntityIndex.Instance.AllRegistered();
+
             // reroll song style, update song library, switch to next song based on graph position
             MusicSystem.OriginalSongLibrary.DreamNumber = SettingsSystem.CurrentJournal.GetDreamIndex(CurrentDream);
             MusicSystem.SetSongStyle((SongStyle)((GameSave.CurrentJournalSave.DayNumber - 1) % (int)SongStyle.COUNT));
@@ -317,12 +354,8 @@ namespace LSDR.Dream
                   (GameSave.CurrentJournalSave.LastGraphX + 9);
             if (!loadingSameDream) MusicSystem.NextSong(songNumber);
 
-            Debug.Log("Registering entities...");
-            Player = GameObject.FindWithTag("Player");
-            if (Player == null) Debug.LogError("Unable to find player in scene!");
             Player.GetComponent<PlayerMovement>().StopExternalInput();
             Player.GetComponent<PlayerRotation>().StopExternalInput();
-            registerCommonEntities();
 
             OnLevelPreLoad.Raise();
 
@@ -367,6 +400,12 @@ namespace LSDR.Dream
 
         protected Color fadeColorFromCurrentSequence()
         {
+            if (CurrentSequence == null)
+            {
+                Debug.LogWarning("attempted to get fade color without current sequence");
+                return RandUtil.RandColor();
+            }
+
             Vector2Int graphPos = CurrentSequence.EvaluateGraphPosition();
             switch (graphPos)
             {

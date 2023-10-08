@@ -40,5 +40,10 @@ namespace LSDR.SDK.Data
             int toChoose = (dayNum - 1) % Environments.Count;
             return Environments[toChoose];
         }
+
+        public override string ToString()
+        {
+            return $"{Name} ({Author})";
+        }
     }
 }

@@ -53,5 +53,10 @@ namespace LSDR.SDK.Data
 
             return RandUtil.RandomListElement(Dreams);
         }
+
+        public override string ToString()
+        {
+            return $"{Name} ({Author})";
+        }
     }
 }

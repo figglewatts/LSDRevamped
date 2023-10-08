@@ -14,10 +14,8 @@ namespace LSDR.SDK.Entities
 
         protected override Color _editorColour { get; } = new Color(r: 0, g: 0, b: 0.8f);
 
-        public override void Start()
+        public override void Init()
         {
-            base.Start();
-
             if (Script)
                 _luaScript = new TriggerLuaLuaScript(LuaManager.Managed, Script, TriggerFunctionName,
                     TriggerExitFunctionName);

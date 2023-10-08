@@ -3,6 +3,7 @@ using LSDR.Dream;
 using LSDR.Game;
 using LSDR.InputManagement;
 using LSDR.SDK.Audio;
+using LSDR.SDK.Entities;
 using Torii.Audio;
 using Torii.Console;
 using Torii.Util;
@@ -48,6 +49,8 @@ namespace LSDR.Entities.Player
         public void Start()
         {
             _controller = GetComponent<CharacterController>();
+
+            EntityIndex.Instance.Register("__player", gameObject, force: true);
 
             _initialCameraOffset = _controller.height;
 

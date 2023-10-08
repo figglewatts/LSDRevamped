@@ -14,5 +14,7 @@ namespace LSDR.Lua.Proxies
         public bool GreyMan => _target.GreyMan;
         public bool Linkable => _target.Linkable;
         public List<DreamEnvironment> Environments => _target.Environments;
+
+        public override string ToString() => _target.ToString();
     }
 }

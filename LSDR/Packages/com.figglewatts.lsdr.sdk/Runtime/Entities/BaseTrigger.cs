@@ -13,9 +13,8 @@ namespace LSDR.SDK.Entities
 
         protected abstract Color _editorColour { get; }
 
-        public override void Start()
+        public override void Init()
         {
-            base.Start();
             _collider = GetComponent<BoxCollider>();
             _collider.isTrigger = true;
         }

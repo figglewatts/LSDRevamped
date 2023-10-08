@@ -1,4 +1,5 @@
 using System;
+using LSDR.SDK.Animation;
 using LSDR.SDK.Assets;
 using LSDR.SDK.Data;
 using LSDR.SDK.DreamControl;
@@ -18,30 +19,33 @@ namespace LSDR.SDK.Entities
             View
         }
 
-        protected const float UPDATE_INTERVAL = 0.25f;
-
         public LuaScriptAsset Script;
         public InteractionType InteractionKind;
         public float InteractionDistance = 3;
+
+        public Animator Animator => _animator;
+        public AnimatedObject AnimatedObject => _animatedObject;
+
+        protected const float UPDATE_INTERVAL = 0.25f;
+
         protected Animator _animator;
         protected bool _interacted;
         protected InteractiveObjectLuaScript _luaScript;
         protected Transform _player;
         protected Camera _playerCamera;
-
+        protected AnimatedObject _animatedObject;
         protected float _t;
 
         public LuaAsyncActionRunner Action { get; protected set; }
 
-        public override void Start()
+        public override void Init()
         {
-            base.Start();
-
             _playerCamera = EntityIndex.Instance.GetComponent<Camera>("__camera");
             _player = EntityIndex.Instance.GetComponent<Transform>("__player");
 
             _animator = GetComponent<Animator>();
             Action = GetComponent<LuaAsyncActionRunner>();
+            _animatedObject = GetComponent<AnimatedObject>();
 
             if (Script) _luaScript = new InteractiveObjectLuaScript(LuaManager.Managed, Script, this);
         }

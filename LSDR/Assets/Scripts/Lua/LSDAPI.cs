@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using LSDR.Dream;
 using LSDR.Entities.Player;
 using LSDR.Lua.Proxies;
@@ -41,6 +42,26 @@ namespace LSDR.Lua
         public static GameObject GetEntity(string id)
         {
             return EntityIndex.Instance.Get(id);
+        }
+
+        public static bool IsDayEven() => DreamControlManager.Managed.CurrentDay % 2 == 0;
+
+        public static bool IsDayNumber(int number) => (DreamControlManager.Managed.CurrentDay - 1) % 7 == number - 1;
+
+        public static void SetCanControlPlayer(bool state)
+        {
+            DreamControlManager.Managed.SetCanControlPlayer(state);
+        }
+
+        public static SDK.Data.Dream GetDreamByName(string dreamName)
+        {
+            var dream = DreamControlManager.Managed.GetDreamsFromJournal().FirstOrDefault(d => d.Name == dreamName);
+            var journal = DreamControlManager.Managed.GetCurrentJournal();
+            if (dream == null)
+            {
+                Debug.LogError($"unable to find dream with name '{dreamName}' in journal '{journal}'");
+            }
+            return dream;
         }
     }
 }

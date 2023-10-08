@@ -1,7 +1,12 @@
-moveSpeed = 0.25
+moveSpeed = 0.2
 
 function start()
-    startPosition = this.GameObject.WorldPosition
+    if not IsDayEven() then
+        this.GameObject.SetActive(false)
+        return
+    end
+
+    this.PlayAnimation(0)
 end
 
 function update()
@@ -12,5 +17,5 @@ function update()
 end
 
 function interact()
-
+    DreamSystem.LogGraphContributionFromEntity(0, 2)
 end

@@ -64,6 +64,8 @@ namespace LSDR.SDK.Editor.Windows
                 }
 
                 transform.position = lbdPos;
+
+                EditorUtility.SetDirty(transform.gameObject);
             }
         }
 

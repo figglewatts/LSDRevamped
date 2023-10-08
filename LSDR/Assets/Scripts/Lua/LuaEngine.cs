@@ -134,16 +134,22 @@ namespace LSDR.Lua
                                     DynValue rX = DynValue.NewNumber(a.Get(key: "x").Number + b.Get(key: "x").Number);
                                     DynValue rY = DynValue.NewNumber(a.Get(key: "y").Number + b.Get(key: "y").Number);
                                     DynValue rZ = DynValue.NewNumber(a.Get(key: "z").Number + b.Get(key: "z").Number);
-                                    return new Table(script, rX, rY, rZ);
+                                    return new Table(script)
+                                    {
+                                        ["x"] = rX,
+                                        ["y"] = rY,
+                                        ["z"] = rZ
+                                    };
                                 })
                             },
                             {
-                                "__sub", new Func<Table, Table, Table>((a, b) =>
+                                "__sub", new Func<Table, Table, Vector3>((a, b) =>
                                 {
-                                    DynValue rX = DynValue.NewNumber(a.Get(key: "x").Number - b.Get(key: "x").Number);
-                                    DynValue rY = DynValue.NewNumber(a.Get(key: "y").Number - b.Get(key: "y").Number);
-                                    DynValue rZ = DynValue.NewNumber(a.Get(key: "z").Number - b.Get(key: "z").Number);
-                                    return new Table(script, rX, rY, rZ);
+                                    var aVec = new Vector3((float)a.Get("x").Number, (float)a.Get("y").Number,
+                                        (float)a.Get("z").Number);
+                                    var bVec = new Vector3((float)b.Get("x").Number, (float)b.Get("y").Number,
+                                        (float)b.Get("z").Number);
+                                    return aVec - bVec;
                                 })
                             },
                             {
@@ -152,7 +158,12 @@ namespace LSDR.Lua
                                     DynValue rX = DynValue.NewNumber(v.Get(key: "x").Number * s);
                                     DynValue rY = DynValue.NewNumber(v.Get(key: "y").Number * s);
                                     DynValue rZ = DynValue.NewNumber(v.Get(key: "z").Number * s);
-                                    return new Table(script, rX, rY, rZ);
+                                    return new Table(script)
+                                    {
+                                        ["x"] = rX,
+                                        ["y"] = rY,
+                                        ["z"] = rZ
+                                    };
                                 })
                             },
                             {
@@ -161,11 +172,37 @@ namespace LSDR.Lua
                                     DynValue rX = DynValue.NewNumber(v.Get(key: "x").Number / s);
                                     DynValue rY = DynValue.NewNumber(v.Get(key: "y").Number / s);
                                     DynValue rZ = DynValue.NewNumber(v.Get(key: "z").Number / s);
-                                    return new Table(script, rX, rY, rZ);
+                                    return new Table(script)
+                                    {
+                                        ["x"] = rX,
+                                        ["y"] = rY,
+                                        ["z"] = rZ
+                                    };
                                 })
-                            }
+                            },
                         }).Table
                     };
+
+                    vec["normalise"] = new CallbackFunction((context, args) =>
+                    {
+
+                        var vec3 = new Vector3((float)vec.Get("x").Number, (float)vec.Get("y").Number,
+                            (float)vec.Get("z").Number);
+                        vec3.Normalize();
+                        return DynValue.FromObject(script, new Table(script)
+                        {
+                            ["x"] = vec3.x,
+                            ["y"] = vec3.y,
+                            ["z"] = vec3.z
+                        });
+                    });
+                    vec["length"] = new CallbackFunction((context, args) =>
+                    {
+                        var vec3 = new Vector3((float)vec.Get("x").Number, (float)vec.Get("y").Number,
+                            (float)vec.Get("z").Number);
+                        return DynValue.NewNumber(vec3.magnitude);
+                    });
+
                     return DynValue.FromObject(script, vec);
                 }
             );

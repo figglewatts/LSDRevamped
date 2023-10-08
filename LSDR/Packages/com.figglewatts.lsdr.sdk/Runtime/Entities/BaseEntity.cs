@@ -7,7 +7,9 @@ namespace LSDR.SDK.Entities
     {
         public string ID = Guid.NewGuid().ToString();
 
-        public virtual void Start() { EntityIndex.Instance.Register(this); }
+        public virtual void Init() { }
+
+        public void Awake() { EntityIndex.Instance.Register(this); }
 
         public virtual void OnValidate()
         {
