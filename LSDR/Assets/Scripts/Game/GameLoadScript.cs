@@ -1,6 +1,16 @@
-﻿using LSDR.Dream;
+﻿using LSDR.Audio;
+using LSDR.Dream;
+using LSDR.InputManagement;
+using LSDR.Lua;
+using LSDR.SDK.Audio;
+using LSDR.SDK.Data;
+using LSDR.SDK.DreamControl;
 using LSDR.SDK.Entities;
+using LSDR.SDK.Lua;
+using LSDR.Visual;
+using Torii.Console;
 using Torii.Event;
+using Torii.UI;
 using UnityEngine;
 
 namespace LSDR.Game
@@ -10,6 +20,7 @@ namespace LSDR.Game
         public GameLoadSystem GameLoadSystem;
         public DreamSystem DreamSystem;
         public ToriiEvent OnGameLaunch;
+        public SettingsSystem SettingsSystem;
 
         public bool Testing = false;
 
@@ -25,15 +36,37 @@ namespace LSDR.Game
 
             if (Testing)
             {
+                GameLoadSystem.OnGameLoadedProgrammatic += () =>
+                {
+                    Debug.Log("Initialising entities...");
+                    EntityIndex.Instance.AllRegistered();
+                };
+
+                DevConsole.Initialise();
+                DreamSystem.Initialise();
+
+                // hook up interfaces to SDK
+                LuaManager.ProvideManaged(new LuaEngine(DreamSystem, SettingsSystem));
+                DreamControlManager.ProvideManaged(DreamSystem);
+                MixerGroupProviderManager.ProvideManaged(new MixerGroupProvider());
+
+                Screenshotter.Instance.Initialise();
+
+                // set the sort order for the fader so the version text appears on top during fades
+                ToriiFader.Instance.SetSortOrder(idx: 0);
+
+                GameLoadSystem.ControlSchemeLoaderSystem.LoadSchemes();
+                SettingsSystem.Load();
+                GameLoadSystem.GameSaveSystem.Load();
+
                 var player = GameObject.FindWithTag("Player");
-                EntityIndex.Instance.Register("__player", player);
+                EntityIndex.Instance.Register("__player", player, force: true);
                 DreamSystem.Player = player;
 
                 GameObject camera = GameObject.FindWithTag("MainCamera");
                 if (camera == null) Debug.LogWarning("Unable to find MainCamera in scene");
-                EntityIndex.Instance.Register("__camera", camera);
-
-                EntityIndex.Instance.AllRegistered();
+                EntityIndex.Instance.Register("__camera", camera, force: true);
+                Debug.Log("finished test load");
             }
         }
 
@@ -44,7 +77,7 @@ namespace LSDR.Game
             Application.backgroundLoadingPriority = ThreadPriority.Low;
             #endif
 
-            StartCoroutine(GameLoadSystem.LoadGameCoroutine());
+            StartCoroutine(GameLoadSystem.LoadGameCoroutine(Testing));
         }
     }
 }

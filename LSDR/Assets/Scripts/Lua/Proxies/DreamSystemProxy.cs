@@ -17,7 +17,7 @@ namespace LSDR.Lua.Proxies
         public int DayNumber => _target.GameSave.CurrentJournalSave.DayNumber;
 
         protected static Color? _transitionColor;
-        protected static bool _transitionSound;
+        protected static bool _transitionSound = true;
         protected static string _transitionSpawnID;
         protected static SDK.Data.Dream _transitionDream;
 

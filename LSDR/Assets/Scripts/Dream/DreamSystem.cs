@@ -68,7 +68,7 @@ namespace LSDR.Dream
         public GameObject CurrentDreamInstance { get; protected set; }
         public DreamSequence CurrentSequence { get; protected set; }
 
-        public int CurrentDay => GameSave.CurrentJournalSave?.DayNumber ?? 1;
+        public int CurrentDay => GameSave.CurrentJournalSave.DayNumber;
 
         public bool InDream => CurrentDream != null;
 

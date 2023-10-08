@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using LSDR.Dream;
+using LSDR.Game;
 using LSDR.SDK.Lua;
 using LSDR.SDK.Lua.Actions;
 using MoonSharp.Interpreter;
@@ -15,10 +16,13 @@ namespace LSDR.Lua
     public class LuaEngine : ILuaEngine
     {
         protected readonly Dictionary<string, object> _registeredObjects;
+        protected readonly SettingsSystem _settingsSystem;
 
-        public LuaEngine(DreamSystem dreamSystem)
+        public LuaEngine(DreamSystem dreamSystem, SettingsSystem settingsSystem)
         {
             _registeredObjects = new Dictionary<string, object>();
+
+            _settingsSystem = settingsSystem;
 
             // register types
             UserData.RegisterAssembly();
@@ -33,11 +37,11 @@ namespace LSDR.Lua
 
         public Script CreateBaseAPI()
         {
-            Script script = new Script(CoreModules.Preset_SoftSandbox)
+            Script script = new Script(CoreModules.Preset_SoftSandbox | CoreModules.LoadMethods)
             {
                 Options =
                 {
-                    ScriptLoader = new FileSystemScriptLoader(),
+                    ScriptLoader = new JournalScriptLoader(_settingsSystem.CurrentJournal),
                     DebugPrint = Debug.Log,
                     UseLuaErrorLocations = false,
                 }

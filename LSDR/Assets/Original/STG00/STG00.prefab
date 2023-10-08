@@ -1613,9 +1613,7 @@ Transform:
   - {fileID: 4481141976240521666}
   - {fileID: 6196124489055666515}
   - {fileID: 2017728665051179286}
-  - {fileID: 1260432081729374139}
-  - {fileID: 5628885161172376715}
-  - {fileID: 2882568193516405033}
+  - {fileID: 1503356408137002374}
   - {fileID: 5881631910082352937}
   - {fileID: 5397115776875617785}
   m_Father: {fileID: 7132490716962725300}
@@ -4502,7 +4500,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1430962265396884040}
-  m_RootOrder: 39
+  m_RootOrder: 37
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3839266657252302751
 MonoBehaviour:
@@ -5625,6 +5623,91 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06f34b4cfe5742eb9b690a3b14765640, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &5925256001502018820
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1503356408137002374}
+  - component: {fileID: 8421713829992351710}
+  - component: {fileID: 8243136747161815966}
+  - component: {fileID: 1934558396629959854}
+  m_Layer: 0
+  m_Name: PersonInBed
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1503356408137002374
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5925256001502018820}
+  m_LocalRotation: {x: -0.5, y: 0.5, z: -0.5, w: 0.5}
+  m_LocalPosition: {x: 4, y: 2, z: 7.6875}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1260432081729374139}
+  - {fileID: 5628885161172376715}
+  - {fileID: 2882568193516405033}
+  m_Father: {fileID: 1430962265396884040}
+  m_RootOrder: 35
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &8421713829992351710
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5925256001502018820}
+  m_Enabled: 0
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &8243136747161815966
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5925256001502018820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3477426c29c8464b95abcc93a63b2b3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1934558396629959854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5925256001502018820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5b0923921724b18b17afa40a2d01bf7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ID: PersonInBed
+  Script: {fileID: 271950057456261835, guid: a48cb8303affbec48b3dd476e592820d, type: 3}
+  InteractionKind: 0
+  InteractionDistance: 1.5
 --- !u!1 &6178907588911358580
 GameObject:
   m_ObjectHideFlags: 0
@@ -6495,6 +6578,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1260432081729374139}
+  - component: {fileID: 4223259715251681268}
   m_Layer: 0
   m_Name: BedPerson
   m_TagString: Untagged
@@ -6509,15 +6593,28 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7516892237798044867}
-  m_LocalRotation: {x: -0.5, y: 0.5, z: -0.5, w: 0.5}
-  m_LocalPosition: {x: 4, y: 2, z: 7.6875}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 9028922088029715776}
   - {fileID: 1769413502344931888}
-  m_Father: {fileID: 1430962265396884040}
-  m_RootOrder: 35
+  m_Father: {fileID: 1503356408137002374}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: -90}
+--- !u!114 &4223259715251681268
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7516892237798044867}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aadec67881284206abea7f2dc299e32e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ID: BedPerson
 --- !u!1 &7528382661385022302
 GameObject:
   m_ObjectHideFlags: 0
@@ -6558,6 +6655,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2882568193516405033}
+  - component: {fileID: 271342857111746890}
   m_Layer: 0
   m_Name: BedEmpty
   m_TagString: Untagged
@@ -6572,15 +6670,28 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7598448958787533066}
-  m_LocalRotation: {x: -0.5, y: 0.5, z: -0.5, w: 0.5}
-  m_LocalPosition: {x: 4, y: 2, z: 7.6875}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7277330387420773137}
   - {fileID: 4512030035870009674}
-  m_Father: {fileID: 1430962265396884040}
-  m_RootOrder: 37
+  m_Father: {fileID: 1503356408137002374}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: -90}
+--- !u!114 &271342857111746890
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7598448958787533066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aadec67881284206abea7f2dc299e32e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ID: BedEmpty
 --- !u!1 &7624229877367623413
 GameObject:
   m_ObjectHideFlags: 0
@@ -7284,6 +7395,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5628885161172376715}
+  - component: {fileID: 4053888334076943182}
   m_Layer: 0
   m_Name: BedDead
   m_TagString: Untagged
@@ -7298,15 +7410,28 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8523026780915491391}
-  m_LocalRotation: {x: -0.5, y: 0.5, z: -0.5, w: 0.5}
-  m_LocalPosition: {x: 4, y: 2, z: 7.6875}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5868607368081531951}
   - {fileID: 6288936104711321523}
-  m_Father: {fileID: 1430962265396884040}
-  m_RootOrder: 36
+  m_Father: {fileID: 1503356408137002374}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: -90}
+--- !u!114 &4053888334076943182
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8523026780915491391}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aadec67881284206abea7f2dc299e32e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ID: BedDead
 --- !u!1 &8779969767439644110
 GameObject:
   m_ObjectHideFlags: 0
@@ -7341,7 +7466,7 @@ Transform:
   - {fileID: 3967182958907580156}
   - {fileID: 2955668232385190233}
   m_Father: {fileID: 1430962265396884040}
-  m_RootOrder: 38
+  m_RootOrder: 36
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!95 &6941362054894789378
 Animator:

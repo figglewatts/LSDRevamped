@@ -8,6 +8,7 @@ using LSDR.IO.ResourceHandlers;
 using LSDR.Lua;
 using LSDR.SDK.Audio;
 using LSDR.SDK.DreamControl;
+using LSDR.SDK.Entities;
 using LSDR.SDK.Lua;
 using LSDR.Visual;
 using Torii.Console;
@@ -33,6 +34,7 @@ namespace LSDR.Game
         public GameSaveSystem GameSaveSystem;
         public DreamSystem DreamSystem;
         public ToriiEvent OnGameLoaded;
+        public Action OnGameLoadedProgrammatic;
         public Action<string> OnGameLoadError;
 
         public void OnEnable()
@@ -40,38 +42,42 @@ namespace LSDR.Game
             OnGameLoadError += err => { Debug.LogError($"Game load error: {err}"); };
         }
 
-        public IEnumerator LoadGameCoroutine()
+        public IEnumerator LoadGameCoroutine(bool testing = false)
         {
             Debug.Log("Loading game...");
 
             // do game startup stuff here
-            DevConsole.Initialise();
+            if (!testing)
+            {
+                DevConsole.Initialise();
 
-            DreamSystem.Initialise();
+                DreamSystem.Initialise();
 
-            // hook up interfaces to SDK
-            LuaManager.ProvideManaged(new LuaEngine(DreamSystem));
-            DreamControlManager.ProvideManaged(DreamSystem);
-            MixerGroupProviderManager.ProvideManaged(new MixerGroupProvider());
+                // hook up interfaces to SDK
+                LuaManager.ProvideManaged(new LuaEngine(DreamSystem, SettingsSystem));
+                DreamControlManager.ProvideManaged(DreamSystem);
+                MixerGroupProviderManager.ProvideManaged(new MixerGroupProvider());
 
-            // register old resource handlers, possibly can be removed
-            TResourceManager.RegisterHandler(new LBDHandler());
-            TResourceManager.RegisterHandler(new TIXHandler());
-            TResourceManager.RegisterHandler(new Texture2DHandler());
-            TResourceManager.RegisterHandler(new MOMHandler());
-            TResourceManager.RegisterHandler(new ToriiAudioClipHandler());
-            TResourceManager.RegisterHandler(new TIXTexture2DHandler());
+                // register old resource handlers, possibly can be removed
+                TResourceManager.RegisterHandler(new LBDHandler());
+                TResourceManager.RegisterHandler(new TIXHandler());
+                TResourceManager.RegisterHandler(new Texture2DHandler());
+                TResourceManager.RegisterHandler(new MOMHandler());
+                TResourceManager.RegisterHandler(new ToriiAudioClipHandler());
+                TResourceManager.RegisterHandler(new TIXTexture2DHandler());
 
-            Screenshotter.Instance.Initialise();
+                Screenshotter.Instance.Initialise();
 
-            // set the sort order for the fader so the version text appears on top during fades
-            ToriiFader.Instance.SetSortOrder(idx: 0);
+                // set the sort order for the fader so the version text appears on top during fades
+                ToriiFader.Instance.SetSortOrder(idx: 0);
 
-            Shader.SetGlobalFloat("_FogStep", value: 0.08F);
-            Shader.SetGlobalFloat("AffineIntensity", value: 0.5F);
+                Shader.SetGlobalFloat("_FogStep", value: 0.08F);
+                Shader.SetGlobalFloat("AffineIntensity", value: 0.5F);
 
-            ControlSchemeLoaderSystem.LoadSchemes();
-            SettingsSystem.Load();
+                ControlSchemeLoaderSystem.LoadSchemes();
+                SettingsSystem.Load();
+                GameSaveSystem.Load();
+            }
             yield return ModLoaderSystem.LoadMods();
             if (!ModLoaderSystem.ModsAvailable)
             {
@@ -79,10 +85,9 @@ namespace LSDR.Game
                 yield break;
             }
 
-            GameSaveSystem.Load();
-
             GameLoaded = true;
             OnGameLoaded.Raise();
+            OnGameLoadedProgrammatic?.Invoke();
         }
     }
 }

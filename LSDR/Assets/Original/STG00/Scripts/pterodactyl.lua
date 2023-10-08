@@ -7,8 +7,8 @@ audioPlayer = GetEntity("PterodactylAudio").DreamAudio
 
 function start()
     if not IsDayNumber(3) then
-        --this.GameObject.SetActive(false)
-        --return
+        this.GameObject.SetActive(false)
+        return
     end
 
     player = GetEntity("__player")
@@ -18,8 +18,6 @@ function update()
     if not flying then
         return
     end
-
-    -- TODO: sometimes we don't fly
 
     local playerHead = player.WorldPosition + Unity.Vector3(0, 0.5, 0)
     this.MoveTowards(playerHead, moveSpeed)
@@ -32,6 +30,11 @@ function update()
 end
 
 function interact()
+    -- we have a 50% chance of not flying
+    if Random.OneIn(0.5) then
+        return
+    end
+
     this.PlayAnimation(0)
     SetCanControlPlayer(false)
     DreamSystem.LogGraphContributionFromEntity(-2, 5)

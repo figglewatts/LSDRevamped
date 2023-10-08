@@ -52,6 +52,8 @@ namespace LSDR.SDK.Entities
 
         public void Update()
         {
+            if (_player == null) return;
+
             _luaScript?.Update();
 
             _t += Time.deltaTime;

@@ -49,6 +49,8 @@ namespace LSDR.SDK.Entities
 
         public void Update()
         {
+            if (_player == null) return;
+
             if (_playing || ControlledWithScript)
                 return; // no need to update if we're already playing or controlled externally
 

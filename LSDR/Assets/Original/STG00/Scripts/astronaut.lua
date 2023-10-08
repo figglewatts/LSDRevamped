@@ -1,7 +1,7 @@
 moveSpeed = 0.2
 
 function start()
-    if not IsDayEven() then
+    if not IsDayEven() or Random.OneIn(0.5) then
         this.GameObject.SetActive(false)
         return
     end
