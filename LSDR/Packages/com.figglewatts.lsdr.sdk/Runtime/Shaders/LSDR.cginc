@@ -147,11 +147,11 @@ fragOut frag(fragdata input)
 {
     fragOut output;
 
-#if defined(LSDR_CLASSIC)
+    #if defined(LSDR_CLASSIC)
     float2 uvs = input.data.uv_MainTex / input.data.clipPos.w;
-#else
+    #else
     float2 uvs = input.data.uv_MainTex;
-#endif
+    #endif
 
 
     half4 waterMap;
@@ -175,14 +175,14 @@ fragOut frag(fragdata input)
     output_col *= _Tint;
 
     // apply fog
-#if defined(LSDR_CLASSIC)
+    #if defined(LSDR_CLASSIC)
     // operate on floored versions of coords to produce grid effect
     float4 fogColor = FogColor(length(int3(input.worldPos) - int3(_WorldSpaceCameraPos)));
     output_col = ApplyClassicFog(output_col, fogColor);
-#else
+    #else
     const float4 fogColor = FogColor(input.distance);
     output_col = ApplyRevampedFog(output_col, fogColor);
-#endif
+    #endif
 
     output.color = output_col * BRIGHTNESS;
     output.color.a = min(_Alpha, waterMap.a);

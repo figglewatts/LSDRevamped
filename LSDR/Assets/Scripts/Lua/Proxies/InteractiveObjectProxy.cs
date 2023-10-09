@@ -1,4 +1,5 @@
 using LSDR.SDK.Entities;
+using LSDR.SDK.Lua.Actions;
 using MoonSharp.Interpreter;
 using UnityEngine;
 
@@ -19,9 +20,16 @@ namespace LSDR.Lua.Proxies
 
         public GameObject GameObject => _gameObject;
 
+        public LuaAsyncActionRunner Action => _target.Action;
+
 #endregion
 
 #region Functions
+
+        public IPredicate WaitForAnimation(int index)
+        {
+            return new WaitForSecondsPredicate(_target.AnimatedObject.Clips[index].length);
+        }
 
         public void PlayAnimation(int index)
         {
@@ -67,7 +75,8 @@ namespace LSDR.Lua.Proxies
         public bool LookTowards(Vector3 worldPosition, float speed)
         {
             var current = _target.transform.rotation;
-            var toTarget = (worldPosition - _target.transform.position).normalized;
+            var toTarget = (_target.transform.position - worldPosition).normalized;
+            toTarget.y = 0; // flatten
             var desired = Quaternion.LookRotation(toTarget, _target.transform.up);
 
             if (Quaternion.Dot(current, desired) > 0.99f)
@@ -79,6 +88,18 @@ namespace LSDR.Lua.Proxies
 
             _target.transform.rotation = Quaternion.RotateTowards(current, desired, speed * Time.deltaTime);
             return false;
+        }
+
+        public void SnapToFloor(float checkHeight = 10)
+        {
+            bool hit = Physics.Raycast(_target.transform.position + new Vector3(0, checkHeight, 0),
+                Vector3.down,
+                out RaycastHit hitInfo,
+                Mathf.Infinity);
+            if (!hit) return; // do nothing if we didn't hit anything
+
+            // otherwise set our position to where we hit
+            _target.transform.position = hitInfo.point;
         }
 
 #endregion

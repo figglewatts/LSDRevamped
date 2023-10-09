@@ -4,7 +4,7 @@ using MoonSharp.Interpreter;
 
 namespace LSDR.SDK.Lua
 {
-    public class SongLibraryLuaScript : AbstractLuaScript
+    public sealed class SongLibraryLuaScript : AbstractLuaScript
     {
         public const string GETSONG_FUNCTION_NAME = "getSong";
 
@@ -16,6 +16,7 @@ namespace LSDR.SDK.Lua
         {
             _songList = songList;
             Script.Globals["songList"] = _songList;
+            compile();
             loadFunctions();
         }
 
@@ -26,7 +27,6 @@ namespace LSDR.SDK.Lua
                 var result = Script.Call(_getSongFunc, style, songNumber);
                 return (SongAsset)result.UserData.Object;
             });
-
         }
 
         private void loadFunctions()

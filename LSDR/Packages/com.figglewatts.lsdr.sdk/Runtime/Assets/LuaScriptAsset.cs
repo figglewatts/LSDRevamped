@@ -9,13 +9,11 @@ namespace LSDR.SDK.Assets
     {
         [HideInInspector] public string ScriptText;
 
-        public Script Compile(ILuaEngine engine)
+        public void Compile(Script script)
         {
-            Script baseApi = engine.CreateBaseAPI();
-
             try
             {
-                HandleLuaErrorsFor(() => { baseApi.DoString(ScriptText); });
+                HandleLuaErrorsFor(() => { script.DoString(ScriptText); });
             }
             catch (InternalErrorException e)
             {
@@ -28,8 +26,6 @@ namespace LSDR.SDK.Assets
                 Debug.LogError(message);
                 throw new LuaException(message, e);
             }
-
-            return baseApi;
         }
 
         public void HandleLuaErrorsFor(Action action)

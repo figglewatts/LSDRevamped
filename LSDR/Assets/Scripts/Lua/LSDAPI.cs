@@ -44,9 +44,15 @@ namespace LSDR.Lua
             return EntityIndex.Instance.Get(id);
         }
 
-        public static bool IsDayEven() => DreamControlManager.Managed.CurrentDay % 2 == 0;
+        public static bool IsDayEven()
+        {
+            return DreamControlManager.Managed.CurrentDay % 2 == 0;
+        }
 
-        public static bool IsDayNumber(int number) => (DreamControlManager.Managed.CurrentDay - 1) % 7 == number - 1;
+        public static bool IsWeekDay(int number) => (DreamControlManager.Managed.CurrentDay - 1) % 7 == number - 1;
+
+        public static bool IsDayLinear(int slope, int constant) =>
+            (DreamControlManager.Managed.CurrentDay - constant) % slope == 0;
 
         public static void SetCanControlPlayer(bool state)
         {

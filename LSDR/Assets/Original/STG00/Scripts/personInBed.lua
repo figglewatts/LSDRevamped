@@ -10,8 +10,8 @@ linked = false
 
 function start()
     if not IsDayEven() then
-        -- this.GameObject.SetActive(false)
-        -- return
+        this.GameObject.SetActive(false)
+        return
     end
 
     local dayNumber = DreamSystem.DayNumber

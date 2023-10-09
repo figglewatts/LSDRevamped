@@ -75,7 +75,7 @@ namespace LSDR.SDK.Editor.Entities
                 else if (_this.Loop)
                 {
                     // handle looping
-                    yield return new EditorWaitForSeconds(_this.Clip.length * _this.Pitch);
+                    yield return new EditorWaitForSeconds(_this.Clip.length * 1f / _this.Pitch);
                 }
 
                 // handle waiting between audio plays

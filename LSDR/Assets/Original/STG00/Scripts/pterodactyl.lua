@@ -1,12 +1,13 @@
+require "dreams"
+
 moveSpeed = 0.25
 
 flying = false
 player = nil
-linkToDream = GetDreamByName("Pit & Temple")
 audioPlayer = GetEntity("PterodactylAudio").DreamAudio
 
 function start()
-    if not IsDayNumber(3) then
+    if not IsWeekDay(3) then
         this.GameObject.SetActive(false)
         return
     end
@@ -24,14 +25,14 @@ function update()
     local distanceToPlayer = (playerHead - this.GameObject.WorldPosition).length()
     if distanceToPlayer < 0.1 then
         flying = false
-        DreamSystem.SetNextTransitionDream(linkToDream)
+        DreamSystem.SetNextTransitionDream(dreams.PitAndTemple)
         DreamSystem.TransitionToDream()
     end
 end
 
 function interact()
     -- we have a 50% chance of not flying
-    if Random.OneIn(0.5) then
+    if Random.OneIn(2) then
         return
     end
 
@@ -39,6 +40,8 @@ function interact()
     SetCanControlPlayer(false)
     DreamSystem.LogGraphContributionFromEntity(-2, 5)
     audioPlayer.Play()
-    this.LookAt(player.WorldPosition + Unity.Vector3(0, 0.5, 0))
+    local lookAtPos = player.WorldPosition
+    lookAtPos.y = this.GameObject.WorldPosition.y
+    this.LookAt(lookAtPos)
     flying = true
 end

@@ -12,14 +12,25 @@ namespace LSDR.SDK.Lua
         private DynValue _startFunc;
         private DynValue _updateFunc;
 
-        protected AbstractStartUpdateLuaScript(ILuaEngine engine, LuaScriptAsset script) : base(engine, script)
+        protected AbstractStartUpdateLuaScript(ILuaEngine engine, LuaScriptAsset script) : base(engine, script) { }
+
+        public void Start()
         {
-            loadStartUpdateFunctions();
+            if (_startFunc.IsNil()) return;
+            _scriptAsset.HandleLuaErrorsFor(() => { Script.Call(_startFunc); });
         }
 
-        public void Start() { _scriptAsset.HandleLuaErrorsFor(() => { Script.Call(_startFunc); }); }
+        public void Update()
+        {
+            if (_updateFunc.IsNil()) return;
+            _scriptAsset.HandleLuaErrorsFor(() => { Script.Call(_updateFunc); });
+        }
 
-        public void Update() { _scriptAsset.HandleLuaErrorsFor(() => { Script.Call(_updateFunc); }); }
+        protected override void compile()
+        {
+            base.compile();
+            loadStartUpdateFunctions();
+        }
 
         private void loadStartUpdateFunctions()
         {

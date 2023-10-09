@@ -18,6 +18,8 @@ namespace LSDR.Lua.Proxies
 
         public DreamAudio DreamAudio => getAs<DreamAudio>();
 
+        public string Name => _target.name;
+
         public Vector3 WorldPosition
         {
             get => _target.transform.position;

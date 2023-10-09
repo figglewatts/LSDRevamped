@@ -3,7 +3,7 @@ using MoonSharp.Interpreter;
 
 namespace LSDR.SDK.Lua
 {
-    public class TriggerLuaLuaScript : AbstractStartUpdateLuaScript
+    public sealed class TriggerLuaLuaScript : AbstractStartUpdateLuaScript
     {
         private DynValue _triggerFunc;
         private DynValue _triggerExitFunc;
@@ -12,11 +12,15 @@ namespace LSDR.SDK.Lua
             string triggerExitFunctionName) : base(engine,
             asset)
         {
+            compile();
             loadTriggerFunctions(triggerFunctionName, triggerExitFunctionName);
             Start();
         }
 
-        public void OnTrigger() { _scriptAsset.HandleLuaErrorsFor(() => { Script.Call(_triggerFunc); }); }
+        public void OnTrigger()
+        {
+            _scriptAsset.HandleLuaErrorsFor(() => { Script.Call(_triggerFunc); });
+        }
 
         public void OnTriggerExit() { _scriptAsset.HandleLuaErrorsFor(() => { Script.Call(_triggerExitFunc); }); }
 

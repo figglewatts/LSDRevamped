@@ -9,9 +9,17 @@ namespace LSDR.UI
     public class UIBuildNumberDisplay : MonoBehaviour
     {
         public Text BuildNumberText;
+        public bool PreRelease = false;
 
         private void Start() { BuildNumberText.text = getVersionString(); }
 
-        protected string getVersionString() { return Application.version; }
+        protected string getVersionString()
+        {
+            if (PreRelease)
+            {
+                return $"{Application.version} - PRERELEASE, anything could go wrong!";
+            }
+            return Application.version;
+        }
     }
 }
