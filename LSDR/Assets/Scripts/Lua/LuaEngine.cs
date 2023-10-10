@@ -206,6 +206,17 @@ namespace LSDR.Lua
                             (float)vec.Get("z").Number);
                         return DynValue.NewNumber(vec3.magnitude);
                     });
+                    vec["negated"] = new CallbackFunction((context, args) =>
+                    {
+                        var vec3 = new Vector3((float)vec.Get("x").Number, (float)vec.Get("y").Number,
+                            (float)vec.Get("z").Number);
+                        return DynValue.FromObject(script, new Table(script)
+                        {
+                            ["x"] = -vec3.x,
+                            ["y"] = -vec3.y,
+                            ["z"] = -vec3.z
+                        });
+                    });
 
                     return DynValue.FromObject(script, vec);
                 }

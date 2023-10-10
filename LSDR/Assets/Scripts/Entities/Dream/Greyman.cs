@@ -32,7 +32,7 @@ namespace LSDR.Entities.Dream
 
         private void playerEncountered()
         {
-            DreamSystem.CurrentSequence.LogGraphContributionFromEntity(-10, -10);
+            DreamSystem.LogGraphContributionFromEntity(-10, -10);
             ToriiFader.Instance.FadeIn(Color.white, duration: 0.1F, () =>
             {
                 Renderer.enabled = false;

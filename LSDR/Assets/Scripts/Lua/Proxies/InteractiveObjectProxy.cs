@@ -102,6 +102,11 @@ namespace LSDR.Lua.Proxies
             _target.transform.position = hitInfo.point;
         }
 
+        public void SetChildVisible(bool visible)
+        {
+            _target.transform.GetChild(0).gameObject.SetActive(visible);
+        }
+
 #endregion
     }
 }

@@ -337,13 +337,6 @@ namespace LSDR.Dream
                 yield return loadSceneOp;
             }
 
-            Debug.Log("Registering entities...");
-            Player = GameObject.FindWithTag("Player");
-            if (Player == null) Debug.LogError("Unable to find player in scene!");
-            registerCommonEntities();
-
-            EntityIndex.Instance.AllRegistered();
-
             // reroll song style, update song library, switch to next song based on graph position
             MusicSystem.OriginalSongLibrary.DreamNumber = SettingsSystem.CurrentJournal.GetDreamIndex(CurrentDream);
             MusicSystem.SetSongStyle((SongStyle)((GameSave.CurrentJournalSave.DayNumber - 1) % (int)SongStyle.COUNT));
@@ -353,6 +346,11 @@ namespace LSDR.Dream
                 : (GameSave.CurrentJournalSave.LastGraphY + 9) * GraphSpawnMap.GRAPH_SIZE +
                   (GameSave.CurrentJournalSave.LastGraphX + 9);
             if (!loadingSameDream) MusicSystem.NextSong(songNumber);
+
+            Debug.Log("Registering entities...");
+            Player = GameObject.FindWithTag("Player");
+            if (Player == null) Debug.LogError("Unable to find player in scene!");
+            registerCommonEntities();
 
             Player.GetComponent<PlayerMovement>().StopExternalInput();
             Player.GetComponent<PlayerRotation>().StopExternalInput();
@@ -364,6 +362,8 @@ namespace LSDR.Dream
             yield return null;
 
             ResourceManager.ClearLifespan("scene");
+
+            EntityIndex.Instance.AllRegistered();
 
             // if we're not transitioning (via a link) then set the orientation
             // because we're beginning the dream
