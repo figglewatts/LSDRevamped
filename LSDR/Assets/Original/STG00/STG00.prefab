@@ -1631,6 +1631,7 @@ Transform:
   - {fileID: 257787250416970348}
   - {fileID: 4442916599927886644}
   - {fileID: 6117044995129073981}
+  - {fileID: 1335826584023726280}
   m_Father: {fileID: 7132490716962725300}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -11475,6 +11476,72 @@ MonoBehaviour:
   Script: {fileID: 271950057456261835, guid: 99a3555a31df55d40ad746849c11ebdf, type: 3}
   InteractionKind: 0
   InteractionDistance: 1
+--- !u!1 &8207017963642602740
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1335826584023726280}
+  - component: {fileID: 470225550739897061}
+  - component: {fileID: 8684427740823382372}
+  m_Layer: 0
+  m_Name: BirdsTriggerLink
+  m_TagString: Untagged
+  m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1335826584023726280
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8207017963642602740}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 6, y: 2.4375, z: 8.25}
+  m_LocalScale: {x: 0.8125, y: 0.8125, z: 0.9375}
+  m_Children: []
+  m_Father: {fileID: 1430962265396884040}
+  m_RootOrder: 53
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &470225550739897061
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8207017963642602740}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &8684427740823382372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8207017963642602740}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2064ad0257e4cb478058e31e87d2613, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ID: BirdsTriggerLink
+  OnlyOnce: 0
+  Linked: {fileID: 11400000, guid: 56de95b6448cb444982ef9899983934e, type: 2}
+  ForcedLinkColor: {r: 0, g: 0, b: 0, a: 0}
+  SpawnPointEntityID: 
+  ForceFadeColor: 0
+  PlayLinkSound: 1
+  LockInput: 0
+  AffectsLinksWithin: 1
 --- !u!1 &8284975646958816704
 GameObject:
   m_ObjectHideFlags: 0
