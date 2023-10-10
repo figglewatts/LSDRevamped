@@ -16,6 +16,7 @@ namespace LSDR.SDK.Editor.Windows
         protected int[] _excludes;
         protected string _stringExcludes;
         protected Vector2 _scrollPos;
+        protected int _lastPlayed = -1;
 
         protected const string _excludesEditorPref = "LSDR_VABSoundboard_Excludes";
 
@@ -62,11 +63,20 @@ namespace LSDR.SDK.Editor.Windows
                 {
                     if (_excludes != null && _excludes.Contains(i)) continue;
 
+                    var lastBackground = GUI.backgroundColor;
+                    if (i == _lastPlayed)
+                    {
+                        GUI.backgroundColor = new Color(lastBackground.r, lastBackground.g, 0.8f);
+                    }
+
                     AudioClip sample = VAB.Samples[i];
                     if (GUILayout.Button($"Play {sample.name}"))
                     {
                         playClip(sample);
+                        _lastPlayed = i;
                     }
+
+                    GUI.backgroundColor = lastBackground;
                 }
             }
             EditorGUILayout.EndScrollView();
