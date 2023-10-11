@@ -1,4 +1,5 @@
 using LSDR.Entities.Player;
+using LSDR.SDK.Animation;
 using LSDR.SDK.Entities;
 using LSDR.SDK.Lua.Actions;
 using MoonSharp.Interpreter;
@@ -17,6 +18,8 @@ namespace LSDR.Lua.Proxies
         public LuaAsyncActionRunner Action => getAs<LuaAsyncActionRunner>();
 
         public DreamAudio DreamAudio => getAs<DreamAudio>();
+
+        public AnimatedObject AnimatedObject => getAs<AnimatedObject>();
 
         public string Name => _target.name;
 
@@ -59,9 +62,32 @@ namespace LSDR.Lua.Proxies
             _target.SetActive(active);
         }
 
-        // TODO: PositionToWorld(Vector3 position)
+        public GameObject GetChildByName(string name)
+        {
+            var found = _target.transform.Find(name);
+            if (found == null) Debug.LogWarning($"unable to find GameObject with name '{name}'");
+            return found.gameObject;
+        }
 
-        // TODO: PositionFromWorld(Vector3 worldPosition)
+        public Vector3 PositionToWorld(Vector3 position)
+        {
+            return _target.transform.TransformPoint(position);
+        }
+
+        public Vector3 DirectionToWorld(Vector3 direction)
+        {
+            return _target.transform.TransformDirection(direction);
+        }
+
+        public Vector3 PositionFromWorld(Vector3 worldPosition)
+        {
+            return _target.transform.InverseTransformPoint(worldPosition);
+        }
+
+        public Vector3 DirectionFromWorld(Vector3 worldDirection)
+        {
+            return _target.transform.InverseTransformDirection(worldDirection);
+        }
 
         protected T getAs<T>() where T : MonoBehaviour
         {

@@ -25,9 +25,9 @@ namespace LSDR.Dream
             _areaGraphContributions.Add(new GraphContribution(dynamicness, upperness));
         }
 
-        public void LogGraphContributionFromEntity(int dynamicness, int upperness)
+        public void LogGraphContributionFromEntity(int dynamicness, int upperness, Transform playerTransform)
         {
-            _entityGraphContributions.Add(new GraphContribution(dynamicness, upperness));
+            _entityGraphContributions.Add(new GraphContribution(dynamicness, upperness, playerTransform));
         }
 
         public Vector2Int EvaluateGraphPosition()

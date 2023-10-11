@@ -33,20 +33,12 @@ namespace LSDR.Lua.Proxies
 
         public void PlayAnimation(int index)
         {
-            if (index >= _target.AnimatedObject.Clips.Length)
-            {
-                Debug.LogWarning($"Unable to play animation {index} on object '{_gameObject.name}', " +
-                                 $"object only has {_target.AnimatedObject.Clips.Length} animations");
-                return;
-            }
-
-            _target.Animator.enabled = true;
-            _target.Animator.Play(_target.AnimatedObject.Clips[index].name);
+            _target.AnimatedObject.Play(index);
         }
 
-        public void ResumeAnimation() { _target.Animator.enabled = true; }
+        public void ResumeAnimation() { _target.AnimatedObject.Resume(); }
 
-        public void StopAnimation() { _target.Animator.enabled = false; }
+        public void StopAnimation() { _target.AnimatedObject.Stop(); }
 
         public bool MoveTowards(Vector3 worldPosition, float speed)
         {
@@ -69,7 +61,7 @@ namespace LSDR.Lua.Proxies
 
         public void LookAt(Vector3 worldPosition)
         {
-            _target.transform.LookAt(-worldPosition, _target.transform.up);
+            _target.transform.LookAt(worldPosition, _target.transform.up);
         }
 
         public bool LookTowards(Vector3 worldPosition, float speed)
@@ -100,6 +92,11 @@ namespace LSDR.Lua.Proxies
 
             // otherwise set our position to where we hit
             _target.transform.position = hitInfo.point;
+        }
+
+        public void StretchShrink(float factor)
+        {
+            _target.transform.localScale = new Vector3(1, factor, 1);
         }
 
         public void SetChildVisible(bool visible)

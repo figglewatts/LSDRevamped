@@ -48,6 +48,14 @@ namespace LSDR.SDK.Lua.Actions
             return actionObj;
         }
 
+        public LuaAsyncAction WaitUntil(IPredicate condition)
+        {
+            var action = new LuaAsyncAction(() => { }, this).Until(condition);
+            _rootAction = action;
+            _currentAction = _rootAction;
+            return action;
+        }
+
         public void Begin(LuaAsyncActionRunnerMode mode)
         {
             switch (mode)

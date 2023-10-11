@@ -81,7 +81,8 @@ namespace LSDR.Dream
             {
                 var pitch = RandUtil.RandomArrayElement(new[] { 0.25f, 0.5f });
                 AudioPlayer.Instance.PlayClip(LinkSound, loop: false, pitch: pitch, mixerGroup: "SFX");
-                CurrentSequence.LogGraphContributionFromEntity(dynamicness: 0, FALLING_UPPER_PENALTY);
+                CurrentSequence.LogGraphContributionFromEntity(dynamicness: 0, FALLING_UPPER_PENALTY,
+                    Player.transform);
                 SettingsSystem.CanControlPlayer = false;
             }
             else
@@ -132,7 +133,7 @@ namespace LSDR.Dream
                 Debug.LogWarning("Attempting to log contribution with no sequence");
                 return;
             }
-            CurrentSequence.LogGraphContributionFromEntity(dynamicness, upperness);
+            CurrentSequence.LogGraphContributionFromEntity(dynamicness, upperness, Player.transform);
         }
 
         public void SetNextLinkDream(SDK.Data.Dream dream, string spawnPointID = null)

@@ -4,6 +4,7 @@ using LSDR.Dream;
 using LSDR.Entities.Player;
 using LSDR.Lua.Proxies;
 using LSDR.SDK;
+using LSDR.SDK.Animation;
 using LSDR.SDK.Audio;
 using LSDR.SDK.Data;
 using LSDR.SDK.DreamControl;
@@ -37,6 +38,7 @@ namespace LSDR.Lua
             UserData.RegisterType<SongAsset>();
             UserData.RegisterType<SongListAsset>();
             UserData.RegisterType<DreamEnvironment>();
+            UserData.RegisterType<AnimatedObject>();
         }
 
         public static GameObject GetEntity(string id)

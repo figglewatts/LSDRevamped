@@ -65,6 +65,7 @@ namespace LSDR.SDK.Editor.Entities
 
                 // play the audio
                 _source.Play();
+                if (_this.OneShot) yield break;
 
                 // stop the audio if that setting is enabled
                 if (_this.PlayClipForSeconds > 0)

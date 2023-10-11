@@ -19,6 +19,7 @@ namespace LSDR.SDK.Entities
         public float DelayBeforePlayingSeconds = 0;
         public bool WaitUntilAudibleBeforePlaying = true;
         public bool Loop = false;
+        public bool OneShot = false;
         public bool ControlledWithScript = false;
 
         protected AudioSource _audioSource;
@@ -89,7 +90,7 @@ namespace LSDR.SDK.Entities
 
         public void StartPlaying()
         {
-            if (Loop)
+            if (Loop || OneShot)
             {
                 _audioSource.Play();
             }

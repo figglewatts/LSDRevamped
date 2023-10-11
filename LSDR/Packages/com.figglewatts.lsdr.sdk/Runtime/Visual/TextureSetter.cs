@@ -14,12 +14,13 @@ namespace LSDR.SDK.Visual
 
         [NonSerialized] protected readonly List<Material> _textureSetMaterials = new List<Material>();
         protected Shader _classicAlphaShader;
-
         protected Shader _classicShader;
+        protected Shader _classicWaterShader;
 
         protected bool _lastShaderSet;
         protected Shader _revampedAlphaShader;
         protected Shader _revampedShader;
+        protected Shader _revampedWaterShader;
 
         protected TextureSet _textureSet;
 
@@ -57,12 +58,20 @@ namespace LSDR.SDK.Visual
             _classicAlphaShader = Shader.Find("LSDR/ClassicDiffuseSetAlphaBlend");
             _revampedShader = Shader.Find("LSDR/RevampedDiffuseSet");
             _revampedAlphaShader = Shader.Find("LSDR/RevampedDiffuseSetAlphaBlend");
+            _classicWaterShader = Shader.Find("LSDR/ClassicWater");
+            _revampedWaterShader = Shader.Find("LSDR/RevampedWater");
         }
 
         public void SetShader(Material mat) { SetShader(mat, _lastShaderSet); }
 
         public void SetShader(Material mat, bool classic)
         {
+            if (mat.name.ToLowerInvariant().Contains("water"))
+            {
+                mat.shader = classic ? _classicWaterShader : _revampedWaterShader;
+                return;
+            }
+
             ShaderTagId queue = mat.shader.FindPassTagValue(passIndex: 0, new ShaderTagId("Queue"));
             if (queue.name.Equals("Transparent"))
                 mat.shader = classic ? _classicAlphaShader : _revampedAlphaShader;
@@ -78,6 +87,7 @@ namespace LSDR.SDK.Visual
 
         public void RegisterMaterial(Material mat)
         {
+            if (!isMaterialValid(mat)) return;
             _textureSetMaterials.Add(mat);
             SetShader(mat);
         }
@@ -119,6 +129,18 @@ namespace LSDR.SDK.Visual
             }
 
             // TODO: randomly introduce the glitch texture set
+        }
+
+        protected bool isMaterialValid(Material mat)
+        {
+            var matShader = mat.shader;
+            if (matShader == _classicShader) return true;
+            if (matShader == _revampedShader) return true;
+            if (matShader == _classicAlphaShader) return true;
+            if (matShader == _revampedAlphaShader) return true;
+            if (matShader == _classicWaterShader) return true;
+            if (matShader == _revampedWaterShader) return true;
+            return false;
         }
     }
 }
