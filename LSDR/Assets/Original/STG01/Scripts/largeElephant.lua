@@ -3,8 +3,8 @@ moveSpeed = 0.2
 
 function start()
     if Random.OneIn(2) then
-        this.GameObject.SetActive(false)
-        return
+        --this.GameObject.SetActive(false)
+        --return
     end
 
     this.SetChildVisible(false)

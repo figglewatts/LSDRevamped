@@ -29,7 +29,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2545162243610730089}
-  - {fileID: 2545162244093661507}
+  - {fileID: 7342316564979814541}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -101,7 +101,7 @@ GameObject:
   - component: {fileID: 2545162244093661507}
   - component: {fileID: 2545162244093661504}
   m_Layer: 0
-  m_Name: a386fb2e-a86d-4af3-ac4b-7f3ecf4f5404
+  m_Name: EntranceFromKyoto
   m_TagString: Untagged
   m_Icon: {fileID: 4422084297763085224, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -114,12 +114,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2545162244093661506}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 8, y: 0, z: 8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 2545162242744238229}
-  m_RootOrder: 1
+  m_Father: {fileID: 7342316564979814541}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2545162244093661504
 MonoBehaviour:
@@ -133,9 +133,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b66350b2ce324279b594531b66a49112, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ID: a386fb2e-a86d-4af3-ac4b-7f3ecf4f5404
+  ID: EntranceFromKyoto
   DayOneSpawn: 0
   TunnelEntrance: 0
+--- !u!1 &8869786437189654298
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7342316564979814541}
+  m_Layer: 0
+  m_Name: Entities
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7342316564979814541
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8869786437189654298}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 2545162244093661507}
+  m_Father: {fileID: 2545162242744238229}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2545162242265319458
 PrefabInstance:
   m_ObjectHideFlags: 0
