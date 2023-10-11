@@ -23,10 +23,10 @@ namespace LSDR.SDK.Entities
         public InteractionType InteractionKind;
         public float InteractionDistance = 3;
 
+        public float UpdateIntervalSeconds => _currentUpdateInterval <= 0 ? Time.deltaTime : _currentUpdateInterval;
+
         public Animator Animator => _animator;
         public AnimatedObject AnimatedObject => _animatedObject;
-
-        protected const float UPDATE_INTERVAL = 0.25f;
 
         protected Animator _animator;
         protected bool _interacted;
@@ -35,6 +35,7 @@ namespace LSDR.SDK.Entities
         protected Camera _playerCamera;
         protected AnimatedObject _animatedObject;
         protected float _t;
+        protected float _currentUpdateInterval = 0.25f;
 
         public LuaAsyncActionRunner Action { get; protected set; }
 
@@ -47,7 +48,11 @@ namespace LSDR.SDK.Entities
             Action = GetComponent<LuaAsyncActionRunner>();
             _animatedObject = GetComponent<AnimatedObject>();
 
-            if (Script) _luaScript = new InteractiveObjectLuaScript(LuaManager.Managed, Script, this);
+            if (Script)
+            {
+                _luaScript = new InteractiveObjectLuaScript(LuaManager.Managed, Script, this);
+                _luaScript?.IntervalUpdate();
+            }
         }
 
         public void Update()
@@ -57,10 +62,11 @@ namespace LSDR.SDK.Entities
             _luaScript?.Update();
 
             _t += Time.deltaTime;
-            if (_t > UPDATE_INTERVAL)
+            if (_t > _currentUpdateInterval)
             {
                 _t = 0;
                 processPlayerInteraction();
+                _luaScript?.IntervalUpdate();
             }
         }
 
@@ -76,6 +82,11 @@ namespace LSDR.SDK.Entities
             {
                 InteractionDistance = 1;
             }
+        }
+
+        public void SetUpdateIntervalSeconds(float seconds)
+        {
+            _currentUpdateInterval = seconds;
         }
 
         protected void processPlayerInteraction()

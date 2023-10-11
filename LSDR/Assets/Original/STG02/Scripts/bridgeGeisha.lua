@@ -1,17 +1,13 @@
 require "dreams"
 
 player = GetEntity("__player")
-
-linked = false
 distanceToPlayer = 0
 
 function start()
-    if not IsDayEven() or Random.OneIn(2) then
+    if not Random.OneIn(3) then
         this.GameObject.SetActive(false)
         return
     end
-
-    this.PlayAnimation(0)
 end
 
 function intervalUpdate()
@@ -19,14 +15,13 @@ function intervalUpdate()
 end
 
 function update()
-    if distanceToPlayer < 0.6 and not linked then
+    if distanceToPlayer < 0.3 and not linked then
         linked = true
-        DreamSystem.SetNextTransitionDream(dreams.Kyoto)
+        DreamSystem.SetNextTransitionDream(dreams.Void)
         DreamSystem.TransitionToDream()
     end
 end
 
 function interact()
-    -- TODO: stretch kyoto
-    DreamSystem.LogGraphContributionFromEntity(-3, -5)
+    DreamSystem.LogGraphContributionFromEntity(-5, 6)
 end

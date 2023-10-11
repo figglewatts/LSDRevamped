@@ -104,6 +104,11 @@ namespace LSDR.Lua.Proxies
             _target.transform.GetChild(0).gameObject.SetActive(visible);
         }
 
+        public void SetUpdateIntervalSeconds(float seconds)
+        {
+            _target.SetUpdateIntervalSeconds(seconds);
+        }
+
 #endregion
     }
 }

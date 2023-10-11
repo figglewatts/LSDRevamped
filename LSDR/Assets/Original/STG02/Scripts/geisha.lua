@@ -1,32 +1,35 @@
 require "dreams"
 
 player = GetEntity("__player")
-
-linked = false
+audio = GetEntity(this.GameObject.Name .. "Audio").DreamAudio
+moveSpeed = 0.25
 distanceToPlayer = 0
 
 function start()
-    if not IsDayEven() or Random.OneIn(2) then
+    if Random.OneIn(2) then
         this.GameObject.SetActive(false)
         return
     end
 
     this.PlayAnimation(0)
+    audio.Play()
 end
 
 function intervalUpdate()
     distanceToPlayer = (player.WorldPosition - this.GameObject.WorldPosition).length()
+    this.SnapToFloor()
 end
 
 function update()
-    if distanceToPlayer < 0.6 and not linked then
+    if distanceToPlayer < 0.3 and not linked then
         linked = true
-        DreamSystem.SetNextTransitionDream(dreams.Kyoto)
+        DreamSystem.SetNextTransitionDream(dreams.TempleDojo)
         DreamSystem.TransitionToDream()
     end
+    
+    this.MoveInDirection(this.GameObject.ForwardDirection.negated(), moveSpeed)
 end
 
 function interact()
-    -- TODO: stretch kyoto
-    DreamSystem.LogGraphContributionFromEntity(-3, -5)
+    DreamSystem.LogGraphContributionFromEntity(3, 0)
 end

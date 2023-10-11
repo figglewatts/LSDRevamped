@@ -1,8 +1,6 @@
 require "dreams"
 
 player = GetEntity("__player")
-
-linked = false
 distanceToPlayer = 0
 
 function start()
@@ -10,23 +8,24 @@ function start()
         this.GameObject.SetActive(false)
         return
     end
-
-    this.PlayAnimation(0)
 end
 
 function intervalUpdate()
     distanceToPlayer = (player.WorldPosition - this.GameObject.WorldPosition).length()
+
 end
 
 function update()
-    if distanceToPlayer < 0.6 and not linked then
+    if distanceToPlayer < 0.4 and not linked then
         linked = true
-        DreamSystem.SetNextTransitionDream(dreams.Kyoto)
+        DreamSystem.SetNextTransitionDream(dreams.Happytown)
         DreamSystem.TransitionToDream()
     end
 end
 
 function interact()
-    -- TODO: stretch kyoto
-    DreamSystem.LogGraphContributionFromEntity(-3, -5)
+    local target = player.WorldPosition
+    this.LookAt(player.WorldPosition)
+    this.PlayAnimation(0)
+    DreamSystem.LogGraphContributionFromEntity(1, 4)
 end
