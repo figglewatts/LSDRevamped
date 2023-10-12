@@ -31,10 +31,13 @@ namespace LSDR.SDK.Entities
 
         public override void Init()
         {
+            _player = EntityIndex.Instance.Get("__player");
+        }
+
+        public void Start()
+        {
             _audioSource = GetComponent<AudioSource>();
             _audioSource.outputAudioMixerGroup = MixerGroupProviderManager.Managed.GetMixerGroup("SFX");
-
-            _player = EntityIndex.Instance.Get("__player");
         }
 
         public void OnEnable()

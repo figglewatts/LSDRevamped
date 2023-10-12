@@ -7,15 +7,19 @@ screechAudio = GetEntity("PterodactylScreech").DreamAudio
 state = "hidden"
 moveSpeed = 0.75
 linked = false
+distanceToPlayer = 0
 
 function start()
     this.SetChildVisible(false)
 end
 
+function intervalUpdate()
+    distanceToPlayer = (player.WorldPosition - this.GameObject.WorldPosition).length()
+end
+
 function update()
     if state == "hidden" or linked then return end
 
-    local distanceToPlayer = (player.WorldPosition - this.GameObject.WorldPosition).length()
     if distanceToPlayer < 0.5 then
         linked = true
         DreamSystem.SetNextTransitionDream(dreams.PitAndTemple)

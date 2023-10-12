@@ -1,13 +1,5 @@
 player = GetEntity("__player")
 
-function start()
-    
-end
-
-function update()
-
-end
-
 function onTrigger5Down()
     local target1 = GetEntity("5FloorStairsTarget2")
     local target2 = GetEntity("5FloorStairsTarget3")
@@ -82,10 +74,6 @@ end
 
 function onTrigger1Up()
     doStairWalk(false, 1).ThenFinish()
-end
-
-function onTriggerExit()
-
 end
 
 function doStairWalk(down, floor)

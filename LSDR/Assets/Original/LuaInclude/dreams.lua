@@ -1,6 +1,7 @@
 dreams = {
     BrightMoonCottage = GetDreamByName("Bright Moon Cottage"),
     PitAndTemple = GetDreamByName("Pit & Temple"),
+    Kyoto = GetDreamByName("Kyoto"),
     NaturalWorld = GetDreamByName("The Natural World"),
     Happytown = GetDreamByName("Happytown"),
     ViolenceDistrict = GetDreamByName("Violence District"),

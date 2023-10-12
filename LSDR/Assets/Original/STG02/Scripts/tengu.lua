@@ -6,11 +6,11 @@ player = GetEntity("__player")
 active = false
 linked = false
 direction = nil
-moveSpeed = 0.4
+moveSpeed = 1
 distanceToPlayer = 0
 
 function start()
-    if Random.OneIn(2) then
+    if not IsDayEven() or Random.OneIn(2) then
         this.GameObject.SetActive(false)
         return
     end
@@ -54,9 +54,14 @@ function update()
 end
 
 function interact()
-    DreamSystem.LogGraphContributionFromEntity(0, -4)
+    DreamSystem.LogGraphContributionFromEntity(0, 5)
     this.SetChildVisible(true)
     audio.Play()
-    this.PlayAnimation(0)
-    active = true
+
+    this.Action
+        .Do(|| this.PlayAnimation(0))
+        .ThenWaitUntil(this.WaitForAnimation(0))
+        .Then(|| this.PlayAnimation(1))
+        .Then(function() active = true end)
+        .ThenFinish()
 end

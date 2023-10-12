@@ -12,6 +12,7 @@ audio = GetEntity(this.GameObject.Name .. "Audio").DreamAudio
 linked = false
 finishedRotating = false
 isTvBear = false
+distanceToPlayer = 0
 
 function start()
     isTvBear = this.GameObject.Name == "TVBear"
@@ -21,10 +22,13 @@ function start()
     end
 end
 
+function intervalUpdate()
+    distanceToPlayer = (player.WorldPosition - this.GameObject.WorldPosition).length()
+end
+
 function update()
     if linked then return end
 
-    local distanceToPlayer = (player.WorldPosition - this.GameObject.WorldPosition).length()
     if distanceToPlayer < 0.3 and not linked then
         linked = true
         DreamSystem.SetNextTransitionDream(dreams.Happytown)

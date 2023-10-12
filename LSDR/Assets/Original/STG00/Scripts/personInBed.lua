@@ -7,6 +7,7 @@ player = GetEntity("__player")
 
 state = 0
 linked = false
+playerDist = 0
 
 function start()
     if not IsDayEven() then
@@ -30,10 +31,13 @@ function start()
     end
 end
 
+function intervalUpdate()
+    playerDist = (player.WorldPosition - this.GameObject.WorldPosition).length()
+end
+
 function update()
     if linked then return end
 
-    local playerDist = (player.WorldPosition - this.GameObject.WorldPosition).length()
     if playerDist < 0.4 then
         linked = true
 

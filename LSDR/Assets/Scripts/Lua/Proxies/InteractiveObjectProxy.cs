@@ -64,6 +64,11 @@ namespace LSDR.Lua.Proxies
             _target.transform.LookAt(worldPosition, _target.transform.up);
         }
 
+        public void LookInDirection(Vector3 worldDirection)
+        {
+            _target.transform.LookAt(_target.transform.position + worldDirection, _target.transform.up);
+        }
+
         public bool LookTowards(Vector3 worldPosition, float speed)
         {
             var current = _target.transform.rotation;

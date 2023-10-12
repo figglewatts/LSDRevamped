@@ -6,6 +6,7 @@ player = GetEntity("__player")
 linked = false
 direction = nil
 moveSpeed = 0.3
+distanceToPlayer = 0
 
 function start()
     if IsDayEven() or Random.OneIn(2) then
@@ -31,10 +32,13 @@ function start()
     this.PlayAnimation(0)
 end
 
+function intervalUpdate()
+    distanceToPlayer = (player.WorldPosition - this.GameObject.WorldPosition).length()
+end
+
 function update()
     if linked then return end
 
-    local distanceToPlayer = (player.WorldPosition - this.GameObject.WorldPosition).length()
     if distanceToPlayer < 0.3 and not linked then
         linked = true
         DreamSystem.SetNextTransitionDream(dreams.Kyoto)

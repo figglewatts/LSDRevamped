@@ -19,10 +19,15 @@ namespace LSDR.SDK.Lua
 
         public void OnTrigger()
         {
+            if (_triggerFunc.IsNil()) return;
             _scriptAsset.HandleLuaErrorsFor(() => { Script.Call(_triggerFunc); });
         }
 
-        public void OnTriggerExit() { _scriptAsset.HandleLuaErrorsFor(() => { Script.Call(_triggerExitFunc); }); }
+        public void OnTriggerExit()
+        {
+            if (_triggerExitFunc.IsNil()) return;
+            _scriptAsset.HandleLuaErrorsFor(() => { Script.Call(_triggerExitFunc); });
+        }
 
         private void loadTriggerFunctions(string triggerFunctionName, string triggerExitFunctionName)
         {

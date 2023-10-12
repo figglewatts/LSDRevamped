@@ -78,6 +78,7 @@ namespace LSDR.SDK.Entities
 
         public void OnValidate()
         {
+            base.OnValidate();
             if (InteractionDistance < 0)
             {
                 InteractionDistance = 1;

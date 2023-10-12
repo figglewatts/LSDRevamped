@@ -11,6 +11,7 @@ audio = GetEntity(this.GameObject.Name .. "Audio").DreamAudio
 moveSpeed = 0.25
 delay = 0
 linked = false
+distanceToPlayer = 0
 
 function start()
     if not IsDayEven() or Random.OneIn(2) then
@@ -22,10 +23,13 @@ function start()
     delay = Random.FloatMinMax(0, 0.3)
 end
 
+function intervalUpdate()
+    distanceToPlayer = (player.WorldPosition - this.GameObject.WorldPosition).length()
+end
+
 function update()
     if linked then return end
 
-    local distanceToPlayer = (player.WorldPosition - this.GameObject.WorldPosition).length()
     if distanceToPlayer < 0.3 and not linked then
         linked = true
         DreamSystem.SetNextTransitionDream(dreams.PitAndTemple)
