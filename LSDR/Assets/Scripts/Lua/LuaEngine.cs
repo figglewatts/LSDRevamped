@@ -106,121 +106,100 @@ namespace LSDR.Lua
             );
 
             // Vector3
+            Vector3 vec3FromTable(Table table)
+            {
+                return new Vector3((float)table.Get("x").Number, (float)table.Get("y").Number,
+                    (float)table.Get("z").Number);
+            }
+
+            Table makeVec3Table(Vector3 vector, Script script)
+            {
+                DynValue x = DynValue.NewNumber(vector.x);
+                DynValue y = DynValue.NewNumber(vector.y);
+                DynValue z = DynValue.NewNumber(vector.z);
+                Table vec = new Table(script)
+                {
+                    ["x"] = x,
+                    ["y"] = y,
+                    ["z"] = z,
+                    MetaTable = DynValue.FromObject(script, new Dictionary<string, object>
+                    {
+                        {
+                            "__tostring", new Func<Table, string>(t => $"({x}, {y}, {z})")
+                        },
+                        {
+                            "__add", new Func<Table, Table, Table>((a, b) =>
+                            {
+                                var aVec = vec3FromTable(a);
+                                var bVec = vec3FromTable(b);
+                                return makeVec3Table(aVec + bVec, script);
+                            })
+                        },
+                        {
+                            "__sub", new Func<Table, Table, Table>((a, b) =>
+                            {
+                                var aVec = vec3FromTable(a);
+                                var bVec = vec3FromTable(b);
+                                return makeVec3Table(aVec - bVec, script);
+                            })
+                        },
+                        {
+                            "__mul", new Func<Table, double, Table>((v, s) =>
+                            {
+                                var vec = vec3FromTable(v);
+                                return makeVec3Table(vec * (float)s, script);
+                            })
+                        },
+                        {
+                            "__div", new Func<Table, double, Table>((v, s) =>
+                            {
+                                var vec = vec3FromTable(v);
+                                return makeVec3Table(vec / (float)s, script);
+                            })
+                        },
+                    }).Table
+                };
+
+                vec["normalise"] = new CallbackFunction((context, args) =>
+                {
+
+                    var vec3 = vec3FromTable(vec);
+                    vec3.Normalize();
+                    return DynValue.NewTable(makeVec3Table(vec3, script));
+                });
+                vec["length"] = new CallbackFunction((context, args) =>
+                {
+                    var vec3 = vec3FromTable(vec);
+                    return DynValue.NewNumber(vec3.magnitude);
+                });
+                vec["negated"] = new CallbackFunction((context, args) =>
+                {
+                    var vec3 = vec3FromTable(vec);
+                    return DynValue.NewTable(makeVec3Table(-vec3, script));
+                });
+                vec["dot"] = new CallbackFunction((context, args) =>
+                {
+                    var a = vec3FromTable(vec);
+                    var bTable = args[0].Table;
+                    var b = vec3FromTable(bTable);
+                    return DynValue.NewNumber(Vector3.Dot(a, b));
+                });
+                vec["project"] = new CallbackFunction((context, args) =>
+                {
+                    var a = vec3FromTable(vec);
+                    var bTable = args[0].Table;
+                    var b = vec3FromTable(bTable);
+                    var result = Vector3.Project(a, b);
+                    return DynValue.NewTable(makeVec3Table(result, script));
+                });
+
+                return vec;
+            }
+
             Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Table, typeof(Vector3),
-                dynVal =>
-                {
-                    Table table = dynVal.Table;
-                    float x = (float)(double)table["x"];
-                    float y = (float)(double)table["y"];
-                    float z = (float)(double)table["z"];
-                    return new Vector3(x, y, z);
-                }
-            );
+                dynVal => vec3FromTable(dynVal.Table));
             Script.GlobalOptions.CustomConverters.SetClrToScriptCustomConversion<Vector3>(
-                (script, vector) =>
-                {
-                    DynValue x = DynValue.NewNumber(vector.x);
-                    DynValue y = DynValue.NewNumber(vector.y);
-                    DynValue z = DynValue.NewNumber(vector.z);
-                    Table vec = new Table(script)
-                    {
-                        ["x"] = x,
-                        ["y"] = y,
-                        ["z"] = z,
-                        MetaTable = DynValue.FromObject(script, new Dictionary<string, object>
-                        {
-                            {
-                                "__tostring", new Func<Table, string>(t => $"({x}, {y}, {z})")
-                            },
-                            {
-                                "__add", new Func<Table, Table, Table>((a, b) =>
-                                {
-                                    DynValue rX = DynValue.NewNumber(a.Get(key: "x").Number + b.Get(key: "x").Number);
-                                    DynValue rY = DynValue.NewNumber(a.Get(key: "y").Number + b.Get(key: "y").Number);
-                                    DynValue rZ = DynValue.NewNumber(a.Get(key: "z").Number + b.Get(key: "z").Number);
-                                    return new Table(script)
-                                    {
-                                        ["x"] = rX,
-                                        ["y"] = rY,
-                                        ["z"] = rZ
-                                    };
-                                })
-                            },
-                            {
-                                "__sub", new Func<Table, Table, Vector3>((a, b) =>
-                                {
-                                    var aVec = new Vector3((float)a.Get("x").Number, (float)a.Get("y").Number,
-                                        (float)a.Get("z").Number);
-                                    var bVec = new Vector3((float)b.Get("x").Number, (float)b.Get("y").Number,
-                                        (float)b.Get("z").Number);
-                                    return aVec - bVec;
-                                })
-                            },
-                            {
-                                "__mul", new Func<Table, double, Table>((v, s) =>
-                                {
-                                    DynValue rX = DynValue.NewNumber(v.Get(key: "x").Number * s);
-                                    DynValue rY = DynValue.NewNumber(v.Get(key: "y").Number * s);
-                                    DynValue rZ = DynValue.NewNumber(v.Get(key: "z").Number * s);
-                                    return new Table(script)
-                                    {
-                                        ["x"] = rX,
-                                        ["y"] = rY,
-                                        ["z"] = rZ
-                                    };
-                                })
-                            },
-                            {
-                                "__div", new Func<Table, double, Table>((v, s) =>
-                                {
-                                    DynValue rX = DynValue.NewNumber(v.Get(key: "x").Number / s);
-                                    DynValue rY = DynValue.NewNumber(v.Get(key: "y").Number / s);
-                                    DynValue rZ = DynValue.NewNumber(v.Get(key: "z").Number / s);
-                                    return new Table(script)
-                                    {
-                                        ["x"] = rX,
-                                        ["y"] = rY,
-                                        ["z"] = rZ
-                                    };
-                                })
-                            },
-                        }).Table
-                    };
-
-                    vec["normalise"] = new CallbackFunction((context, args) =>
-                    {
-
-                        var vec3 = new Vector3((float)vec.Get("x").Number, (float)vec.Get("y").Number,
-                            (float)vec.Get("z").Number);
-                        vec3.Normalize();
-                        return DynValue.FromObject(script, new Table(script)
-                        {
-                            ["x"] = vec3.x,
-                            ["y"] = vec3.y,
-                            ["z"] = vec3.z
-                        });
-                    });
-                    vec["length"] = new CallbackFunction((context, args) =>
-                    {
-                        var vec3 = new Vector3((float)vec.Get("x").Number, (float)vec.Get("y").Number,
-                            (float)vec.Get("z").Number);
-                        return DynValue.NewNumber(vec3.magnitude);
-                    });
-                    vec["negated"] = new CallbackFunction((context, args) =>
-                    {
-                        var vec3 = new Vector3((float)vec.Get("x").Number, (float)vec.Get("y").Number,
-                            (float)vec.Get("z").Number);
-                        return DynValue.FromObject(script, new Table(script)
-                        {
-                            ["x"] = -vec3.x,
-                            ["y"] = -vec3.y,
-                            ["z"] = -vec3.z
-                        });
-                    });
-
-                    return DynValue.FromObject(script, vec);
-                }
-            );
+                (script, vector) => DynValue.NewTable(makeVec3Table(vector, script)));
 
             // color
             Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Table, typeof(Color),

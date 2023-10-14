@@ -7,6 +7,7 @@ using UnityEngine;
 
 namespace LSDR.SDK.Editor.Entities
 {
+    [CanEditMultipleObjects]
     [CustomEditor(typeof(DreamAudio))]
     public class DreamAudioEditor : UnityEditor.Editor
     {
@@ -32,11 +33,14 @@ namespace LSDR.SDK.Editor.Entities
             {
                 GUILayout.FlexibleSpace();
 
-                var buttonText = _playAudioCoroutine == null ? "Preview" : "Stop";
-                if (GUILayout.Button(buttonText, GUILayout.Width(60)))
+                if (targets.Length == 1)
                 {
-                    if (_playAudioCoroutine == null) startPreviewing();
-                    else stopPreviewing();
+                    var buttonText = _playAudioCoroutine == null ? "Preview" : "Stop";
+                    if (GUILayout.Button(buttonText, GUILayout.Width(60)))
+                    {
+                        if (_playAudioCoroutine == null) startPreviewing();
+                        else stopPreviewing();
+                    }
                 }
             }
             EditorGUILayout.EndHorizontal();

@@ -26,9 +26,9 @@ namespace LSDR.Lua.Proxies
 
 #region Functions
 
-        public IPredicate WaitForAnimation(int index)
+        public IPredicate WaitForAnimation(int index, float offsetSeconds = 0)
         {
-            return new WaitForSecondsPredicate(_target.AnimatedObject.Clips[index].length);
+            return new WaitForSecondsPredicate(_target.AnimatedObject.Clips[index].length + offsetSeconds);
         }
 
         public void PlayAnimation(int index)
@@ -62,6 +62,13 @@ namespace LSDR.Lua.Proxies
         public void LookAt(Vector3 worldPosition)
         {
             _target.transform.LookAt(worldPosition, _target.transform.up);
+        }
+
+        public void LookAtPlane(Vector3 worldPosition)
+        {
+            var target = worldPosition;
+            target.y = _target.transform.position.y;
+            LookAt(target);
         }
 
         public void LookInDirection(Vector3 worldDirection)

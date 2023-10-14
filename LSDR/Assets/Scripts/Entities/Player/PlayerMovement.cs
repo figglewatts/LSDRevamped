@@ -240,7 +240,7 @@ namespace LSDR.Entities.Player
             Vector3 axis = Vector3.Cross(transform.up, desiredMove);
             float slopeAngle = Vector3.SignedAngle(hit.normal, transform.up, axis);
             bool hitOverSlopeLimit = hitSomething && slopeAngle > _controller.slopeLimit;
-            bool hitSeemsLikeAStep = hit.normal.y < 0.1f || hit.distance < 1E-06;
+            bool hitSeemsLikeAStep = hit.normal.y < 0.7f || hit.distance < 1E-06;
 
             if (DebugLog)
             {

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace LSDR.SDK.Lua.Actions
@@ -82,6 +83,7 @@ namespace LSDR.SDK.Lua.Actions
                     {
                         // if we're looping then start from the beginning again
                         _currentAction = _rootAction;
+                        _rootAction.UntilPredicate?.Begin();
                     }
                     else
                     {

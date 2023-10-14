@@ -9,7 +9,12 @@ namespace LSDR.SDK.Entities
 
         public virtual void Init() { }
 
-        public void Awake() { EntityIndex.Instance.Register(this); }
+        public void Awake()
+        {
+            ID = ID.Replace("$$", Guid.NewGuid().ToString());
+            name = ID;
+            EntityIndex.Instance.Register(this);
+        }
 
         public virtual void OnValidate()
         {
