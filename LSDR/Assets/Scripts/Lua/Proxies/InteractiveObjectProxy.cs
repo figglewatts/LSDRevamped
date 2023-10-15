@@ -43,7 +43,7 @@ namespace LSDR.Lua.Proxies
         public bool MoveTowards(Vector3 worldPosition, float speed)
         {
             var toTarget = (worldPosition - _target.transform.position);
-            if (toTarget.magnitude < 0.001)
+            if (toTarget.magnitude < 0.1)
             {
                 _target.transform.position = worldPosition;
                 return true;
@@ -79,8 +79,14 @@ namespace LSDR.Lua.Proxies
         public bool LookTowards(Vector3 worldPosition, float speed)
         {
             var current = _target.transform.rotation;
-            var toTarget = (_target.transform.position - worldPosition).normalized;
+            var toTarget = (worldPosition - _target.transform.position).normalized;
             toTarget.y = 0; // flatten
+
+            if (toTarget.sqrMagnitude < 0.01f)
+            {
+                return true;
+            }
+
             var desired = Quaternion.LookRotation(toTarget, _target.transform.up);
 
             if (Quaternion.Dot(current, desired) > 0.99f)

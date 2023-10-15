@@ -1,8 +1,3 @@
--- walk in straight line
--- if player gets close, set them back 9/10 times
--- 3/10 times rotate to face player
--- 1/10 times freeze, roar, approach, end dream
--- play step ever 1 or 2 secs
 player = GetEntity("__player")
 roarAudio = GetEntity(this.GameObject.Name .. "RoarAudio").DreamAudio
 stepAudio = GetEntity(this.GameObject.Name .. "StepAudio").DreamAudio

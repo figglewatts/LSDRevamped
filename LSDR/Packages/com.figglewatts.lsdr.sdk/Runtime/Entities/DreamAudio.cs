@@ -34,9 +34,14 @@ namespace LSDR.SDK.Entities
             _player = EntityIndex.Instance.Get("__player");
         }
 
+        public new void Awake()
+        {
+            base.Awake();
+            _audioSource = GetComponent<AudioSource>();
+        }
+
         public void Start()
         {
-            _audioSource = GetComponent<AudioSource>();
             _audioSource.outputAudioMixerGroup = MixerGroupProviderManager.Managed.GetMixerGroup("SFX");
         }
 
@@ -122,6 +127,9 @@ namespace LSDR.SDK.Entities
             while (true)
             {
                 if (DelayBeforePlayingSeconds > 0) yield return new WaitForSeconds(DelayBeforePlayingSeconds);
+
+                _audioSource.pitch = Pitch;
+                _audioSource.volume = Volume;
 
                 // play the audio
                 _audioSource.Play();

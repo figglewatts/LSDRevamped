@@ -8,6 +8,18 @@ namespace LSDR.Lua.Proxies
         [MoonSharpHidden]
         public DreamAudioProxy(DreamAudio target) : base(target) { }
 
+        public float Pitch
+        {
+            get => _target.Pitch;
+            set => _target.Pitch = value;
+        }
+
+        public float Volume
+        {
+            get => _target.Volume;
+            set => _target.Volume = value;
+        }
+
         public void Play() => _target.StartPlaying();
         public void Stop() => _target.StopPlaying();
     }

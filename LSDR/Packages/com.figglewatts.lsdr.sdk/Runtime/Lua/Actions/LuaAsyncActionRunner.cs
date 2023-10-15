@@ -71,11 +71,19 @@ namespace LSDR.SDK.Lua.Actions
             }
         }
 
+        public void Stop()
+        {
+            stopRunning();
+        }
+
         private IEnumerator runActions()
         {
             _currentAction = _rootAction;
             while (true)
             {
+                // if we've stopped running
+                if (_running == false) break;
+
                 // if we're at the end
                 if (_currentAction == null)
                 {
