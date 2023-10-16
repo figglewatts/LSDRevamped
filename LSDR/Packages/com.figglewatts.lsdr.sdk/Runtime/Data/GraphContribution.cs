@@ -1,4 +1,5 @@
 ﻿using System;
+using LSDR.SDK.Entities;
 using UnityEngine;
 
 namespace LSDR.SDK.Data
@@ -13,26 +14,31 @@ namespace LSDR.SDK.Data
         [SerializeField] private Vector2Int _vector;
         private Vector3 _playerPosition;
         private float _playerYRotation;
+        private string _entityID;
 
         public GraphContribution(int dynamicness, int upperness)
         {
             _vector = new Vector2Int(dynamicness, upperness);
             _playerPosition = Vector3.zero;
             _playerYRotation = 0;
+            _entityID = null;
         }
 
-        public GraphContribution(int dynamicness, int upperness, Transform playerTransform)
+        public GraphContribution(int dynamicness, int upperness, Transform playerTransform, BaseEntity sourceEntity)
             : this(dynamicness, upperness)
         {
             _playerPosition = playerTransform.position;
             _playerYRotation = playerTransform.eulerAngles.y;
+            _entityID = sourceEntity.ID;
         }
 
-        public GraphContribution(int dynamicness, int upperness, Vector3 playerPosition, float playerYRotation)
+        public GraphContribution(int dynamicness, int upperness, Vector3 playerPosition, float playerYRotation,
+            string entityID)
             : this(dynamicness, upperness)
         {
             _playerPosition = playerPosition;
             _playerYRotation = playerYRotation;
+            _entityID = entityID;
         }
 
         public int Dynamic => _vector.x;
@@ -41,5 +47,7 @@ namespace LSDR.SDK.Data
         public Vector3 PlayerPosition => _playerPosition;
 
         public float PlayerYRotation => _playerYRotation;
+
+        public string EntityID => _entityID;
     }
 }

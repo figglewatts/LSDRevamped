@@ -3,5 +3,5 @@ function start()
 end
 
 function interact()
-    DreamSystem.LogGraphContributionFromEntity(6, 0)
+    this.LogGraphContribution(6, 0)
 end

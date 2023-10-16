@@ -40,5 +40,5 @@ function interact()
     creakingAudio.Play()
     this.SetChildVisible(true)
     this.PlayAnimation(0)
-    DreamSystem.LogGraphContributionFromEntity(-1, -2)
+    this.LogGraphContribution(-1, -2)
 end

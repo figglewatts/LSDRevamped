@@ -1,3 +1,4 @@
+using LSDR.SDK.DreamControl;
 using LSDR.SDK.Entities;
 using LSDR.SDK.Lua.Actions;
 using MoonSharp.Interpreter;
@@ -21,6 +22,12 @@ namespace LSDR.Lua.Proxies
         public GameObject GameObject => _gameObject;
 
         public LuaAsyncActionRunner Action => _target.Action;
+
+        public float InteractionDistance
+        {
+            get => _target.InteractionDistance;
+            set => _target.InteractionDistance = value;
+        }
 
 #endregion
 
@@ -125,6 +132,11 @@ namespace LSDR.Lua.Proxies
         public void SetUpdateIntervalSeconds(float seconds)
         {
             _target.SetUpdateIntervalSeconds(seconds);
+        }
+
+        public void LogGraphContribution(int dynamicness, int upperness)
+        {
+            DreamControlManager.Managed.LogGraphContributionFromEntity(dynamicness, upperness, _target);
         }
 
 #endregion

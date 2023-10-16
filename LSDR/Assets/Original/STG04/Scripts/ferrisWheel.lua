@@ -8,7 +8,7 @@ function start()
 end
 
 function interact()
-    DreamSystem.LogGraphContributionFromEntity(9, 9)
+    this.LogGraphContribution(9, 9)
     DreamSystem.EndDream()
     -- TODO: play ferris wheel video
 end

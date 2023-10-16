@@ -26,5 +26,5 @@ end
 
 function interact()
     interacted = true
-    DreamSystem.LogGraphContributionFromEntity(0, -2)
+    this.LogGraphContribution(0, -2)
 end

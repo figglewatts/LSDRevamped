@@ -37,5 +37,5 @@ function interact()
     toPlayer = (player.WorldPosition - this.GameObject.WorldPosition).normalise()
     this.LookInDirection(toPlayer)
     lastPlayerPos = player.WorldPosition
-    DreamSystem.LogGraphContributionFromEntity(0, 7)
+    this.LogGraphContribution(0, 7)
 end

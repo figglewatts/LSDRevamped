@@ -110,6 +110,7 @@ namespace LSDR.SDK.Entities
 
         public void StopPlaying()
         {
+            _audioSource.Stop();
             if (_audioPlayerCoroutine != null)
             {
                 StopCoroutine(_audioPlayerCoroutine);

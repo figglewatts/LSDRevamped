@@ -28,5 +28,5 @@ end
 
 function interact()
     -- TODO: stretch kyoto
-    DreamSystem.LogGraphContributionFromEntity(-3, -5)
+    this.LogGraphContribution(-3, -5)
 end

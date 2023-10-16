@@ -27,5 +27,5 @@ function interact()
     local target = player.WorldPosition
     this.LookAt(player.WorldPosition)
     this.PlayAnimation(0)
-    DreamSystem.LogGraphContributionFromEntity(1, 4)
+    this.LogGraphContribution(1, 4)
 end

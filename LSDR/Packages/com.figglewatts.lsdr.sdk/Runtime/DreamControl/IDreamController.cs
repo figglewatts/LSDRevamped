@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using LSDR.SDK.Data;
+using LSDR.SDK.Entities;
 using UnityEngine;
 
 namespace LSDR.SDK.DreamControl
@@ -23,7 +24,7 @@ namespace LSDR.SDK.DreamControl
         void EndDream(bool fromFall = false);
 
         void LogGraphContributionFromArea(int dynamicness, int upperness);
-        void LogGraphContributionFromEntity(int dynamicness, int upperness);
+        void LogGraphContributionFromEntity(int dynamicness, int upperness, BaseEntity sourceEntity);
 
         void SetNextLinkDream(Dream dream, string spawnPointID = null);
 

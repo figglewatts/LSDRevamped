@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using LSDR.SDK.Data;
+using LSDR.SDK.Entities;
 using Newtonsoft.Json;
 using UnityEngine;
 
@@ -25,9 +26,11 @@ namespace LSDR.Dream
             _areaGraphContributions.Add(new GraphContribution(dynamicness, upperness));
         }
 
-        public void LogGraphContributionFromEntity(int dynamicness, int upperness, Transform playerTransform)
+        public void LogGraphContributionFromEntity(int dynamicness, int upperness, Transform playerTransform,
+            BaseEntity sourceEntity)
         {
-            _entityGraphContributions.Add(new GraphContribution(dynamicness, upperness, playerTransform));
+            _entityGraphContributions.Add(new GraphContribution(dynamicness, upperness, playerTransform,
+                sourceEntity));
         }
 
         public Vector2Int EvaluateGraphPosition()

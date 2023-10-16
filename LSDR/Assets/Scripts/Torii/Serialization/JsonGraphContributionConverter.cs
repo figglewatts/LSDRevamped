@@ -14,7 +14,8 @@ namespace Torii.Serialization
             {
                 { "contribution", new JArray(value.Dynamic, value.Upper) },
                 { "position", new JArray(value.PlayerPosition.x, value.PlayerPosition.y, value.PlayerPosition.z) },
-                { "yRotation", value.PlayerYRotation }
+                { "yRotation", value.PlayerYRotation },
+                { "entityID", value.EntityID }
             };
             obj.WriteTo(writer);
         }
@@ -37,11 +38,12 @@ namespace Torii.Serialization
                     ? obj["position"]!.ToObject<float[]>()
                     : new float[] { 0, 0, 0 };
                 float yRotation = obj.ContainsKey("yRotation") ? obj["yRotation"]!.ToObject<float>() : 0f;
+                string entityID = obj.ContainsKey("entityID") ? obj["entityID"]!.ToString() : null;
 
                 Vector3 position = new Vector3(positionArray[0], positionArray[1], positionArray[2]);
 
                 GraphContribution graphContribution =
-                    new GraphContribution(contributionArray[0], contributionArray[1], position, yRotation);
+                    new GraphContribution(contributionArray[0], contributionArray[1], position, yRotation, entityID);
 
                 return graphContribution;
             }

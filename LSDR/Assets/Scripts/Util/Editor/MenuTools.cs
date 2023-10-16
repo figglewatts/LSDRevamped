@@ -2,6 +2,8 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
+using LSDR.SDK.Entities;
 using UnityEditor;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
@@ -39,6 +41,39 @@ namespace LSDR.Util
                 {
                     orderedChildren[i].SetSiblingIndex(i);
                 }
+            }
+        }
+
+        [MenuItem("GameObject/Increment entity name", false, 0)]
+        public static void IncrementEntityName()
+        {
+            GameObject selectedGameObject = Selection.activeGameObject;
+            if (selectedGameObject == null) return;
+
+            void doRename(BaseEntity baseEntity)
+            {
+                var originalName = baseEntity.ID;
+
+                // if it's ONLY digits, skip renaming (we'd garble the TOD animations..)
+                if (Regex.IsMatch(originalName, @"^\d+$")) return;
+
+                bool replaced = false;
+                var incrementedName = Regex.Replace(originalName, @"\d+", m =>
+                {
+                    if (replaced) return m.Value;
+
+                    replaced = true;
+                    return (int.Parse(m.Value) + 1).ToString();
+                });
+
+                baseEntity.ID = incrementedName;
+                baseEntity.OnValidate();
+            }
+
+            Transform parentTransform = selectedGameObject.transform;
+            foreach (var entity in selectedGameObject.GetComponentsInChildren<BaseEntity>())
+            {
+                doRename(entity);
             }
         }
     }

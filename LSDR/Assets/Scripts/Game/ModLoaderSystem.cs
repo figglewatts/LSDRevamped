@@ -27,14 +27,14 @@ namespace LSDR.Game
             return _loadedMods[modIdx];
         }
 
-        public IEnumerator LoadMods()
+        public void LoadMods()
         {
             Debug.Log("Loading mods...");
 
             if (_loadedMods.Count > 0)
             {
                 Debug.LogWarning("Cannot load mods twice!");
-                yield break;
+                return;
             }
 
             ensureDirectory();
@@ -44,21 +44,14 @@ namespace LSDR.Game
             string[] modFiles = Directory.GetFiles(_modsDirectory, "*.lsdrmod", SearchOption.AllDirectories);
             foreach (string modFile in modFiles)
             {
-                AssetBundleCreateRequest bundleLoadRequest = AssetBundle.LoadFromFileAsync(modFile);
-                yield return bundleLoadRequest;
-
-                AssetBundle loadedBundle = bundleLoadRequest.assetBundle;
+                AssetBundle loadedBundle = AssetBundle.LoadFromFile(modFile);
                 if (loadedBundle == null)
                 {
                     Debug.LogWarning($"Unable to load mod '{modFile}', error loading asset bundle");
                     continue;
                 }
 
-                AssetBundleRequest assetLoadRequest =
-                    bundleLoadRequest.assetBundle.LoadAllAssetsAsync<LSDRevampedMod>();
-                yield return assetLoadRequest;
-
-                Object[] mods = assetLoadRequest.allAssets;
+                Object[] mods = loadedBundle.LoadAllAssets();
                 if (mods.Length > 1)
                 {
                     Debug.LogWarning($"Unable to load mod '{modFile}', multiple LSDRevampedMods in bundle");

@@ -30,6 +30,6 @@ end
 
 function interact()
     interacted = true
-    DreamSystem.LogGraphContributionFromEntity(2, 8)
+    this.LogGraphContribution(2, 8)
     this.PlayAnimation(0)
 end

@@ -9,7 +9,7 @@ end
 
 function interact()
     interacted = true
-    DreamSystem.LogGraphContributionFromEntity(-2, 6)
+    this.LogGraphContribution(-2, 6)
 
     this.Action
         .WaitUntil(Condition.WaitForSeconds(60))

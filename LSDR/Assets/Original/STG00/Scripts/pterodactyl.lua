@@ -38,7 +38,7 @@ function interact()
 
     this.PlayAnimation(0)
     SetCanControlPlayer(false)
-    DreamSystem.LogGraphContributionFromEntity(-2, 5)
+    this.LogGraphContribution(-2, 5)
     audioPlayer.Play()
     local lookAtPos = player.WorldPosition
     lookAtPos.y = this.GameObject.WorldPosition.y

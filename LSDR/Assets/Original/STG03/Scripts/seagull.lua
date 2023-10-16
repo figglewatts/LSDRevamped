@@ -7,7 +7,7 @@ function update()
 end
 
 function interact()
-    DreamSystem.LogGraphContributionFromEntity(0, -1)
+    this.LogGraphContribution(0, -1)
 
     if Random.OneIn(2) then return end
     this.PlayAnimation(0)

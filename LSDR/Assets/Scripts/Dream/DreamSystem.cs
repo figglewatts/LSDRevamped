@@ -81,8 +81,7 @@ namespace LSDR.Dream
             {
                 var pitch = RandUtil.RandomArrayElement(new[] { 0.25f, 0.5f });
                 AudioPlayer.Instance.PlayClip(LinkSound, loop: false, pitch: pitch, mixerGroup: "SFX");
-                CurrentSequence.LogGraphContributionFromEntity(dynamicness: 0, FALLING_UPPER_PENALTY,
-                    Player.transform);
+                CurrentSequence.LogGraphContributionFromArea(dynamicness: 0, FALLING_UPPER_PENALTY);
                 SettingsSystem.CanControlPlayer = false;
             }
             else
@@ -126,14 +125,14 @@ namespace LSDR.Dream
             CurrentSequence.LogGraphContributionFromArea(dynamicness, upperness);
         }
 
-        public void LogGraphContributionFromEntity(int dynamicness, int upperness)
+        public void LogGraphContributionFromEntity(int dynamicness, int upperness, BaseEntity sourceEntity)
         {
             if (CurrentSequence == null)
             {
                 Debug.LogWarning("Attempting to log contribution with no sequence");
                 return;
             }
-            CurrentSequence.LogGraphContributionFromEntity(dynamicness, upperness, Player.transform);
+            CurrentSequence.LogGraphContributionFromEntity(dynamicness, upperness, Player.transform, sourceEntity);
         }
 
         public void SetNextLinkDream(SDK.Data.Dream dream, string spawnPointID = null)
@@ -192,7 +191,9 @@ namespace LSDR.Dream
             {
                 // see if we should switch texture sets
                 if (RandUtil.OneIn(CHANCE_TO_SWITCH_TEXTURES_WHEN_LINKING))
+                {
                     TextureSetter.Instance.SetRandomTextureSetFromDayNumber(GameSave.CurrentJournalSave.DayNumber);
+                }
 
                 // if we're locking controls then we're going through a tunnel and want to update player rotation
                 Coroutines.Instance.StartCoroutine(LoadDream(dream, !lockControls));

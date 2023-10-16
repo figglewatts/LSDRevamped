@@ -8,7 +8,7 @@ function start()
 end
 
 function interact()
-    DreamSystem.LogGraphContributionFromEntity(-5, 5)
+    this.LogGraphContribution(-5, 5)
 
     this.Action
         .Do(|| audio.Play())

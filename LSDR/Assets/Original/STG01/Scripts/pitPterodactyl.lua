@@ -52,7 +52,7 @@ function interact()
     this.PlayAnimation(0)
     audio.Play()
     screechAudio.Play()
-    DreamSystem.LogGraphContributionFromEntity(-5, 0)
+    this.LogGraphContribution(-5, 0)
 
     state = "chasing"
 end

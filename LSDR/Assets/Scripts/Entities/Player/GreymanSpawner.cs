@@ -66,6 +66,7 @@ namespace LSDR.Entities.Dream
 
         public void RollSpawn()
         {
+            if (!DreamSystem.InDream) return;
             bool shouldSpawnGreyMan = RandUtil.OneIn(CHANCE_FOR_GREYMAN);
             if (DreamSystem.CurrentDream.GreyMan && shouldSpawnGreyMan)
             {

@@ -8,5 +8,5 @@ function start()
 end
 
 function interact()
-    DreamSystem.LogGraphContributionFromEntity(1, 0)
+    this.LogGraphContribution(1, 0)
 end

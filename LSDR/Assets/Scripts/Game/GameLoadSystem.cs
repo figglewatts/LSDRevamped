@@ -58,6 +58,14 @@ namespace LSDR.Game
                 DreamControlManager.ProvideManaged(DreamSystem);
                 MixerGroupProviderManager.ProvideManaged(new MixerGroupProvider());
 
+                ModLoaderSystem.LoadMods();
+                if (!ModLoaderSystem.ModsAvailable)
+                {
+                    OnGameLoadError?.Invoke(
+                        "There are no mods available.\n\nPlease check your mod folder and try again.");
+                    yield break;
+                }
+
                 // register old resource handlers, possibly can be removed
                 TResourceManager.RegisterHandler(new LBDHandler());
                 TResourceManager.RegisterHandler(new TIXHandler());
@@ -77,12 +85,6 @@ namespace LSDR.Game
                 ControlSchemeLoaderSystem.LoadSchemes();
                 SettingsSystem.Load();
                 GameSaveSystem.Load();
-            }
-            yield return ModLoaderSystem.LoadMods();
-            if (!ModLoaderSystem.ModsAvailable)
-            {
-                OnGameLoadError?.Invoke("There are no mods available.\n\nPlease check your mod folder and try again.");
-                yield break;
             }
 
             GameLoaded = true;

@@ -11,7 +11,7 @@ function update()
 end
 
 function interact()
-    DreamSystem.LogGraphContributionFromEntity(6, 0)
+    this.LogGraphContribution(6, 0)
     this.PlayAnimation(0)
     this.Action
         .Do(|| this.MoveInDirection(this.Forward, 1.5))

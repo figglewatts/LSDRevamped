@@ -48,7 +48,7 @@ namespace LSDR.SDK.Visual
             set
             {
                 _textureSet = value;
-                Shader.SetGlobalInt(_textureSetPropertyID, (int)value);
+                Shader.SetGlobalInt(_textureSetPropertyID, (int)value + 1);
             }
         }
 

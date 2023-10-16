@@ -35,7 +35,7 @@ function intervalUpdate()
             -- eat the player!!!
             this.LookAtPlane(player.WorldPosition)
             SetCanControlPlayer(false)
-            DreamSystem.LogGraphContributionFromEntity(0, -9)
+            this.LogGraphContribution(0, -9)
             this.GameObject.WorldPosition = player.WorldPosition - (toPlayer * 1.5)
             roarAudio.Play()
             DreamSystem.EndDream()
@@ -57,6 +57,6 @@ function interact()
     this.SetChildVisible(true)
     stepAudio.Play()
     this.PlayAnimation(0)
-    DreamSystem.LogGraphContributionFromEntity(-3, 3)
+    this.LogGraphContribution(-3, 3)
     interacted = true
 end

@@ -28,7 +28,7 @@ function interact()
     direction = Unity.Vector3(1, 0, 0)
     if Random.OneIn(2) then direction = direction.negated() end
 
-    DreamSystem.LogGraphContributionFromEntity(-3, 2)
+    this.LogGraphContribution(-3, 2)
 
     this.Action
         .Do(|| this.PlayAnimation(0))

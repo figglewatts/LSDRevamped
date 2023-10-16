@@ -27,7 +27,7 @@ end
 
 function interact()
     this.SetChildVisible(true)
-    DreamSystem.LogGraphContributionFromEntity(-3, 1)
+    this.LogGraphContribution(-3, 1)
     audio.Play()
     this.PlayAnimation(0)
     interacted = true

@@ -20,5 +20,5 @@ function interact()
     this.SetChildVisible(true)
     this.PlayAnimation(0)
     updating = true
-    DreamSystem.LogGraphContributionFromEntity(3, 3)
+    this.LogGraphContribution(3, 3)
 end

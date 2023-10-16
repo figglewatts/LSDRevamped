@@ -20,7 +20,7 @@ end
 
 function interact()
     interacted = true
-    DreamSystem.LogGraphContributionFromEntity(-8, 4)
+    this.LogGraphContribution(-8, 4)
     this.Action
         .Do(|| this.LookAt(target.WorldPosition))
         .Then(|| this.MoveTowards(target.WorldPosition, moveSpeed))

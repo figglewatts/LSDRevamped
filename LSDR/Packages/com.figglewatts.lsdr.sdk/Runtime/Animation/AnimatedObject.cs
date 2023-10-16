@@ -8,11 +8,29 @@ namespace LSDR.SDK.Animation
     {
         public AnimationClip[] Clips;
 
+        public int AutoPlay = -1;
+
         protected Animator _animator;
 
         public void Awake()
         {
             _animator = GetComponent<Animator>();
+        }
+
+        public void Start()
+        {
+            if (AutoPlay != -1)
+            {
+                Play(AutoPlay);
+            }
+        }
+
+        public void OnEnable()
+        {
+            if (AutoPlay != -1)
+            {
+                Play(AutoPlay);
+            }
         }
 
         public void Play(int index)

@@ -23,5 +23,5 @@ function update()
 end
 
 function interact()
-    DreamSystem.LogGraphContributionFromEntity(-5, 6)
+    this.LogGraphContribution(-5, 6)
 end

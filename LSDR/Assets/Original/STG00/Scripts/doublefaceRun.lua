@@ -39,9 +39,9 @@ end
 
 function interact()
     if this.GameObject.Name == "DoublefaceA" then
-        DreamSystem.LogGraphContributionFromEntity(2, 8)
+        this.LogGraphContribution(2, 8)
     else
-        DreamSystem.LogGraphContributionFromEntity(0, 5)
+        this.LogGraphContribution(0, 5)
     end
 
     audio.Play()

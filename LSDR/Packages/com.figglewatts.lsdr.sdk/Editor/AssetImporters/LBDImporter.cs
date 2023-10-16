@@ -63,12 +63,42 @@ namespace LSDR.SDK.Editor.AssetImporters
             Mesh combinedMesh = _meshCombiner.Combine();
             combinedMesh.name = $"{Path.GetFileNameWithoutExtension(ctx.assetPath)} Mesh";
 
-            // now create a GameObject for the mesh
-            GameObject meshObj = new GameObject();
-            MeshFilter mf = meshObj.AddComponent<MeshFilter>();
+            // now create a GameObject for the mesh if we need to, otherwise get the existing one
+            var meshObj = AssetDatabase.LoadAssetAtPath<GameObject>(ctx.assetPath);
+            if (meshObj == null)
+            {
+                // if the asset didn't already exist, create it anew
+                meshObj = new GameObject();
+                meshObj.AddComponent<MeshFilter>();
+                meshObj.AddComponent<MeshRenderer>();
+                meshObj.AddComponent<ShaderSetter>();
+
+                // handle collision
+                if (Collision)
+                {
+                    MeshCollider col = meshObj.AddComponent<MeshCollider>();
+                    col.sharedMesh = combinedMesh;
+                    col.convex = false;
+                }
+
+                LBDChunk chunk = meshObj.AddComponent<LBDChunk>();
+                chunk.ID = Path.GetFileNameWithoutExtension(ctx.assetPath);
+                chunk.Tiles = lbd.TileLayout.Select(t => new LBDChunk.LBDTileData(t)).ToArray();
+
+                if (lbd.Header.HasMML && lbd.MML.HasValue)
+                {
+                    for (int i = 0; i < lbd.MML?.MOMs.Length; i++)
+                    {
+                        GameObject momObj = createMOM(ctx, lbd.MML.Value.MOMs[i], i);
+                        momObj.transform.SetParent(meshObj.transform);
+                    }
+                }
+            }
+
+
+            MeshFilter mf = meshObj.GetComponent<MeshFilter>();
             mf.sharedMesh = combinedMesh;
-            MeshRenderer mr = meshObj.AddComponent<MeshRenderer>();
-            meshObj.AddComponent<ShaderSetter>();
+            MeshRenderer mr = meshObj.GetComponent<MeshRenderer>();
 
             // set up materials
             int numMaterials = 2 + (UVMaterialOverrides != null ? UVMaterialOverrides.Overrides.Count : 0);
@@ -86,31 +116,10 @@ namespace LSDR.SDK.Editor.AssetImporters
             }
             mr.sharedMaterials = meshMaterials;
 
-            // handle collision
-            if (Collision)
-            {
-                MeshCollider col = meshObj.AddComponent<MeshCollider>();
-                col.sharedMesh = combinedMesh;
-                col.convex = false;
-            }
-
-            LBDChunk chunk = meshObj.AddComponent<LBDChunk>();
-            chunk.ID = Path.GetFileNameWithoutExtension(ctx.assetPath);
-            chunk.Tiles = lbd.TileLayout.Select(t => new LBDChunk.LBDTileData(t)).ToArray();
-
             // and set the outputs
             ctx.AddObjectToAsset("LBD Object", meshObj);
             ctx.SetMainObject(meshObj);
             ctx.AddObjectToAsset("LBD Mesh", combinedMesh);
-
-            if (lbd.Header.HasMML && lbd.MML.HasValue)
-            {
-                for (int i = 0; i < lbd.MML?.MOMs.Length; i++)
-                {
-                    GameObject momObj = createMOM(ctx, lbd.MML.Value.MOMs[i], i);
-                    momObj.transform.SetParent(meshObj.transform);
-                }
-            }
 
             // clean up unused assets
             foreach (Mesh lbdMesh in lbdMeshes) DestroyImmediate(lbdMesh);

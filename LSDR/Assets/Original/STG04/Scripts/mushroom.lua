@@ -27,7 +27,7 @@ function intervalUpdate()
 end
 
 function interact()
-    DreamSystem.LogGraphContributionFromEntity(-1, -1)
+    this.LogGraphContribution(-1, -1)
     this.PlayAnimation(0)
     interacted = true
 end

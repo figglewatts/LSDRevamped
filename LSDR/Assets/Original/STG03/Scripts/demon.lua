@@ -9,7 +9,7 @@ end
 function interact()
     SetCanControlPlayer(false)
     audio.Play()
-    DreamSystem.LogGraphContributionFromEntity(2, -5)
+    this.LogGraphContribution(2, -5)
     this.SetChildVisible(true)
 
     this.Action

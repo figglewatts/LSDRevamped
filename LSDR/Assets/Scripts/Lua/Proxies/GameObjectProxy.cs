@@ -89,6 +89,18 @@ namespace LSDR.Lua.Proxies
             return _target.transform.InverseTransformDirection(worldDirection);
         }
 
+        public void LookAt(Vector3 worldPosition)
+        {
+            _target.transform.LookAt(worldPosition, _target.transform.up);
+        }
+
+        public void LookAtPlane(Vector3 worldPosition)
+        {
+            var target = worldPosition;
+            target.y = _target.transform.position.y;
+            LookAt(target);
+        }
+
         protected T getAs<T>() where T : MonoBehaviour
         {
             T component = _target.GetComponent<T>();

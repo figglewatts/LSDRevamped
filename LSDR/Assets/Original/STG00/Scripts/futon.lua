@@ -30,5 +30,5 @@ end
 function interact()
     audio.Play()
     this.PlayAnimation(0)
-    DreamSystem.LogGraphContributionFromEntity(-4, 4)
+    this.LogGraphContribution(-4, 4)
 end

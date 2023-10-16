@@ -54,10 +54,10 @@ end
 
 function interact()
     if state == 0 then
-        DreamSystem.LogGraphContributionFromEntity(0, 0)
+        this.LogGraphContribution(0, 0)
     elseif state == 1 then
-        DreamSystem.LogGraphContributionFromEntity(0, -3)
+        this.LogGraphContribution(0, -3)
     else
-        DreamSystem.LogGraphContributionFromEntity(0, -7)
+        this.LogGraphContribution(0, -7)
     end
 end

@@ -1,5 +1,6 @@
 ﻿using LSDR.Dream;
 using LSDR.SDK;
+using LSDR.SDK.Entities;
 using LSDR.SDK.Visual;
 using MoonSharp.Interpreter;
 using UnityEngine;
@@ -41,9 +42,9 @@ namespace LSDR.Lua.Proxies
             _transitionDream = dream;
         }
 
-        public void LogGraphContributionFromEntity(int dynamicness, int upperness)
+        public void LogGraphContributionFromEntity(int dynamicness, int upperness, BaseEntity sourceEntity)
         {
-            _target.LogGraphContributionFromEntity(dynamicness, upperness);
+            _target.LogGraphContributionFromEntity(dynamicness, upperness, sourceEntity);
         }
 
         public void TransitionToDream()

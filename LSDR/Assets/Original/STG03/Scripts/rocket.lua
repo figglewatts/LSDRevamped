@@ -10,7 +10,7 @@ function update()
 end
 
 function interact()
-    DreamSystem.LogGraphContributionFromEntity(-5, -1)
+    this.LogGraphContribution(-5, -1)
 
     this.Action
         .Do(|| sirenAudio.Play())
