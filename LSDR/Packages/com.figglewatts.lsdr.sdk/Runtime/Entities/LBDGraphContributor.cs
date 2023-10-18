@@ -1,7 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using LSDR.SDK.Data;
 using LSDR.SDK.DreamControl;
 using UnityEngine;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace LSDR.SDK.Entities
 {
@@ -89,5 +94,50 @@ namespace LSDR.SDK.Entities
             if (flooredY < 0) return -1;
             return flooredY;
         }
+
+        #if UNITY_EDITOR
+        [ContextMenu("Arrange tiles")]
+        protected void arrangeTiles()
+        {
+            var lbds = gameObject.transform.Find("LBDs");
+
+            // order the LBDs
+            var children = new List<Transform>();
+            foreach (var child in lbds)
+            {
+                children.Add((Transform)child);
+            }
+
+            var orderedChildren = children.OrderBy(t =>
+            {
+                Debug.Log(t.name);
+                return int.Parse(t.name.Substring(1));
+            }).ToArray();
+
+            for (int i = 0; i < orderedChildren.Length; i++)
+            {
+                orderedChildren[i].SetSiblingIndex(i);
+            }
+
+            for (int i = 0; i < orderedChildren.Length; i++)
+            {
+                Transform lbdTransform = orderedChildren[i];
+                Vector3 lbdPos = Vector3.zero;
+                if (LayoutType == LBDLayoutType.Horizontal)
+                {
+                    int xPos = i % TileWidth;
+                    int yPos = i / TileWidth;
+                    int xMod = 0;
+                    if (yPos % 2 == 1) xMod = 10;
+
+                    lbdPos = new Vector3(xPos * 20 - xMod, y: 0, yPos * 20);
+                }
+
+                lbdTransform.position = lbdPos;
+
+                EditorUtility.SetDirty(lbdTransform.gameObject);
+            }
+        }
+        #endif
     }
 }

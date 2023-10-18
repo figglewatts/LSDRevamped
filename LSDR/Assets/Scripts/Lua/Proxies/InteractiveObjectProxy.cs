@@ -38,6 +38,11 @@ namespace LSDR.Lua.Proxies
             return new WaitForSecondsPredicate(_target.AnimatedObject.Clips[index].length + offsetSeconds);
         }
 
+        public float GetAnimationLengthSeconds(int index)
+        {
+            return _target.AnimatedObject.Clips[index].length;
+        }
+
         public void PlayAnimation(int index)
         {
             _target.AnimatedObject.Play(index);

@@ -10,13 +10,11 @@ namespace LSDR.Entities.Dream
     {
         private const float MIN_WAIT_BETWEEN_SPAWN_CHANCES_SECONDS = 1;
         private const float MAX_WAIT_BETWEEN_SPAWN_CHANCES_SECONDS = 5;
-        private const float CHANCE_FOR_GREYMAN = 13;
+        private const float CHANCE_FOR_GREYMAN = 7;
         public DreamSystem DreamSystem;
         public GameObject GreymanPrefab;
         public float GreymanSpawnDistance = 10;
         private Coroutine _rollForGreymanCoroutine;
-
-        private GameObject _spawnedGreyman;
 
         public void Start()
         {
@@ -36,14 +34,11 @@ namespace LSDR.Entities.Dream
         public void Spawn()
         {
             Debug.Log("Spawning grey man");
-
-            if (_spawnedGreyman != null) Destroy(_spawnedGreyman);
-
             Vector3 forward = transform.forward;
             Vector3 spawnPos = transform.position + forward * GreymanSpawnDistance;
             Vector3 toPlayer = transform.position - spawnPos;
             Quaternion orientation = Quaternion.LookRotation(toPlayer);
-            _spawnedGreyman = Instantiate(GreymanPrefab, spawnPos, orientation);
+            Instantiate(GreymanPrefab, spawnPos, orientation);
         }
 
         public void OnNewDream()

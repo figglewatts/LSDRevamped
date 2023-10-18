@@ -98,6 +98,8 @@ namespace LSDR.SDK.Entities
 
         public void StartPlaying()
         {
+            if (_audioPlayerCoroutine != null) return;
+
             if (Loop || OneShot)
             {
                 _audioSource.Play();

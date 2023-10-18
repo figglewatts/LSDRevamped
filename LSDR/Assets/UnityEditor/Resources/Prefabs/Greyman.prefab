@@ -98,7 +98,7 @@ MonoBehaviour:
   MoveSpeed: 0.5
   FlashDistance: 2
   DreamSystem: {fileID: 11400000, guid: 7980ba7eb97e9a54a9e6fd65c8a8d2a3, type: 2}
-  Renderer: {fileID: 2299899847789161434}
+  GreymanObject: {fileID: 2482278165257052073}
 --- !u!1001 &1016481168981901564
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -110,6 +110,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: SYMSPY
+      objectReference: {fileID: 0}
+    - target: {fileID: -6023117094196830379, guid: a95ef80480bc39147b6ae58c1b1bd5b9,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6081754537182727858, guid: a95ef80480bc39147b6ae58c1b1bd5b9,
         type: 3}
@@ -169,15 +174,15 @@ PrefabInstance:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 8363083070160398481, guid: a95ef80480bc39147b6ae58c1b1bd5b9,
     type: 3}
---- !u!4 &6520649017245814350 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6081754537182727858, guid: a95ef80480bc39147b6ae58c1b1bd5b9,
+--- !u!1 &2482278165257052073 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -6023117094196830379, guid: a95ef80480bc39147b6ae58c1b1bd5b9,
     type: 3}
   m_PrefabInstance: {fileID: 1016481168981901564}
   m_PrefabAsset: {fileID: 0}
---- !u!23 &2299899847789161434 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 1292997659006135078, guid: a95ef80480bc39147b6ae58c1b1bd5b9,
+--- !u!4 &6520649017245814350 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6081754537182727858, guid: a95ef80480bc39147b6ae58c1b1bd5b9,
     type: 3}
   m_PrefabInstance: {fileID: 1016481168981901564}
   m_PrefabAsset: {fileID: 0}

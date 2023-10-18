@@ -4,13 +4,12 @@ using UnityEngine;
 
 namespace LSDR.Entities.Dream
 {
-    [RequireComponent(typeof(MeshRenderer))]
     public class Greyman : MonoBehaviour
     {
         public float MoveSpeed = 0.5f;
         public float FlashDistance = 2;
         public DreamSystem DreamSystem;
-        public MeshRenderer Renderer;
+        public GameObject GreymanObject;
 
         protected bool _playerEncountered;
 
@@ -35,7 +34,7 @@ namespace LSDR.Entities.Dream
             DreamSystem.LogGraphContributionFromArea(-10, -10);
             ToriiFader.Instance.FadeIn(Color.white, duration: 0.1F, () =>
             {
-                Renderer.enabled = false;
+                GreymanObject.SetActive(false);
                 ToriiFader.Instance.FadeOut(Color.white, duration: 3F, () =>
                 {
                     if (gameObject != null) Destroy(gameObject);

@@ -50,6 +50,8 @@ namespace LSDR.Game
                 DreamControlManager.ProvideManaged(DreamSystem);
                 MixerGroupProviderManager.ProvideManaged(new MixerGroupProvider());
 
+                SettingsSystem.ModLoaderSystem.LoadMods();
+
                 Screenshotter.Instance.Initialise();
 
                 // set the sort order for the fader so the version text appears on top during fades
@@ -67,6 +69,8 @@ namespace LSDR.Game
                 if (camera == null) Debug.LogWarning("Unable to find MainCamera in scene");
                 EntityIndex.Instance.Register("__camera", camera, force: true);
                 Debug.Log("finished test load");
+
+                EntityIndex.Instance.AllRegistered();
             }
         }
 
