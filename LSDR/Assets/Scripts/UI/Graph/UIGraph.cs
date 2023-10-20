@@ -43,10 +43,10 @@ namespace LSDR.UI.Graph
 
         private Vector2[] getGraphCoords()
         {
-            var coords = new Vector2[GameSave.CurrentJournalSave.SequenceData.Count];
-            for (int i = 0; i < GameSave.CurrentJournalSave.SequenceData.Count; i++)
+            var coords = new Vector2[GameSave.CurrentJournalSave.NumberOfSequences];
+            for (int i = 0; i < GameSave.CurrentJournalSave.NumberOfSequences; i++)
             {
-                DreamSequence seq = GameSave.CurrentJournalSave.SequenceData[i];
+                DreamSequence seq = GameSave.CurrentJournalSave.GetSequence(i);
                 coords[i] = seq.EvaluateGraphPosition();
             }
 

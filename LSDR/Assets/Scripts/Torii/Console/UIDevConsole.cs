@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
@@ -20,9 +21,14 @@ namespace Torii.Console
         public GameObject ConsoleOutputRowContainer;
         public InputField CommandInputField;
         public ScrollRect ContentScrollRect;
+        public GameObject ErrorDisplayObject;
+        public Text ErrorCountText;
+        public bool ShowErrorDisplay = false;
+
         private readonly List<string> _commandHistory = new List<string>();
         private readonly Queue<GameObject> _instantiatedOutputRows = new Queue<GameObject>();
         private int _commandHistoryPos = -1;
+        private int _errorCount = 0;
 
         private bool _visible;
 
@@ -30,8 +36,6 @@ namespace Torii.Console
 
         public void Start()
         {
-            _visible = gameObject.activeSelf;
-
             CommandInputField.onEndEdit.AddListener(val =>
             {
                 // submit command on press enter
@@ -40,11 +44,17 @@ namespace Torii.Console
             });
 
             DevConsole.Register(this);
+
+            _visible = false;
+            gameObject.SetActive(false);
         }
 
         public void Update()
         {
-            if (EventSystem.current.currentSelectedGameObject != CommandInputField.gameObject) return;
+            if (EventSystem.current.currentSelectedGameObject != CommandInputField.gameObject)
+            {
+                EventSystem.current.SetSelectedGameObject(CommandInputField.gameObject);
+            }
 
             // print completions on tab
             if (Keyboard.current.tabKey.wasPressedThisFrame) PrintCompletions(CommandInputField.text);
@@ -53,6 +63,11 @@ namespace Torii.Console
             if (Keyboard.current.upArrowKey.wasPressedThisFrame)
                 CycleCommandHistory(_commandHistoryPos + 1);
             else if (Keyboard.current.downArrowKey.wasPressedThisFrame) CycleCommandHistory(_commandHistoryPos - 1);
+        }
+
+        public void OnEnable()
+        {
+            ErrorDisplayObject.SetActive(ShowErrorDisplay);
         }
 
         public void OnDestroy() { Application.logMessageReceived -= LogHandler; }
@@ -128,8 +143,19 @@ namespace Torii.Console
 
         public void LogHandler(string logString, string stackTrace, LogType type)
         {
+            if (type == LogType.Error || type == LogType.Exception)
+            {
+                _errorCount++;
+                updateErrorCount();
+            }
+
             instantiateOutputRow(logString, type);
             if (gameObject.activeSelf) StartCoroutine(updateScrollRect());
+        }
+
+        private void updateErrorCount()
+        {
+            ErrorCountText.text = _errorCount.ToString();
         }
 
         private void instantiateOutputRow(string output, LogType type)

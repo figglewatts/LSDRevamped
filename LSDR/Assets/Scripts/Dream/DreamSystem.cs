@@ -91,7 +91,7 @@ namespace LSDR.Dream
                 fromFall ? FADE_OUT_SECS_FALL : FADE_OUT_SECS_REGULAR, () =>
                 {
                     CurrentDream = null;
-                    GameSave.CurrentJournalSave.SequenceData.Add(CurrentSequence);
+                    GameSave.CurrentJournalSave.IncrementDayNumberWithSequence(CurrentSequence);
                     GameSave.Save();
                     _dreamIsEnding = false;
                     Coroutines.Instance.StartCoroutine(ReturnToTitle());
@@ -445,6 +445,7 @@ namespace LSDR.Dream
             EntityIndex.Instance.Register("__camera", camera, force: true);
         }
 
+        // stuff that gets called when ending a dream whether or not we are manually quitting or naturally ending
         protected void commonEndDream()
         {
             _dreamIsEnding = true;
@@ -545,6 +546,13 @@ namespace LSDR.Dream
             if (CurrentDream == null) return;
 
             MusicSystem.NextSong(RandUtil.Int(100));
+        }
+
+        [Console]
+        public void SetDay(int dayNumber)
+        {
+            GameSave.CurrentJournalSave.SetDayNumber(dayNumber);
+            Debug.Log($"Set day number to: {dayNumber}");
         }
 
         [Console]

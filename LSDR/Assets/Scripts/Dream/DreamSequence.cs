@@ -20,6 +20,7 @@ namespace LSDR.Dream
 
         [JsonProperty] protected List<GraphContribution> _areaGraphContributions = new List<GraphContribution>();
         [JsonProperty] protected List<GraphContribution> _entityGraphContributions = new List<GraphContribution>();
+        [JsonProperty] protected int _dayNumber;
 
         public void LogGraphContributionFromArea(int dynamicness, int upperness)
         {
@@ -31,6 +32,11 @@ namespace LSDR.Dream
         {
             _entityGraphContributions.Add(new GraphContribution(dynamicness, upperness, playerTransform,
                 sourceEntity));
+        }
+
+        public void SetDayNumber(int dayNumber)
+        {
+            _dayNumber = dayNumber;
         }
 
         public Vector2Int EvaluateGraphPosition()

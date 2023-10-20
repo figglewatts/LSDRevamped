@@ -1,4 +1,5 @@
-﻿using LSDR.Game;
+﻿using System;
+using LSDR.Game;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,6 +21,17 @@ namespace LSDR.UI.Title
         }
 
         public void OnEnable()
+        {
+            SetDayText(GameSave.CurrentJournalSave.DayNumber);
+            GameSave.CurrentJournalSave.OnDayNumberChanged += onDayNumberChanged;
+        }
+
+        public void OnDisable()
+        {
+            GameSave.CurrentJournalSave.OnDayNumberChanged -= onDayNumberChanged;
+        }
+
+        private void onDayNumberChanged()
         {
             SetDayText(GameSave.CurrentJournalSave.DayNumber);
         }
