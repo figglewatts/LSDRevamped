@@ -17,7 +17,11 @@ namespace LSDR.Game
 
         public JournalSaveData Journal(DreamJournal journal)
         {
-            if (!JournalSaves.ContainsKey(journal.Name)) JournalSaves[journal.Name] = new JournalSaveData();
+            if (!JournalSaves.ContainsKey(journal.Name))
+            {
+                JournalSaves[journal.Name] = new JournalSaveData();
+                JournalSaves[journal.Name].SetDayNumber(1);
+            }
 
             return JournalSaves[journal.Name];
         }
@@ -28,9 +32,9 @@ namespace LSDR.Game
             [JsonProperty("SequenceData")]
             protected readonly List<DreamSequence> _sequenceData = new List<DreamSequence>();
 
-            public int DayNumber { get; protected set; } = 1;
+            public int DayNumber { get; set; }
 
-            public int YearNumber { get; protected set; } = 0;
+            public int YearNumber { get; set; }
 
             [JsonIgnore]
             public int LastGraphX => _sequenceData.Last().EvaluateGraphPosition().x;
