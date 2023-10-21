@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using LSDR.SDK.DreamControl;
+using LSDR.SDK.Visual;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Video;
 
 namespace LSDR.SDK.Data
@@ -10,7 +13,12 @@ namespace LSDR.SDK.Data
 
         public override void HandleDay(int dayNumber)
         {
-            throw new System.NotImplementedException();
+            SceneManager.LoadScene("video_dream");
+            FadeManager.Managed.FadeOut(Color.black, 1f, () =>
+            {
+                VideoSpecialDayControl control = FindObjectOfType<VideoSpecialDayControl>();
+                control.BeginVideoDay(this);
+            }, 1);
         }
     }
 }

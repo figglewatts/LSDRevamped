@@ -11,6 +11,7 @@ namespace LSDR.Entities.Player
     {
         public SettingsSystem Settings;
         public ControlSchemeLoaderSystem ControlScheme;
+        public PlayerCameraRotation CameraRotation;
 
         /// <summary>
         ///     The speed at which to rotate the player. Set in editor.
@@ -24,18 +25,20 @@ namespace LSDR.Entities.Player
         {
             _externalInput = true;
             _externalInputValue = inputValue;
+            CameraRotation.SetUsingExternalInput(true);
         }
 
         public void StopExternalInput()
         {
             _externalInput = false;
             _externalInputValue = 0;
+            CameraRotation.SetUsingExternalInput(false);
         }
 
         private void FixedUpdate()
         {
-            // if we can control the player and we're not currently in FPS control mode
-            if (Settings.CanControlPlayer && !ControlScheme.Current.FpsControls)
+            // if we can control the player and we're not currently in FPS control mode (or we're using external input)
+            if (Settings.CanControlPlayer && (!ControlScheme.Current.FpsControls || _externalInput))
             {
                 // apply a rotation equal to the current move amount
                 float rotAmount = ControlScheme.InputActions.Game.Move.ReadValue<Vector2>().x;

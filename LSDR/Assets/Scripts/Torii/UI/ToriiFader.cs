@@ -1,12 +1,13 @@
 using System;
 using System.Collections;
+using LSDR.SDK.Visual;
 using Torii.Util;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Torii.UI
 {
-    public class ToriiFader : MonoSingleton<ToriiFader>
+    public class ToriiFader : MonoSingleton<ToriiFader>, IFadeManager
     {
         private UnityEngine.Coroutine _currentFade;
         private Action _currentOnFinish;
@@ -66,8 +67,11 @@ namespace Torii.UI
         private void beginFade(IEnumerator fade)
         {
             // if there was an existing fade, stop it and execute its callback if it existed
-            if (_currentFade != null) StopCoroutine(_currentFade);
-            _currentOnFinish?.Invoke();
+            if (_currentFade != null)
+            {
+                _currentOnFinish?.Invoke();
+                StopCoroutine(_currentFade);
+            }
 
             _currentFade = StartCoroutine(fade);
         }
@@ -95,6 +99,10 @@ namespace Torii.UI
 
                 yield return null;
             }
+
+            var finalCol = _fadeImage.color;
+            finalCol.a = targetOpacity;
+            _fadeImage.color = finalCol;
 
             _currentOnFinish = null;
             _currentFade = null;

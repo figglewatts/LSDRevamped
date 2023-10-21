@@ -27,12 +27,19 @@ namespace LSDR.SDK.Lua.Actions
 
         public static IPredicate PointingAt(GameObject obj, Vector3 worldPos)
         {
+            float? initialAngle = null;
             return new GenericPredicate(() =>
             {
                 var direction = worldPos - obj.transform.position;
                 direction.y = 0; // cancel out Y, so we can walk up/down slopes
-                float curAngle = Vector3.Angle(direction, obj.transform.forward);
-                return curAngle < 1;
+                initialAngle ??= Vector3.SignedAngle(direction, obj.transform.forward, Vector3.up);
+
+                float curAngle = Vector3.SignedAngle(direction, obj.transform.forward, Vector3.up);
+                bool signChanged = (initialAngle < 0) != (curAngle < 0);
+
+                Debug.Log($"initialAngle: {initialAngle}, curAngle: {curAngle}, signChanged: {signChanged}");
+
+                return signChanged;
             });
         }
 

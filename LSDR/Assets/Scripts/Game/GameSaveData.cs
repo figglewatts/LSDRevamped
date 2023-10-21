@@ -37,10 +37,24 @@ namespace LSDR.Game
             public int YearNumber { get; set; }
 
             [JsonIgnore]
-            public int LastGraphX => _sequenceData.Last().EvaluateGraphPosition().x;
+            public int LastGraphX
+            {
+                get
+                {
+                    if (_sequenceData.Count == 0) return 0;
+                    return _sequenceData.Last().EvaluateGraphPosition().x;
+                }
+            }
 
             [JsonIgnore]
-            public int LastGraphY => _sequenceData.Last().EvaluateGraphPosition().y;
+            public int LastGraphY
+            {
+                get
+                {
+                    if (_sequenceData.Count == 0) return 0;
+                    return _sequenceData.Last().EvaluateGraphPosition().y;
+                }
+            }
 
             [JsonIgnore]
             public int NumberOfSequences => _sequenceData.Count;

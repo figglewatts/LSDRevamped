@@ -94,10 +94,12 @@ namespace LSDR.Dream
                     GameSave.CurrentJournalSave.IncrementDayNumberWithSequence(CurrentSequence);
                     GameSave.Save();
                     _dreamIsEnding = false;
+                    CurrentSequence = null;
                     Coroutines.Instance.StartCoroutine(ReturnToTitle());
                 });
 
-            commonEndDream();
+            Debug.Log($"In dream?? " + InDream);
+            if (InDream) commonEndDream();
         }
 
         public void SetCanControlPlayer(bool state)
@@ -217,12 +219,27 @@ namespace LSDR.Dream
 
         public void BeginDream()
         {
+            if (CurrentSequence != null) return;
+
+            CurrentSequence = new DreamSequence();
+
             TextureSetter.Instance.SetRandomTextureSetFromDayNumber(GameSave.CurrentJournalSave.DayNumber);
 
-            BeginDream(getRandomDream());
+            if (SettingsSystem.CurrentJournal.HasSpecialDay(GameSave.CurrentJournalSave.DayNumber,
+                    out AbstractSpecialDay specialDay))
+            {
+                ToriiFader.Instance.FadeIn(Color.black, duration: 3, () =>
+                {
+                    specialDay.HandleDay(GameSave.CurrentJournalSave.DayNumber);
+                    LogGraphContributionFromArea(specialDay.Contribution.Dynamic, specialDay.Contribution.Upper);
+                });
+                return;
+            }
+
+            BeginPlayableDream(getRandomDream());
         }
 
-        public void BeginDream(SDK.Data.Dream dream)
+        public void BeginPlayableDream(SDK.Data.Dream dream)
         {
             SetNextSpawn(null); // don't force a spawn point
             _canTransition = true;
@@ -233,7 +250,6 @@ namespace LSDR.Dream
 
             ToriiFader.Instance.FadeIn(Color.black, duration: 3, () => Coroutines.Instance.StartCoroutine(
                 LoadDream(dream, transitioning: false)));
-            CurrentSequence = new DreamSequence();
             CurrentSequence.Visited.Add(dream);
         }
 
@@ -344,7 +360,7 @@ namespace LSDR.Dream
             MusicSystem.SetSongStyle((SongStyle)((GameSave.CurrentJournalSave.DayNumber - 1) % (int)SongStyle.COUNT));
             MusicSystem.CurrentSongLibrary = CurrentDream.SongLibrary;
             int songNumber = GameSave.CurrentJournalSave.DayNumber == 1
-                ? 0
+                ? 2
                 : (GameSave.CurrentJournalSave.LastGraphY + 9) * GraphSpawnMap.GRAPH_SIZE +
                   (GameSave.CurrentJournalSave.LastGraphX + 9);
             if (!loadingSameDream) MusicSystem.NextSong(songNumber);
@@ -402,6 +418,8 @@ namespace LSDR.Dream
 
         protected Color fadeColorFromCurrentSequence()
         {
+            if (!InDream) return Color.black;
+
             if (CurrentSequence == null)
             {
                 Debug.LogWarning("attempted to get fade color without current sequence");
@@ -654,7 +672,7 @@ namespace LSDR.Dream
             }
 
             if (CurrentDream == null)
-                BeginDream(dream);
+                BeginPlayableDream(dream);
             else
                 Transition(Color.black, dream, playSound: false);
         }
@@ -671,7 +689,7 @@ namespace LSDR.Dream
             }
 
             if (CurrentDream == null)
-                BeginDream(dream);
+                BeginPlayableDream(dream);
             else
                 Transition(Color.black, dream, playSound: false, spawnPointID: spawnId);
         }

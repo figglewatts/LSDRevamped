@@ -17,6 +17,9 @@ namespace LSDR.SDK.Editor.Util
         {
             EditorGUI.BeginProperty(position, label, property);
 
+            EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), label);
+            position.y += EditorGUIUtility.singleLineHeight;
+
             SerializedProperty keys = property.FindPropertyRelative("_keys");
             SerializedProperty values = property.FindPropertyRelative("_values");
             _tempKey = property.FindPropertyRelative("_tempKey");
@@ -68,6 +71,7 @@ namespace LSDR.SDK.Editor.Util
                         valueProperty, new GUIContent("Value"));
                     elementHeights += EditorGUI.GetPropertyHeight(keyProperty);
                     elementHeights += EditorGUI.GetPropertyHeight(valueProperty);
+                    elementHeights += EditorGUIUtility.standardVerticalSpacing;
                 }
             }
 
@@ -124,6 +128,7 @@ namespace LSDR.SDK.Editor.Util
                         values.InsertArrayElementAtIndex(index);
 
                         setValue(keys.GetArrayElementAtIndex(index), _tempKey);
+                        setValue(values.GetArrayElementAtIndex(index), _tempValue);
 
                         _showAddPanel = false;
                     }
@@ -209,12 +214,14 @@ namespace LSDR.SDK.Editor.Util
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
+            target.serializedObject.ApplyModifiedProperties();
         }
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
             float totalHeight =
-                EditorGUIUtility.singleLineHeight +
+                EditorGUIUtility.singleLineHeight * 2 +
                 EditorGUIUtility.standardVerticalSpacing; // Initial height for the label.
 
             SerializedProperty keys = property.FindPropertyRelative("_keys");

@@ -51,6 +51,7 @@ namespace LSDR.Entities.Player
         public SettingsSystem Settings;
 
         public ControlSchemeLoaderSystem ControlScheme;
+
         protected float _lookBehindRotation;
 
         protected float _lookUpDownRotation;
@@ -58,6 +59,8 @@ namespace LSDR.Entities.Player
         // used to store how much we need to rotate on X axis (for lerping)
         protected float _rotationX;
         protected TimeSince _timeSinceInteract;
+
+        protected bool _externalInput = false;
 
         protected void Start()
         {
@@ -77,13 +80,28 @@ namespace LSDR.Entities.Player
             {
                 // handle the controls differently depending on whether or not the current
                 // control scheme has FPS controls (mouselook) enabled
-                if (ControlScheme.Current.FpsControls)
+                // if we're using external input then force tank controls (its easier..)
+                if (ControlScheme.Current.FpsControls && !_externalInput)
                 {
                     handleFpsCameraRotation(c);
                 }
                 else
                 {
                     handleTankCameraRotation(c);
+                }
+            }
+        }
+
+        public void SetUsingExternalInput(bool usingExternalInput)
+        {
+            _externalInput = usingExternalInput;
+            if (usingExternalInput)
+            {
+                foreach (Camera c in TargetCameras)
+                {
+                    var rot = c.transform.localEulerAngles;
+                    rot.x = 0; // zero out up/down rotation
+                    c.transform.localEulerAngles = rot;
                 }
             }
         }

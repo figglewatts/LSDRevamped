@@ -10,6 +10,7 @@ using LSDR.SDK.Audio;
 using LSDR.SDK.DreamControl;
 using LSDR.SDK.Entities;
 using LSDR.SDK.Lua;
+using LSDR.SDK.Visual;
 using LSDR.Visual;
 using Torii.Console;
 using Torii.Event;
@@ -56,6 +57,7 @@ namespace LSDR.Game
                 // hook up interfaces to SDK
                 LuaManager.ProvideManaged(new LuaEngine(DreamSystem, SettingsSystem));
                 DreamControlManager.ProvideManaged(DreamSystem);
+                FadeManager.ProvideManaged(ToriiFader.Instance);
                 MixerGroupProviderManager.ProvideManaged(new MixerGroupProvider());
 
                 ModLoaderSystem.LoadMods();

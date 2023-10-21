@@ -34,7 +34,7 @@ namespace LSDR.Lua.Proxies
             _target.Settings.CanMouseLook = false;
 
             // use cross product to figure out if we should rotate left or right
-            var playerForward = _target.transform.forward;
+            var playerForward = _target.Camera.forward;
             var direction = position - _target.transform.position;
             var cross = Vector3.Cross(playerForward, direction);
             float inputDir = cross.y > 0 ? 1 : -1;

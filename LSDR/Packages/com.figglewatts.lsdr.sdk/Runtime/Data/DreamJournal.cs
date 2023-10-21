@@ -27,6 +27,9 @@ namespace LSDR.SDK.Data
         [Tooltip("Lua scripts that will be loaded into the environment of every script.")]
         public List<LuaScriptAsset> LuaScriptIncludes;
 
+        [Tooltip("Mapping of day numbers to special days (video/text dreams).")]
+        public SerializableDictionary<int, AbstractSpecialDay> SpecialDays;
+
         public IEnumerable<Dream> LinkableDreams => Dreams.Where(d => d.Linkable);
 
         public Dream GetLinkable(Dream current)
@@ -56,6 +59,11 @@ namespace LSDR.SDK.Data
             }
 
             return RandUtil.RandomListElement(Dreams);
+        }
+
+        public bool HasSpecialDay(int dayNumber, out AbstractSpecialDay specialDay)
+        {
+            return SpecialDays.TryGetValue(dayNumber, out specialDay);
         }
 
         public override string ToString()
