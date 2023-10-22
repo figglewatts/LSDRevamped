@@ -13,6 +13,7 @@ using LSDR.SDK.Lua;
 using LSDR.SDK.Visual;
 using LSDR.Visual;
 using Torii.Console;
+using Torii.Coroutine;
 using Torii.Event;
 using Torii.UI;
 using UnityEngine;
@@ -35,8 +36,10 @@ namespace LSDR.Game
         public GameSaveSystem GameSaveSystem;
         public DreamSystem DreamSystem;
         public ToriiEvent OnGameLoaded;
+        public ToriiEvent OnGameLoadedError;
         public Action OnGameLoadedProgrammatic;
         public Action<string> OnGameLoadError;
+        public string LoadError = "";
 
         public void OnEnable()
         {
@@ -60,11 +63,13 @@ namespace LSDR.Game
                 FadeManager.ProvideManaged(ToriiFader.Instance);
                 MixerGroupProviderManager.ProvideManaged(new MixerGroupProvider());
 
-                ModLoaderSystem.LoadMods();
+                yield return Coroutines.Instance.StartCoroutine(ModLoaderSystem.LoadModsAsync());
                 if (!ModLoaderSystem.ModsAvailable)
                 {
-                    OnGameLoadError?.Invoke(
-                        "There are no mods available.\n\nPlease check your mod folder and try again.");
+                    LoadError = "There are no mods available.\n\nPlease check your mod folder and try again.";
+                    OnGameLoadError?.Invoke(LoadError);
+                    OnGameLoadedError.Raise();
+
                     yield break;
                 }
 

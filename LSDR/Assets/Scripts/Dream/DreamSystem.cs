@@ -355,6 +355,8 @@ namespace LSDR.Dream
                 yield return loadSceneOp;
             }
 
+            yield return Resources.UnloadUnusedAssets();
+
             // reroll song style, update song library, switch to next song based on graph position
             MusicSystem.OriginalSongLibrary.DreamNumber = SettingsSystem.CurrentJournal.GetDreamIndex(CurrentDream);
             MusicSystem.SetSongStyle((SongStyle)((GameSave.CurrentJournalSave.DayNumber - 1) % (int)SongStyle.COUNT));
@@ -376,8 +378,10 @@ namespace LSDR.Dream
             OnLevelPreLoad.Raise();
 
             Debug.Log("Instantiating dream prefab...");
-            CurrentDreamInstance = Instantiate(dream.DreamPrefab);
-            yield return null;
+            var prefabRequest = SettingsSystem.CurrentMod.GetDreamPrefabAsync(CurrentDream);
+            yield return prefabRequest;
+
+            CurrentDreamInstance = Instantiate((GameObject)prefabRequest.asset);
 
             ResourceManager.ClearLifespan("scene");
 

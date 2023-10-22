@@ -34,6 +34,7 @@ namespace LSDR.Game
         public DreamSystem DreamSystem;
 
         public ToriiEvent OnSettingsApply;
+        public Action ProgrammaticOnSettingsApply;
 
         // reference to serializer used for loading/saving data
         private readonly ToriiSerializer _serializer = new ToriiSerializer();
@@ -162,6 +163,7 @@ namespace LSDR.Game
             Settings.UpdateCurrentProfile();
 
             OnSettingsApply.Raise();
+            ProgrammaticOnSettingsApply?.Invoke();
         }
 
         public void SwitchToNextProfile()

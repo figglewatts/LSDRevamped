@@ -35,7 +35,7 @@ namespace LSDR.Entities.Player
             CameraRotation.SetUsingExternalInput(false);
         }
 
-        private void FixedUpdate()
+        private void Update()
         {
             // if we can control the player and we're not currently in FPS control mode (or we're using external input)
             if (Settings.CanControlPlayer && (!ControlScheme.Current.FpsControls || _externalInput))

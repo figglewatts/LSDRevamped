@@ -6,21 +6,13 @@ namespace LSDR.UI.Title
 {
     public class UIGameLoadError : MonoBehaviour
     {
-        public GameLoadSystem GameLoadSystem;
         public GameObject ErrorDialog;
-        public Text ErrorText;
         public Button QuitButton;
         public GameObject LoadingView;
 
-        public void Start()
-        {
-            GameLoadSystem.OnGameLoadError += onGameLoadError;
-        }
-
-        protected void onGameLoadError(string error)
+        public void OnGameLoadError()
         {
             LoadingView.SetActive(value: false);
-            ErrorText.text = error;
             QuitButton.onClick.AddListener(Application.Quit);
             ErrorDialog.SetActive(value: true);
         }

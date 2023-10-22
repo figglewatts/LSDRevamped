@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,6 +13,27 @@ namespace LSDR.SDK.Data
 
         [Tooltip("The dream journals contained in this mod.")]
         public List<DreamJournal> Journals;
+
+        public AssetBundle SourceBundle { get; protected set; }
+
+        public bool IsBuiltIn => SourceBundle == null;
+
+        public void SetSourceBundle(AssetBundle bundle)
+        {
+            SourceBundle = bundle;
+        }
+
+        public ResourceRequest GetDreamPrefabAsync(Dream dream)
+        {
+            if (IsBuiltIn)
+            {
+                return Resources.LoadAsync<GameObject>(dream.DreamPrefabPath);
+            }
+            else
+            {
+                return SourceBundle.LoadAssetAsync<GameObject>(dream.DreamPrefabPath);
+            }
+        }
 
         public DreamJournal GetJournal(int journalIdx)
         {

@@ -22,7 +22,6 @@ namespace LSDR.UI.Title
 
         public void OnEnable()
         {
-            SetDayText(GameSave.CurrentJournalSave.DayNumber);
             GameSave.CurrentJournalSave.OnDayNumberChanged += onDayNumberChanged;
         }
 
