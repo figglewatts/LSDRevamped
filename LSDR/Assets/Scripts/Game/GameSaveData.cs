@@ -4,6 +4,7 @@ using System.Linq;
 using LSDR.Dream;
 using LSDR.SDK.Data;
 using Newtonsoft.Json;
+using UnityEngine;
 using UnityEngine.Assertions;
 
 namespace LSDR.Game
@@ -78,9 +79,14 @@ namespace LSDR.Game
 
             public void SetDayNumber(int newDayNumber)
             {
-                int yearNumber = newDayNumber / 365;
-                DayNumber = newDayNumber % 365;
-                YearNumber = yearNumber;
+                if (newDayNumber <= 0)
+                {
+                    Debug.LogError("Can't set day to number less than 1");
+                    return;
+                }
+
+                DayNumber = (newDayNumber - 1) % 365 + 1;
+                YearNumber = (newDayNumber - 1) / 365;
                 OnDayNumberChanged?.Invoke();
             }
 

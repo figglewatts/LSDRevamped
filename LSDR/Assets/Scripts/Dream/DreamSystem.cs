@@ -50,6 +50,7 @@ namespace LSDR.Dream
         public ToriiEvent OnSongChange;
         public ToriiEvent OnPlayerSpawned;
         public ToriiEvent OnLevelPreLoad;
+        public ToriiEvent OnBeginDream;
 
         protected readonly ToriiSerializer _serializer = new ToriiSerializer();
         [NonSerialized] protected bool _canTransition = true;
@@ -64,9 +65,10 @@ namespace LSDR.Dream
         [NonSerialized] public GameObject Player;
         [NonSerialized] protected SDK.Data.Dream _nextDream = null;
         [NonSerialized] protected DreamEnvironment _currentEnvironment;
-        public SDK.Data.Dream CurrentDream { get; protected set; }
-        public GameObject CurrentDreamInstance { get; protected set; }
-        public DreamSequence CurrentSequence { get; protected set; }
+
+        [field: NonSerialized] public SDK.Data.Dream CurrentDream { get; protected set; }
+        [field: NonSerialized] public GameObject CurrentDreamInstance { get; protected set; }
+        [field: NonSerialized] public DreamSequence CurrentSequence { get; protected set; }
 
         public int CurrentDay => GameSave.CurrentJournalSave.DayNumber;
 
@@ -94,11 +96,9 @@ namespace LSDR.Dream
                     GameSave.CurrentJournalSave.IncrementDayNumberWithSequence(CurrentSequence);
                     GameSave.Save();
                     _dreamIsEnding = false;
-                    CurrentSequence = null;
                     Coroutines.Instance.StartCoroutine(ReturnToTitle());
                 });
 
-            Debug.Log($"In dream?? " + InDream);
             if (InDream) commonEndDream();
         }
 
@@ -220,6 +220,8 @@ namespace LSDR.Dream
         public void BeginDream()
         {
             if (CurrentSequence != null) return;
+
+            OnBeginDream.Raise();
 
             CurrentSequence = new DreamSequence();
 
@@ -404,6 +406,10 @@ namespace LSDR.Dream
             PlayerMovement playerMovement = Player.GetComponent<PlayerMovement>();
             playerMovement.CanLink = true;
             playerMovement.ClearInputLock();
+            PlayerCameraRotation playerCameraRotation = Player.GetComponent<PlayerCameraRotation>();
+            playerCameraRotation.SetUsingExternalInput(false);
+            PlayerRotation playerRotation = Player.GetComponent<PlayerRotation>();
+            playerRotation.StopExternalInput();
             _canTransition = true;
 
             // tell grey man spawner we're in a new dream
@@ -472,6 +478,7 @@ namespace LSDR.Dream
         {
             _dreamIsEnding = true;
             _canTransition = false;
+            CurrentSequence = null;
 
             // save the last Y rotation for the player, so we can set it back to this when we start the next dream
             _lastPlayerYRotation = Player.transform.rotation.eulerAngles.y;
@@ -573,8 +580,8 @@ namespace LSDR.Dream
         [Console]
         public void SetDay(int dayNumber)
         {
+            Debug.Log($"Setting day number to: {dayNumber}");
             GameSave.CurrentJournalSave.SetDayNumber(dayNumber);
-            Debug.Log($"Set day number to: {dayNumber}");
         }
 
         [Console]

@@ -84,14 +84,6 @@ namespace Torii.Build
             PlayerSettings.bundleVersion = version;
             Debug.Log($"Using '{version}' as version");
 
-            // build mods
-            Debug.Log("Building mods to StreamingAssets path");
-            ModBuilder modBuilder = new ModBuilder();
-            LSDRevampedMod originalDreamsMod =
-                AssetDatabase.LoadAssetAtPath<LSDRevampedMod>("Assets/Original/OriginalDreamsMod.asset");
-            string modOutputPath = Path.Combine(Application.streamingAssetsPath, "mods");
-            modBuilder.Build(originalDreamsMod, ModPlatform.Windows, modOutputPath);
-
             string filter = getArgValue(FILTER_ARG);
             string[] filters = null;
             if (filter != null)

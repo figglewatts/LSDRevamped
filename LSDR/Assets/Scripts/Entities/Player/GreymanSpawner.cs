@@ -8,8 +8,8 @@ namespace LSDR.Entities.Dream
 {
     public class GreymanSpawner : MonoBehaviour
     {
-        private const float MIN_WAIT_BETWEEN_SPAWN_CHANCES_SECONDS = 1;
-        private const float MAX_WAIT_BETWEEN_SPAWN_CHANCES_SECONDS = 5;
+        private const float MIN_WAIT_BETWEEN_SPAWN_CHANCES_SECONDS = 5;
+        private const float MAX_WAIT_BETWEEN_SPAWN_CHANCES_SECONDS = 15;
         private const float CHANCE_FOR_GREYMAN = 7;
         public DreamSystem DreamSystem;
         public GameObject GreymanPrefab;

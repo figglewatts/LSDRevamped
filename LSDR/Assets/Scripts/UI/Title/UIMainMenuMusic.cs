@@ -1,4 +1,5 @@
-﻿using LSDR.Game;
+﻿using System;
+using LSDR.Game;
 using UnityEngine;
 
 namespace LSDR.UI.Title

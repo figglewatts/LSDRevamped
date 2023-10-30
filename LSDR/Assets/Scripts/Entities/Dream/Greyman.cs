@@ -15,7 +15,7 @@ namespace LSDR.Entities.Dream
 
         public void Update()
         {
-            if (_playerEncountered || !DreamSystem.InDream) return;
+            if (_playerEncountered || !DreamSystem.InDream || DreamSystem.Player == null) return;
 
             Transform t = transform;
             t.position += t.forward * (MoveSpeed * Time.deltaTime);

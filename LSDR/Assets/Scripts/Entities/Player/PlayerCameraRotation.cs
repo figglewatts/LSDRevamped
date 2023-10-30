@@ -130,6 +130,9 @@ namespace LSDR.Entities.Player
             // it'll be pretty slow
             if (Settings.Settings.LimitFramerate && ControlScheme.LastUsedGamepad) lookVec *= 4;
 
+            // gamepad can be slowwwwww
+            if (ControlScheme.LastUsedGamepad) lookVec *= 4;
+
             // sensitivity calculation
             Vector2 adjustedLookVec = lookVec * DEGREES_PER_DOT * ControlScheme.Current.MouseSensitivity;
 

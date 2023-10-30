@@ -1813,6 +1813,7 @@ GameObject:
   - component: {fileID: 478776298}
   - component: {fileID: 478776300}
   - component: {fileID: 478776299}
+  - component: {fileID: 478776302}
   - component: {fileID: 478776301}
   m_Layer: 0
   m_Name: MainMenuMusic
@@ -1849,8 +1850,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   source: {fileID: 478776300}
   NormalMusic: {fileID: 8300000, guid: 0bd44250959190344ba68eb4f5fae168, type: 3}
-  KanjiMusic: {fileID: 8300000, guid: 305a2f454da623447a260db96d1f7f03, type: 3}
-  DownerMusic: {fileID: 8300000, guid: 0bd44250959190344ba68eb4f5fae168, type: 3}
+  KanjiMusic: {fileID: 8300000, guid: 695c1d5d7a01fbf42a17dbffccd10091, type: 3}
+  DownerMusic: {fileID: 8300000, guid: 305a2f454da623447a260db96d1f7f03, type: 3}
   UpperMusic: {fileID: 8300000, guid: 57818f739d0d4734dafde95005497657, type: 3}
   GameSave: {fileID: 11400000, guid: dc1612e2640a30c4491ae5d369fea962, type: 2}
 --- !u!82 &478776300
@@ -1866,7 +1867,7 @@ AudioSource:
     type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.605
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -1962,12 +1963,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4855a35832945d5865aec599963246c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Event: {fileID: 11400000, guid: 44fd4cb80f11a304ba2c096609f4ca91, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 478776299}
+        m_TargetAssemblyTypeName: LSDR.UI.Title.UIMainMenuMusic, Assembly-CSharp
+        m_MethodName: PlayMusic
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &478776302
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 478776297}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4855a35832945d5865aec599963246c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   Event: {fileID: 11400000, guid: 1812e240addef4e0d9d43cfb70be6143, type: 2}
   Response:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 478776299}
-        m_TargetAssemblyTypeName: 
+        m_TargetAssemblyTypeName: LSDR.UI.Title.UIMainMenuMusic, Assembly-CSharp
         m_MethodName: PlayMusic
         m_Mode: 1
         m_Arguments:
@@ -3150,6 +3179,7 @@ GameObject:
   m_Component:
   - component: {fileID: 766174151}
   - component: {fileID: 766174152}
+  - component: {fileID: 766174153}
   m_Layer: 5
   m_Name: ButtonsVLayout
   m_TagString: Untagged
@@ -3211,6 +3241,82 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &766174153
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 766174150}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4855a35832945d5865aec599963246c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Event: {fileID: 11400000, guid: 1b0be28b5d5290e41a6e2156107b0e8a, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1106723485}
+        m_TargetAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
+        m_MethodName: set_interactable
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1612392209}
+        m_TargetAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
+        m_MethodName: set_interactable
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1298670691}
+        m_TargetAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
+        m_MethodName: set_interactable
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1667246982}
+        m_TargetAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
+        m_MethodName: set_interactable
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 537702652}
+        m_TargetAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
+        m_MethodName: set_interactable
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &780487728
 GameObject:
   m_ObjectHideFlags: 0
@@ -8546,7 +8652,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Day 000
+  m_Text: Day 001
 --- !u!222 &1229652001
 CanvasRenderer:
   m_ObjectHideFlags: 0

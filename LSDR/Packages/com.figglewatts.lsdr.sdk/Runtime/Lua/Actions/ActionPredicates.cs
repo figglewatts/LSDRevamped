@@ -18,10 +18,14 @@ namespace LSDR.SDK.Lua.Actions
 
         public static IPredicate WaitForLinearMove(GameObject obj, Vector3 end)
         {
+            Vector3? start = null;
             return new GenericPredicate(() =>
             {
-                var length = (end - obj.transform.position).magnitude;
-                return length < 0.2f;
+                start ??= obj.transform.position;
+                var diff = (end - start).Value.sqrMagnitude;
+                var current = (obj.transform.position - start).Value.sqrMagnitude;
+
+                return current / diff > 1;
             });
         }
 
@@ -36,8 +40,6 @@ namespace LSDR.SDK.Lua.Actions
 
                 float curAngle = Vector3.SignedAngle(direction, obj.transform.forward, Vector3.up);
                 bool signChanged = (initialAngle < 0) != (curAngle < 0);
-
-                Debug.Log($"initialAngle: {initialAngle}, curAngle: {curAngle}, signChanged: {signChanged}");
 
                 return signChanged;
             });

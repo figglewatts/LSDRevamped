@@ -80,11 +80,11 @@ namespace LSDR.InputManagement
 
             ensureDirectory();
 
-            EnsureDefaultSchemes();
-
             // deserialize all of the control schemes in the path
             foreach (string file in Directory.GetFiles(_controlSchemesPath, "*.dat"))
                 CreateScheme(_serializer.Deserialize<ControlScheme>(file));
+
+            EnsureDefaultSchemes();
         }
 
         public void SaveSchemes()
@@ -136,9 +136,9 @@ namespace LSDR.InputManagement
         {
             if (idx < 0 || idx >= Schemes.Count)
             {
-                Debug.LogError(
+                Debug.LogWarning(
                     $"Cannot select scheme {idx}, as it's outside the bounds of the currently loaded schemes");
-                return;
+                idx = 0;
             }
 
             Debug.Log($"Selecting scheme {idx}");

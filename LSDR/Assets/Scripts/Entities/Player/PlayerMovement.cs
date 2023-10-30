@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using LSDR.Dream;
 using LSDR.Game;
@@ -45,6 +46,19 @@ namespace LSDR.Entities.Player
         protected Vector2 _externalInputDirection;
 
         protected FixedTimeSince _timeColliding;
+        protected TimeSince _timeSinceStartedMoving;
+        protected bool _playedWalkStep;
+        protected Collider[] _depenetrateOverlapBuffer = new Collider[32];
+
+        protected Vector3 _boxBottom => new Vector3(
+            transform.position.x,
+            transform.position.y + _controller.skinWidth * 2,
+            transform.position.z);
+
+        protected Vector3 _boxTop => new Vector3(
+            transform.position.x,
+            _boxBottom.y + _controller.height,
+            transform.position.z);
 
         public void Start()
         {
@@ -80,16 +94,41 @@ namespace LSDR.Entities.Player
             if (ControlScheme.InputActions.Game.Run.IsPressed() && canStartSprinting()) _currentlySprinting = true;
 
             // perform a single step
-            if (!_currentlyStepping && _inputDir.sqrMagnitude > 0)
+            float moveSpeed = _currentlySprinting ? RunMoveSpeed : WalkMoveSpeed;
+            if (!ControlScheme.Current.FpsControls && !_currentlyStepping && _inputDir.sqrMagnitude > 0)
             {
-                float moveSpeed = _currentlySprinting ? RunMoveSpeed : WalkMoveSpeed;
                 StartCoroutine(takeStep(_inputDir, moveSpeed));
+            }
+            else if (ControlScheme.Current.FpsControls && _inputDir.sqrMagnitude > 0)
+            {
+                if (!_currentlyStepping)
+                {
+                    _currentlyStepping = true;
+                    _timeSinceStartedMoving = 0;
+                }
+
+                if (!_playedWalkStep && _timeSinceStartedMoving > StepTimeSeconds / 2)
+                {
+                    playFootstepSound();
+                    _playedWalkStep = true;
+                }
+
+                if (_timeSinceStartedMoving > StepTimeSeconds)
+                {
+                    if (_currentlySprinting) playFootstepSound();
+                    _playedWalkStep = false;
+                    _timeSinceStartedMoving = 0;
+                }
+
+                moveController(_inputDir, moveSpeed);
             }
 
             // if run is not pressed and no movement keys are pressed, we should no longer sprint
-            if (!ControlScheme.InputActions.Game.Run.IsPressed()
-                && !ControlScheme.InputActions.Game.Move.IsPressed())
+            if ((!ControlScheme.InputActions.Game.Run.IsPressed()
+                 && !ControlScheme.InputActions.Game.Move.IsPressed()) || _externalInput)
+            {
                 _currentlySprinting = false;
+            }
         }
 
         public void OnDestroy() { DevConsole.Deregister(this); }
@@ -180,6 +219,9 @@ namespace LSDR.Entities.Player
         {
             Vector3 moveAmount = transform.forward * input.y + transform.right * input.x;
 
+            // apply the movement speed and delta time
+            moveAmount *= speedUnitsPerSecond * Time.deltaTime;
+
             // perform collision detection (to override default Unity char controller's 'slide along walls' for
             // LSD's janky 'lets just stop in place')
             if (movingIntoWall(moveAmount))
@@ -197,11 +239,25 @@ namespace LSDR.Entities.Player
             else
                 _timeColliding = 0;
 
-            // apply the movement speed
-            moveAmount *= speedUnitsPerSecond;
-
             // move the controller
-            _controller.Move(moveAmount * Time.deltaTime);
+            var flags = _controller.Move(moveAmount);
+
+            // this is a bit of a hack for when our box ends up inside geometry without hitting the boxcast
+            // normally we'd slide here but we can detect this state with this statement and force a link instead
+            // I have successfully gaslit myself that this is the least worst option
+            if (flags.HasFlag(CollisionFlags.Sides) && isOverlapping() && !_externalInput)
+            {
+                CanLink = false;
+                DreamSystem.Transition();
+            }
+        }
+
+        private bool isOverlapping()
+        {
+            Vector3 topBottom = _boxTop - _boxBottom;
+            Vector3 boxCenter = _boxBottom + topBottom / 2;
+            Vector3 halfExtents = new Vector3(_controller.radius, topBottom.y / 2, _controller.radius);
+            return Physics.CheckBox(boxCenter, halfExtents);
         }
 
         /// <summary>
@@ -211,36 +267,35 @@ namespace LSDR.Entities.Player
         /// <returns>True if we are moving into a wall, false otherwise.</returns>
         private bool movingIntoWall(Vector3 desiredMove)
         {
-            float stepTopYPos = transform.position.y + _controller.radius + _controller.stepOffset +
-                                _controller.skinWidth;
+            float moveDistance = desiredMove.magnitude;
+            Vector3 castDirection = desiredMove.normalized;
+            float stepTopYPos = transform.position.y + _controller.stepOffset + _controller.skinWidth;
             Vector3 stepTopPos = new Vector3(transform.position.x, stepTopYPos, transform.position.z);
-            Vector3 capsuleBottom = new Vector3(transform.position.x,
-                transform.position.y + _controller.radius + _controller.skinWidth,
-                transform.position.z);
-            Vector3 capsuleTop = new Vector3(transform.position.x,
-                capsuleBottom.y + _controller.height - _controller.radius,
-                transform.position.z);
+            Vector3 boxTop = _boxTop;
+            Vector3 boxBottom = _boxBottom;
 
             if (DebugLog)
-                Debug.Log($"1. StepTop: {stepTopPos}, CapsuleBottom: {capsuleBottom}, CapsuleTop: {capsuleTop}");
+                Debug.Log(
+                    $"1. StepTop: {stepTopPos:F5}, _boxBottom: {boxBottom:F5}, _boxTop: {boxTop:F5}");
 
-            (bool hitAboveStepHeight, RaycastHit hit) = castController(stepTopPos, capsuleTop, _controller.radius,
-                desiredMove, _controller.skinWidth * 2);
+            (bool hitAboveStepHeight, RaycastHit hit) = castController(stepTopPos, boxTop, _controller.radius,
+                castDirection, _controller.skinWidth * 2);
             if (DebugLog)
             {
                 Debug.Log(
                     $"2. hitAboveStepHeight: {hitAboveStepHeight}, collider: {hit.collider}, norm: {hit.normal}");
             }
+            float angle = Mathf.Acos(hit.normal.y) * Mathf.Rad2Deg;
 
-            if (hitAboveStepHeight && !hit.collider.isTrigger && hit.normal.y >= -0.1f) return true;
+            if (hitAboveStepHeight && !hit.collider.isTrigger && angle > _controller.slopeLimit) return true;
 
             bool hitSomething;
-            (hitSomething, hit) = castController(capsuleBottom, capsuleTop, _controller.radius, desiredMove,
-                _controller.skinWidth * 2);
-            Vector3 axis = Vector3.Cross(transform.up, desiredMove);
+            (hitSomething, hit) = castController(boxBottom, boxTop, _controller.radius, castDirection,
+                moveDistance);
+            Vector3 axis = Vector3.Cross(transform.up, castDirection);
             float slopeAngle = Vector3.SignedAngle(hit.normal, transform.up, axis);
             bool hitOverSlopeLimit = hitSomething && slopeAngle > _controller.slopeLimit;
-            bool hitSeemsLikeAStep = hit.normal.y < 0.7f || hit.distance < 1E-06;
+            bool hitSeemsLikeAStep = (slopeAngle > 80 && slopeAngle < 100) || hit.distance < 1E-06;
 
             if (DebugLog)
             {
@@ -254,6 +309,7 @@ namespace LSDR.Entities.Player
 
         protected void playFootstepSound()
         {
+            if (!Settings.Settings.EnableFootstepSounds) return;
             var footstep = getFootstepSound();
             if (footstep == null || footstep.Sound == null) return;
             AudioPlayer.Instance.PlayClip(footstep.Sound, loop: false, pitch: footstep.Pitch, mixerGroup: "SFX");
@@ -261,14 +317,7 @@ namespace LSDR.Entities.Player
 
         protected Footstep getFootstepSound()
         {
-            Vector3 capsuleBottom = new Vector3(transform.position.x,
-                transform.position.y + _controller.radius + _controller.skinWidth,
-                transform.position.z);
-            Vector3 capsuleTop = new Vector3(transform.position.x,
-                capsuleBottom.y + _controller.height - _controller.radius,
-                transform.position.z);
-
-            (bool hitSomething, RaycastHit hit) = castController(capsuleBottom, capsuleTop, _controller.radius,
+            (bool hitSomething, RaycastHit hit) = castController(_boxBottom, _boxTop, _controller.radius,
                 -transform.up,
                 1);
 
@@ -280,8 +329,9 @@ namespace LSDR.Entities.Player
         protected (bool, RaycastHit) castController(Vector3 bottomPos, Vector3 topPos, float halfExtent,
             Vector3 direction, float distance)
         {
-            Vector3 boxCenter = bottomPos + (topPos - bottomPos) / 2;
-            Vector3 halfExtents = new Vector3(halfExtent, _controller.height / 2, halfExtent);
+            Vector3 topBottom = topPos - bottomPos;
+            Vector3 boxCenter = bottomPos + topBottom / 2;
+            Vector3 halfExtents = new Vector3(halfExtent, topBottom.y / 2, halfExtent);
             bool hitSomething = Physics.BoxCast(boxCenter, halfExtents, direction,
                 out RaycastHit hitInfo, Quaternion.identity, distance);
             return (hitSomething, hitInfo);
@@ -304,23 +354,27 @@ namespace LSDR.Entities.Player
             // handle input from external sources (i.e. Lua scripts controlling the player)
             if (_externalInput) move = _externalInputDirection;
 
-            // no partial movement
-            if (move.x > 0) move.x = 1;
-            else if (move.x < 0) move.x = -1;
-            if (move.y > 0) move.y = 1;
-            else if (move.y < 0) move.y = -1;
+            // no partial movement in classic mode
+            if (!ControlScheme.Current.FpsControls)
+            {
+                if (move.x > 0) move.x = 1;
+                else if (move.x < 0) move.x = -1;
+                if (move.y > 0) move.y = 1;
+                else if (move.y < 0) move.y = -1;
+            }
 
             return move;
         }
 
         /// <summary>
         ///     We can start sprinting if we're moving on the X axis (strafing) or if we're moving forwards.
+        ///     We can only sprint if input is not being overridden.
         /// </summary>
         /// <returns>True if we can start sprinting, false otherwise.</returns>
         private bool canStartSprinting()
         {
             Vector2 move = ControlScheme.InputActions.Game.Move.ReadValue<Vector2>();
-            return move.x != 0 || move.y > 0;
+            return !_externalInput && (move.x != 0 || move.y > 0);
         }
     }
 }
