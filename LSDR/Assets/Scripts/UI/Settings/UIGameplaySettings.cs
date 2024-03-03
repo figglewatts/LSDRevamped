@@ -13,9 +13,11 @@ namespace LSDR.UI.Settings
         public SettingsSystem Settings;
 
         public Toggle EnableHeadBobToggle;
+        public Toggle SmoothHeadBobToggle;
         public Toggle EnableFootstepSoundsToggle;
         public Dropdown CurrentJournalDropdown;
         public Dropdown CurrentModDropdown;
+        public Slider HeadbobIntensitySlider;
 
         public void Start()
         {
@@ -23,11 +25,15 @@ namespace LSDR.UI.Settings
             Settings.SettingsBindBroker.RegisterData(EnableFootstepSoundsToggle);
             Settings.SettingsBindBroker.RegisterData(CurrentJournalDropdown);
             Settings.SettingsBindBroker.RegisterData(CurrentModDropdown);
+            Settings.SettingsBindBroker.RegisterData(HeadbobIntensitySlider);
+            Settings.SettingsBindBroker.RegisterData(SmoothHeadBobToggle);
 
             EnableHeadBobToggle.isOn = Settings.Settings.HeadBobEnabled;
             EnableFootstepSoundsToggle.isOn = Settings.Settings.EnableFootstepSounds;
             CurrentJournalDropdown.value = Settings.Settings.CurrentJournalIndex;
             CurrentModDropdown.value = Settings.Settings.CurrentModIndex;
+            HeadbobIntensitySlider.value = Settings.Settings.HeadBobIntensity;
+            SmoothHeadBobToggle.isOn = Settings.Settings.SmoothHeadBob;
 
             Settings.SettingsBindBroker.Bind(() => EnableHeadBobToggle.isOn,
                 () => Settings.Settings.HeadBobEnabled, BindingType.TwoWay);
@@ -36,6 +42,10 @@ namespace LSDR.UI.Settings
             Settings.SettingsBindBroker.Bind(() => CurrentJournalDropdown.value,
                 () => Settings.Settings.CurrentJournalIndex, BindingType.TwoWay);
             Settings.SettingsBindBroker.Bind(() => CurrentModDropdown.value, () => Settings.Settings.CurrentModIndex,
+                BindingType.TwoWay);
+            Settings.SettingsBindBroker.Bind(() => HeadbobIntensitySlider.value,
+                () => Settings.Settings.HeadBobIntensity, BindingType.TwoWay);
+            Settings.SettingsBindBroker.Bind(() => SmoothHeadBobToggle.isOn, () => Settings.Settings.SmoothHeadBob,
                 BindingType.TwoWay);
         }
     }

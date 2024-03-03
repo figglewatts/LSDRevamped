@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using LSDR.Dream;
 using LSDR.SDK.Util;
 using Torii.Console;
@@ -15,6 +16,7 @@ namespace LSDR.Entities.Dream
         public GameObject GreymanPrefab;
         public float GreymanSpawnDistance = 10;
         private Coroutine _rollForGreymanCoroutine;
+        private List<GameObject> _greyMen = new List<GameObject>();
 
         public void Start()
         {
@@ -38,11 +40,23 @@ namespace LSDR.Entities.Dream
             Vector3 spawnPos = transform.position + forward * GreymanSpawnDistance;
             Vector3 toPlayer = transform.position - spawnPos;
             Quaternion orientation = Quaternion.LookRotation(toPlayer);
-            Instantiate(GreymanPrefab, spawnPos, orientation);
+            _greyMen.Add(Instantiate(GreymanPrefab, spawnPos, orientation));
+        }
+
+        public void RemoveGreyMen()
+        {
+            foreach (var greyMan in _greyMen)
+            {
+                Destroy(greyMan);
+            }
+            _greyMen.Clear();
         }
 
         public void OnNewDream()
         {
+            // remove existing grey men
+            RemoveGreyMen();
+
             // see if we can scare the player by loading into a grey man spawn ;)
             RollSpawn();
         }
@@ -62,6 +76,7 @@ namespace LSDR.Entities.Dream
         public void RollSpawn()
         {
             if (!DreamSystem.InDream) return;
+            if (DreamSystem.CurrentDay % 2 != 0) return; // only spawn on even days
             bool shouldSpawnGreyMan = RandUtil.OneIn(CHANCE_FOR_GREYMAN);
             if (DreamSystem.CurrentDream.GreyMan && shouldSpawnGreyMan)
             {

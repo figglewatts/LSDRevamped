@@ -89,12 +89,13 @@ namespace LSDR.Dream
             else
                 SettingsSystem.PlayerGravity = false;
 
+            GameSave.CurrentJournalSave.IncrementDayNumberWithSequence(CurrentSequence);
+            GameSave.Save();
+
             ToriiFader.Instance.FadeIn(fadeColorFromCurrentSequence(),
                 fromFall ? FADE_OUT_SECS_FALL : FADE_OUT_SECS_REGULAR, () =>
                 {
                     CurrentDream = null;
-                    GameSave.CurrentJournalSave.IncrementDayNumberWithSequence(CurrentSequence);
-                    GameSave.Save();
                     _dreamIsEnding = false;
                     Coroutines.Instance.StartCoroutine(ReturnToTitle());
                 });
@@ -171,7 +172,10 @@ namespace LSDR.Dream
 
             SettingsSystem.CanControlPlayer = false;
             OverrideNextSpawn(spawnPointID);
-            if (lockControls) Player.GetComponent<PlayerMovement>().SetInputLock();
+            if (lockControls)
+            {
+                Player.GetComponent<PlayerMovement>().SetInputLock();
+            }
 
             // save the last Y rotation for the player, so we can set it back to this when we load the next dream
             _lastPlayerYRotation = Player.transform.rotation.eulerAngles.y;
@@ -179,7 +183,7 @@ namespace LSDR.Dream
             // disable pausing to prevent throwing off timers etc
             PauseSystem.CanPause = false;
 
-            MusicSystem.StopSong();
+            if (dream != CurrentDream) MusicSystem.StopSong();
 
             if (playSound)
             {
@@ -361,13 +365,17 @@ namespace LSDR.Dream
 
             // reroll song style, update song library, switch to next song based on graph position
             MusicSystem.OriginalSongLibrary.DreamNumber = SettingsSystem.CurrentJournal.GetDreamIndex(CurrentDream);
-            MusicSystem.SetSongStyle((SongStyle)((GameSave.CurrentJournalSave.DayNumber - 1) % (int)SongStyle.COUNT));
             MusicSystem.CurrentSongLibrary = CurrentDream.SongLibrary;
             int songNumber = GameSave.CurrentJournalSave.DayNumber == 1
                 ? 2
                 : (GameSave.CurrentJournalSave.LastGraphY + 9) * GraphSpawnMap.GRAPH_SIZE +
                   (GameSave.CurrentJournalSave.LastGraphX + 9);
-            if (!loadingSameDream) MusicSystem.NextSong(songNumber);
+            if (!loadingSameDream)
+            {
+                MusicSystem.SetSongStyle(
+                    (SongStyle)((GameSave.CurrentJournalSave.DayNumber - 1) % (int)SongStyle.COUNT));
+                MusicSystem.NextSong(songNumber);
+            }
 
             Debug.Log("Registering entities...");
             Player = GameObject.FindWithTag("Player");
@@ -404,8 +412,8 @@ namespace LSDR.Dream
 
             Debug.Log("Restoring player input etc...");
             PlayerMovement playerMovement = Player.GetComponent<PlayerMovement>();
-            playerMovement.CanLink = true;
             playerMovement.ClearInputLock();
+            playerMovement.OnNewDream();
             PlayerCameraRotation playerCameraRotation = Player.GetComponent<PlayerCameraRotation>();
             playerCameraRotation.SetUsingExternalInput(false);
             PlayerRotation playerRotation = Player.GetComponent<PlayerRotation>();
@@ -423,7 +431,11 @@ namespace LSDR.Dream
 
             ToriiCursor.Hide();
 
-            ToriiFader.Instance.FadeOut(duration: 1F, () => _currentlyTransitioning = false);
+            ToriiFader.Instance.FadeOut(duration: 1F, () =>
+            {
+                playerMovement.CanLink = true;
+                _currentlyTransitioning = false;
+            });
         }
 
         protected Color fadeColorFromCurrentSequence()

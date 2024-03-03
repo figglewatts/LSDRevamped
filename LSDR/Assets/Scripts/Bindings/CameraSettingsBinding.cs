@@ -26,6 +26,7 @@ namespace LSDR.Bindings
             if (Settings.Settings != null)
             {
                 PixelateImageEffect.enabled = Settings.Settings.UsePixelationShader;
+                PixelateImageEffect.Dithering = Settings.Settings.UseDithering;
                 Camera.fieldOfView = Settings.Settings.FOV;
             }
         }

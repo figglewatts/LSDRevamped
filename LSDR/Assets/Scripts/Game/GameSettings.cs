@@ -39,6 +39,10 @@ namespace LSDR.Game
             SFXVolume = 1F;
             UseOriginalSoundtrack = true;
             GUID = Guid.NewGuid();
+            HeadBobIntensity = 1;
+            SmoothHeadBob = false;
+
+            Debug.Log($"HeadBobIntensity: {HeadBobIntensity}");
 
             Profiles = new List<SettingsProfile>();
             SettingsMatchProfile = true;
@@ -136,6 +140,38 @@ namespace LSDR.Game
             }
         }
 
+        // private member of HeadBobEnabled
+        private float _headbobIntensity;
+
+        /// <summary>
+        ///     HeadBobIntensity controls the intensity of head bobbing.
+        /// </summary>
+        public float HeadBobIntensity
+        {
+            get => _headbobIntensity;
+            set
+            {
+                _headbobIntensity = value;
+                NotifyPropertyChange(nameof(HeadBobIntensity));
+            }
+        }
+
+        // private member of SmoothHeadBob
+        private bool _smoothHeadBob;
+
+        /// <summary>
+        ///     Controls whether head bobbing is smoothed.
+        /// </summary>
+        public bool SmoothHeadBob
+        {
+            get => _smoothHeadBob;
+            set
+            {
+                _smoothHeadBob = value;
+                NotifyPropertyChange(nameof(SmoothHeadBob));
+            }
+        }
+
         // private member of CurrentControlSchemeIndex
         private int _currentControlSchemeIndex;
 
@@ -186,6 +222,22 @@ namespace LSDR.Game
             {
                 _usePixelationShader = value;
                 NotifyPropertyChange(nameof(UsePixelationShader));
+            }
+        }
+
+        // private member of UseDithering
+        private bool _useDithering;
+
+        /// <summary>
+        ///     Whether or not dithering is enabled on the pixelation shader.
+        /// </summary>
+        public bool UseDithering
+        {
+            get => _useDithering;
+            set
+            {
+                _useDithering = value;
+                NotifyPropertyChange(nameof(UseDithering));
             }
         }
 

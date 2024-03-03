@@ -43,7 +43,7 @@ RenderSettings:
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 11
+  serializedVersion: 12
   m_GIWorkflowMode: 1
   m_GISettings:
     serializedVersion: 2
@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -118,6 +118,8 @@ NavMeshSettings:
     manualTileSize: 0
     tileSize: 256
     accuratePlacement: 0
+    maxJobWorkers: 0
+    preserveTilesOutsideBounds: 0
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
@@ -138,15 +140,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4202393580413338, guid: 063cfe8f9712d4d44b862477f80d0dfa, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.166
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4202393580413338, guid: 063cfe8f9712d4d44b862477f80d0dfa, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.23
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4202393580413338, guid: 063cfe8f9712d4d44b862477f80d0dfa, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 8.532
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4202393580413338, guid: 063cfe8f9712d4d44b862477f80d0dfa, type: 3}
       propertyPath: m_LocalRotation.w

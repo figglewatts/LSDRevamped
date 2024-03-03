@@ -125,6 +125,6 @@ namespace LSDR.SDK.Util
 
         public static T From<T>(params T[] list) { return RandomArrayElement(list); }
 
-        public static bool OneIn(float chance) { return Float(chance) < 1f / chance; }
+        public static bool OneIn(float chance) { return Float() < 1f / chance; }
     }
 }

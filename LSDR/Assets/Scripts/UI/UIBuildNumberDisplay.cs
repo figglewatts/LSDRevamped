@@ -19,6 +19,10 @@ namespace LSDR.UI
             {
                 return $"{Application.version} - PRERELEASE, anything could go wrong!";
             }
+            if (Application.isEditor)
+            {
+                return $"{Application.version}-editor";
+            }
             return Application.version;
         }
     }

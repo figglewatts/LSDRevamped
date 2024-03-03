@@ -107,7 +107,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afa1697d44904f08bbbb66db7cccd58e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DitherTexture: {fileID: 2800000, guid: 17d0623c75b63174f950736fb9936d21, type: 3}
   Height: 224
+  Dithering: 1
 --- !u!114 &114371286810715588
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -221,9 +223,9 @@ CharacterController:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Height: 0.55
+  m_Height: 0.4
   m_Radius: 0.08
-  m_SlopeLimit: 46
+  m_SlopeLimit: 48
   m_StepOffset: 0.2
   m_SkinWidth: 0.01
   m_MinMoveDistance: 0

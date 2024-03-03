@@ -14,6 +14,7 @@ namespace LSDR.UI.Settings
 
         public Toggle UseClassicShadersToggle;
         public Toggle UsePixelationShaderToggle;
+        public Toggle UseDitheringToggle;
         public Toggle FullscreenToggle;
         public Toggle LimitFramerateToggle;
         public Toggle DrawDistanceToggle;
@@ -26,6 +27,7 @@ namespace LSDR.UI.Settings
         {
             Settings.SettingsBindBroker.RegisterData(UseClassicShadersToggle);
             Settings.SettingsBindBroker.RegisterData(UsePixelationShaderToggle);
+            Settings.SettingsBindBroker.RegisterData(UseDitheringToggle);
             Settings.SettingsBindBroker.RegisterData(FullscreenToggle);
             Settings.SettingsBindBroker.RegisterData(LimitFramerateToggle);
             Settings.SettingsBindBroker.RegisterData(FOVSlider);
@@ -36,6 +38,7 @@ namespace LSDR.UI.Settings
 
             UseClassicShadersToggle.isOn = Settings.Settings.UseClassicShaders;
             UsePixelationShaderToggle.isOn = Settings.Settings.UsePixelationShader;
+            UseDitheringToggle.isOn = Settings.Settings.UseDithering;
             FullscreenToggle.isOn = Settings.Settings.Fullscreen;
             LimitFramerateToggle.isOn = Settings.Settings.LimitFramerate;
             FOVSlider.value = Settings.Settings.FOV;
@@ -48,6 +51,8 @@ namespace LSDR.UI.Settings
                 () => Settings.Settings.UseClassicShaders, BindingType.TwoWay);
             Settings.SettingsBindBroker.Bind(() => UsePixelationShaderToggle.isOn,
                 () => Settings.Settings.UsePixelationShader, BindingType.TwoWay);
+            Settings.SettingsBindBroker.Bind(() => UseDitheringToggle.isOn, () => Settings.Settings.UseDithering,
+                BindingType.TwoWay);
             Settings.SettingsBindBroker.Bind(() => FullscreenToggle.isOn,
                 () => Settings.Settings.Fullscreen, BindingType.TwoWay);
             Settings.SettingsBindBroker.Bind(() => FOVSlider.value,

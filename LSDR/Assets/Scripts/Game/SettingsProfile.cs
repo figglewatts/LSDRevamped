@@ -12,6 +12,7 @@ namespace LSDR.Game
         public string Name;
         public bool UseClassicShaders;
         public bool UsePixelationShader;
+        public bool UseDithering;
         public bool LongDrawDistance;
 
         public SettingsProfile() { }
@@ -25,6 +26,7 @@ namespace LSDR.Game
         {
             UseClassicShaders = settings.UseClassicShaders;
             UsePixelationShader = settings.UsePixelationShader;
+            UseDithering = settings.UseDithering;
             LimitFramerate = settings.LimitFramerate;
             FOV = settings.FOV;
             AffineIntensity = settings.AffineIntensity;
@@ -35,6 +37,7 @@ namespace LSDR.Game
         {
             settings.UseClassicShaders = UseClassicShaders;
             settings.UsePixelationShader = UsePixelationShader;
+            settings.UseDithering = UseDithering;
             settings.LimitFramerate = LimitFramerate;
             settings.FOV = FOV;
             settings.AffineIntensity = AffineIntensity;
@@ -50,6 +53,7 @@ namespace LSDR.Game
                     Name = "Classic",
                     UseClassicShaders = true,
                     UsePixelationShader = true,
+                    UseDithering = true,
                     LimitFramerate = false,
                     FOV = 50,
                     AffineIntensity = 0.4f,
@@ -60,6 +64,7 @@ namespace LSDR.Game
                     Name = "Revamped",
                     UseClassicShaders = false,
                     UsePixelationShader = false,
+                    UseDithering = false,
                     LimitFramerate = false,
                     FOV = 50,
                     AffineIntensity = 0.4f,
