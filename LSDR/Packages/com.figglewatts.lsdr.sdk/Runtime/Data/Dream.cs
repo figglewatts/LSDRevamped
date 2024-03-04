@@ -28,7 +28,7 @@ namespace LSDR.SDK.Data
         public List<DreamEnvironment> Environments;
 
         [Tooltip("The prefab that comprises this dream.")]
-        [AssetName(typeof(GameObject), true)]
+        [AssetName(typeof(GameObject))]
         public string DreamPrefabPath;
 
         [Tooltip("The song library this dream uses to play music.")]

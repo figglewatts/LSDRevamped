@@ -28,6 +28,11 @@ namespace LSDR.SDK.Data
         private Texture2D _createdTexture;
         private bool _dirty = true;
 
+        public void Reset()
+        {
+            ClearAllGraphSquares();
+        }
+
         // get a dream from the current graph position (i.e. -9 to +9)
         public Dream Get(int x, int y)
         {

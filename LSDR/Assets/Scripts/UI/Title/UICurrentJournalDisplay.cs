@@ -16,6 +16,11 @@ namespace LSDR.UI.Title
             SettingsSystem.ProgrammaticOnSettingsApply += updateText;
         }
 
+        public void OnEnable()
+        {
+            JournalDisplayElement.text = SettingsSystem.CurrentJournal.Name;
+        }
+
         public void OnDestroy()
         {
             SettingsSystem.ProgrammaticOnSettingsApply -= updateText;

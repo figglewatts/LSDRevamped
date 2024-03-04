@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using LSDR.SDK.Util;
+using UnityEngine;
 
 namespace LSDR.SDK.Audio
 {
@@ -7,7 +8,10 @@ namespace LSDR.SDK.Audio
     {
         public override Footstep GetFootstep(RaycastHit hit)
         {
-            throw new System.NotImplementedException();
+            var meshRenderer = hit.collider.gameObject.GetComponent<MeshRenderer>();
+
+            if (!Index.ContainsKey(meshRenderer.sharedMaterial)) return Fallback;
+            return Index[meshRenderer.sharedMaterial];
         }
     }
 }

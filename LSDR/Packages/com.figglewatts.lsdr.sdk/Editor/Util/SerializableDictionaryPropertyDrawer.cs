@@ -185,8 +185,9 @@ namespace LSDR.SDK.Editor.Util
                 //     break;
                 // case SerializedPropertyType.Vector4:
                 //     break;
-                // case SerializedPropertyType.Rect:
-                //     break;
+                case SerializedPropertyType.Rect:
+                    target.rectValue = value.rectValue;
+                    break;
                 // case SerializedPropertyType.ArraySize:
                 //     break;
                 // case SerializedPropertyType.Character:
@@ -207,8 +208,9 @@ namespace LSDR.SDK.Editor.Util
                 //     break;
                 // case SerializedPropertyType.Vector3Int:
                 //     break;
-                // case SerializedPropertyType.RectInt:
-                //     break;
+                case SerializedPropertyType.RectInt:
+                    target.rectIntValue = value.rectIntValue;
+                    break;
                 // case SerializedPropertyType.BoundsInt:
                 //     break;
                 default:

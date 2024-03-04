@@ -34,6 +34,7 @@ namespace LSDR.SDK.Data
 
         public Dream GetLinkable(Dream current)
         {
+            if (LinkableDreams.Count() == 1) return LinkableDreams.First();
             return RandUtil.RandomListElement(LinkableDreams.Where(d => d != current));
         }
 

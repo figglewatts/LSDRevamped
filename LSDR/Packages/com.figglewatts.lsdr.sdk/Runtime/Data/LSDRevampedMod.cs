@@ -27,10 +27,12 @@ namespace LSDR.SDK.Data
         {
             if (IsBuiltIn)
             {
+                Debug.Log("loading from builtin");
                 return Resources.LoadAsync<GameObject>(dream.DreamPrefabPath);
             }
             else
             {
+                Debug.Log("loading from asset bundle");
                 return SourceBundle.LoadAssetAsync<GameObject>(dream.DreamPrefabPath);
             }
         }

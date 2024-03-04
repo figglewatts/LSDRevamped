@@ -26,7 +26,7 @@ namespace LSDR.Visual
         protected void Start()
         {
             _main = Camera.main;
-            _imageEffectMaterial = new Material(Shader.Find(SHADER));
+            _imageEffectMaterial = new Material(Resources.Load<Shader>("Shaders/PSXDither"));
             _imageEffectMaterial.SetTexture(_ditherPattern, DitherTexture);
         }
 

@@ -23,6 +23,7 @@ namespace LSDR.UI.Title
         public void OnEnable()
         {
             GameSave.CurrentJournalSave.OnDayNumberChanged += onDayNumberChanged;
+            onDayNumberChanged();
         }
 
         public void OnDisable()

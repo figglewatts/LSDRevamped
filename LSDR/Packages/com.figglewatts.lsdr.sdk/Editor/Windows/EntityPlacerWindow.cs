@@ -86,6 +86,7 @@ namespace LSDR.SDK.Editor.Windows
             if (prefabStage == null)
             {
                 _entitiesRoot = GameObject.Find("Entities");
+                if (_entitiesRoot == null) _entitiesRoot = new GameObject("Entities");
             }
             else
             {

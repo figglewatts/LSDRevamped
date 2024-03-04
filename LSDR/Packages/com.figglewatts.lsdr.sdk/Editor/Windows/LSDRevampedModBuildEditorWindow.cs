@@ -11,7 +11,6 @@ namespace LSDR.SDK.Editor.Windows
         protected readonly ModBuilder _modBuilder = new ModBuilder();
         protected LSDRevampedMod _mod;
         protected string _outputPath;
-        protected ModPlatform _platform = ModPlatform.Windows;
         protected Vector2 _scrollPos;
 
         protected void OnGUI()
@@ -26,8 +25,6 @@ namespace LSDR.SDK.Editor.Windows
                 EditorGUI.EndDisabledGroup();
 
                 EditorGUILayout.Space();
-
-                _platform = (ModPlatform)EditorGUILayout.EnumPopup("platform", _platform);
 
                 EditorGUILayout.LabelField("Output", EditorStyles.boldLabel);
                 EditorGUI.indentLevel++;
@@ -52,7 +49,7 @@ namespace LSDR.SDK.Editor.Windows
                     EditorGUI.BeginDisabledGroup(string.IsNullOrWhiteSpace(_outputPath));
                     if (GUILayout.Button("Build", GUILayout.Width(width: 150)))
                     {
-                        _modBuilder.Build(_mod, _platform, _outputPath);
+                        _modBuilder.Build(_mod, _outputPath);
                     }
 
                     EditorGUI.EndDisabledGroup();

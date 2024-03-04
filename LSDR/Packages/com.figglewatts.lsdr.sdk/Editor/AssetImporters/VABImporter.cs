@@ -64,19 +64,17 @@ namespace LSDR.SDK.Editor.AssetImporters
                 sampleNum++;
             }
 
-            // hook up the samples
-            EditorApplication.delayCall += () =>
+            vabAsset.Samples = new List<AudioClip>();
+            foreach (var sampleAssetPath in sampleAssetPaths)
             {
-                VABAsset vabAsset = AssetDatabase.LoadAssetAtPath<VABAsset>(assetPath);
-                foreach (var sampleAssetPath in sampleAssetPaths)
-                {
-                    AudioClip importedSample = AssetDatabase.LoadAssetAtPath<AudioClip>(sampleAssetPath);
-                    vabAsset.Samples.Add(importedSample);
-                }
-                EditorUtility.SetDirty(vabAsset);
-                AssetDatabase.SaveAssets();
-                AssetDatabase.Refresh();
-            };
+                AudioClip importedSample = AssetDatabase.LoadAssetAtPath<AudioClip>(sampleAssetPath);
+                vabAsset.Samples.Add(importedSample);
+            }
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+
+            // hook up the samples
+            EditorApplication.delayCall += () => { };
         }
     }
 }

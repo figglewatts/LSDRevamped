@@ -18,6 +18,7 @@ namespace LSDR.UI.Settings
         public Dropdown CurrentJournalDropdown;
         public Dropdown CurrentModDropdown;
         public Slider HeadbobIntensitySlider;
+        public UIJournalDropdownPopulator JournalDropdownPopulator;
 
         public void Start()
         {
@@ -34,6 +35,7 @@ namespace LSDR.UI.Settings
             CurrentModDropdown.value = Settings.Settings.CurrentModIndex;
             HeadbobIntensitySlider.value = Settings.Settings.HeadBobIntensity;
             SmoothHeadBobToggle.isOn = Settings.Settings.SmoothHeadBob;
+            CurrentModDropdown.onValueChanged.AddListener(_ => updateJournal());
 
             Settings.SettingsBindBroker.Bind(() => EnableHeadBobToggle.isOn,
                 () => Settings.Settings.HeadBobEnabled, BindingType.TwoWay);
@@ -47,6 +49,12 @@ namespace LSDR.UI.Settings
                 () => Settings.Settings.HeadBobIntensity, BindingType.TwoWay);
             Settings.SettingsBindBroker.Bind(() => SmoothHeadBobToggle.isOn, () => Settings.Settings.SmoothHeadBob,
                 BindingType.TwoWay);
+        }
+
+        protected void updateJournal()
+        {
+            CurrentJournalDropdown.value = 0;
+            JournalDropdownPopulator.PopulateDropdownWithJournals();
         }
     }
 }

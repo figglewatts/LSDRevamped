@@ -25,7 +25,7 @@ Shader "Jazz/PSX Dither"
     {
         _MainTex ("Texture", 2D) = "white" {}
         _DitherPattern("Dither", 2D) = "black" {}
-        _Colors ("Color Depth", float) = 32
+        _Colors ("Color Depth", float) = 16
     }
     SubShader
     {
@@ -115,7 +115,7 @@ Shader "Jazz/PSX Dither"
                     yuva.a);
             }
 
-            fixed4 frag (v2f i) : SV_Target
+            fixed4 frag (v2f i) : COLOR
             {
                 // sample the texture and convert to YUV color space
                 fixed4 col = tex2D(_MainTex, i.uv);

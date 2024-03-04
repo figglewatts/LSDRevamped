@@ -14,6 +14,11 @@ namespace LSDR.UI.Settings
         protected override void Awake()
         {
             base.Awake();
+            PopulateDropdownWithJournals();
+        }
+
+        public void PopulateDropdownWithJournals()
+        {
             Populate(SettingsSystem.CurrentMod.Journals.Select(j => j.Name).ToList());
         }
     }
