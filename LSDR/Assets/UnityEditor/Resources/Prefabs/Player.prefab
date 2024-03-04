@@ -107,9 +107,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afa1697d44904f08bbbb66db7cccd58e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DitherTexture: {fileID: 2800000, guid: 17d0623c75b63174f950736fb9936d21, type: 3}
   Height: 224
   Dithering: 1
+  ImageEffectMaterial: {fileID: 2100000, guid: 6c05a70190c7ef84bafcf9aa02e18204, type: 2}
 --- !u!114 &114371286810715588
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -255,6 +255,7 @@ MonoBehaviour:
   StepTimeSeconds: 0.25
   HeadBobAmount: 0.05
   DebugLog: 0
+  SmoothHeadBob: 0
   CanLink: 1
 --- !u!114 &114219709262752180
 MonoBehaviour:

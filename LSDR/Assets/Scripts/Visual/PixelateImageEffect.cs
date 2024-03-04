@@ -11,13 +11,12 @@ namespace LSDR.Visual
     [ExecuteInEditMode]
     public class PixelateImageEffect : MonoBehaviour
     {
-        public Texture2D DitherTexture;
         public int Height = 64;
         public bool Dithering = true;
         private Camera _main;
         private int _width;
 
-        protected Material _imageEffectMaterial;
+        public Material ImageEffectMaterial;
 
         protected static readonly int _ditherPattern = Shader.PropertyToID("_DitherPattern");
 
@@ -26,8 +25,6 @@ namespace LSDR.Visual
         protected void Start()
         {
             _main = Camera.main;
-            _imageEffectMaterial = new Material(Resources.Load<Shader>("Shaders/PSXDither"));
-            _imageEffectMaterial.SetTexture(_ditherPattern, DitherTexture);
         }
 
         protected void Update()
@@ -48,7 +45,7 @@ namespace LSDR.Visual
             Graphics.Blit(src, buffer);
             if (Dithering)
             {
-                Graphics.Blit(buffer, dest, _imageEffectMaterial);
+                Graphics.Blit(buffer, dest, ImageEffectMaterial);
             }
             else
             {
