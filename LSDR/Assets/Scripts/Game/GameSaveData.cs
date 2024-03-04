@@ -37,6 +37,8 @@ namespace LSDR.Game
 
             public int YearNumber { get; set; }
 
+            [JsonIgnore] public IEnumerable<DreamSequence> SequenceData => _sequenceData;
+
             [JsonIgnore]
             public int LastGraphX
             {
@@ -62,6 +64,11 @@ namespace LSDR.Game
 
             [JsonIgnore]
             public Action OnDayNumberChanged;
+
+            public bool HasEnoughDataForFlashback()
+            {
+                return SequenceData.SelectMany(sd => sd.EntityGraphContributions).Count() > 100;
+            }
 
             public void IncrementDayNumberWithSequence(DreamSequence sequence)
             {

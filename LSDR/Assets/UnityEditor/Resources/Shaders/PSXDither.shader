@@ -29,8 +29,8 @@ Shader "Jazz/PSX Dither"
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" }
-        LOD 100
+        // No culling or depth
+        Cull Off ZWrite Off ZTest Always
 
         Pass
         {
@@ -64,7 +64,7 @@ Shader "Jazz/PSX Dither"
             {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
-                o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+                o.uv = v.uv;
                 return o;
             }
 

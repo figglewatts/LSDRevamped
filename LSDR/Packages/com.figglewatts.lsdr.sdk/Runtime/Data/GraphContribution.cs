@@ -15,6 +15,7 @@ namespace LSDR.SDK.Data
         private Vector3 _playerPosition;
         private float _playerYRotation;
         private string _entityID;
+        private string _dream;
 
         public GraphContribution(int dynamicness, int upperness)
         {
@@ -22,23 +23,27 @@ namespace LSDR.SDK.Data
             _playerPosition = Vector3.zero;
             _playerYRotation = 0;
             _entityID = null;
+            _dream = null;
         }
 
-        public GraphContribution(int dynamicness, int upperness, Transform playerTransform, BaseEntity sourceEntity)
+        public GraphContribution(int dynamicness, int upperness, Transform playerTransform, BaseEntity sourceEntity,
+            string dream)
             : this(dynamicness, upperness)
         {
             _playerPosition = playerTransform.position;
             _playerYRotation = playerTransform.eulerAngles.y;
             _entityID = sourceEntity.ID;
+            _dream = dream;
         }
 
         public GraphContribution(int dynamicness, int upperness, Vector3 playerPosition, float playerYRotation,
-            string entityID)
+            string entityID, string dream)
             : this(dynamicness, upperness)
         {
             _playerPosition = playerPosition;
             _playerYRotation = playerYRotation;
             _entityID = entityID;
+            _dream = dream;
         }
 
         public int Dynamic => _vector.x;
@@ -49,5 +54,7 @@ namespace LSDR.SDK.Data
         public float PlayerYRotation => _playerYRotation;
 
         public string EntityID => _entityID;
+
+        public string Dream => _dream;
     }
 }

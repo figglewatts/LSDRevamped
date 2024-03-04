@@ -32,6 +32,7 @@ namespace LSDR.Entities.Dream
         private void playerEncountered()
         {
             DreamSystem.LogGraphContributionFromArea(-10, -10);
+            DreamSystem.DisableFlashbackForDays(10);
             ToriiFader.Instance.FadeIn(Color.white, duration: 0.1F, () =>
             {
                 GreymanObject.SetActive(false);

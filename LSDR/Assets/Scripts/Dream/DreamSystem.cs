@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using LSDR.Audio;
 using LSDR.Entities.Dream;
 using LSDR.Entities.Player;
@@ -14,6 +15,7 @@ using LSDR.SDK.DreamControl;
 using LSDR.SDK.Entities;
 using LSDR.SDK.Util;
 using LSDR.SDK.Visual;
+using LSDR.Visual;
 using Torii.Audio;
 using Torii.Console;
 using Torii.Coroutine;
@@ -38,6 +40,9 @@ namespace LSDR.Dream
         protected const float FADE_OUT_SECS_REGULAR = 3;
         protected const float FADE_OUT_SECS_FALL = 2.5f;
         protected const float FADE_OUT_SECS_FORCE = 1;
+        protected const float MIN_SECONDS_IN_FLASHBACK = 8f;
+        protected const float MAX_SECONDS_IN_FLASHBACK = 16f;
+
         public ScenePicker TitleScene;
         public GameSaveSystem GameSave;
         public ControlSchemeLoaderSystem Control;
@@ -58,6 +63,7 @@ namespace LSDR.Dream
 
         [NonSerialized] protected bool _dreamIsEnding;
         [NonSerialized] protected Coroutine _endDreamTimer;
+        [NonSerialized] protected Coroutine _flashbackCoroutine;
 
         [NonSerialized] protected string _forcedSpawnID;
         [NonSerialized] protected float _lastPlayerYRotation;
@@ -65,6 +71,9 @@ namespace LSDR.Dream
         [NonSerialized] public GameObject Player;
         [NonSerialized] protected SDK.Data.Dream _nextDream = null;
         [NonSerialized] protected DreamEnvironment _currentEnvironment;
+        [NonSerialized] protected TimeSince _timeInCurrentFlashback;
+        [NonSerialized] protected (Vector3, float)? _flashbackEventSpawn = null;
+        [NonSerialized] protected int _flashbackDisabledForDays = 0;
 
         [field: NonSerialized] public SDK.Data.Dream CurrentDream { get; protected set; }
         [field: NonSerialized] public GameObject CurrentDreamInstance { get; protected set; }
@@ -73,6 +82,10 @@ namespace LSDR.Dream
         public int CurrentDay => GameSave.CurrentJournalSave.DayNumber;
 
         public bool InDream => CurrentDream != null;
+        public bool InFlashback { get; protected set; }
+
+        public bool CanFlashback =>
+            _flashbackDisabledForDays <= 0 && GameSave.CurrentJournalSave.HasEnoughDataForFlashback();
 
         public void EndDream(bool fromFall = false)
         {
@@ -83,16 +96,20 @@ namespace LSDR.Dream
             {
                 var pitch = RandUtil.RandomArrayElement(new[] { 0.25f, 0.5f });
                 AudioPlayer.Instance.PlayClip(LinkSound, loop: false, pitch: pitch, mixerGroup: "SFX");
-                CurrentSequence.LogGraphContributionFromArea(dynamicness: 0, FALLING_UPPER_PENALTY);
+                CurrentSequence?.LogGraphContributionFromArea(dynamicness: 0, FALLING_UPPER_PENALTY);
                 SettingsSystem.CanControlPlayer = false;
             }
             else
                 SettingsSystem.PlayerGravity = false;
 
-            GameSave.CurrentJournalSave.IncrementDayNumberWithSequence(CurrentSequence);
-            GameSave.Save();
+            if (!InFlashback)
+            {
+                GameSave.CurrentJournalSave.IncrementDayNumberWithSequence(CurrentSequence);
+                GameSave.Save();
+                if (_flashbackDisabledForDays > 0) _flashbackDisabledForDays--;
+            }
 
-            ToriiFader.Instance.FadeIn(fadeColorFromCurrentSequence(),
+            ToriiFader.Instance.FadeIn(InFlashback ? Color.white : fadeColorFromCurrentSequence(),
                 fromFall ? FADE_OUT_SECS_FALL : FADE_OUT_SECS_REGULAR, () =>
                 {
                     CurrentDream = null;
@@ -135,13 +152,19 @@ namespace LSDR.Dream
                 Debug.LogWarning("Attempting to log contribution with no sequence");
                 return;
             }
-            CurrentSequence.LogGraphContributionFromEntity(dynamicness, upperness, Player.transform, sourceEntity);
+            CurrentSequence.LogGraphContributionFromEntity(dynamicness, upperness, Player.transform, sourceEntity,
+                CurrentDream.Name);
         }
 
         public void SetNextLinkDream(SDK.Data.Dream dream, string spawnPointID = null)
         {
             SetNextSpawn(spawnPointID);
             _nextDream = dream;
+        }
+
+        public void DisableFlashbackForDays(int days)
+        {
+            _flashbackDisabledForDays = days;
         }
 
         public void Transition(Color fadeCol,
@@ -220,6 +243,99 @@ namespace LSDR.Dream
         }
 
         public void Initialise() { DevConsole.Register(this); }
+
+        public void BeginFlashback()
+        {
+            if (CurrentSequence != null) return;
+
+            OnBeginDream.Raise(); // controls UI buttons
+
+            TextureSetter.Instance.SetRandomTextureSetFromDayNumber(GameSave.CurrentJournalSave.DayNumber);
+            var randomEventStream = GameSave.CurrentJournalSave.SequenceData
+                                            .SelectMany(sd => sd.EntityGraphContributions);
+            ToriiFader.Instance.FadeIn(Color.black, duration: 3,
+                () =>
+                {
+                    _flashbackCoroutine = Coroutines.Instance.StartCoroutine(flashback(randomEventStream));
+
+                    // start a timer to end the dream
+                    float secondsInDream = RandUtil.Float(MIN_SECONDS_IN_DREAM, MAX_SECONDS_IN_DREAM);
+                    _endDreamTimer = Coroutines.Instance.StartCoroutine(EndDreamAfterSeconds(secondsInDream));
+                });
+        }
+
+        protected IEnumerator flashback(IEnumerable<GraphContribution> pastEvents)
+        {
+            InFlashback = true;
+
+            Debug.Log("loading first flashback");
+
+            // transition to first area
+            var firstEvent = pastEvents.OrderBy(_ => RandUtil.Int()).First();
+            SDK.Data.Dream dream;
+            if (firstEvent.Dream == null)
+            {
+                // might be old version of save format, choose random dream
+                dream = RandUtil.RandomListElement(SettingsSystem.CurrentJournal.Dreams);
+            }
+            else
+            {
+                dream = SettingsSystem.CurrentJournal.Dreams.FirstOrDefault(d =>
+                    d.Name.Equals(firstEvent.Dream, StringComparison.InvariantCulture));
+            }
+            _flashbackEventSpawn = new(firstEvent.PlayerPosition, firstEvent.PlayerYRotation);
+            yield return Coroutines.Instance.StartCoroutine(LoadDream(dream, transitioning: true, onLoadFinished: () =>
+            {
+                EntityIndex.Instance.Get(firstEvent.EntityID).SetActive(true);
+            }));
+
+            while (true)
+            {
+                Debug.Log("waiting for next flashback");
+                float secondsInFlashback = RandUtil.Float(MIN_SECONDS_IN_FLASHBACK, MAX_SECONDS_IN_FLASHBACK);
+                _timeInCurrentFlashback = 0;
+                while (_timeInCurrentFlashback < secondsInFlashback)
+                {
+                    yield return null;
+                }
+
+                var flashbackEvent = pastEvents.OrderBy(_ => RandUtil.Int()).First();
+
+                // transition to flashback event
+                if (flashbackEvent.Dream == null)
+                {
+                    // might be old version of save format, choose random dream
+                    dream = RandUtil.RandomListElement(SettingsSystem.CurrentJournal.Dreams);
+                }
+                else
+                {
+                    dream = SettingsSystem.CurrentJournal.Dreams.FirstOrDefault(d =>
+                        d.Name.Equals(flashbackEvent.Dream, StringComparison.InvariantCulture));
+                }
+                _flashbackEventSpawn = new(flashbackEvent.PlayerPosition, flashbackEvent.PlayerYRotation);
+                Debug.Log(_flashbackEventSpawn);
+
+                Debug.Log("loading next flashback");
+                SetCanControlPlayer(false);
+                ToriiFader.Instance.FadeIn(Color.white, duration: 2F, () =>
+                {
+                    // see if we should switch texture sets
+                    if (RandUtil.OneIn(CHANCE_TO_SWITCH_TEXTURES_WHEN_LINKING))
+                    {
+                        TextureSetter.Instance.SetRandomTextureSetFromDayNumber(GameSave.CurrentJournalSave.DayNumber);
+                    }
+
+                    // if we're locking controls then we're going through a tunnel and want to update player rotation
+                    Coroutines.Instance.StartCoroutine(LoadDream(dream, transitioning: true,
+                        onLoadFinished: () =>
+                        {
+                            SetCanControlPlayer(true);
+                            EntityIndex.Instance.Get(flashbackEvent.EntityID).SetActive(true);
+                            _timeInCurrentFlashback = 0;
+                        }));
+                });
+            }
+        }
 
         public void BeginDream()
         {
@@ -335,7 +451,8 @@ namespace LSDR.Dream
             ToriiFader.Instance.FadeOut(duration: 1F);
         }
 
-        public IEnumerator LoadDream(SDK.Data.Dream dream, bool transitioning)
+        public IEnumerator LoadDream(SDK.Data.Dream dream, bool transitioning,
+            [CanBeNull] Action onLoadFinished = null)
         {
             Debug.Log($"Loading dream '{dream.Name}'");
 
@@ -401,10 +518,19 @@ namespace LSDR.Dream
             // because we're beginning the dream
             spawnPlayerInDream(transitioning == false);
             _forcedSpawnID = null; // reset forced spawn ID as we're now in different dream so last value is irrelevant
+            _flashbackEventSpawn = null; // reset flashback spawn
 
             Debug.Log("Choosing environment...");
-            _currentEnvironment = dream.ChooseEnvironment(GameSave.CurrentJournalSave.DayNumber);
-            ApplyEnvironment();
+            if (!InFlashback)
+            {
+                _currentEnvironment = dream.ChooseEnvironment(GameSave.CurrentJournalSave.DayNumber);
+                ApplyEnvironment();
+            }
+            else
+            {
+                _currentEnvironment = dream.RandomEnvironment();
+                ApplyEnvironment();
+            }
 
             SettingsSystem.CanControlPlayer = true;
             SettingsSystem.CanMouseLook = true;
@@ -423,6 +549,9 @@ namespace LSDR.Dream
             // tell grey man spawner we're in a new dream
             Player.GetComponent<GreymanSpawner>().OnNewDream();
 
+            // enable flashback effect if we're in a flashback
+            Player.transform.GetChild(0).GetComponent<FlashbackImageEffect>().enabled = InFlashback;
+
             OnLevelLoad.Raise();
             OnSongChange.Raise();
 
@@ -430,6 +559,8 @@ namespace LSDR.Dream
             PauseSystem.CanPause = true;
 
             ToriiCursor.Hide();
+
+            onLoadFinished?.Invoke();
 
             ToriiFader.Instance.FadeOut(duration: 1F, () =>
             {
@@ -491,6 +622,7 @@ namespace LSDR.Dream
             _dreamIsEnding = true;
             _canTransition = false;
             CurrentSequence = null;
+            InFlashback = false;
 
             // save the last Y rotation for the player, so we can set it back to this when we start the next dream
             _lastPlayerYRotation = Player.transform.rotation.eulerAngles.y;
@@ -503,6 +635,13 @@ namespace LSDR.Dream
             MusicSystem.StopSong();
 
             Debug.Log("Ending dream");
+
+            // make sure flashback stops
+            if (_flashbackCoroutine != null)
+            {
+                Coroutines.Instance.StopCoroutine(_flashbackCoroutine);
+                _flashbackCoroutine = null;
+            }
 
             // make sure the dream end timer stops
             if (_endDreamTimer != null)
@@ -517,6 +656,25 @@ namespace LSDR.Dream
             Debug.Log("Spawning player...");
             try
             {
+                // see if we're spawning in a flashback
+                if (_flashbackEventSpawn != null)
+                {
+                    CharacterController controller = Player.GetComponent<CharacterController>();
+                    float skinWidth = 0f;
+                    if (controller) skinWidth = controller.skinWidth;
+
+                    // spawn the player facing the entity
+                    var (spawnPos, spawnAngle) = _flashbackEventSpawn.Value;
+                    Player.transform.position =
+                        new Vector3(spawnPos.x + 0.01f, spawnPos.y + skinWidth,
+                            spawnPos.z - 0.01f);
+                    Player.transform.rotation = Quaternion.Euler(x: 0, spawnAngle, z: 0);
+
+                    Debug.Log($"spawning player at pos: {spawnPos} - dream: {CurrentDream.Name}");
+
+                    return;
+                }
+
                 PlayerSpawn[] allSpawns = CurrentDreamInstance.GetComponentsInChildren<PlayerSpawn>();
                 if (!allSpawns.Any())
                 {

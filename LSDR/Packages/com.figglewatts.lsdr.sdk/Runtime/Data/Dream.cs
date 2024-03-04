@@ -34,6 +34,13 @@ namespace LSDR.SDK.Data
         [Tooltip("The song library this dream uses to play music.")]
         public AbstractSongLibrary SongLibrary;
 
+        public DreamEnvironment RandomEnvironment()
+        {
+            // if the dream doesn't have environments, just return a default one
+            if (Environments.Count <= 0) return CreateInstance<DreamEnvironment>();
+            return RandUtil.RandomListElement(Environments);
+        }
+
         public DreamEnvironment ChooseEnvironment(int dayNum)
         {
             // if the dream doesn't have environments, just return a default one

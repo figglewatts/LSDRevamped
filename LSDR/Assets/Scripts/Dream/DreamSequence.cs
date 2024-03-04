@@ -22,16 +22,18 @@ namespace LSDR.Dream
         [JsonProperty] protected List<GraphContribution> _entityGraphContributions = new List<GraphContribution>();
         [JsonProperty] protected int _dayNumber;
 
+        [JsonIgnore] public IEnumerable<GraphContribution> EntityGraphContributions => _entityGraphContributions;
+
         public void LogGraphContributionFromArea(int dynamicness, int upperness)
         {
             _areaGraphContributions.Add(new GraphContribution(dynamicness, upperness));
         }
 
         public void LogGraphContributionFromEntity(int dynamicness, int upperness, Transform playerTransform,
-            BaseEntity sourceEntity)
+            BaseEntity sourceEntity, string dream)
         {
             _entityGraphContributions.Add(new GraphContribution(dynamicness, upperness, playerTransform,
-                sourceEntity));
+                sourceEntity, dream));
         }
 
         public void SetDayNumber(int dayNumber)
