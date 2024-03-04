@@ -11,6 +11,7 @@ namespace LSDR.UI.Settings
     public class UIGameplaySettings : MonoBehaviour
     {
         public SettingsSystem Settings;
+        public GameSaveSystem GameSave;
 
         public Toggle EnableHeadBobToggle;
         public Toggle SmoothHeadBobToggle;
@@ -35,7 +36,11 @@ namespace LSDR.UI.Settings
             CurrentModDropdown.value = Settings.Settings.CurrentModIndex;
             HeadbobIntensitySlider.value = Settings.Settings.HeadBobIntensity;
             SmoothHeadBobToggle.isOn = Settings.Settings.SmoothHeadBob;
-            CurrentModDropdown.onValueChanged.AddListener(_ => updateJournal());
+            CurrentModDropdown.onValueChanged.AddListener(_ =>
+            {
+                updateMod();
+                updateJournal();
+            });
 
             Settings.SettingsBindBroker.Bind(() => EnableHeadBobToggle.isOn,
                 () => Settings.Settings.HeadBobEnabled, BindingType.TwoWay);
@@ -49,6 +54,11 @@ namespace LSDR.UI.Settings
                 () => Settings.Settings.HeadBobIntensity, BindingType.TwoWay);
             Settings.SettingsBindBroker.Bind(() => SmoothHeadBobToggle.isOn, () => Settings.Settings.SmoothHeadBob,
                 BindingType.TwoWay);
+        }
+
+        protected void updateMod()
+        {
+            GameSave.Load();
         }
 
         protected void updateJournal()

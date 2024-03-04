@@ -4,7 +4,7 @@ using System.Reflection;
 using LSDR.SDK.Entities;
 using LSDR.SDK.Util;
 using UnityEditor;
-using UnityEditor.Experimental.SceneManagement;
+
 using UnityEngine;
 
 namespace LSDR.SDK.Editor.Windows
@@ -30,16 +30,16 @@ namespace LSDR.SDK.Editor.Windows
         {
             _entityTypes = getEntityTypes();
             SceneView.duringSceneGui += onSceneGUI;
-            PrefabStage.prefabStageOpened += onPrefabStageOpened;
-            PrefabStage.prefabStageClosing += onPrefabStageClosing;
+            UnityEditor.SceneManagement.PrefabStage.prefabStageOpened += onPrefabStageOpened;
+            UnityEditor.SceneManagement.PrefabStage.prefabStageClosing += onPrefabStageClosing;
             findRootEntity();
         }
 
         public void OnDisable()
         {
             SceneView.duringSceneGui -= onSceneGUI;
-            PrefabStage.prefabStageOpened -= onPrefabStageOpened;
-            PrefabStage.prefabStageClosing -= onPrefabStageClosing;
+            UnityEditor.SceneManagement.PrefabStage.prefabStageOpened -= onPrefabStageOpened;
+            UnityEditor.SceneManagement.PrefabStage.prefabStageClosing -= onPrefabStageClosing;
         }
 
         public void OnGUI()
@@ -70,19 +70,19 @@ namespace LSDR.SDK.Editor.Windows
             EditorGUILayout.EndScrollView();
         }
 
-        protected void onPrefabStageOpened(PrefabStage stage)
+        protected void onPrefabStageOpened(UnityEditor.SceneManagement.PrefabStage stage)
         {
             findRootEntity();
         }
 
-        protected void onPrefabStageClosing(PrefabStage stage)
+        protected void onPrefabStageClosing(UnityEditor.SceneManagement.PrefabStage stage)
         {
             findRootEntity();
         }
 
         protected void findRootEntity()
         {
-            var prefabStage = PrefabStageUtility.GetCurrentPrefabStage();
+            var prefabStage = UnityEditor.SceneManagement.PrefabStageUtility.GetCurrentPrefabStage();
             if (prefabStage == null)
             {
                 _entitiesRoot = GameObject.Find("Entities");

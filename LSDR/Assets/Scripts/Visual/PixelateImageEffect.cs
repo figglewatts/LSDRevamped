@@ -43,7 +43,7 @@ namespace LSDR.Visual
             RenderTexture buffer = RenderTexture.GetTemporary(_width, Height, depthBuffer: -1);
             buffer.filterMode = FilterMode.Point;
             Graphics.Blit(src, buffer);
-            if (Dithering)
+            if (Application.platform != RuntimePlatform.OSXPlayer && Dithering)
             {
                 Graphics.Blit(buffer, dest, ImageEffectMaterial);
             }

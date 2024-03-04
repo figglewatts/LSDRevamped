@@ -5,7 +5,7 @@ A remake of the cult-classic game LSD: Dream Emulator.
 ## Prerequisites
 
 - [Git LFS](https://git-lfs.github.com/)
-- Unity 2020.3.48f1 installed via Unity Hub
+- Unity 2021.3.35f1 installed via Unity Hub
 - [nuget.exe](https://learn.microsoft.com/en-us/nuget/install-nuget-client-tools#nugetexe-cli)
   - If you are using Mac or Linux, there are instructions above for running nuget.exe with mono.
 

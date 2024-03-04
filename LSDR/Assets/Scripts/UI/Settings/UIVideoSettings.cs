@@ -36,6 +36,11 @@ namespace LSDR.UI.Settings
             Settings.SettingsBindBroker.RegisterData(AffineSlider);
             Settings.SettingsBindBroker.RegisterData(DrawDistanceToggle);
 
+            if (Application.platform == RuntimePlatform.OSXPlayer)
+            {
+                UseDitheringToggle.gameObject.transform.parent.gameObject.SetActive(false);
+            }
+
             UseClassicShadersToggle.isOn = Settings.Settings.UseClassicShaders;
             UsePixelationShaderToggle.isOn = Settings.Settings.UsePixelationShader;
             UseDitheringToggle.isOn = Settings.Settings.UseDithering;

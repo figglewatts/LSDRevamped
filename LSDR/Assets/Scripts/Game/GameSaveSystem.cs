@@ -34,14 +34,17 @@ namespace LSDR.Game
         {
             if (!File.Exists(_savedGamePath))
             {
-                Debug.Log("Unable to find game save -- creating new one");
+                Debug.Log("Unable to find game save -- creating new one at " + _savedGamePath);
                 Data = new GameSaveData();
                 foreach (DreamJournal journal in SettingsSystem.CurrentMod.Journals) Data.Journal(journal);
 
                 Save();
             }
             else
+            {
+                Debug.Log("loading game from " + _savedGamePath);
                 Data = _serializer.Deserialize<GameSaveData>(_savedGamePath);
+            }
         }
 
         public void Save() { _serializer.Serialize(Data, _savedGamePath); }
