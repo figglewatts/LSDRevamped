@@ -25,7 +25,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 200}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 39245
+  controlID: 57111
 --- !u!114 &2
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -98,23 +98,23 @@ MonoBehaviour:
       serializedVersion: 2
       x: 0
       y: 21
-      width: 728
-      height: 411
-    m_Scale: {x: 0.56875, y: 0.56875}
-    m_Translation: {x: 364, y: 205.5}
+      width: 1920
+      height: 899
+    m_Scale: {x: 1, y: 1}
+    m_Translation: {x: 960, y: 449.5}
     m_MarginLeft: 0
     m_MarginRight: 0
     m_MarginTop: 0
     m_MarginBottom: 0
     m_LastShownAreaInsideMargins:
       serializedVersion: 2
-      x: -640
-      y: -361.31866
-      width: 1280
-      height: 722.6373
+      x: -960
+      y: -449.5
+      width: 1920
+      height: 899
     m_MinimalGUI: 1
-  m_defaultScale: 0.56875
-  m_LastWindowPixelSize: {x: 728, y: 432}
+  m_defaultScale: 1
+  m_LastWindowPixelSize: {x: 1920, y: 920}
   m_ClearInEditMode: 1
   m_NoCameraWarning: 1
   m_LowResolutionForAspectRatios: 01000000000000000000
@@ -144,7 +144,7 @@ MonoBehaviour:
   m_MinSize: {x: 100, y: 200}
   m_MaxSize: {x: 8096, y: 16192}
   vertical: 1
-  controlID: 39246
+  controlID: 57112
 --- !u!114 &4
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -448,14 +448,14 @@ MonoBehaviour:
   m_OverrideSceneCullingMask: 6917529027641081856
   m_SceneIsLit: 1
   m_SceneLighting: 1
-  m_2DMode: 0
+  m_2DMode: 1
   m_isRotationLocked: 0
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 44.31433, y: -3.5496004, z: 5.983845}
+    m_Target: {x: 660.66846, y: 395.74432, z: -14.347032}
     speed: 2
-    m_Value: {x: 44.31433, y: -3.5496004, z: 5.983845}
+    m_Value: {x: 660.66846, y: 395.74432, z: -14.347032}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -484,17 +484,17 @@ MonoBehaviour:
       m_Size: {x: 0, y: 0}
     yGrid:
       m_Fade:
-        m_Target: 1
+        m_Target: 0
         speed: 2
-        m_Value: 1
+        m_Value: 0
       m_Color: {r: 0.5, g: 0.5, b: 0.5, a: 0.4}
       m_Pivot: {x: 0, y: 0, z: 0}
       m_Size: {x: 1, y: 1}
     zGrid:
       m_Fade:
-        m_Target: 0
+        m_Target: 1
         speed: 2
-        m_Value: 0
+        m_Value: 1
       m_Color: {r: 0.5, g: 0.5, b: 0.5, a: 0.4}
       m_Pivot: {x: 0, y: 0, z: 0}
       m_Size: {x: 1, y: 1}
@@ -502,17 +502,17 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: 0.12494056, y: 0.78053486, z: -0.1654168, w: 0.589773}
+    m_Target: {x: 0, y: 0, z: 0, w: 1}
     speed: 2
-    m_Value: {x: 0.12493807, y: 0.7805193, z: -0.16541351, w: 0.58976126}
+    m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 12.124355
+    m_Target: 548.70465
     speed: 2
-    m_Value: 12.124355
+    m_Value: 548.70465
   m_Ortho:
-    m_Target: 0
+    m_Target: 1
     speed: 2
-    m_Value: 0
+    m_Value: 1
   m_CameraSettings:
     m_Speed: 1
     m_SpeedNormalized: 0.5
@@ -526,7 +526,7 @@ MonoBehaviour:
     m_FarClip: 10000
     m_DynamicClip: 1
     m_OcclusionCulling: 0
-  m_LastSceneViewRotation: {x: -0.29791766, y: -0.5265811, z: 0.20383231, w: -0.76969564}
+  m_LastSceneViewRotation: {x: -0.08717229, y: 0.89959055, z: -0.21045254, w: -0.3726226}
   m_LastSceneViewOrtho: 0
   m_ReplacementShader: {fileID: 0}
   m_ReplacementString: 
@@ -649,7 +649,7 @@ MonoBehaviour:
   m_ObjectsLockedBeforeSerialization: []
   m_InstanceIDsLockedBeforeSerialization: 
   m_PreviewResizer:
-    m_CachedPref: 160
+    m_CachedPref: 415
     m_ControlHash: -371814159
     m_PrefName: Preview_InspectorPreview
   m_LastInspectedObjectInstanceID: -1
@@ -683,7 +683,7 @@ MonoBehaviour:
   m_MinSize: {x: 100, y: 200}
   m_MaxSize: {x: 8096, y: 16192}
   vertical: 1
-  controlID: 39182
+  controlID: 57025
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -743,9 +743,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 
-      m_LastClickedID: 0
-      m_ExpandedIDs: 5c65d6ff3087d7ff1c93d7fffe05d8ff0006d8ff28bad9ff5cc3d9ff5cc4d9ff70f5d9ffb67cdbff6a88dbff7c52ddffa452ddffa852ddffb452ddffcc6dddffcc6eddffa6fcf2ffa8fcf2ff9e3df3ff325af3ff6ec4f9ffe0c4f9fffcc6f9ffe0d1f9ff56dcf9ff72dcf9ff4204fdff528afeff64f40100f6f5010018f70100aa3c05009c410500b4420500ee45050090db060022dd06003ade0600088e0c00
+      m_SelectedIDs: e23b0e00
+      m_LastClickedID: 932834
+      m_ExpandedIDs: beafd2ffbac1d2ff6ccad2ff38d4d2ff72d5d2ff267bd4fff47dd4ffa489d4ff6496d4ff3897d4ffc897d4ff5c65d6ff3087d7ff1c93d7fffe05d8ff0006d8ff28bad9ff5cc3d9ff5cc4d9ff70f5d9ffb67cdbff6a88dbff7c52ddffa452ddffa852ddffb452ddffcc6dddffcc6eddffa6fcf2ffa8fcf2ff9e3df3ff325af3ff6ec4f9ffe0c4f9fffcc6f9ffe0d1f9ff56dcf9ff72dcf9ff4204fdff528afefff4ffffff64f40100f6f5010018f70100aa3c05009c410500b4420500ee45050090db060022dd06003ade0600088e0c00006d0d00c0d60d00b0db0d0028e00d00
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -788,8 +788,8 @@ MonoBehaviour:
     y: 484
     width: 665
     height: 455
-  m_MinSize: {x: 230, y: 250}
-  m_MaxSize: {x: 10000, y: 10000}
+  m_MinSize: {x: 231, y: 271}
+  m_MaxSize: {x: 10001, y: 10021}
   m_ActualView: {fileID: 14}
   m_Panes:
   - {fileID: 14}
@@ -826,7 +826,7 @@ MonoBehaviour:
     m_SaveData: []
     m_OverlaysVisible: 1
   m_SearchFilter:
-    m_NameFilter: 
+    m_NameFilter: game
     m_ClassNames: []
     m_AssetLabels: []
     m_AssetBundleNames: []
@@ -836,23 +836,23 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Resources/Original/STG02
+    - Assets/Resources/Original/SpecialDay
     m_Globs: []
-    m_OriginalText: 
+    m_OriginalText: game
     m_FilterByTypeIntersection: 0
   m_ViewMode: 1
-  m_StartGridSize: 64
+  m_StartGridSize: 16
   m_LastFolders:
-  - Assets/Resources/Original/STG02
-  m_LastFoldersGridSize: -1
+  - Assets/Resources/Original/SpecialDay
+  m_LastFoldersGridSize: 16
   m_LastProjectPath: C:\Users\figgl\git-repos\LSDRevamped\LSDR
   m_LockTracker:
-    m_IsLocked: 0
+    m_IsLocked: 1
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 230}
-    m_SelectedIDs: c4ab0200
-    m_LastClickedID: 175044
-    m_ExpandedIDs: 00000000e0f80100e2f80100e4f80100e6f80100e8f80100eaf80100ecf80100eef80100f0f80100f2f80100f4f80100f6f80100f8f80100faf80100fcf80100fef8010000f9010002f90100aafb010000ca9a3bffffff7f
+    scrollPos: {x: 0, y: 60}
+    m_SelectedIDs: beab0200
+    m_LastClickedID: 175038
+    m_ExpandedIDs: 00000000e0f80100e2f80100aafb010000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -868,7 +868,7 @@ MonoBehaviour:
       m_IsRenaming: 0
       m_OriginalEventType: 11
       m_IsRenamingFilename: 1
-      m_ClientGUIView: {fileID: 0}
+      m_ClientGUIView: {fileID: 13}
     m_SearchString: 
     m_CreateAssetUtility:
       m_EndAction: {fileID: 0}
@@ -880,7 +880,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000e0f80100e2f80100e4f80100e6f80100e8f80100eaf80100ecf80100eef80100f0f80100f2f80100f4f80100f6f80100f8f80100faf80100fcf80100fef8010000f9010002f90100aafb010000ca9a3bffffff7f
+    m_ExpandedIDs: 00000000e0f8010000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -905,8 +905,8 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: 
-    m_LastClickedInstanceID: 0
+    m_SelectedInstanceIDs: e23b0e00
+    m_LastClickedInstanceID: 932834
     m_HadKeyboardFocusLastEvent: 0
     m_ExpandedInstanceIDs: c6230000
     m_RenameOverlay:
@@ -924,7 +924,7 @@ MonoBehaviour:
       m_IsRenaming: 0
       m_OriginalEventType: 11
       m_IsRenamingFilename: 1
-      m_ClientGUIView: {fileID: 0}
+      m_ClientGUIView: {fileID: 13}
     m_CreateAssetUtility:
       m_EndAction: {fileID: 0}
       m_InstanceID: 0
@@ -932,7 +932,7 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
     m_NewAssetIndexInList: -1
-    m_ScrollPosition: {x: 0, y: 378}
-    m_GridSize: 64
+    m_ScrollPosition: {x: 0, y: 0}
+    m_GridSize: 16
   m_SkipHiddenPackages: 0
   m_DirectoriesAreaWidth: 207

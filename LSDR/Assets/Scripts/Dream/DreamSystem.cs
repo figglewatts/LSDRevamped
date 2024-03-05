@@ -122,7 +122,7 @@ namespace LSDR.Dream
                     Coroutines.Instance.StartCoroutine(ReturnToTitle());
                 });
 
-            if (InDream) commonEndDream();
+            commonEndDream();
         }
 
         public void SetCanControlPlayer(bool state)
@@ -712,7 +712,7 @@ namespace LSDR.Dream
             InFlashback = false;
 
             // save the last Y rotation for the player, so we can set it back to this when we start the next dream
-            _lastPlayerYRotation = Player.transform.rotation.eulerAngles.y;
+            if (Player != null) _lastPlayerYRotation = Player.transform.rotation.eulerAngles.y;
 
             Player = null;
 

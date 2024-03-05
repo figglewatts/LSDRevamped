@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using LSDR.SDK.Util;
 using UnityEngine;
 
 namespace LSDR.SDK.Data
@@ -10,7 +11,7 @@ namespace LSDR.SDK.Data
 
         public override void HandleDay(int dayNumber)
         {
-            throw new System.NotImplementedException();
+            RandUtil.RandomListElement(SpecialDayChoices).HandleDay(dayNumber);
         }
     }
 }
