@@ -360,12 +360,15 @@ namespace LSDR.Dream
             if (SettingsSystem.CurrentJournal.HasSpecialDay(GameSave.CurrentJournalSave.DayNumber,
                     out AbstractSpecialDay specialDay))
             {
-                ToriiFader.Instance.FadeIn(Color.black, duration: 3, () =>
+                if (SettingsSystem.Settings.SpecialDaysEnabled || specialDay.Always)
                 {
-                    specialDay.HandleDay(GameSave.CurrentJournalSave.DayNumber);
-                    LogGraphContributionFromArea(specialDay.Contribution.Dynamic, specialDay.Contribution.Upper);
-                });
-                return;
+                    ToriiFader.Instance.FadeIn(Color.black, duration: 3, () =>
+                    {
+                        specialDay.HandleDay(GameSave.CurrentJournalSave.DayNumber);
+                        LogGraphContributionFromArea(specialDay.Contribution.Dynamic, specialDay.Contribution.Upper);
+                    });
+                    return;
+                }
             }
 
             BeginPlayableDream(getRandomDream());

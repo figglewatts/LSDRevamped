@@ -20,6 +20,7 @@ namespace LSDR.UI.Settings
         public Dropdown CurrentModDropdown;
         public Slider HeadbobIntensitySlider;
         public UIJournalDropdownPopulator JournalDropdownPopulator;
+        public Toggle SpecialDaysEnabledToggle;
 
         public void Start()
         {
@@ -29,6 +30,7 @@ namespace LSDR.UI.Settings
             Settings.SettingsBindBroker.RegisterData(CurrentModDropdown);
             Settings.SettingsBindBroker.RegisterData(HeadbobIntensitySlider);
             Settings.SettingsBindBroker.RegisterData(SmoothHeadBobToggle);
+            Settings.SettingsBindBroker.RegisterData(SpecialDaysEnabledToggle);
 
             EnableHeadBobToggle.isOn = Settings.Settings.HeadBobEnabled;
             EnableFootstepSoundsToggle.isOn = Settings.Settings.EnableFootstepSounds;
@@ -36,6 +38,8 @@ namespace LSDR.UI.Settings
             CurrentModDropdown.value = Settings.Settings.CurrentModIndex;
             HeadbobIntensitySlider.value = Settings.Settings.HeadBobIntensity;
             SmoothHeadBobToggle.isOn = Settings.Settings.SmoothHeadBob;
+            SpecialDaysEnabledToggle.isOn = Settings.Settings.SpecialDaysEnabled;
+
             CurrentModDropdown.onValueChanged.AddListener(_ =>
             {
                 updateMod();
@@ -54,6 +58,8 @@ namespace LSDR.UI.Settings
                 () => Settings.Settings.HeadBobIntensity, BindingType.TwoWay);
             Settings.SettingsBindBroker.Bind(() => SmoothHeadBobToggle.isOn, () => Settings.Settings.SmoothHeadBob,
                 BindingType.TwoWay);
+            Settings.SettingsBindBroker.Bind(() => SpecialDaysEnabledToggle.isOn,
+                () => Settings.Settings.SpecialDaysEnabled, BindingType.TwoWay);
         }
 
         protected void updateMod()

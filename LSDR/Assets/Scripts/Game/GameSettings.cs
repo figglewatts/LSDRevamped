@@ -41,6 +41,7 @@ namespace LSDR.Game
             GUID = Guid.NewGuid();
             HeadBobIntensity = 1;
             SmoothHeadBob = false;
+            SpecialDaysEnabled = true;
 
             Debug.Log($"HeadBobIntensity: {HeadBobIntensity}");
 
@@ -447,6 +448,22 @@ namespace LSDR.Game
             {
                 _useOriginalSoundtrack = value;
                 NotifyPropertyChange(nameof(UseOriginalSoundtrack));
+            }
+        }
+
+#endregion
+
+#region Gameplay Settings
+
+        private bool _specialDaysEnabled;
+
+        public bool SpecialDaysEnabled
+        {
+            get => _specialDaysEnabled;
+            set
+            {
+                _specialDaysEnabled = value;
+                NotifyPropertyChange(nameof(SpecialDaysEnabled));
             }
         }
 
