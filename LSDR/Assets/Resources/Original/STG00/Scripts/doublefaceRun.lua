@@ -14,13 +14,13 @@ linked = false
 distanceToPlayer = 0
 
 function start()
+    moveSpeed = Random.FloatMinMax(0.4, 0.75)
+    delay = Random.FloatMinMax(0, 0.3)
+    
     if not IsDayEven() or Random.OneIn(2) then
         this.GameObject.SetActive(false)
         return
     end
-
-    moveSpeed = Random.FloatMinMax(0.4, 0.75)
-    delay = Random.FloatMinMax(0, 0.3)
 end
 
 function intervalUpdate()

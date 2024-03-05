@@ -7,12 +7,12 @@ interacted = false
 moveSpeed = 0.75
 
 function start()
+    this.SetChildVisible(false)
+    
     if IsDayEven() then
         this.GameObject.SetActive(false)
         return
     end
-
-    this.SetChildVisible(false)
 end
 
 function intervalUpdate()

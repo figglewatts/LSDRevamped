@@ -4,13 +4,14 @@ moveSpeed = 2.4
 interacted = false
 
 function start()
+    this.SetChildVisible(false)
+    
     if DreamSystem.DayNumber != 1 then
         if Random.OneIn(2) then
             this.GameObject.SetActive(false)
             return
         end
     end
-    this.SetChildVisible(false)
 end
 
 function intervalUpdate()

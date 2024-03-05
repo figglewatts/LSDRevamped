@@ -7,12 +7,12 @@ trumpeter6 = GetEntity("Trumpeter6")
 audio = GetEntity("TrumpetersAudio").DreamAudio
 
 function start()
+    hideTrumpeters()
+    
     if IsDayEven() then
         this.GameObject.SetActive(false)
         return
     end
-
-    hideTrumpeters()
 end
 
 function interact()

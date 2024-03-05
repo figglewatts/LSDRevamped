@@ -5,17 +5,17 @@ player = GetEntity("__player")
 interacted = false
 
 function start()
-    if not IsDayEven() then
-        this.GameObject.SetActive(false)
-        return
-    end
-
     if Random.OneIn(4) then
         this.GameObject.Scale = Unity.Vector3(8, 8, 8)
     end
 
     this.PlayAnimation(0)
     this.SetChildVisible(false)
+    
+    if not IsDayEven() then
+        this.GameObject.SetActive(false)
+        return
+    end
 end
 
 function intervalUpdate()

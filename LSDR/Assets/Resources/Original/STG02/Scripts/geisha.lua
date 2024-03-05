@@ -6,13 +6,13 @@ moveSpeed = 0.25
 distanceToPlayer = 0
 
 function start()
+    this.PlayAnimation(0)
+    audio.Play()
+    
     if Random.OneIn(2) then
         this.GameObject.SetActive(false)
         return
     end
-
-    this.PlayAnimation(0)
-    audio.Play()
 end
 
 function intervalUpdate()

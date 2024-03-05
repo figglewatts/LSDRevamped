@@ -1,4 +1,5 @@
-﻿using LSDR.Dream;
+﻿using System;
+using LSDR.Dream;
 using LSDR.SDK;
 using LSDR.SDK.Entities;
 using LSDR.SDK.Visual;
@@ -21,6 +22,11 @@ namespace LSDR.Lua.Proxies
         protected static bool _transitionSound = true;
         protected static string _transitionSpawnID;
         protected static SDK.Data.Dream _transitionDream;
+
+        public void OnDreamTimeout(Action onDreamTimeout)
+        {
+            _target.OnDreamTimeout += onDreamTimeout;
+        }
 
         public void SetNextTransitionColor(Color? color)
         {
@@ -74,6 +80,11 @@ namespace LSDR.Lua.Proxies
         public void SetTextureSet(TextureSet set)
         {
             TextureSetter.Instance.TextureSet = set;
+        }
+
+        public void StretchDream(float amount, float durationSeconds)
+        {
+            _target.StretchDream(amount, durationSeconds);
         }
     }
 }

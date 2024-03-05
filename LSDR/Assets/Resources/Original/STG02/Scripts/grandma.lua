@@ -6,12 +6,12 @@ linked = false
 distanceToPlayer = 0
 
 function start()
+    this.PlayAnimation(0)
+    
     if not IsDayEven() or Random.OneIn(2) then
         this.GameObject.SetActive(false)
         return
     end
-
-    this.PlayAnimation(0)
 end
 
 function intervalUpdate()
@@ -27,6 +27,9 @@ function update()
 end
 
 function interact()
-    -- TODO: stretch kyoto
     this.LogGraphContribution(-3, -5)
+
+    if Random.OneIn(2) then
+        DreamSystem.StretchDream(2, 1)
+    end
 end

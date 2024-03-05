@@ -10,11 +10,6 @@ linked = false
 playerDist = 0
 
 function start()
-    if not IsDayEven() then
-        this.GameObject.SetActive(false)
-        return
-    end
-
     local dayNumber = DreamSystem.DayNumber
     if dayNumber < 10 then
         state = 0
@@ -28,6 +23,11 @@ function start()
         state = 2
         bedPerson.SetActive(false)
         bedDead.SetActive(false)
+    end
+    
+    if not IsDayEven() then
+        this.GameObject.SetActive(false)
+        return
     end
 end
 

@@ -27,6 +27,7 @@ using Torii.UnityEditor;
 using Torii.Util;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Video;
 
 namespace LSDR.Dream
 {
@@ -57,6 +58,8 @@ namespace LSDR.Dream
         public ToriiEvent OnLevelPreLoad;
         public ToriiEvent OnBeginDream;
 
+        [NonSerialized] public Action OnDreamTimeout;
+
         protected readonly ToriiSerializer _serializer = new ToriiSerializer();
         [NonSerialized] protected bool _canTransition = true;
         [NonSerialized] protected bool _currentlyTransitioning;
@@ -74,6 +77,8 @@ namespace LSDR.Dream
         [NonSerialized] protected TimeSince _timeInCurrentFlashback;
         [NonSerialized] protected (Vector3, float)? _flashbackEventSpawn = null;
         [NonSerialized] protected int _flashbackDisabledForDays = 0;
+        [NonSerialized] protected bool _dreamStretching = false;
+        [NonSerialized] protected bool _playingVideo = false;
 
         [field: NonSerialized] public SDK.Data.Dream CurrentDream { get; protected set; }
         [field: NonSerialized] public GameObject CurrentDreamInstance { get; protected set; }
@@ -89,7 +94,7 @@ namespace LSDR.Dream
 
         public void EndDream(bool fromFall = false)
         {
-            if (_dreamIsEnding) return;
+            if (_dreamIsEnding || _playingVideo) return;
 
             // penalise upper score if ending dream from falling
             if (fromFall)
@@ -133,6 +138,11 @@ namespace LSDR.Dream
         public List<SDK.Data.Dream> GetDreamsFromJournal()
         {
             return SettingsSystem.CurrentJournal.Dreams;
+        }
+
+        public void OverrideDreamInstance(GameObject dreamInstance)
+        {
+            CurrentDreamInstance = dreamInstance;
         }
 
         public void LogGraphContributionFromArea(int dynamicness, int upperness)
@@ -393,6 +403,41 @@ namespace LSDR.Dream
             if (!string.IsNullOrWhiteSpace(spawnPointID)) _forcedSpawnID = spawnPointID;
         }
 
+        public void PlayVideo(VideoClip videoClip, Color fadeInColor)
+        {
+            _playingVideo = true;
+            MusicSystem.StopSong();
+
+            // make sure flashback stops
+            if (_flashbackCoroutine != null)
+            {
+                Coroutines.Instance.StopCoroutine(_flashbackCoroutine);
+                _flashbackCoroutine = null;
+            }
+
+            // make sure the dream end timer stops
+            if (_endDreamTimer != null)
+            {
+                Coroutines.Instance.StopCoroutine(_endDreamTimer);
+                _endDreamTimer = null;
+            }
+
+            FadeManager.Managed.FadeIn(fadeInColor, 3f, () =>
+            {
+                SceneManager.LoadScene("video_dream");
+                FadeManager.Managed.FadeOut(Color.black, 1f, () =>
+                {
+                    VideoSpecialDayControl control = FindObjectOfType<VideoSpecialDayControl>();
+                    control.BeginVideoClip(videoClip);
+                }, 1);
+            });
+        }
+
+        public void VideoFinished()
+        {
+            _playingVideo = false;
+        }
+
         /// <summary>
         ///     End dream without advancing the day number or adding progress.
         /// </summary>
@@ -417,6 +462,38 @@ namespace LSDR.Dream
             _currentEnvironment.Apply(SettingsSystem.Settings.LongDrawDistance);
         }
 
+        public void StretchDream(float amount, float timeSeconds)
+        {
+            if (CurrentDreamInstance == null)
+            {
+                Debug.LogWarning("Cannot stretch dream when not instantiated");
+            }
+
+            if (_dreamStretching) return;
+
+            Coroutines.Instance.StartCoroutine(stretchDreamCoroutine(amount, timeSeconds));
+        }
+
+        protected IEnumerator stretchDreamCoroutine(float amount, float timeSeconds)
+        {
+            _dreamStretching = true;
+            float t = 0;
+            float startYScale = CurrentDreamInstance.transform.localScale.y;
+            float targetYScale = startYScale * amount;
+            while (t < timeSeconds)
+            {
+                CurrentDreamInstance.transform.localScale = new Vector3(CurrentDreamInstance.transform.localScale.x,
+                    Mathf.Lerp(startYScale, targetYScale, t / timeSeconds),
+                    CurrentDreamInstance.transform.localScale.z);
+                t += Time.deltaTime;
+                yield return null;
+            }
+            CurrentDreamInstance.transform.localScale = new Vector3(CurrentDreamInstance.transform.localScale.x,
+                targetYScale,
+                CurrentDreamInstance.transform.localScale.z);
+            _dreamStretching = false;
+        }
+
         public IEnumerator EndDreamAfterSeconds(float seconds)
         {
             yield return new WaitForSeconds(seconds);
@@ -426,6 +503,8 @@ namespace LSDR.Dream
 
             // if the dream is already ending (perhaps we fell) then don't end it again
             if (_dreamIsEnding) yield break;
+
+            OnDreamTimeout?.Invoke();
 
             EndDream();
         }
@@ -464,6 +543,11 @@ namespace LSDR.Dream
             {
                 Destroy(CurrentDreamInstance);
             }
+
+            _playingVideo = false;
+
+            // unhook events
+            OnDreamTimeout = null;
 
             TextureSetter.Instance.DeregisterAllMaterials();
             EntityIndex.Instance.DeregisterAllEntities();

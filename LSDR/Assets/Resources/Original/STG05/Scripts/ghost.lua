@@ -1,22 +1,23 @@
 require "dreams"
 
 audio = GetEntity(this.GameObject.Name .. "Audio").DreamAudio
+videoClip = GetEntity("FlyingVideoClip").VideoClip
 player = GetEntity("__player")
 
 interacted = false
 moveSpeed = 0.05
 
 function start()
-    if IsDayEven() then
-        this.GameObject.SetActive(false)
-        return
-    end
-
     if Random.OneIn(3) then
         this.GameObject.Scale = Unity.Vector3(4, 4, 4)
     end
 
     this.SetChildVisible(false)
+    
+    if IsDayEven() then
+        --this.GameObject.SetActive(false)
+        return
+    end
 end
 
 function intervalUpdate()
@@ -44,4 +45,12 @@ function interact()
     this.SetChildVisible(true)
     audio.Play()
     this.LogGraphContribution(-4, -5)
+
+    if Random.OneIn(2) then
+        DreamSystem.StretchDream(2, 1)
+    end
+
+    if Random.OneIn(1) then
+        videoClip.Play(Unity.ColorRGB(1, 0, 0))
+    end
 end

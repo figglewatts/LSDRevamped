@@ -7,12 +7,12 @@ interacted = false
 moveSpeed = 2
 
 function start()
+    this.SetChildVisible(false)
+    
     if not IsWeekDay(4) then
         this.GameObject.SetActive(false)
         return
     end
-
-    this.SetChildVisible(false)
 end
 
 function intervalUpdate()

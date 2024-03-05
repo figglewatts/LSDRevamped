@@ -140,7 +140,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4202393580413338, guid: 063cfe8f9712d4d44b862477f80d0dfa, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 26.625
+      value: 90.75
       objectReference: {fileID: 0}
     - target: {fileID: 4202393580413338, guid: 063cfe8f9712d4d44b862477f80d0dfa, type: 3}
       propertyPath: m_LocalPosition.y
@@ -148,7 +148,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4202393580413338, guid: 063cfe8f9712d4d44b862477f80d0dfa, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 94
+      value: 67.875
       objectReference: {fileID: 0}
     - target: {fileID: 4202393580413338, guid: 063cfe8f9712d4d44b862477f80d0dfa, type: 3}
       propertyPath: m_LocalRotation.w
@@ -250,6 +250,11 @@ PrefabInstance:
       propertyPath: Testing
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114892638709442086, guid: aab5ac614e7b53141a710f763fab03dc,
+        type: 3}
+      propertyPath: TestDreamInstance
+      value: 
+      objectReference: {fileID: 2940507415663406483}
     - target: {fileID: 224414894277662874, guid: aab5ac614e7b53141a710f763fab03dc,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -501,3 +506,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 93b7771a853474c25853bf75f320a550, type: 3}
+--- !u!1 &2940507415663406483 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2940507415088835223, guid: 93b7771a853474c25853bf75f320a550,
+    type: 3}
+  m_PrefabInstance: {fileID: 2940507415663406482}
+  m_PrefabAsset: {fileID: 0}

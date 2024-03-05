@@ -9,11 +9,6 @@ moveSpeed = 0.3
 distanceToPlayer = 0
 
 function start()
-    if IsDayEven() or Random.OneIn(2) then
-        this.GameObject.SetActive(false)
-        return
-    end
-
     -- choose walking direction
     local choice = Random.IntMax(4)
     if choice == 0 then
@@ -30,6 +25,11 @@ function start()
 
     audio.Play()
     this.PlayAnimation(0)
+    
+    if IsDayEven() or Random.OneIn(2) then
+        this.GameObject.SetActive(false)
+        return
+    end
 end
 
 function intervalUpdate()

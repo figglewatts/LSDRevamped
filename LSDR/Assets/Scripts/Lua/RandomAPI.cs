@@ -2,6 +2,7 @@
 using LSDR.SDK.Lua;
 using LSDR.SDK.Util;
 using MoonSharp.Interpreter;
+using UnityEngine;
 
 namespace LSDR.Lua
 {
@@ -20,5 +21,7 @@ namespace LSDR.Lua
         public static float FloatMinMax(float min, float max) => RandUtil.Float(min, max);
 
         public static bool OneIn(float chance) => RandUtil.OneIn(chance);
+
+        public static Color Color() => RandUtil.RandColor();
     }
 }

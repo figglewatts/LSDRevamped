@@ -21,6 +21,8 @@ namespace LSDR.Lua.Proxies
 
         public AnimatedObject AnimatedObject => getAs<AnimatedObject>();
 
+        public VideoPlayer VideoClip => getAs<VideoPlayer>();
+
         public string Name => _target.name;
 
         public Vector3 WorldPosition
@@ -56,6 +58,8 @@ namespace LSDR.Lua.Proxies
         public Vector3 ForwardDirection => _target.transform.forward;
         public Vector3 RightDirection => _target.transform.right;
         public Vector3 UpDirection => _target.transform.up;
+
+        public bool Active => _target.activeInHierarchy;
 
         public void SetActive(bool active)
         {

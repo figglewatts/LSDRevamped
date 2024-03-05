@@ -1,12 +1,12 @@
 audio = GetEntity(this.GameObject.Name .. "Audio").DreamAudio
 
 function start()
+    this.SetChildVisible(false)
+    
     if IsDayEven() then
         this.GameObject.SetActive(false)
         return
     end
-
-    this.SetChildVisible(false)
 end
 
 function interact()

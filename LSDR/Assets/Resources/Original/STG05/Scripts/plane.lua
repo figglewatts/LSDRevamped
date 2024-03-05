@@ -1,15 +1,11 @@
 audio = GetEntity("PlaneAudio").DreamAudio
+videoClip = GetEntity("PlaneVideoClip").VideoClip
 
 state = "none"
 moveSpeed = 5
 flyOver = false
 
 function start()
-    if IsDayEven() then
-        this.GameObject.SetActive(false)
-        return
-    end
-
     local randResult = Random.Float()
     if randResult < 0.2 then
         state = "crash"
@@ -18,6 +14,12 @@ function start()
     end
     
     this.SetChildVisible(false)
+    
+    state = "crash"
+    if IsDayEven() then
+        --this.GameObject.SetActive(false)
+        return
+    end
 end
 
 function update()
@@ -36,7 +38,7 @@ function interact()
             .Do(|| this.PlayAnimation(0))
             .ThenWaitUntil(this.WaitForAnimation(0))
             .Then(|| this.GameObject.SetActive(false))
-            .Then(|| DreamSystem.EndDream()) -- TODO: play plane video
+            .Then(|| videoClip.Play(Unity.ColorRGB(1, 0, 0)))
             .ThenFinish()
     else
 

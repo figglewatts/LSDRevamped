@@ -6,17 +6,21 @@ target = GetEntity("BlimpTarget").WorldPosition
 moveSpeed = 0.3
 
 function start()
+    this.SetChildVisible(false)
+    
     if IsDayEven() then
         this.GameObject.SetActive(false)
         return
     end
-
-    this.SetChildVisible(false)
 end
 
 function interact()
     this.LogGraphContribution(-6, 7)
     this.SetChildVisible(true)
+
+    if Random.OneIn(4) then
+        DreamSystem.StretchDream(2, 1)
+    end
 
     if Random.OneIn(2) then
         this.Action

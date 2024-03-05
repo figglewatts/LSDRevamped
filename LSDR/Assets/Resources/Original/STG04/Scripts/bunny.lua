@@ -5,12 +5,12 @@ player = GetEntity("__player")
 interacted = false
 
 function start()
+    this.PlayAnimation(0)
+    
     if not IsDayEven() then
         this.GameObject.SetActive(false)
         return
     end
-
-    this.PlayAnimation(0)
 end
 
 function intervalUpdate()

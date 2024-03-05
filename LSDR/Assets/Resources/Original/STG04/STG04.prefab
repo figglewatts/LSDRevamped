@@ -56740,6 +56740,7 @@ Transform:
   - {fileID: 1862907383066342660}
   - {fileID: 5881079995765733321}
   - {fileID: 8756112718335739009}
+  - {fileID: 184329780050616325}
   m_Father: {fileID: 2940507415088835220}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -65363,6 +65364,52 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   OneIn: 2
+--- !u!1 &8231616084200644189
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 184329780050616325}
+  - component: {fileID: 6181132344955964455}
+  m_Layer: 0
+  m_Name: FerrisWheelVideo
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &184329780050616325
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8231616084200644189}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8764216183769997062}
+  m_RootOrder: 197
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6181132344955964455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8231616084200644189}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1c625ecbf4a4bcabe4e274cd596f70c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ID: FerrisWheelVideo
+  Clip: {fileID: 32900000, guid: 97c0c4f390b959742ae339f18a55a2c9, type: 3}
 --- !u!1 &8240096106098146832
 GameObject:
   m_ObjectHideFlags: 0

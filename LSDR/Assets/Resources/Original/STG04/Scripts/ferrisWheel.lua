@@ -1,14 +1,15 @@
+videoClip = GetEntity("FerrisWheelVideo").VideoClip
+
 function start()
+    this.PlayAnimation(0)
+    
     if IsDayEven() then
         this.GameObject.SetActive(false)
         return
     end
-    
-    this.PlayAnimation(0)
 end
 
 function interact()
     this.LogGraphContribution(9, 9)
-    DreamSystem.EndDream()
-    -- TODO: play ferris wheel video
+    videoClip.Play(Unity.ColorRGB(1, 0, 0))
 end

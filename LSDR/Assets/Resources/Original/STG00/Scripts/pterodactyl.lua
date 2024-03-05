@@ -7,12 +7,12 @@ player = nil
 audioPlayer = GetEntity("PterodactylAudio").DreamAudio
 
 function start()
+    player = GetEntity("__player")
+    
     if not IsWeekDay(3) then
         this.GameObject.SetActive(false)
         return
     end
-
-    player = GetEntity("__player")
 end
 
 function update()

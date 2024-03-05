@@ -4,12 +4,12 @@ player = GetEntity("__player")
 audio = GetEntity("BabyAudio").DreamAudio
 
 function start()
+    this.PlayAnimation(0)
+
     if not IsWeekDay(1) or not IsWeekDay(5) then
         this.GameObject.SetActive(false)
         return
     end
-
-    this.PlayAnimation(0)
 end
 
 function interact()

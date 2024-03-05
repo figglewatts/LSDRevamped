@@ -7,12 +7,12 @@ distanceToPlayer = 0
 moveSpeed = 1.4
 
 function start()
+    this.SetChildVisible(false)
+    
     if IsDayEven() or Random.OneIn(2) then
         this.GameObject.SetActive(false)
         return
     end
-
-    this.SetChildVisible(false)
 end
 
 function intervalUpdate()

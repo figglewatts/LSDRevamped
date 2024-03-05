@@ -5,13 +5,13 @@ player = GetEntity("__player")
 interacted = false
 
 function start()
+    if Random.OneIn(3) then
+        this.GameObject.Scale = Unity.Vector3(1, 2, 1)
+    end
+    
     if not IsDayEven() then
         this.GameObject.SetActive(false)
         return
-    end
-
-    if Random.OneIn(3) then
-        this.GameObject.Scale = Unity.Vector3(1, 2, 1)
     end
 end
 

@@ -24,6 +24,7 @@ namespace LSDR.Game
         public SettingsSystem SettingsSystem;
 
         public bool Testing = false;
+        public GameObject TestDreamInstance;
 
         public void Start()
         {
@@ -71,6 +72,8 @@ namespace LSDR.Game
                 if (camera == null) Debug.LogWarning("Unable to find MainCamera in scene");
                 EntityIndex.Instance.Register("__camera", camera, force: true);
                 Debug.Log("finished test load");
+
+                DreamSystem.OverrideDreamInstance(TestDreamInstance);
 
                 EntityIndex.Instance.AllRegistered();
             }

@@ -11,16 +11,16 @@ moveSpeed = 0.3
 actionsFinished = false
 
 function start()
-    if IsDayEven() then
-        this.GameObject.SetActive(false)
-        return
-    end
-
     if Random.OneIn(4) then
         this.GameObject.Scale = Unity.Vector3(1, 1, 1)
     end
 
     this.SetChildVisible(false)
+    
+    if IsDayEven() then
+        this.GameObject.SetActive(false)
+        return
+    end
 end
 
 function intervalUpdate()

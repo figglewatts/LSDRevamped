@@ -11,11 +11,6 @@ distanceToPlayer = 0
 
 function start()
     if Random.OneIn(2) then
-        this.GameObject.SetActive(false)
-        return
-    end
-
-    if Random.OneIn(2) then
         -- set us tall
         this.StretchShrink(2)
     end
@@ -35,6 +30,11 @@ function start()
     this.LookAt(targetPos)
 
     this.SetChildVisible(false)
+    
+    if Random.OneIn(2) then
+        this.GameObject.SetActive(false)
+        return
+    end
 end
 
 function intervalUpdate()

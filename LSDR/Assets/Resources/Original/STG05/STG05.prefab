@@ -707,6 +707,52 @@ Transform:
   m_Father: {fileID: 4298238217353679071}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &153241502799799929
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7576368486836941938}
+  - component: {fileID: 4483448372777383637}
+  m_Layer: 0
+  m_Name: PlaneVideoClip
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7576368486836941938
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 153241502799799929}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7909303112458658192}
+  m_RootOrder: 106
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4483448372777383637
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 153241502799799929}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1c625ecbf4a4bcabe4e274cd596f70c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ID: PlaneVideoClip
+  Clip: {fileID: 32900000, guid: ce73be6e2ad946a47903e27b03b33fe4, type: 3}
 --- !u!1 &155694303554575421
 GameObject:
   m_ObjectHideFlags: 0
@@ -36559,6 +36605,52 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06f34b4cfe5742eb9b690a3b14765640, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &5728896215336812657
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2134873532164409313}
+  - component: {fileID: 6578276543432491065}
+  m_Layer: 0
+  m_Name: FlyingVideoClip
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2134873532164409313
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5728896215336812657}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7909303112458658192}
+  m_RootOrder: 107
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6578276543432491065
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5728896215336812657}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1c625ecbf4a4bcabe4e274cd596f70c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ID: FlyingVideoClip
+  Clip: {fileID: 32900000, guid: 6ac95c1e49673b94b900af992b7f4cb4, type: 3}
 --- !u!1 &5744296106481496584
 GameObject:
   m_ObjectHideFlags: 0
@@ -51937,6 +52029,8 @@ Transform:
   - {fileID: 4905732261150044383}
   - {fileID: 7605236208697926146}
   - {fileID: 2392764876331518079}
+  - {fileID: 7576368486836941938}
+  - {fileID: 2134873532164409313}
   m_Father: {fileID: 1736273697227968465}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

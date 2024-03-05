@@ -5,12 +5,12 @@ interacted = false
 turned = false
 
 function start()
+    this.SetChildVisible(false)
+    
     if not IsDayEven() then
         this.GameObject.SetActive(false)
         return
     end
-
-    this.SetChildVisible(false)
 end
 
 function update()

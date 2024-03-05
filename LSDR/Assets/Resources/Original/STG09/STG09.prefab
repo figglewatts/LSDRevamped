@@ -96,6 +96,52 @@ Transform:
   m_Father: {fileID: 5006458046747026817}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &757165347233179964
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8689690273924800974}
+  - component: {fileID: 8693934365709106538}
+  m_Layer: 0
+  m_Name: GearsVideoClip
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8689690273924800974
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 757165347233179964}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2236530918784383127}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8693934365709106538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 757165347233179964}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1c625ecbf4a4bcabe4e274cd596f70c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ID: GearsVideoClip
+  Clip: {fileID: 32900000, guid: 8b50dafdc53e6894ba7b25e318645129, type: 3}
 --- !u!1 &988231417853996232
 GameObject:
   m_ObjectHideFlags: 0
@@ -517,6 +563,7 @@ Transform:
   - {fileID: 1829241806623820925}
   - {fileID: 6227332183252602699}
   - {fileID: 5125674701435305677}
+  - {fileID: 8689690273924800974}
   m_Father: {fileID: 2496636250776579768}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

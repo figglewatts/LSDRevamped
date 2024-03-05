@@ -4,12 +4,12 @@ interacted = false
 moveSpeed = 0.5
 
 function start()
+    this.SetChildVisible(false)
+    
     if not IsDayEven() then
         this.GameObject.SetActive(false)
         return
     end
-
-    this.SetChildVisible(false)
 end
 
 function update()
@@ -24,4 +24,8 @@ function interact()
     this.SetChildVisible(true)
     interacted = true
     audio.Play()
+
+    if Random.OneIn(4) then
+        DreamSystem.StretchDream(2, 1)
+    end
 end

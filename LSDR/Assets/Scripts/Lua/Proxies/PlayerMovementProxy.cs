@@ -11,6 +11,8 @@ namespace LSDR.Lua.Proxies
 
         public PlayerRotation Rotation => _target.Rotation;
 
+        public GameObject Camera => _target.Camera.gameObject;
+
         public void SetCanControl(bool canControl)
         {
             _target.Settings.CanControlPlayer = canControl;

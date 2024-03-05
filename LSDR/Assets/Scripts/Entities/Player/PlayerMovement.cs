@@ -30,7 +30,6 @@ namespace LSDR.Entities.Player
         [Console] public float StepTimeSeconds = 0.25f;
         [Console] public float HeadBobAmount = 0.1f;
         [Console] public bool DebugLog;
-        [Console] public bool SmoothHeadBob = false;
         public bool CanLink = true;
 
         protected CharacterController _controller;

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using LSDR.SDK.Data;
 using LSDR.SDK.Entities;
 using UnityEngine;
+using UnityEngine.Video;
 
 namespace LSDR.SDK.DreamControl
 {
@@ -22,6 +23,11 @@ namespace LSDR.SDK.DreamControl
             string spawnPointID = null);
 
         void EndDream(bool fromFall = false);
+
+        void StretchDream(float amount, float timeSeconds);
+
+        void PlayVideo(VideoClip video, Color fadeInColor);
+        void VideoFinished();
 
         void LogGraphContributionFromArea(int dynamicness, int upperness);
         void LogGraphContributionFromEntity(int dynamicness, int upperness, BaseEntity sourceEntity);

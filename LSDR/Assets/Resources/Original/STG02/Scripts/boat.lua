@@ -3,13 +3,13 @@ audio = GetEntity(this.GameObject.Name .. "Audio").DreamAudio
 moveSpeed = 0.15
 
 function start()
+    this.PlayAnimation(0)
+    audio.Play()
+    
     if IsDayEven() or Random.OneIn(2) then
         this.GameObject.SetActive(false)
         return
     end
-    
-    this.PlayAnimation(0)
-    audio.Play()
 end
 
 function update()

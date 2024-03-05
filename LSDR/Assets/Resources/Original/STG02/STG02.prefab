@@ -12035,6 +12035,52 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06f34b4cfe5742eb9b690a3b14765640, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1708370935473413102
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7551034234543455484}
+  - component: {fileID: 2201581747194945576}
+  m_Layer: 0
+  m_Name: PetalsVideoClip
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7551034234543455484
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1708370935473413102}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8088036229350060755}
+  m_RootOrder: 85
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2201581747194945576
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1708370935473413102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1c625ecbf4a4bcabe4e274cd596f70c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ID: PetalsVideoClip
+  Clip: {fileID: 32900000, guid: 4502bd7d719e6c740800a2dbf8c69e68, type: 3}
 --- !u!1 &1709096318542988729
 GameObject:
   m_ObjectHideFlags: 0
@@ -46854,6 +46900,7 @@ Transform:
   - {fileID: 8090774814044938912}
   - {fileID: 457921849056675626}
   - {fileID: 822910466972401986}
+  - {fileID: 7551034234543455484}
   m_Father: {fileID: 2052258469303122865}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

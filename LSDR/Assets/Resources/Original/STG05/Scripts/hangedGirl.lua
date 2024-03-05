@@ -11,11 +11,6 @@ moveSpeed = 0.4
 following = false
 
 function start()
-    if IsDayEven() then
-        this.GameObject.SetActive(false)
-        return
-    end
-
     local randResult = Random.Float()
     if randResult < 0.1 then
         -- single, drop and follow player
@@ -30,6 +25,11 @@ function start()
     end
 
     hide()
+    
+    if IsDayEven() then
+        this.GameObject.SetActive(false)
+        return
+    end
 end
 
 function intervalUpdate()

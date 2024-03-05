@@ -10,10 +10,18 @@ namespace LSDR.SDK.DreamControl
     public class VideoSpecialDayControl : MonoBehaviour
     {
         protected VideoPlayer _videoPlayer;
+        protected bool _over = false;
 
         public void Awake()
         {
             _videoPlayer = GetComponent<VideoPlayer>();
+        }
+
+        public void BeginVideoClip(VideoClip clip)
+        {
+            _videoPlayer.clip = clip;
+            _videoPlayer.loopPointReached += endVideoDay;
+            _videoPlayer.Play();
         }
 
         public void BeginVideoDay(VideoSpecialDay day)
@@ -28,7 +36,7 @@ namespace LSDR.SDK.DreamControl
             bool skipInputPressed = Gamepad.current != null && (Gamepad.current.buttonSouth.wasPressedThisFrame ||
                                                                 Gamepad.current.startButton.wasPressedThisFrame);
             bool skipKeyPressed = Keyboard.current != null && Keyboard.current.anyKey.wasPressedThisFrame;
-            if (_videoPlayer.isPlaying && (skipInputPressed || skipKeyPressed))
+            if (!_over && _videoPlayer.isPlaying && (skipInputPressed || skipKeyPressed))
             {
                 endVideoDay(_videoPlayer);
             }
@@ -36,6 +44,8 @@ namespace LSDR.SDK.DreamControl
 
         protected void endVideoDay(VideoPlayer player)
         {
+            _over = true;
+            DreamControlManager.Managed.VideoFinished();
             DreamControlManager.Managed.EndDream();
             player.Pause();
         }
