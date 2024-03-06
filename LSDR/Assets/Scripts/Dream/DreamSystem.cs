@@ -57,6 +57,7 @@ namespace LSDR.Dream
         public ToriiEvent OnPlayerSpawned;
         public ToriiEvent OnLevelPreLoad;
         public ToriiEvent OnBeginDream;
+        [NonSerialized] public bool ReturningFromDream = false;
 
         [NonSerialized] public Action OnDreamTimeout;
 
@@ -710,6 +711,7 @@ namespace LSDR.Dream
             _canTransition = false;
             CurrentSequence = null;
             InFlashback = false;
+            ReturningFromDream = true;
 
             // save the last Y rotation for the player, so we can set it back to this when we start the next dream
             if (Player != null) _lastPlayerYRotation = Player.transform.rotation.eulerAngles.y;

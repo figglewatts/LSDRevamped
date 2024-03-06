@@ -26,8 +26,13 @@ namespace LSDR.Game
         public bool Testing = false;
         public GameObject TestDreamInstance;
 
+        protected static bool _initialised = false;
+
         public void Start()
         {
+            if (_initialised) Destroy(gameObject);
+            _initialised = true;
+
             if (GameLoadSystem.GameLoaded)
             {
                 Destroy(this.gameObject);

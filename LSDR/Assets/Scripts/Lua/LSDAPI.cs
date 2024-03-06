@@ -39,7 +39,7 @@ namespace LSDR.Lua
             UserData.RegisterType<SongListAsset>();
             UserData.RegisterType<DreamEnvironment>();
             UserData.RegisterType<AnimatedObject>();
-            UserData.RegisterType<VideoPlayer>();
+            UserData.RegisterType<MovieClip>();
         }
 
         public static GameObject GetEntity(string id)

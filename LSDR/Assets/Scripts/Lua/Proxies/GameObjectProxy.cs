@@ -21,7 +21,7 @@ namespace LSDR.Lua.Proxies
 
         public AnimatedObject AnimatedObject => getAs<AnimatedObject>();
 
-        public VideoPlayer VideoClip => getAs<VideoPlayer>();
+        public MovieClip VideoClip => getAs<MovieClip>();
 
         public string Name => _target.name;
 

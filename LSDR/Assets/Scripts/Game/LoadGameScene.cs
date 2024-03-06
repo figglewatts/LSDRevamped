@@ -9,17 +9,9 @@ namespace LSDR.Game
 {
     public class LoadGameScene : MonoBehaviour
     {
-        public void Start()
+        public void LoadIntro()
         {
-            Coroutines.Instance.StartCoroutine(loadTitle());
-        }
-
-        protected IEnumerator loadTitle()
-        {
-            AsyncOperation loadTitleScene = SceneManager.LoadSceneAsync("titlescreen", LoadSceneMode.Additive);
-            yield return loadTitleScene;
-            ToriiFader.Instance.SetFade(Color.black);
-            Destroy(gameObject);
+            SceneManager.LoadScene("intro");
         }
     }
 }

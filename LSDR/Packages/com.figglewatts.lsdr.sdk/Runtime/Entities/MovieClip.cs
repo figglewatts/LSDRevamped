@@ -4,7 +4,7 @@ using UnityEngine.Video;
 
 namespace LSDR.SDK.Entities
 {
-    public class VideoPlayer : BaseEntity
+    public class MovieClip : BaseEntity
     {
         public VideoClip Clip;
 

@@ -13,6 +13,11 @@ namespace LSDR.UI.Title
         public AudioClip UpperMusic;
         public GameSaveSystem GameSave;
 
+        public void Start()
+        {
+            PlayMusic();
+        }
+
         public void PlayMusic()
         {
             int dayNumMod = GameSave.CurrentJournalSave.DayNumber % 41;
