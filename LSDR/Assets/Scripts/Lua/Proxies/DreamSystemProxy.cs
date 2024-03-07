@@ -17,6 +17,7 @@ namespace LSDR.Lua.Proxies
         public int CurrentDreamIndex => _target.SettingsSystem.CurrentJournal.GetDreamIndex(CurrentDream);
 
         public int DayNumber => _target.GameSave.CurrentJournalSave.DayNumber;
+        public int YearNumber => _target.GameSave.CurrentJournalSave.YearNumber;
 
         protected static Color? _transitionColor;
         protected static bool _transitionSound = true;

@@ -1,4 +1,6 @@
-﻿using LSDR.SDK.DreamControl;
+﻿using System.Collections;
+using LSDR.SDK.DreamControl;
+using LSDR.SDK.Util;
 using LSDR.SDK.Visual;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -16,11 +18,12 @@ namespace LSDR.SDK.Data
         public override void HandleDay(int dayNumber)
         {
             SceneManager.LoadScene("text_dream");
-            FadeManager.Managed.FadeOut(Color.black, 3f, () =>
+            NextFrameUtil.Instance.RunNextFrame(() =>
             {
                 TextSpecialDayControl control = FindObjectOfType<TextSpecialDayControl>();
                 control.BeginTextDay(this);
-            }, 1);
+            });
+            FadeManager.Managed.FadeOut(Color.black, 3f, () => { }, 1);
         }
     }
 }
