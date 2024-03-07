@@ -11,7 +11,7 @@ Shader "LSDR/GradientSky"
     {
         Tags
         {
-            "RenderType"="Background" "Queue"="Background"
+            "RenderType"="Background" "Queue"="Background-1"
         }
 
         Pass

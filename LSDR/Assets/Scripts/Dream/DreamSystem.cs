@@ -80,6 +80,7 @@ namespace LSDR.Dream
         [NonSerialized] protected int _flashbackDisabledForDays = 0;
         [NonSerialized] protected bool _dreamStretching = false;
         [NonSerialized] protected bool _playingVideo = false;
+        [NonSerialized] protected DreamEnvironmentEffects _environmentEffects;
 
         [field: NonSerialized] public SDK.Data.Dream CurrentDream { get; protected set; }
         [field: NonSerialized] public GameObject CurrentDreamInstance { get; protected set; }
@@ -463,7 +464,7 @@ namespace LSDR.Dream
         public void ApplyEnvironment()
         {
             if (_currentEnvironment == null) return;
-            _currentEnvironment.Apply(SettingsSystem.Settings.LongDrawDistance);
+            _currentEnvironment.Apply(SettingsSystem.Settings.LongDrawDistance, _environmentEffects);
         }
 
         public void StretchDream(float amount, float timeSeconds)
@@ -546,6 +547,7 @@ namespace LSDR.Dream
             if (CurrentDream != null)
             {
                 Destroy(CurrentDreamInstance);
+                _environmentEffects.ClearEffects();
             }
 
             _playingVideo = false;
@@ -586,6 +588,8 @@ namespace LSDR.Dream
             Player = GameObject.FindWithTag("Player");
             if (Player == null) Debug.LogError("Unable to find player in scene!");
             registerCommonEntities();
+
+            _environmentEffects = FindObjectOfType<DreamEnvironmentEffects>();
 
             Player.GetComponent<PlayerMovement>().StopExternalInput();
             Player.GetComponent<PlayerRotation>().StopExternalInput();
@@ -882,21 +886,22 @@ namespace LSDR.Dream
         public void ListDreamEnvironments()
         {
             if (CurrentDream == null) return;
-            Debug.Log($"Dream has {CurrentDream.Environments.Count} environments.");
+            Debug.Log($"Dream has {CurrentDream.Environments.Environments.Count} environments.");
         }
 
         [Console]
         public void ApplyDreamEnvironment(int idx)
         {
             if (CurrentDream == null) return;
-            if (idx < 0 || idx >= CurrentDream.Environments.Count)
+            if (idx < 0 || idx >= CurrentDream.Environments.Environments.Count)
             {
                 Debug.LogError(
-                    $"Unable to apply environment '{idx}', dream only has {CurrentDream.Environments.Count}");
+                    $"Unable to apply environment '{idx}', dream only has {CurrentDream.Environments.Environments.Count}");
                 return;
             }
 
-            CurrentDream.Environments[idx].Apply(SettingsSystem.Settings.LongDrawDistance);
+            CurrentDream.Environments.Environments[idx]
+                        .Apply(SettingsSystem.Settings.LongDrawDistance, _environmentEffects);
         }
 
         [Console]

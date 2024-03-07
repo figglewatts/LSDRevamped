@@ -52,11 +52,18 @@ namespace LSDR.SDK.Editor.Data
                 if (sunChance.floatValue > 0)
                 {
                     EditorGUILayout.PropertyField(serializedObject.FindProperty("SunColor"));
+                    EditorGUILayout.PropertyField(serializedObject.FindProperty("SunHeight"));
+                    EditorGUILayout.PropertyField(serializedObject.FindProperty("SunSize"));
 
                     SerializedProperty secondSunChance = serializedObject.FindProperty("SecondSunChance");
                     EditorGUILayout.PropertyField(secondSunChance);
                     if (secondSunChance.floatValue > 0)
+                    {
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("SecondSunColor"));
+                        EditorGUILayout.PropertyField(serializedObject.FindProperty("SecondSunOffset"));
+                        EditorGUILayout.PropertyField(serializedObject.FindProperty("SecondSunHeight"));
+                        EditorGUILayout.PropertyField(serializedObject.FindProperty("SecondSunSize"));
+                    }
                 }
 
                 EditorGUILayout.Space();
@@ -64,7 +71,10 @@ namespace LSDR.SDK.Editor.Data
                 SerializedProperty sunBurstChance = serializedObject.FindProperty("SunBurstChance");
                 EditorGUILayout.PropertyField(sunBurstChance);
                 if (sunBurstChance.floatValue > 0)
+                {
                     EditorGUILayout.PropertyField(serializedObject.FindProperty("SunBurstColor"));
+                    EditorGUILayout.PropertyField(serializedObject.FindProperty("SunBurstSize"));
+                }
 
                 EditorGUILayout.Space();
 
@@ -107,7 +117,7 @@ namespace LSDR.SDK.Editor.Data
 
             _oldRenderSettings = new RenderSettings();
 
-            dreamEnvironment.Apply(false);
+            dreamEnvironment.Apply(false, null);
         }
 
         protected void destroyPreview()

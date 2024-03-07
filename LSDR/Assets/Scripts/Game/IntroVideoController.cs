@@ -50,7 +50,7 @@ namespace LSDR.Game
         {
             _over = true;
             player.Pause();
-            ToriiFader.Instance.FadeIn(Color.black, 2f, () =>
+            ToriiFader.Instance.FadeIn(Color.black, 1f, () =>
             {
                 SceneManager.LoadScene("titlescreen");
             });

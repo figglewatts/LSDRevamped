@@ -24,8 +24,14 @@ namespace LSDR.SDK.Data
         [Tooltip("Whether this dream should be spawned into on the first day of the journal.")]
         public bool FirstDay;
 
+        [Tooltip("The offset into the environments this dream starts at.")]
+        public int EnvironmentOffset = 0;
+
         [Tooltip("The list of environments this dream can potentially have.")]
-        public List<DreamEnvironment> Environments;
+        public DreamEnvironmentSequence Environments;
+
+        [Tooltip("Whether or not this dream has environment effects enabled.")]
+        public bool HasEnvironmentEffects = true;
 
         [Tooltip("The prefab that comprises this dream.")]
         [AssetName(typeof(GameObject))]
@@ -37,17 +43,17 @@ namespace LSDR.SDK.Data
         public DreamEnvironment RandomEnvironment()
         {
             // if the dream doesn't have environments, just return a default one
-            if (Environments.Count <= 0) return CreateInstance<DreamEnvironment>();
-            return RandUtil.RandomListElement(Environments);
+            if (Environments.Environments.Count <= 0) return CreateInstance<DreamEnvironment>();
+            return RandUtil.RandomListElement(Environments.Environments);
         }
 
         public DreamEnvironment ChooseEnvironment(int dayNum)
         {
             // if the dream doesn't have environments, just return a default one
-            if (Environments.Count <= 0) return CreateInstance<DreamEnvironment>();
+            if (Environments.Environments.Count <= 0) return CreateInstance<DreamEnvironment>();
 
-            int toChoose = (dayNum - 1) % Environments.Count;
-            return Environments[toChoose];
+            int toChoose = (dayNum - 1 + EnvironmentOffset) % Environments.Environments.Count;
+            return Environments.Environments[toChoose];
         }
 
         public override string ToString()

@@ -14,7 +14,7 @@ Shader "LSDR/ClassicDiffuseAlphaBlend"
         Pass
         {
             Blend SrcAlpha OneMinusSrcAlpha
-            ZWrite On
+            ZWrite Off
             ZTest LEqual
             
             CGPROGRAM

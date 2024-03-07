@@ -17,6 +17,8 @@ namespace Torii.Util
         public bool MatchScaleY;
         public bool MatchScaleZ;
 
+        public bool LocalRotation = false;
+
         public Transform Match;
 
         private Transform _this;
@@ -72,20 +74,40 @@ namespace Torii.Util
             }
             _this.position = pos;
 
-            Vector3 euler = _this.rotation.eulerAngles;
-            if (MatchRotX)
+            if (LocalRotation)
             {
-                euler.x = Match.rotation.eulerAngles.x;
+                Vector3 euler = _this.localRotation.eulerAngles;
+                if (MatchRotX)
+                {
+                    euler.x = Match.localRotation.eulerAngles.x;
+                }
+                if (MatchRotY)
+                {
+                    euler.y = Match.localRotation.eulerAngles.y;
+                }
+                if (MatchRotZ)
+                {
+                    euler.z = Match.localRotation.eulerAngles.z;
+                }
+                _this.localRotation = Quaternion.Euler(euler);
             }
-            if (MatchRotY)
+            else
             {
-                euler.y = Match.rotation.eulerAngles.y;
+                Vector3 euler = _this.rotation.eulerAngles;
+                if (MatchRotX)
+                {
+                    euler.x = Match.rotation.eulerAngles.x;
+                }
+                if (MatchRotY)
+                {
+                    euler.y = Match.rotation.eulerAngles.y;
+                }
+                if (MatchRotZ)
+                {
+                    euler.z = Match.rotation.eulerAngles.z;
+                }
+                _this.rotation = Quaternion.Euler(euler);
             }
-            if (MatchRotZ)
-            {
-                euler.z = Match.rotation.eulerAngles.z;
-            }
-            _this.rotation = Quaternion.Euler(euler);
 
             Vector3 scale = _this.localScale;
             if (MatchScaleX)

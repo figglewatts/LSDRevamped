@@ -16,6 +16,11 @@ float GetFogDepth(float distance)
     return saturate(unityFogFactor);
 }
 
+float3 Complement(float3 color)
+{
+    return float3(1 - color.r, 1 - color.g, 1 - color.b);
+}
+
 float4 FogColor(float distance)
 {
     float fogDepth = GetFogDepth(distance);
@@ -26,11 +31,15 @@ float4 FogColor(float distance)
 float3 AdditiveFog(float3 color, float3 fogColor, float factor)
 {
     return color + fogColor * factor;
+    //return fogColor * factor;
 }
 
-float3 SubtractiveFog(float3 color, float3 fogColor, float factor)
+float3 SubtractiveFog(float3 color, float4 fogColor, float factor)
 {
-    return max(float3(0, 0, 0), color - fogColor * factor);
+    //return color - Complement(fogColor) * factor;
+    //return color - Complement(fogColor) * factor * (1 - fogColor.a);
+    return lerp(color, lerp(color, fogColor.rgb, 1 - fogColor.a), factor);
+    //return float3(fogColor.a, fogColor.a, fogColor.a);
 }
 
 float4 ApplyClassicFog(float4 color, float4 fogColor)
@@ -40,7 +49,7 @@ float4 ApplyClassicFog(float4 color, float4 fogColor)
 
     #if defined(FOG_LINEAR)
     finalFogCol = AdditiveFog(finalFogCol, fogColor.rgb, 1.0 - _SubtractiveFog);
-    finalFogCol = SubtractiveFog(finalFogCol, fogColor.rgb, _SubtractiveFog);
+    finalFogCol = SubtractiveFog(finalFogCol, fogColor.rgba, _SubtractiveFog);
     #endif
 
     return float4(finalFogCol.rgb, color.a);
@@ -52,8 +61,9 @@ float4 ApplyRevampedFog(float4 color, float4 fogColor)
 
     #if defined(FOG_LINEAR)
     finalFogCol = AdditiveFog(finalFogCol, fogColor.rgb, 1.0 - _SubtractiveFog);
-    finalFogCol = SubtractiveFog(finalFogCol, fogColor.rgb, _SubtractiveFog);
+    finalFogCol = SubtractiveFog(finalFogCol, fogColor.rgba, _SubtractiveFog);
     #endif
 
-    return float4(finalFogCol.rgb, color.a);
+    return color;
+    //return float4(finalFogCol.rgb, color.a);
 }
