@@ -109,14 +109,14 @@ namespace LSDR.SDK.Data
             Shader.SetGlobalInt(_subtractiveFogPropertyId, SubtractiveFog ? 1 : 0);
 
             if (environmentEffects == null || environmentEffects.Created) return;
-            if (CloudsChance > 0 && RandUtil.Float() > CloudsChance)
+            if (CloudsChance > 0 && RandUtil.Float() < CloudsChance)
             {
                 environmentEffects.CreateClouds(NumberOfClouds, CloudsColor);
             }
 
             if (SunChance > 0 && RandUtil.Float() > SunChance)
             {
-                if (SunBurstChance > 0 && RandUtil.Float() > SunBurstChance)
+                if (SunBurstChance > 0 && RandUtil.Float() < SunBurstChance)
                 {
                     environmentEffects.CreateSun(SunColor, SunSize, SunHeight, 0,
                         new DreamEnvironmentEffects.SunburstConfig
@@ -130,13 +130,13 @@ namespace LSDR.SDK.Data
                     environmentEffects.CreateSun(SunColor, SunSize, SunHeight, 0);
                 }
 
-                if (SecondSunChance > 0 && RandUtil.Float() > SecondSunChance)
+                if (SecondSunChance > 0 && RandUtil.Float() < SecondSunChance)
                 {
                     environmentEffects.CreateSun(SecondSunColor, SecondSunSize, SecondSunHeight, SecondSunOffset);
                 }
             }
 
-            if (StarsChance > 0 && RandUtil.Float() > StarsChance)
+            if (StarsChance > 0 && RandUtil.Float() < StarsChance)
             {
                 environmentEffects.CreateStars(NumberOfStars, StarsColor);
             }

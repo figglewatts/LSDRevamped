@@ -41,7 +41,18 @@ namespace LSDR.Entities.Player
             if (Settings.CanControlPlayer && (!ControlScheme.Current.FpsControls || _externalInput))
             {
                 // apply a rotation equal to the current move amount
-                float rotAmount = ControlScheme.InputActions.Game.Move.ReadValue<Vector2>().x;
+                float rotAmount;
+                if (ControlScheme.LastUsedGamepad)
+                {
+                    // if we're using a gamepad we want the look input to contribute
+                    rotAmount = ControlScheme.InputActions.Game.Look.ReadValue<Vector2>().x;
+                }
+                else
+                {
+                    // otherwise we want the move input to contribute
+                    rotAmount = ControlScheme.InputActions.Game.Move.ReadValue<Vector2>().x;
+                }
+
                 if (_externalInput) rotAmount = _externalInputValue;
                 Vector3 transformRotation = transform.rotation.eulerAngles;
                 transformRotation.y += rotAmount * RotationSpeed * Time.deltaTime;

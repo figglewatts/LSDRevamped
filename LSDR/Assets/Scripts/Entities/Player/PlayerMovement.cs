@@ -406,7 +406,9 @@ namespace LSDR.Entities.Player
 
             // get vector axes from input system
             Vector2 move = ControlScheme.InputActions.Game.Move.ReadValue<Vector2>();
-            move.x = ControlScheme.Current.FpsControls ? move.x : 0;
+            move.x = ControlScheme.Current.FpsControls
+                ? move.x
+                : ControlScheme.InputActions.Game.Strafe.ReadValue<float>();
 
             // handle input from external sources (i.e. Lua scripts controlling the player)
             if (_externalInput) move = _externalInputDirection;

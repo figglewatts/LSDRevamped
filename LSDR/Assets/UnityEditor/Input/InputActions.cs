@@ -98,13 +98,22 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Strafe"",
+                    ""type"": ""Button"",
+                    ""id"": ""ccceb909-f3dd-4136-946a-38964adbd12a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
                 {
                     ""name"": """",
                     ""id"": ""7ad87685-5d6e-46d5-96ad-96a3dbdd0e13"",
-                    ""path"": ""<Keyboard>/e"",
+                    ""path"": ""<Keyboard>/f"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard and mouse"",
@@ -148,7 +157,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""536ff503-6ee7-4d21-a7b6-22af338d6332"",
-                    ""path"": ""<Keyboard>/q"",
+                    ""path"": ""<Keyboard>/z"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard and mouse"",
@@ -170,7 +179,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""1c435ac5-eef0-4ec8-a4de-abfbffbdcc87"",
-                    ""path"": ""<Keyboard>/z"",
+                    ""path"": ""<Keyboard>/x"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard and mouse"",
@@ -331,6 +340,72 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""action"": ""NextProfile"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""46f32362-5be2-4d6e-924f-60d1e5ab9fad"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Strafe"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""e773c200-9a93-4a44-8d22-4548278eff54"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Strafe"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""97ce885e-7164-48e2-909e-bd09f28950fd"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Strafe"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""cd0c6a00-9bed-454c-997b-dfe8aa6d3119"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Strafe"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""f9866fab-36ef-4e8f-88cc-6e04d0115dea"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Strafe"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""35152aea-7fba-47d5-aec7-12fb0f30fdab"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Strafe"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         },
@@ -624,6 +699,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         m_Game_LookDown = m_Game.FindAction("LookDown", throwIfNotFound: true);
         m_Game_Pause = m_Game.FindAction("Pause", throwIfNotFound: true);
         m_Game_NextProfile = m_Game.FindAction("NextProfile", throwIfNotFound: true);
+        m_Game_Strafe = m_Game.FindAction("Strafe", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -701,6 +777,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Game_LookDown;
     private readonly InputAction m_Game_Pause;
     private readonly InputAction m_Game_NextProfile;
+    private readonly InputAction m_Game_Strafe;
     public struct GameActions
     {
         private @InputActions m_Wrapper;
@@ -713,6 +790,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         public InputAction @LookDown => m_Wrapper.m_Game_LookDown;
         public InputAction @Pause => m_Wrapper.m_Game_Pause;
         public InputAction @NextProfile => m_Wrapper.m_Game_NextProfile;
+        public InputAction @Strafe => m_Wrapper.m_Game_Strafe;
         public InputActionMap Get() { return m_Wrapper.m_Game; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -746,6 +824,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @NextProfile.started += instance.OnNextProfile;
             @NextProfile.performed += instance.OnNextProfile;
             @NextProfile.canceled += instance.OnNextProfile;
+            @Strafe.started += instance.OnStrafe;
+            @Strafe.performed += instance.OnStrafe;
+            @Strafe.canceled += instance.OnStrafe;
         }
 
         private void UnregisterCallbacks(IGameActions instance)
@@ -774,6 +855,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @NextProfile.started -= instance.OnNextProfile;
             @NextProfile.performed -= instance.OnNextProfile;
             @NextProfile.canceled -= instance.OnNextProfile;
+            @Strafe.started -= instance.OnStrafe;
+            @Strafe.performed -= instance.OnStrafe;
+            @Strafe.canceled -= instance.OnStrafe;
         }
 
         public void RemoveCallbacks(IGameActions instance)
@@ -905,6 +989,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         void OnLookDown(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
         void OnNextProfile(InputAction.CallbackContext context);
+        void OnStrafe(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
