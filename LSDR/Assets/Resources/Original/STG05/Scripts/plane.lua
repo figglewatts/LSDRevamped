@@ -15,9 +15,8 @@ function start()
     
     this.SetChildVisible(false)
     
-    state = "crash"
     if IsDayEven() then
-        --this.GameObject.SetActive(false)
+        this.GameObject.SetActive(false)
         return
     end
 end

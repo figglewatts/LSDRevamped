@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
+using LSDR.SDK.Assets;
 using LSDR.SDK.Audio;
+using LSDR.SDK.Lua;
 using LSDR.SDK.Util;
 using UnityEngine;
 
@@ -39,6 +42,23 @@ namespace LSDR.SDK.Data
 
         [Tooltip("The song library this dream uses to play music.")]
         public AbstractSongLibrary SongLibrary;
+
+        [Tooltip("The script to run with this dream.")]
+        public LuaScriptAsset DreamScript;
+
+        [NonSerialized] protected DreamLuaScript _dreamLuaScript;
+
+        public void CreateScript()
+        {
+            if (DreamScript == null) return;
+            _dreamLuaScript = new DreamLuaScript(LuaManager.Managed, DreamScript, this);
+            _dreamLuaScript.Start();
+        }
+
+        public void UpdateScript()
+        {
+            _dreamLuaScript?.Update();
+        }
 
         public DreamEnvironment RandomEnvironment()
         {

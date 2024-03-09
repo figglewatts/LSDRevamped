@@ -58,7 +58,8 @@ namespace LSDR.Game
                 DreamSystem.Initialise();
 
                 // hook up interfaces to SDK
-                LuaManager.ProvideManaged(new LuaEngine(DreamSystem, SettingsSystem));
+                LuaManager.ProvideManaged(new LuaEngine(DreamSystem, SettingsSystem,
+                    SettingsSystem.ControlSchemeLoader));
                 DreamControlManager.ProvideManaged(DreamSystem);
                 FadeManager.ProvideManaged(ToriiFader.Instance);
                 MixerGroupProviderManager.ProvideManaged(new MixerGroupProvider());

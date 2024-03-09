@@ -2,6 +2,9 @@ using System;
 using System.Linq;
 using LSDR.Dream;
 using LSDR.Entities.Player;
+using LSDR.Game;
+using LSDR.InputManagement;
+using LSDR.Lua.Persistence;
 using LSDR.Lua.Proxies;
 using LSDR.SDK;
 using LSDR.SDK.Animation;
@@ -31,15 +34,25 @@ namespace LSDR.Lua
             UserData.RegisterProxyType<DreamSystemProxy, DreamSystem>(r => new DreamSystemProxy(r));
             UserData.RegisterProxyType<DreamAudioProxy, DreamAudio>(e => new DreamAudioProxy(e));
             UserData.RegisterProxyType<DreamProxy, SDK.Data.Dream>(e => new DreamProxy(e));
+            UserData.RegisterProxyType<ControlSchemeLoaderSystemProxy, ControlSchemeLoaderSystem>(s =>
+                new ControlSchemeLoaderSystemProxy(s));
+            UserData.RegisterProxyType<DreamJournalProxy, DreamJournal>(dj => new DreamJournalProxy(dj));
+            UserData.RegisterProxyType<PauseSystemProxy, PauseSystem>(ps => new PauseSystemProxy(ps));
 
-            // register types
+            // register enum
             engine.RegisterEnum<TextureSet>();
             engine.RegisterEnum<SongStyle>();
+            engine.RegisterEnum<Lifetime>();
+
+            // register types
             UserData.RegisterType<SongAsset>();
             UserData.RegisterType<SongListAsset>();
             UserData.RegisterType<DreamEnvironment>();
             UserData.RegisterType<AnimatedObject>();
             UserData.RegisterType<MovieClip>();
+            UserData.RegisterType<ControlScheme>();
+            UserData.RegisterType<Prefab>();
+            UserData.RegisterType<Persistence.Persistence>();
         }
 
         public static GameObject GetEntity(string id)

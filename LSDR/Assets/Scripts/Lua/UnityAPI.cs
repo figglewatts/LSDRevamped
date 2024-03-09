@@ -3,6 +3,7 @@ using LSDR.Lua.Proxies;
 using LSDR.SDK.Lua;
 using MoonSharp.Interpreter;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace LSDR.Lua
 {
@@ -12,6 +13,7 @@ namespace LSDR.Lua
         {
             // register proxies
             UserData.RegisterProxyType<GameObjectProxy, GameObject>(go => new GameObjectProxy(go));
+            UserData.RegisterProxyType<InputActionProxy, InputAction>(ia => new InputActionProxy(ia));
         }
 
         public static Vector3 Vector3(float x, float y, float z) => new Vector3(x, y, z);

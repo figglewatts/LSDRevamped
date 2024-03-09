@@ -1,6 +1,7 @@
 ﻿using System;
 using LSDR.Dream;
 using LSDR.SDK;
+using LSDR.SDK.Data;
 using LSDR.SDK.Entities;
 using LSDR.SDK.Visual;
 using MoonSharp.Interpreter;
@@ -18,6 +19,8 @@ namespace LSDR.Lua.Proxies
 
         public int DayNumber => _target.GameSave.CurrentJournalSave.DayNumber;
         public int YearNumber => _target.GameSave.CurrentJournalSave.YearNumber;
+
+        public DreamEnvironment CurrentEnvironment => _target.CurrentEnvironment;
 
         protected static Color? _transitionColor;
         protected static bool _transitionSound = true;
@@ -86,6 +89,16 @@ namespace LSDR.Lua.Proxies
         public void StretchDream(float amount, float durationSeconds)
         {
             _target.StretchDream(amount, durationSeconds);
+        }
+
+        public void ApplyEnvironment(DreamEnvironment environment)
+        {
+            _target.ApplyEnvironment(environment);
+        }
+
+        public void ForceSave()
+        {
+            _target.GameSave.Save();
         }
     }
 }

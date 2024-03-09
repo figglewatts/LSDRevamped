@@ -2,7 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using LSDR.Dream;
+using LSDR.Lua;
+using LSDR.Lua.Persistence;
 using LSDR.SDK.Data;
+using LSDR.SDK.Lua;
+using MoonSharp.Interpreter;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -15,6 +19,15 @@ namespace LSDR.Game
         public readonly Dictionary<string, JournalSaveData> JournalSaves;
 
         public GameSaveData() { JournalSaves = new Dictionary<string, JournalSaveData>(); }
+
+        public void Initialise()
+        {
+            ((LuaEngine)LuaManager.Managed).Persistence.Clear(Lifetime.Mod);
+            foreach (var journal in JournalSaves.Values)
+            {
+                journal.DeserializeLuaData();
+            }
+        }
 
         public JournalSaveData Journal(DreamJournal journal)
         {
@@ -32,6 +45,8 @@ namespace LSDR.Game
         {
             [JsonProperty("SequenceData")]
             protected readonly List<DreamSequence> _sequenceData = new List<DreamSequence>();
+
+            public readonly Dictionary<string, object> LuaPersisted = new();
 
             public int DayNumber { get; set; }
 
@@ -68,6 +83,16 @@ namespace LSDR.Game
             public bool HasEnoughDataForFlashback()
             {
                 return SequenceData.SelectMany(sd => sd.EntityGraphContributions).Count() > 100;
+            }
+
+            public void SerializeLuaData()
+            {
+                ((LuaEngine)LuaManager.Managed).Persistence.SerializeToSaveData(this);
+            }
+
+            public void DeserializeLuaData()
+            {
+                ((LuaEngine)LuaManager.Managed).Persistence.DeserializeFromSaveData(this);
             }
 
             public void IncrementDayNumberWithSequence(DreamSequence sequence)

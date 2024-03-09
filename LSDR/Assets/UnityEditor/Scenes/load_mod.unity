@@ -258,12 +258,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SunPrefab: {fileID: 8955513320844263254, guid: 7056277ca8d8bcc46bef043b91195990,
     type: 3}
-  SunTexture: {fileID: 2800000, guid: 1df7ebd9721277a46bb1ddda3a74dd73, type: 3}
   CloudsPrefab: {fileID: 3959927865594837859, guid: 08319cd9068752947b03846763aa2069,
     type: 3}
   StarsPrefab: {fileID: 3959927865594837859, guid: 0595573f948d00f47b51a21fa3bf7638,
     type: 3}
-  SunburstPrefab: {fileID: 0}
 --- !u!1 &626828118
 GameObject:
   m_ObjectHideFlags: 0
@@ -665,6 +663,52 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!1 &2027077765
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2027077767}
+  - component: {fileID: 2027077766}
+  m_Layer: 0
+  m_Name: JournalScriptHandler
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2027077766
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2027077765}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9f70ca61958444380292cb279fb3673, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SettingsSystem: {fileID: 11400000, guid: 12ecd5989d3bcc549bcacf027048a5bd, type: 2}
+  DreamSystem: {fileID: 11400000, guid: 7980ba7eb97e9a54a9e6fd65c8a8d2a3, type: 2}
+--- !u!4 &2027077767
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2027077765}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 23.126976, y: 12.127696, z: 638.8244}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &6290458217227496438
 PrefabInstance:
   m_ObjectHideFlags: 0

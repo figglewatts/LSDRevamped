@@ -45,8 +45,16 @@ namespace LSDR.Game
                 Debug.Log("loading game from " + _savedGamePath);
                 Data = _serializer.Deserialize<GameSaveData>(_savedGamePath);
             }
+            Data.Initialise();
         }
 
-        public void Save() { _serializer.Serialize(Data, _savedGamePath); }
+        public void Save()
+        {
+            foreach (var journal in Data.JournalSaves.Values)
+            {
+                journal.SerializeLuaData();
+            }
+            _serializer.Serialize(Data, _savedGamePath);
+        }
     }
 }

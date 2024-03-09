@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using LSDR.SDK.Assets;
 using LSDR.SDK.Audio;
+using LSDR.SDK.Lua;
 using LSDR.SDK.Util;
 using UnityEngine;
 
@@ -27,10 +29,27 @@ namespace LSDR.SDK.Data
         [Tooltip("Lua scripts that will be loaded into the environment of every script.")]
         public List<LuaScriptAsset> LuaScriptIncludes;
 
+        [Tooltip("The script to run with this journal.")]
+        public LuaScriptAsset JournalScript;
+
         [Tooltip("Mapping of day numbers to special days (video/text dreams).")]
         public SerializableDictionary<int, AbstractSpecialDay> SpecialDays;
 
         public IEnumerable<Dream> LinkableDreams => Dreams.Where(d => d.Linkable);
+
+        [NonSerialized] protected JournalLuaScript _journalLuaScript;
+
+        public void CreateScript()
+        {
+            if (JournalScript == null) return;
+            _journalLuaScript = new JournalLuaScript(LuaManager.Managed, JournalScript, this);
+            _journalLuaScript.Start();
+        }
+
+        public void UpdateScript()
+        {
+            _journalLuaScript?.Update();
+        }
 
         public Dream GetLinkable(Dream current)
         {

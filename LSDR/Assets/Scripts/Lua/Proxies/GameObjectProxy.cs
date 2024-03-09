@@ -3,6 +3,7 @@ using LSDR.SDK.Animation;
 using LSDR.SDK.Entities;
 using LSDR.SDK.Lua.Actions;
 using MoonSharp.Interpreter;
+using Torii.Coroutine;
 using UnityEngine;
 
 namespace LSDR.Lua.Proxies
@@ -16,12 +17,10 @@ namespace LSDR.Lua.Proxies
         public PlayerMovement PlayerMovement => getAs<PlayerMovement>();
         public PlayerCameraRotation PlayerCamera => getAs<PlayerCameraRotation>();
         public LuaAsyncActionRunner Action => getAs<LuaAsyncActionRunner>();
-
         public DreamAudio DreamAudio => getAs<DreamAudio>();
-
         public AnimatedObject AnimatedObject => getAs<AnimatedObject>();
-
         public MovieClip VideoClip => getAs<MovieClip>();
+        public Prefab Prefab => getAs<Prefab>();
 
         public string Name => _target.name;
 
@@ -103,6 +102,11 @@ namespace LSDR.Lua.Proxies
             var target = worldPosition;
             target.y = _target.transform.position.y;
             LookAt(target);
+        }
+
+        public void DestroySelf()
+        {
+            Object.Destroy(_target);
         }
 
         protected T getAs<T>() where T : MonoBehaviour

@@ -8,11 +8,14 @@ using LSDR.Entities.Dream;
 using LSDR.Entities.Player;
 using LSDR.Game;
 using LSDR.InputManagement;
+using LSDR.Lua;
+using LSDR.Lua.Persistence;
 using LSDR.SDK;
 using LSDR.SDK.Audio;
 using LSDR.SDK.Data;
 using LSDR.SDK.DreamControl;
 using LSDR.SDK.Entities;
+using LSDR.SDK.Lua;
 using LSDR.SDK.Util;
 using LSDR.SDK.Visual;
 using LSDR.Visual;
@@ -85,6 +88,8 @@ namespace LSDR.Dream
         [field: NonSerialized] public SDK.Data.Dream CurrentDream { get; protected set; }
         [field: NonSerialized] public GameObject CurrentDreamInstance { get; protected set; }
         [field: NonSerialized] public DreamSequence CurrentSequence { get; protected set; }
+
+        public DreamEnvironment CurrentEnvironment => Instantiate(_currentEnvironment);
 
         public int CurrentDay => GameSave.CurrentJournalSave.DayNumber;
 
@@ -467,6 +472,12 @@ namespace LSDR.Dream
             _currentEnvironment.Apply(SettingsSystem.Settings.LongDrawDistance, _environmentEffects);
         }
 
+        public void ApplyEnvironment(DreamEnvironment environment)
+        {
+            _currentEnvironment = environment;
+            ApplyEnvironment();
+        }
+
         public void StretchDream(float amount, float timeSeconds)
         {
             if (CurrentDreamInstance == null)
@@ -557,6 +568,7 @@ namespace LSDR.Dream
 
             TextureSetter.Instance.DeregisterAllMaterials();
             EntityIndex.Instance.DeregisterAllEntities();
+            ((LuaEngine)LuaManager.Managed).Persistence.Clear(Lifetime.Dream);
 
             bool loadingSameDream = CurrentDream == dream;
             CurrentDream = dream;
@@ -623,6 +635,9 @@ namespace LSDR.Dream
                 _currentEnvironment = dream.RandomEnvironment();
                 ApplyEnvironment();
             }
+
+            // start handling the dream lua script
+            CurrentDream.CreateScript();
 
             SettingsSystem.CanControlPlayer = true;
             SettingsSystem.CanMouseLook = true;

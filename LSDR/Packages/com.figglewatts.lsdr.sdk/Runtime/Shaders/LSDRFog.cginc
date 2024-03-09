@@ -31,15 +31,11 @@ float4 FogColor(float distance)
 float3 AdditiveFog(float3 color, float3 fogColor, float factor)
 {
     return color + fogColor * factor;
-    //return fogColor * factor;
 }
 
 float3 SubtractiveFog(float3 color, float4 fogColor, float factor)
 {
-    //return color - Complement(fogColor) * factor;
-    //return color - Complement(fogColor) * factor * (1 - fogColor.a);
     return lerp(color, lerp(color, fogColor.rgb, 1 - fogColor.a), factor);
-    //return float3(fogColor.a, fogColor.a, fogColor.a);
 }
 
 float4 ApplyClassicFog(float4 color, float4 fogColor)
@@ -64,6 +60,5 @@ float4 ApplyRevampedFog(float4 color, float4 fogColor)
     finalFogCol = SubtractiveFog(finalFogCol, fogColor.rgba, _SubtractiveFog);
     #endif
 
-    return color;
-    //return float4(finalFogCol.rgb, color.a);
+    return float4(finalFogCol.rgb, color.a);
 }

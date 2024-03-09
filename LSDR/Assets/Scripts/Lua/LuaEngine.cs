@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using LSDR.Dream;
 using LSDR.Game;
+using LSDR.InputManagement;
 using LSDR.SDK.Lua;
 using LSDR.SDK.Lua.Actions;
 using MoonSharp.Interpreter;
@@ -18,7 +19,10 @@ namespace LSDR.Lua
         protected readonly Dictionary<string, object> _registeredObjects;
         protected readonly SettingsSystem _settingsSystem;
 
-        public LuaEngine(DreamSystem dreamSystem, SettingsSystem settingsSystem)
+        public Persistence.Persistence Persistence { get; }
+
+        public LuaEngine(DreamSystem dreamSystem, SettingsSystem settingsSystem,
+            ControlSchemeLoaderSystem controlSchemeLoaderSystem)
         {
             _registeredObjects = new Dictionary<string, object>();
 
@@ -29,7 +33,12 @@ namespace LSDR.Lua
             UserData.RegisterType<LuaAsyncActionRunner>();
             UserData.RegisterType<LuaAsyncAction>();
 
+            Persistence = new(dreamSystem.GameSave);
+
             _registeredObjects["DreamSystem"] = dreamSystem;
+            _registeredObjects["ControlScheme"] = controlSchemeLoaderSystem;
+            _registeredObjects["PauseSystem"] = dreamSystem.PauseSystem;
+            _registeredObjects["Persistence"] = Persistence;
 
             // create converters
             createConverters();
@@ -51,7 +60,7 @@ namespace LSDR.Lua
             createNamespacedStaticAPI(new DebugAPI(), script, "Debug");
             createStaticAPI(new LSDAPI(), script);
             createNamespacedStaticAPI(new ActionPredicates(), script, "Condition");
-            createNamespacedStaticAPI(new ColorAPI(), script, "Color");
+            createNamespacedStaticAPI(new ColorAPI(), script, "Colors");
             createNamespacedStaticAPI(new RandomAPI(), script, "Random");
 
             createRegisteredGlobalObjects(script);
@@ -104,6 +113,78 @@ namespace LSDR.Lua
                     return new Func<bool>(() => func.Call().Boolean);
                 }
             );
+
+            // Vector2
+            Vector2 vec2FromTable(Table table)
+            {
+                return new Vector2((float)table.Get("x").Number, (float)table.Get("y").Number);
+            }
+
+            Table makeVec2Table(Vector2 vector, Script script)
+            {
+                DynValue x = DynValue.NewNumber(vector.x);
+                DynValue y = DynValue.NewNumber(vector.y);
+                Table vec = new Table(script)
+                {
+                    ["x"] = x,
+                    ["y"] = y,
+                    MetaTable = DynValue.FromObject(script, new Dictionary<string, object>
+                    {
+                        {
+                            "__tostring", new Func<Table, string>(t => $"({x}, {y})")
+                        },
+                        {
+                            "__add", new Func<Table, Table, Table>((a, b) =>
+                            {
+                                var aVec = vec2FromTable(a);
+                                var bVec = vec2FromTable(b);
+                                return makeVec2Table(aVec + bVec, script);
+                            })
+                        },
+                        {
+                            "__sub", new Func<Table, Table, Table>((a, b) =>
+                            {
+                                var aVec = vec2FromTable(a);
+                                var bVec = vec2FromTable(b);
+                                return makeVec2Table(aVec - bVec, script);
+                            })
+                        },
+                        {
+                            "__mul", new Func<Table, double, Table>((v, s) =>
+                            {
+                                var vec = vec2FromTable(v);
+                                return makeVec2Table(vec * (float)s, script);
+                            })
+                        },
+                        {
+                            "__div", new Func<Table, double, Table>((v, s) =>
+                            {
+                                var vec = vec2FromTable(v);
+                                return makeVec2Table(vec / (float)s, script);
+                            })
+                        },
+                    }).Table
+                };
+
+                vec["normalise"] = new CallbackFunction((context, args) =>
+                {
+                    var vec2 = vec2FromTable(vec);
+                    vec2.Normalize();
+                    return DynValue.NewTable(makeVec2Table(vec2, script));
+                });
+                vec["length"] = new CallbackFunction((context, args) =>
+                {
+                    var vec2 = vec2FromTable(vec);
+                    return DynValue.NewNumber(vec2.magnitude);
+                });
+
+                return vec;
+            }
+
+            Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Table, typeof(Vector2),
+                dynVal => vec2FromTable(dynVal.Table));
+            Script.GlobalOptions.CustomConverters.SetClrToScriptCustomConversion<Vector2>(
+                (script, vector) => DynValue.NewTable(makeVec2Table(vector, script)));
 
             // Vector3
             Vector3 vec3FromTable(Table table)
@@ -162,7 +243,6 @@ namespace LSDR.Lua
 
                 vec["normalise"] = new CallbackFunction((context, args) =>
                 {
-
                     var vec3 = vec3FromTable(vec);
                     vec3.Normalize();
                     return DynValue.NewTable(makeVec3Table(vec3, script));
