@@ -333,12 +333,17 @@ namespace LSDR.Lua
                 var del = method.CreateDelegate(delegateType);
                 script.Globals[method.Name] = del;
             }
+
+            foreach (var property in typeof(T).GetProperties(BindingFlags.Static | BindingFlags.Public))
+            {
+                script.Globals[property.Name] = property.GetValue(instance);
+            }
         }
 
         private void createNamespacedStaticAPI<T>(T instance, Script script, string namespace_) where T : ILuaAPI
         {
             instance.Register(this, script);
-            var apiTableData = new Dictionary<string, Delegate>();
+            var apiTableData = new Dictionary<string, object>();
 
             foreach (var method in typeof(T).GetMethods(BindingFlags.Static |
                                                         BindingFlags.Public))
@@ -351,6 +356,11 @@ namespace LSDR.Lua
 
                 var del = method.CreateDelegate(delegateType);
                 apiTableData[method.Name] = del;
+            }
+
+            foreach (var property in typeof(T).GetProperties(BindingFlags.Static | BindingFlags.Public))
+            {
+                apiTableData[property.Name] = property.GetValue(instance);
             }
 
             DynValue apiTable = DynValue.FromObject(script, apiTableData);
