@@ -803,7 +803,6 @@ namespace LSDR.Dream
                     catch (InvalidOperationException)
                     {
                         Debug.LogError($"Unable to find SpawnPoint with ID '{_forcedSpawnID}'");
-                        throw;
                     }
                 }
 

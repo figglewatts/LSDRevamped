@@ -18,7 +18,7 @@ namespace LSDR.SDK.Entities
         {
             if (Script)
                 _luaScript = new TriggerLuaLuaScript(LuaManager.Managed, Script, TriggerFunctionName,
-                    TriggerExitFunctionName);
+                    TriggerExitFunctionName, this);
         }
 
         protected override void onTrigger(Collider player)

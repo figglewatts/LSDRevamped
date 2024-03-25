@@ -17,6 +17,7 @@ namespace LSDR.Lua
         public static Color Magenta => Color.magenta;
         public static Color White => Color.white;
         public static Color Yellow => Color.yellow;
+        public static Color Green => Color.green;
 
         public void Register(ILuaEngine engine, Script script) { }
     }

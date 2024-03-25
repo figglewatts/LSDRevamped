@@ -15,6 +15,11 @@ namespace LSDR.SDK.Data
         [TextArea]
         public string TextJa;
 
+        [TextArea]
+        public string TextEn;
+
+        public string Text => string.IsNullOrWhiteSpace(TextJa) ? TextEn : TextJa;
+
         public override void HandleDay(int dayNumber)
         {
             SceneManager.LoadScene("text_dream");

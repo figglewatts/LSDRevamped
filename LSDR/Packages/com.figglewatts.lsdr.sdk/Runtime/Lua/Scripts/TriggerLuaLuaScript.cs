@@ -1,4 +1,5 @@
 using LSDR.SDK.Assets;
+using LSDR.SDK.Entities;
 using MoonSharp.Interpreter;
 
 namespace LSDR.SDK.Lua
@@ -7,11 +8,15 @@ namespace LSDR.SDK.Lua
     {
         private DynValue _triggerFunc;
         private DynValue _triggerExitFunc;
+        private readonly TriggerLua _triggerLua;
 
         public TriggerLuaLuaScript(ILuaEngine engine, LuaScriptAsset asset, string triggerFunctionName,
-            string triggerExitFunctionName) : base(engine,
+            string triggerExitFunctionName, TriggerLua triggerLua) : base(engine,
             asset)
         {
+            _triggerLua = triggerLua;
+            Script.Globals["this"] = triggerLua;
+
             compile();
             loadTriggerFunctions(triggerFunctionName, triggerExitFunctionName);
             Start();

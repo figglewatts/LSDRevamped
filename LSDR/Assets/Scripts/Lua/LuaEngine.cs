@@ -36,7 +36,7 @@ namespace LSDR.Lua
             Persistence = new(dreamSystem.GameSave);
 
             _registeredObjects["DreamSystem"] = dreamSystem;
-            _registeredObjects["ControlScheme"] = controlSchemeLoaderSystem;
+            _registeredObjects["Input"] = controlSchemeLoaderSystem;
             _registeredObjects["PauseSystem"] = dreamSystem.PauseSystem;
             _registeredObjects["Persistence"] = Persistence;
 

@@ -12,7 +12,7 @@ namespace LSDR.SDK.DreamControl
 
         public void BeginTextDay(TextSpecialDay day)
         {
-            Text.text = day.TextJa;
+            Text.text = day.Text;
         }
 
         public void Update()
