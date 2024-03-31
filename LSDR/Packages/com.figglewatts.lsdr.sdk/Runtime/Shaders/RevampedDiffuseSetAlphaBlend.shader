@@ -7,6 +7,7 @@ Shader "LSDR/RevampedDiffuseSetAlphaBlend"
         _MainTexC ("Albedo C (RGB)", 2D) = "white" {}
         _MainTexD ("Albedo D (RGB)", 2D) = "white" {}
         _Tint ("Tint Color", Color) = (1, 1, 1, 1)
+        [Enum(UnityEngine.Rendering.CullMode)] _Cull ("Cull", Float) = 0
     }
     SubShader
     {
@@ -18,6 +19,7 @@ Shader "LSDR/RevampedDiffuseSetAlphaBlend"
         {
             Blend SrcAlpha OneMinusSrcAlpha
             ZWrite Off
+            Cull [_Cull]
             
             CGPROGRAM
             #pragma vertex vert

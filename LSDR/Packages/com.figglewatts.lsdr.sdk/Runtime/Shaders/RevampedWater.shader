@@ -11,6 +11,7 @@
         _Tint ("Tint Color", Color) = (1, 1, 1, 1)
         _AnimationSpeed ("Speed", float) = 1.0
 		_Alpha ("Transparency", float) = 0.5
+		[Enum(UnityEngine.Rendering.CullMode)] _Cull ("Cull", Float) = 0
     }
 	SubShader {
 		Tags { "RenderType"="Transparent" "Queue" = "Transparent" }
@@ -18,6 +19,7 @@
         ZWrite On
         ZTest LEqual
 		LOD 200
+		Cull [_Cull]
 
 	    Pass {
 	        CGPROGRAM
