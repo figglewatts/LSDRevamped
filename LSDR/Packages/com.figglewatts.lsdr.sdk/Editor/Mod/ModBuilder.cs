@@ -10,9 +10,10 @@ namespace LSDR.SDK.Editor.Mod
     public class ModBuilder
     {
         protected const BuildAssetBundleOptions BuildOptions = BuildAssetBundleOptions.StrictMode |
-                                                               BuildAssetBundleOptions.ChunkBasedCompression |
+                                                               //BuildAssetBundleOptions.ChunkBasedCompression |
                                                                BuildAssetBundleOptions.AssetBundleStripUnityVersion |
-                                                               BuildAssetBundleOptions.ForceRebuildAssetBundle;
+                                                               BuildAssetBundleOptions.ForceRebuildAssetBundle |
+                                                               BuildAssetBundleOptions.UncompressedAssetBundle;
 
         public void Build(LSDRevampedMod mod, string outputPath)
         {

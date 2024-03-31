@@ -134,12 +134,12 @@ namespace LSDR.SDK.Visual
         protected bool isMaterialValid(Material mat)
         {
             var matShader = mat.shader;
-            if (matShader == _classicShader) return true;
-            if (matShader == _revampedShader) return true;
-            if (matShader == _classicAlphaShader) return true;
-            if (matShader == _revampedAlphaShader) return true;
-            if (matShader == _classicWaterShader) return true;
-            if (matShader == _revampedWaterShader) return true;
+            if (matShader.name.Equals(_classicShader.name, StringComparison.InvariantCulture)) return true;
+            if (matShader.name.Equals(_revampedShader.name, StringComparison.InvariantCulture)) return true;
+            if (matShader.name.Equals(_classicAlphaShader.name, StringComparison.InvariantCulture)) return true;
+            if (matShader.name.Equals(_revampedAlphaShader.name, StringComparison.InvariantCulture)) return true;
+            if (matShader.name.Equals(_classicWaterShader.name, StringComparison.InvariantCulture)) return true;
+            if (matShader.name.Equals(_revampedWaterShader.name, StringComparison.InvariantCulture)) return true;
             return false;
         }
     }
