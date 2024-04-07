@@ -5,8 +5,7 @@ uniform float _AffineIntensity;
 uniform float _RenderCutoffAdjustment;
 uniform int _TextureSet;
 uniform float _VertexColorIntensity;
-
-const static float BRIGHTNESS = 1;
+uniform float _Brightness;
 
 // incoming vertices
 struct appdata
@@ -78,6 +77,19 @@ fragdata vert(appdata v)
     return output;
 }
 
+float applyIntensity(float v, float p)
+{
+    float adj = tanh((v - 0.5) * p);
+    return (adj + 1) / 2;
+}
+
+half3 applyVertexColorIntensity(half3 color)
+{
+    return half3(applyIntensity(color.r, _VertexColorIntensity),
+                 applyIntensity(color.g, _VertexColorIntensity),
+                 applyIntensity(color.b, _VertexColorIntensity));
+}
+
 #if defined(LSDR_TEXTURE_SET)
 fragOut lsdrFrag(fragdata input, sampler2D mainTexA, sampler2D mainTexB, sampler2D mainTexC, sampler2D mainTexD,
                  fixed4 tint)
@@ -109,7 +121,7 @@ fragOut lsdrFrag(fragdata input, sampler2D mainTex, fixed4 tint)
     #endif
 
     // apply vertex color and alpha
-    output_col.rgb *= (input.data.color * _VertexColorIntensity);
+    output_col.rgb *= applyVertexColorIntensity(input.data.color);
     output_col.a *= input.data.color.a;
 
     // apply tint
@@ -125,7 +137,7 @@ fragOut lsdrFrag(fragdata input, sampler2D mainTex, fixed4 tint)
     output_col = ApplyRevampedFog(output_col, fogColor);
     #endif
 
-    output_col.rgb *= BRIGHTNESS;
+    output_col.rgb *= _Brightness;
     output.color = output_col;
 
     return output;
@@ -185,7 +197,7 @@ fragOut frag(fragdata input)
     output_col = ApplyRevampedFog(output_col, fogColor);
 #endif
 
-    output.color = output_col * BRIGHTNESS;
+    output.color = output_col * _Brightness;
     output.color.a = min(_Alpha, waterMap.a);
 
     return output;
