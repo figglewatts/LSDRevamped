@@ -4,6 +4,7 @@
 uniform float _AffineIntensity;
 uniform float _RenderCutoffAdjustment;
 uniform int _TextureSet;
+uniform float _VertexColorIntensity;
 
 const static float BRIGHTNESS = 1;
 
@@ -108,7 +109,7 @@ fragOut lsdrFrag(fragdata input, sampler2D mainTex, fixed4 tint)
     #endif
 
     // apply vertex color and alpha
-    output_col.rgb *= (input.data.color * 1.5);
+    output_col.rgb *= (input.data.color * _VertexColorIntensity);
     output_col.a *= input.data.color.a;
 
     // apply tint

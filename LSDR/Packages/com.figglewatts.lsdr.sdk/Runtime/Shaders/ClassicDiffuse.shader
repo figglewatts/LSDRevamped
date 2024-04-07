@@ -4,6 +4,7 @@ Shader "LSDR/ClassicDiffuse"
     {
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
         _Tint ("Tint Color", Color) = (1, 1, 1, 1)
+        _VertexColorIntensity ("Vertex Color Intensity", Float) = 1.5
         [Enum(UnityEngine.Rendering.CullMode)] _Cull ("Cull", Float) = 0
     }
     SubShader

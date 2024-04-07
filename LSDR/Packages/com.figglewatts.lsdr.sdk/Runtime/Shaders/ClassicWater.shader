@@ -11,6 +11,7 @@
         _Tint ("Tint Color", Color) = (1, 1, 1, 1)
         _AnimationSpeed ("Speed", float) = 1.0
 		_Alpha ("Transparency", float) = 0.5
+		_VertexColorIntensity ("Vertex Color Intensity", Float) = 1.5
 		[Enum(UnityEngine.Rendering.CullMode)] _Cull ("Cull", Float) = 0
     }
 	SubShader {

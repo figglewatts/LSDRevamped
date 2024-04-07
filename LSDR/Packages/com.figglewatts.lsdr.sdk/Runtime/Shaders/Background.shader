@@ -6,6 +6,7 @@
         _ScaleY ("Scale Y", Float) = 1
         _Cutoff("Alpha cutoff", Range(0,1)) = 0.5
         _RotationAngle("Angle", Range(0, 360)) = 0
+        _VertexColorIntensity ("Vertex Color Intensity", Float) = 1.5
     }
     SubShader {
         Tags { "RenderType"="Transparent" "Queue"="Background" }
