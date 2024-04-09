@@ -117,8 +117,14 @@ namespace LSDR.SDK.Editor.Windows
         {
             if (!_placing) return;
 
+            int controlID = GUIUtility.GetControlID(FocusType.Passive);
+
             Event e = Event.current;
+
+            if (e.type == EventType.MouseUp) GUIUtility.hotControl = 0;
             if (e.type != EventType.MouseDown || e.button != 0) return; // only on mouse clicks for left mouse
+
+            GUIUtility.hotControl = controlID;
 
             Ray worldRay = HandleUtility.GUIPointToWorldRay(e.mousePosition);
             if (Physics.Raycast(worldRay, out RaycastHit hitInfo))
