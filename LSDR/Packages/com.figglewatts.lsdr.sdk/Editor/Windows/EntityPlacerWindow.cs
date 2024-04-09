@@ -121,15 +121,24 @@ namespace LSDR.SDK.Editor.Windows
 
             Event e = Event.current;
 
-            if (e.type == EventType.MouseUp) GUIUtility.hotControl = 0;
-            if (e.type != EventType.MouseDown || e.button != 0) return; // only on mouse clicks for left mouse
+            if (e.button != 0) return;
 
-            GUIUtility.hotControl = controlID;
+            if (e.type != EventType.MouseDown || e.type != EventType.MouseUp)
+                return; // only on mouse clicks for left mouse
 
-            Ray worldRay = HandleUtility.GUIPointToWorldRay(e.mousePosition);
-            if (Physics.Raycast(worldRay, out RaycastHit hitInfo))
+            if (e.type == EventType.MouseDown)
             {
-                placeEntity(hitInfo.point);
+                GUIUtility.hotControl = controlID;
+
+                Ray worldRay = HandleUtility.GUIPointToWorldRay(e.mousePosition);
+                if (Physics.Raycast(worldRay, out RaycastHit hitInfo))
+                {
+                    placeEntity(hitInfo.point);
+                }
+            }
+            else if (e.type == EventType.MouseUp)
+            {
+                GUIUtility.hotControl = 0;
             }
 
             e.Use();
