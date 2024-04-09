@@ -122,9 +122,7 @@ namespace LSDR.SDK.Editor.Windows
             Event e = Event.current;
 
             if (e.button != 0) return;
-
-            if (e.type != EventType.MouseDown || e.type != EventType.MouseUp)
-                return; // only on mouse clicks for left mouse
+            if (e.type != EventType.MouseDown && e.type != EventType.MouseUp) return;
 
             if (e.type == EventType.MouseDown)
             {
