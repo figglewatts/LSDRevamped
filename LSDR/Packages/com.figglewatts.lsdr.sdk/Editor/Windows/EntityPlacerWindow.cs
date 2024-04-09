@@ -16,6 +16,7 @@ namespace LSDR.SDK.Editor.Windows
         protected bool _randomizeYRotation = false;
         protected GameObject _entitiesRoot;
         protected bool _placing = false;
+        protected bool _autoName = false;
 
         [MenuItem("LSDR SDK/Entity Placer")]
         public static void Init()
@@ -46,6 +47,7 @@ namespace LSDR.SDK.Editor.Windows
             EditorGUILayout.LabelField("Click in the scene view to place");
 
             _randomizeYRotation = EditorGUILayout.ToggleLeft("Randomize Y rotation", _randomizeYRotation);
+            _autoName = EditorGUILayout.ToggleLeft("Auto name entities", _autoName);
             _placing = EditorGUILayout.ToggleLeft("Placing entities", _placing);
 
             _scrollPos = EditorGUILayout.BeginScrollView(_scrollPos);
@@ -134,7 +136,14 @@ namespace LSDR.SDK.Editor.Windows
             GameObject entityObj = new GameObject(_currentEntityType.Name);
             entityObj.transform.SetParent(_entitiesRoot.transform);
             entityObj.AddComponent(_currentEntityType);
-            entityObj.name = $"{_currentEntityType.Name}_{entityObj.name}";
+            if (_autoName)
+            {
+                entityObj.name = $"{_currentEntityType.Name}_$$";
+            }
+            else
+            {
+                entityObj.name = $"{_currentEntityType.Name}_{entityObj.name}";
+            }
             entityObj.GetComponent<BaseEntity>().ID = entityObj.name;
 
             var iconContent = EditorGUIUtility.IconContent("sv_label_1");
