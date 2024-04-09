@@ -4,7 +4,6 @@ using System.Reflection;
 using LSDR.SDK.Entities;
 using LSDR.SDK.Util;
 using UnityEditor;
-
 using UnityEngine;
 
 namespace LSDR.SDK.Editor.Windows
@@ -139,9 +138,7 @@ namespace LSDR.SDK.Editor.Windows
             entityObj.GetComponent<BaseEntity>().ID = entityObj.name;
 
             var iconContent = EditorGUIUtility.IconContent("sv_label_1");
-            MethodInfo SetIconForObject =
-                typeof(EditorGUIUtility).GetMethod("SetIconForObject", BindingFlags.Static | BindingFlags.NonPublic);
-            SetIconForObject.Invoke(null, new object[] { entityObj, iconContent.image });
+            EditorGUIUtility.SetIconForObject(entityObj, (Texture2D)iconContent.image);
 
             if (_randomizeYRotation)
             {
