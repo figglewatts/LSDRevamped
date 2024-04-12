@@ -16,7 +16,8 @@ namespace LSDR.SDK.Entities
         public enum InteractionType
         {
             Proximity,
-            View
+            View,
+            None
         }
 
         public LuaScriptAsset Script;
@@ -92,7 +93,7 @@ namespace LSDR.SDK.Entities
 
         protected void processPlayerInteraction()
         {
-            if (_interacted) return;
+            if (_interacted || InteractionKind == InteractionType.None) return;
 
             float playerDistance = Vector3.Distance(transform.position, _player.position);
             switch (InteractionKind)
