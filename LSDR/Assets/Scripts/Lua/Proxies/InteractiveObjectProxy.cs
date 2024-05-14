@@ -134,6 +134,14 @@ namespace LSDR.Lua.Proxies
             _target.transform.GetChild(0).gameObject.SetActive(visible);
         }
 
+        public void SetRenderersActive(bool active)
+        {
+            foreach (var r in _target.GetComponentsInChildren<Renderer>())
+            {
+                r.gameObject.SetActive(active);
+            }
+        }
+
         public void SetUpdateIntervalSeconds(float seconds)
         {
             _target.SetUpdateIntervalSeconds(seconds);
