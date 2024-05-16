@@ -12,7 +12,7 @@ namespace LSDR.SDK.Lua.Actions
             UserData.RegisterType<WaitForSecondsPredicate>();
         }
 
-        public static IPredicate Default() { return new GenericPredicate(() => true); }
+        public static IPredicate Default() { return new GenericPredicate(() => true, () => { }); }
 
         public static IPredicate WaitForSeconds(float numSeconds) { return new WaitForSecondsPredicate(numSeconds); }
 
@@ -21,30 +21,39 @@ namespace LSDR.SDK.Lua.Actions
             Vector3? start = null;
             return new GenericPredicate(() =>
             {
-                start ??= obj.transform.position;
                 var diff = (end - start).Value.sqrMagnitude;
                 var current = (obj.transform.position - start).Value.sqrMagnitude;
 
-                return current / diff > 1;
-            });
+                Debug.Log($"current: {current}, diff: {diff}, result: {current / diff}");
+
+                return current / diff >= (1 - float.Epsilon);
+            }, () => start = obj.transform.position);
         }
 
         public static IPredicate PointingAt(GameObject obj, Vector3 worldPos)
         {
             float? initialAngle = null;
             return new GenericPredicate(() =>
-            {
-                var direction = worldPos - obj.transform.position;
-                direction.y = 0; // cancel out Y, so we can walk up/down slopes
-                initialAngle ??= Vector3.SignedAngle(direction, obj.transform.forward, Vector3.up);
+                {
+                    var direction = worldPos - obj.transform.position;
+                    direction.y = 0; // cancel out Y, so we can walk up/down slopes
 
-                float curAngle = Vector3.SignedAngle(direction, obj.transform.forward, Vector3.up);
-                bool signChanged = (initialAngle < 0) != (curAngle < 0);
+                    float curAngle = Vector3.SignedAngle(direction, obj.transform.forward, Vector3.up);
+                    bool signChanged = (initialAngle < 0) != (curAngle < 0);
 
-                return signChanged;
-            });
+                    return signChanged;
+                },
+                () =>
+                {
+                    var direction = worldPos - obj.transform.position;
+                    direction.y = 0; // cancel out Y, so we can walk up/down slopes
+                    initialAngle = Vector3.SignedAngle(direction, obj.transform.forward, Vector3.up);
+                });
         }
 
-        public static IPredicate Custom(Closure closure) { return new GenericPredicate(() => closure.Call().Boolean); }
+        public static IPredicate Custom(Closure closure)
+        {
+            return new GenericPredicate(() => closure.Call().Boolean, () => { });
+        }
     }
 }

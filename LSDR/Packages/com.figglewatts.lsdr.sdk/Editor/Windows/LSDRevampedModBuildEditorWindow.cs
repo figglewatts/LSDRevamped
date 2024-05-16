@@ -1,4 +1,5 @@
 using LSDR.SDK.Data;
+using LSDR.SDK.Editor.Data;
 using LSDR.SDK.Editor.Mod;
 using LSDR.SDK.Editor.Util;
 using UnityEditor;
@@ -35,7 +36,12 @@ namespace LSDR.SDK.Editor.Windows
                     if (GUILayout.Button("Browse", GUILayout.Width(width: 60),
                             GUILayout.Height(EditorGUIUtility.singleLineHeight)))
                     {
+                        var oldOutputPath = _outputPath;
                         _outputPath = EditorUtility.OpenFolderPanel("Mod output folder", "", "");
+                        if (string.IsNullOrWhiteSpace(_outputPath)) _outputPath = oldOutputPath;
+                        GUI.FocusControl(null);
+                        SDKData.SetRecentModOutputPath(_mod, _outputPath);
+                        GUIUtility.ExitGUI();
                     }
                 }
                 EditorGUILayout.EndHorizontal();
@@ -64,6 +70,7 @@ namespace LSDR.SDK.Editor.Windows
         {
             LSDRevampedModBuildEditorWindow window = GetWindow<LSDRevampedModBuildEditorWindow>();
             window._mod = mod;
+            window._outputPath = SDKData.GetRecentModOutputPath(mod);
             window.titleContent = new GUIContent("Build LSDR mod");
             window.minSize = new Vector2(x: 480, y: 170);
             window.maxSize = new Vector2(x: 480, y: 170);

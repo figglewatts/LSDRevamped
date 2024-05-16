@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace LSDR.SDK.Entities
@@ -46,7 +47,8 @@ namespace LSDR.SDK.Entities
 
         public void AllRegistered()
         {
-            foreach (var obj in _entities.Values)
+            var enumerated = _entities.Values.ToList();
+            foreach (var obj in enumerated)
             {
                 var entity = obj.GetComponent<BaseEntity>();
                 if (entity != null)

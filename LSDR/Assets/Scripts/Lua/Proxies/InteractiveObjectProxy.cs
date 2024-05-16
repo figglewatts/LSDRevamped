@@ -33,6 +33,11 @@ namespace LSDR.Lua.Proxies
 
 #region Functions
 
+        public void Init()
+        {
+            _target.Init();
+        }
+
         public IPredicate WaitForAnimation(int index, float offsetSeconds = 0)
         {
             return new WaitForSecondsPredicate(_target.AnimatedObject.Clips[index].length + offsetSeconds);
@@ -107,6 +112,8 @@ namespace LSDR.Lua.Proxies
                 _target.transform.rotation = desired;
                 return true;
             }
+
+            Debug.Log("looking towards");
 
             _target.transform.rotation = Quaternion.RotateTowards(current, desired, speed * Time.deltaTime);
             return false;

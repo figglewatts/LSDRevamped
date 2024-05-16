@@ -392,7 +392,7 @@ namespace LSDR.Dream
 
             ToriiFader.Instance.FadeIn(Color.black, duration: 3, () => Coroutines.Instance.StartCoroutine(
                 LoadDream(dream, transitioning: false)));
-            CurrentSequence.Visited.Add(dream);
+            CurrentSequence?.Visited.Add(dream);
         }
 
         /// <summary>
