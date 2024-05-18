@@ -21,12 +21,9 @@ namespace LSDR.SDK.Lua.Actions
             Vector3? start = null;
             return new GenericPredicate(() =>
             {
-                var diff = (end - start).Value.sqrMagnitude;
-                var current = (obj.transform.position - start).Value.sqrMagnitude;
-
-                Debug.Log($"current: {current}, diff: {diff}, result: {current / diff}");
-
-                return current / diff >= (1 - float.Epsilon);
+                var distance = (end - obj.transform.position).sqrMagnitude;
+                Debug.Log($"distance to target: {distance}");
+                return distance < 0.2f;
             }, () => start = obj.transform.position);
         }
 
@@ -39,6 +36,7 @@ namespace LSDR.SDK.Lua.Actions
                     direction.y = 0; // cancel out Y, so we can walk up/down slopes
 
                     float curAngle = Vector3.SignedAngle(direction, obj.transform.forward, Vector3.up);
+                    Debug.Log($"angle difference to target: {curAngle}");
                     bool signChanged = (initialAngle < 0) != (curAngle < 0);
 
                     return signChanged;

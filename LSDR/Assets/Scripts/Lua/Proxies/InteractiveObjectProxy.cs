@@ -113,8 +113,6 @@ namespace LSDR.Lua.Proxies
                 return true;
             }
 
-            Debug.Log("looking towards");
-
             _target.transform.rotation = Quaternion.RotateTowards(current, desired, speed * Time.deltaTime);
             return false;
         }
@@ -143,7 +141,7 @@ namespace LSDR.Lua.Proxies
 
         public void SetRenderersActive(bool active)
         {
-            foreach (var r in _target.GetComponentsInChildren<Renderer>())
+            foreach (var r in _target.GetComponentsInChildren<Renderer>(includeInactive: true))
             {
                 r.gameObject.SetActive(active);
             }

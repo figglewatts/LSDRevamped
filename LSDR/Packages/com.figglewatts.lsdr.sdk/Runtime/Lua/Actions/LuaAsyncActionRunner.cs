@@ -92,7 +92,6 @@ namespace LSDR.SDK.Lua.Actions
                         // if we're looping then start from the beginning again
                         _currentAction = _rootAction;
                         _rootAction.UntilPredicate?.Begin();
-                        Debug.Log("looping");
                     }
                     else
                     {
@@ -109,14 +108,12 @@ namespace LSDR.SDK.Lua.Actions
                 if (_currentAction.UntilPredicate != null && !_currentAction.UntilPredicate.Predicate())
                 {
                     // defer execution, we need to wait until the predicate is satisfied
-                    Debug.Log("waiting for predicate");
                     yield return null;
                     continue;
                 }
 
                 // if we didn't have a predicate, or if we had a predicate and it was satisfied, then we can move to
                 // the next action
-                Debug.Log($"switching to next action: {_currentAction.Chained}");
                 switchToAction(_currentAction.Chained);
             }
         }

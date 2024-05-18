@@ -14,12 +14,16 @@ namespace LSDR.SDK.Visual
 
         [NonSerialized] protected readonly List<Material> _textureSetMaterials = new List<Material>();
         protected Shader _classicAlphaShader;
+        protected Shader _classicAlphaSetShader;
         protected Shader _classicShader;
+        protected Shader _classicSetShader;
         protected Shader _classicWaterShader;
 
         protected bool _lastShaderSet;
         protected Shader _revampedAlphaShader;
+        protected Shader _revampedAlphaSetShader;
         protected Shader _revampedShader;
+        protected Shader _revampedSetShader;
         protected Shader _revampedWaterShader;
 
         protected TextureSet _textureSet;
@@ -54,10 +58,14 @@ namespace LSDR.SDK.Visual
 
         public void Awake()
         {
-            _classicShader = Shader.Find("LSDR/ClassicDiffuseSet");
-            _classicAlphaShader = Shader.Find("LSDR/ClassicDiffuseSetAlphaBlend");
-            _revampedShader = Shader.Find("LSDR/RevampedDiffuseSet");
-            _revampedAlphaShader = Shader.Find("LSDR/RevampedDiffuseSetAlphaBlend");
+            _classicShader = Shader.Find("LSDR/ClassicDiffuse");
+            _classicSetShader = Shader.Find("LSDR/ClassicDiffuseSet");
+            _classicAlphaShader = Shader.Find("LSDR/ClassicDiffuseAlphaBlend");
+            _classicAlphaSetShader = Shader.Find("LSDR/ClassicDiffuseSetAlphaBlend");
+            _revampedShader = Shader.Find("LSDR/RevampedDiffuse");
+            _revampedSetShader = Shader.Find("LSDR/RevampedDiffuseSet");
+            _revampedAlphaShader = Shader.Find("LSDR/RevampedDiffuseAlphaBlend");
+            _revampedAlphaSetShader = Shader.Find("LSDR/RevampedDiffuseSetAlphaBlend");
             _classicWaterShader = Shader.Find("LSDR/ClassicWater");
             _revampedWaterShader = Shader.Find("LSDR/RevampedWater");
         }
@@ -66,17 +74,31 @@ namespace LSDR.SDK.Visual
 
         public void SetShader(Material mat, bool classic)
         {
-            if (mat.name.ToLowerInvariant().Contains("water"))
+            if (mat.shader.name.Contains("Water", StringComparison.InvariantCulture))
             {
                 mat.shader = classic ? _classicWaterShader : _revampedWaterShader;
                 return;
             }
 
             ShaderTagId queue = mat.shader.FindPassTagValue(passIndex: 0, new ShaderTagId("Queue"));
-            if (queue.name.Equals("Transparent"))
-                mat.shader = classic ? _classicAlphaShader : _revampedAlphaShader;
+            bool isTransparent = queue.name.Equals("Transparent", StringComparison.InvariantCulture);
+
+            if (mat.shader.name.Contains("Set", StringComparison.InvariantCulture))
+            {
+                if (isTransparent)
+                    mat.shader = classic ? _classicAlphaSetShader : _revampedAlphaSetShader;
+                else
+                    mat.shader = classic ? _classicSetShader : _revampedSetShader;
+            }
             else
-                mat.shader = classic ? _classicShader : _revampedShader;
+            {
+                if (isTransparent)
+                    mat.shader = classic ? _classicAlphaShader : _revampedAlphaShader;
+                else
+                    mat.shader = classic ? _classicShader : _revampedShader;
+            }
+
+
         }
 
         public void SetAllShaders(bool classic)
@@ -87,7 +109,10 @@ namespace LSDR.SDK.Visual
 
         public void RegisterMaterial(Material mat)
         {
-            if (!isMaterialValid(mat)) return;
+            if (!isMaterialValid(mat))
+            {
+                return;
+            }
             _textureSetMaterials.Add(mat);
             SetShader(mat);
         }
@@ -135,9 +160,13 @@ namespace LSDR.SDK.Visual
         {
             var matShader = mat.shader;
             if (matShader.name.Equals(_classicShader.name, StringComparison.InvariantCulture)) return true;
+            if (matShader.name.Equals(_classicSetShader.name, StringComparison.InvariantCulture)) return true;
             if (matShader.name.Equals(_revampedShader.name, StringComparison.InvariantCulture)) return true;
+            if (matShader.name.Equals(_revampedSetShader.name, StringComparison.InvariantCulture)) return true;
             if (matShader.name.Equals(_classicAlphaShader.name, StringComparison.InvariantCulture)) return true;
+            if (matShader.name.Equals(_classicAlphaSetShader.name, StringComparison.InvariantCulture)) return true;
             if (matShader.name.Equals(_revampedAlphaShader.name, StringComparison.InvariantCulture)) return true;
+            if (matShader.name.Equals(_revampedAlphaSetShader.name, StringComparison.InvariantCulture)) return true;
             if (matShader.name.Equals(_classicWaterShader.name, StringComparison.InvariantCulture)) return true;
             if (matShader.name.Equals(_revampedWaterShader.name, StringComparison.InvariantCulture)) return true;
             return false;
