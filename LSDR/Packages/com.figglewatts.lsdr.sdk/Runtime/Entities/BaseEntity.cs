@@ -6,6 +6,7 @@ namespace LSDR.SDK.Entities
     public abstract class BaseEntity : MonoBehaviour
     {
         public string ID = Guid.NewGuid().ToString();
+        public bool Unregistered = false;
 
         public virtual void Init() { }
 
@@ -13,7 +14,7 @@ namespace LSDR.SDK.Entities
         {
             ID = ID.Replace("$$", Guid.NewGuid().ToString());
             name = ID;
-            EntityIndex.Instance.Register(this);
+            if (!Unregistered) EntityIndex.Instance.Register(this);
         }
 
         public virtual void OnValidate()
