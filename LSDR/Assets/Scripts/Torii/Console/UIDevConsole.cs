@@ -25,7 +25,7 @@ namespace Torii.Console
         public Text ErrorCountText;
         public bool ShowErrorDisplay = false;
 
-        private readonly List<string> _commandHistory = new List<string>();
+        private ConsoleCommandHistory _commandHistory;
         private readonly Queue<GameObject> _instantiatedOutputRows = new Queue<GameObject>();
         private int _commandHistoryPos = -1;
         private int _errorCount = 0;
@@ -36,6 +36,8 @@ namespace Torii.Console
 
         public void Start()
         {
+            _commandHistory = new ConsoleCommandHistory();
+
             CommandInputField.onEndEdit.AddListener(val =>
             {
                 // submit command on press enter
@@ -80,17 +82,17 @@ namespace Torii.Console
 
         public void CycleCommandHistory(int idx)
         {
-            if (_commandHistory.Count == 0) return;
+            if (_commandHistory.History.Count == 0) return;
 
             if (idx < 0) idx = 0;
 
-            if (idx > _commandHistory.Count - 1)
+            if (idx > _commandHistory.History.Count - 1)
             {
                 CommandInputField.text = "";
-                idx = _commandHistory.Count - 1;
+                idx = _commandHistory.History.Count - 1;
             }
 
-            string command = _commandHistory[idx];
+            string command = _commandHistory.History[idx];
             CommandInputField.text = command;
             _commandHistoryPos = idx;
         }
@@ -131,8 +133,9 @@ namespace Torii.Console
             result.Log();
             CommandInputField.text = string.Empty;
             selectInputField();
-            _commandHistoryPos = _commandHistory.Count - 1;
-            _commandHistory.Add(command);
+            _commandHistoryPos = _commandHistory.History.Count - 1;
+            _commandHistory.History.Add(command);
+            _commandHistory.StoreCommand(command);
         }
 
         private void selectInputField()
