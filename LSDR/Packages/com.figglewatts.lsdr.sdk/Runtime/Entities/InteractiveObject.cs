@@ -9,7 +9,6 @@ using UnityEngine;
 
 namespace LSDR.SDK.Entities
 {
-    [RequireComponent(typeof(Animator))]
     [RequireComponent(typeof(LuaAsyncActionRunner))]
     public class InteractiveObject : BaseEntity
     {
@@ -23,18 +22,14 @@ namespace LSDR.SDK.Entities
         public LuaScriptAsset Script;
         public InteractionType InteractionKind;
         public float InteractionDistance = 3;
+        public AnimatedObject AnimatedObject;
 
         public float UpdateIntervalSeconds => _currentUpdateInterval <= 0 ? Time.deltaTime : _currentUpdateInterval;
 
-        public Animator Animator => _animator;
-        public AnimatedObject AnimatedObject => _animatedObject;
-
-        protected Animator _animator;
         protected bool _interacted;
         protected InteractiveObjectLuaScript _luaScript;
         protected Transform _player;
         protected Camera _playerCamera;
-        protected AnimatedObject _animatedObject;
         protected float _t;
         protected float _currentUpdateInterval = 0.25f;
 
@@ -45,9 +40,8 @@ namespace LSDR.SDK.Entities
             _playerCamera = EntityIndex.Instance.GetComponent<Camera>("__camera");
             _player = EntityIndex.Instance.GetComponent<Transform>("__player");
 
-            _animator = GetComponent<Animator>();
             Action = GetComponent<LuaAsyncActionRunner>();
-            _animatedObject = GetComponent<AnimatedObject>();
+            if (AnimatedObject == null) AnimatedObject = GetComponent<AnimatedObject>();
 
             if (Script)
             {
