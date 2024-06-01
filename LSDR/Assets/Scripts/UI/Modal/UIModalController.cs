@@ -9,7 +9,9 @@ namespace LSDR.UI.Modal
     {
         public GameObject Background;
 
-        protected readonly Stack<(Action, GameObject)> _modals = new Stack<(Action, GameObject)>();
+        public delegate void OnModalCloseAction(int result = 0);
+
+        protected readonly Stack<(OnModalCloseAction, GameObject)> _modals = new();
 
         protected bool modalShowing
         {
@@ -17,7 +19,7 @@ namespace LSDR.UI.Modal
             set => Background.SetActive(value);
         }
 
-        public void ShowModal(Func<GameObject> createModalFunc, Action onModalClose = null)
+        public void ShowModal(Func<GameObject> createModalFunc, OnModalCloseAction onModalClose = null)
         {
             GameObject modalObj = createModalFunc();
             modalObj.transform.SetParent(transform, worldPositionStays: false);
@@ -26,7 +28,7 @@ namespace LSDR.UI.Modal
             modalShowing = true;
         }
 
-        public void HideModal()
+        public void HideModal(int result = 0)
         {
             if (_modals.Count <= 0)
             {
@@ -34,8 +36,8 @@ namespace LSDR.UI.Modal
                 return;
             }
 
-            (Action onModalClose, GameObject modalObj) = _modals.Pop();
-            onModalClose?.Invoke();
+            (OnModalCloseAction onModalClose, GameObject modalObj) = _modals.Pop();
+            onModalClose?.Invoke(result);
             Destroy(modalObj);
 
             if (_modals.Count <= 0)

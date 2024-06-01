@@ -118,7 +118,7 @@ namespace LSDR.UI.Settings
                             UIBindingChoiceModal.BindingChoiceType.Rebind);
                         bindingChoiceModal.ProvideCancelAction(Rebinder.CancelAction);
                         return bindingChoiceModal.gameObject;
-                    }, syncBindingsToControlScheme);
+                    }, _ => syncBindingsToControlScheme());
                 });
                 row.ResetButton.onClick.AddListener(() =>
                 {
@@ -129,7 +129,7 @@ namespace LSDR.UI.Settings
                             UIBindingChoiceModal.BindingChoiceType.Reset);
                         bindingChoiceModal.ProvideCancelAction(Rebinder.CancelAction);
                         return bindingChoiceModal.gameObject;
-                    }, syncBindingsToControlScheme);
+                    }, _ => syncBindingsToControlScheme());
                 });
                 row.DeleteButton.onClick.AddListener(() =>
                 {
@@ -140,7 +140,7 @@ namespace LSDR.UI.Settings
                             UIBindingChoiceModal.BindingChoiceType.Delete);
                         bindingChoiceModal.ProvideCancelAction(Rebinder.CancelAction);
                         return bindingChoiceModal.gameObject;
-                    }, syncBindingsToControlScheme);
+                    }, _ => syncBindingsToControlScheme());
                 });
             }
             else

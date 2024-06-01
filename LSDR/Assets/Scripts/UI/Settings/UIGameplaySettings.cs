@@ -1,7 +1,11 @@
 ﻿using LSDR.Game;
+using LSDR.UI.Modal;
 using Torii.Binding;
-using Torii.UI;
 using UnityEngine;
+using UnityEngine.UI;
+using Dropdown = Torii.UI.Dropdown;
+using Slider = Torii.UI.Slider;
+using Toggle = Torii.UI.Toggle;
 
 namespace LSDR.UI.Settings
 {
@@ -21,6 +25,9 @@ namespace LSDR.UI.Settings
         public Slider HeadbobIntensitySlider;
         public UIJournalDropdownPopulator JournalDropdownPopulator;
         public Toggle SpecialDaysEnabledToggle;
+        public Button ResetProgressButton;
+
+        public GameObject ResetProgressChoiceModalPrefab;
 
         public void Start()
         {
@@ -44,6 +51,29 @@ namespace LSDR.UI.Settings
             {
                 updateMod();
                 updateJournal();
+            });
+
+            ResetProgressButton.onClick.AddListener(() =>
+            {
+                UIModalController.Instance.ShowModal(() =>
+                {
+                    // create modal
+                    var modal = Instantiate(ResetProgressChoiceModalPrefab).GetComponent<UIChoiceModal>();
+                    modal.SetText("Reset journal progress",
+                        "This will reset progress in the current journal to Day 1.\n\nAre you sure?");
+                    return modal.gameObject;
+                }, result =>
+                {
+                    switch ((UIChoiceModal.Result)result)
+                    {
+                        case UIChoiceModal.Result.Cancel:
+                            break;
+                        case UIChoiceModal.Result.Yes:
+                            GameSave.CurrentJournalSave.ResetProgress();
+                            GameSave.Save();
+                            break;
+                    }
+                });
             });
 
             Settings.SettingsBindBroker.Bind(() => EnableHeadBobToggle.isOn,

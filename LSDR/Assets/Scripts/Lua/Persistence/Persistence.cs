@@ -48,6 +48,11 @@ namespace LSDR.Lua.Persistence
             foreach (var key in toRemove) _dataStore.Remove(key);
         }
 
+        public void ClearAll()
+        {
+            _dataStore.Clear();
+        }
+
         public void StoreNumber(string key, Lifetime lifetime, DynValue number)
         {
             _dataStore[key] = new PersistenceRecord(number.Number, lifetime);

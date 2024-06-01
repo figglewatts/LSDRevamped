@@ -126,6 +126,15 @@ namespace LSDR.Game
             {
                 return _sequenceData[index];
             }
+
+            public void ResetProgress()
+            {
+                _sequenceData.Clear();
+                ((LuaEngine)LuaManager.Managed).Persistence.ClearAll();
+                LuaPersisted.Clear();
+                DayNumber = 1;
+                YearNumber = 0;
+            }
         }
     }
 }
