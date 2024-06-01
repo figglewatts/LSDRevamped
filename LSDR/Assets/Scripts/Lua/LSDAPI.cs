@@ -53,6 +53,7 @@ namespace LSDR.Lua
             UserData.RegisterType<ControlScheme>();
             UserData.RegisterType<Prefab>();
             UserData.RegisterType<Persistence.Persistence>();
+            UserData.RegisterType<TriggerLua>();
         }
 
         public static GameObject GetEntity(string id)

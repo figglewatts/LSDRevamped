@@ -26,6 +26,7 @@ namespace LSDR.Lua.Proxies
         protected static bool _transitionSound = true;
         protected static string _transitionSpawnID;
         protected static SDK.Data.Dream _transitionDream;
+        protected static bool _lockControls = false;
 
         public void OnDreamTimeout(Action onDreamTimeout)
         {
@@ -47,6 +48,11 @@ namespace LSDR.Lua.Proxies
             _transitionSpawnID = spawnID;
         }
 
+        public void SetNextTransitionLockControls(bool lockControls)
+        {
+            _lockControls = lockControls;
+        }
+
         public void SetNextTransitionDream(SDK.Data.Dream dream)
         {
             _transitionDream = dream;
@@ -61,16 +67,18 @@ namespace LSDR.Lua.Proxies
         {
             if (_transitionColor == null)
             {
-                _target.Transition(_transitionDream, _transitionSound, lockControls: false, _transitionSpawnID);
+                _target.Transition(_transitionDream, _transitionSound, _lockControls, _transitionSpawnID);
             }
             else
             {
-                _target.Transition(_transitionColor.Value, _transitionDream, _transitionSound, lockControls: false,
+                _target.Transition(_transitionColor.Value, _transitionDream, _transitionSound, _lockControls,
                     _transitionSpawnID);
             }
             _transitionColor = null;
             _transitionSpawnID = null;
             _transitionDream = null;
+            _lockControls = false;
+            _transitionSound = true;
         }
 
         public void EndDream()

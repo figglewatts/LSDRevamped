@@ -22,7 +22,6 @@ namespace LSDR.SDK.Lua.Actions
             return new GenericPredicate(() =>
             {
                 var distance = (end - obj.transform.position).sqrMagnitude;
-                Debug.Log($"distance to target: {distance}");
                 return distance < 0.2f;
             }, () => start = obj.transform.position);
         }

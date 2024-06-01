@@ -12,8 +12,7 @@ namespace LSDR.SDK.Entities
             var dreamSystem = DreamControlManager.Managed;
             var dayNumber = dreamSystem.CurrentDay;
 
-            gameObject.SetActive(false);
-            if (checkDayKind(dayNumber)) gameObject.SetActive(true);
+            if (!checkDayKind(dayNumber)) gameObject.SetActive(false);
         }
 
         protected bool checkDayKind(int dayNumber)

@@ -293,6 +293,18 @@ namespace LSDR.Lua
                     return new Color(r, g, b, a);
                 }
             );
+            Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(DataType.Table, typeof(Color?),
+                dynVal =>
+                {
+                    if (dynVal.IsNil()) return null;
+                    Table table = dynVal.Table;
+                    float r = (float)(double)table[key: "r"];
+                    float g = (float)(double)table[key: "g"];
+                    float b = (float)(double)table[key: "b"];
+                    float a = (float)(double)table[key: "a"];
+                    return new Color(r, g, b, a);
+                }
+            );
             Script.GlobalOptions.CustomConverters.SetClrToScriptCustomConversion<Color>(
                 (script, color) =>
                 {

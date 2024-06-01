@@ -25,6 +25,7 @@ namespace LSDR.SDK.Lua
             return _scriptAsset.HandleLuaErrorsFor(() =>
             {
                 var result = Script.Call(_getSongFunc, style, songNumber);
+                if (result.IsNil()) return null;
                 return (SongAsset)result.UserData.Object;
             });
         }
