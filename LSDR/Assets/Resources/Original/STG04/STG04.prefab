@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: EntranceFromNaturalWorld
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 1
 --- !u!1 &1207411705
@@ -106,6 +107,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: b1dd7874-a5f6-43dc-b463-e81e342ef58e
+  Unregistered: 0
   OnlyOnce: 0
   Linked: {fileID: 11400000, guid: 56de95b6448cb444982ef9899983934e, type: 2}
   ForcedLinkColor: {r: 0, g: 0, b: 0, a: 0}
@@ -390,9 +392,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Train3Trigger
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 8be2e233cb6454649a378cd91c31f1b6, type: 3}
   InteractionKind: 0
   InteractionDistance: 15
+  AnimatedObject: {fileID: 0}
 --- !u!114 &5921779474659786178
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -515,6 +519,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget79
+  Unregistered: 0
 --- !u!1 &64851798485785527
 GameObject:
   m_ObjectHideFlags: 0
@@ -980,6 +985,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget46
+  Unregistered: 0
 --- !u!1 &111442506856848079
 GameObject:
   m_ObjectHideFlags: 0
@@ -1274,9 +1280,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Penguin1_2
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 608b95816ba759b4bb6851796ced8ff2, type: 3}
   InteractionKind: 0
   InteractionDistance: 10
+  AnimatedObject: {fileID: 0}
 --- !u!114 &4531220334410098337
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1497,6 +1505,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget40
+  Unregistered: 0
 --- !u!1 &201977773271059721
 GameObject:
   m_ObjectHideFlags: 0
@@ -1921,9 +1930,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Marcher3_4
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: a2cb58f7dabc6f74eb72e3f31befc816, type: 3}
   InteractionKind: 0
   InteractionDistance: 10
+  AnimatedObject: {fileID: 0}
 --- !u!1 &232815270886689120
 GameObject:
   m_ObjectHideFlags: 0
@@ -2033,6 +2044,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_2092548e-5aae-433c-ba9d-74207a76baea
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &245216218891173777
@@ -2602,9 +2614,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Marcher2_1
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: a2cb58f7dabc6f74eb72e3f31befc816, type: 3}
   InteractionKind: 0
   InteractionDistance: 10
+  AnimatedObject: {fileID: 0}
 --- !u!1 &327634579081475255
 GameObject:
   m_ObjectHideFlags: 0
@@ -2650,6 +2664,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_84e511e3-8f33-4be0-84ea-00e09e4449dc
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &340984573856879197
@@ -2826,6 +2841,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget64
+  Unregistered: 0
 --- !u!1 &385060786632963481
 GameObject:
   m_ObjectHideFlags: 0
@@ -3387,6 +3403,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Marcher3_1Audio
+  Unregistered: 0
   Clip: {fileID: 8300000, guid: b2836c7ab9b50474da914c2a274f20b5, type: 3}
   Spatial: 1
   FullVolumeRangeUnits: 3
@@ -3799,6 +3816,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_8ee3c71a-9117-45c2-9b29-d688ebabc7cd
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &515416491586489345
@@ -4107,6 +4125,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_8211b75a-7f71-4777-88e1-927222014a35
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &556519809955518252
@@ -4154,6 +4173,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget44
+  Unregistered: 0
 --- !u!1 &560742361044170967
 GameObject:
   m_ObjectHideFlags: 0
@@ -4321,9 +4341,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Penguin1_1
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 608b95816ba759b4bb6851796ced8ff2, type: 3}
   InteractionKind: 0
   InteractionDistance: 10
+  AnimatedObject: {fileID: 0}
 --- !u!114 &2321322967256780509
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4414,6 +4436,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget69
+  Unregistered: 0
 --- !u!1 &611942853251263165
 GameObject:
   m_ObjectHideFlags: 0
@@ -4846,6 +4869,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget33
+  Unregistered: 0
 --- !u!1 &714123451331696841
 GameObject:
   m_ObjectHideFlags: 0
@@ -5538,6 +5562,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Marcher3_4Audio
+  Unregistered: 0
   Clip: {fileID: 8300000, guid: b2836c7ab9b50474da914c2a274f20b5, type: 3}
   Spatial: 1
   FullVolumeRangeUnits: 3
@@ -5790,6 +5815,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget51
+  Unregistered: 0
 --- !u!1 &823685351089755668
 GameObject:
   m_ObjectHideFlags: 0
@@ -5867,6 +5893,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget90
+  Unregistered: 0
 --- !u!1 &832742934028202727
 GameObject:
   m_ObjectHideFlags: 0
@@ -6042,6 +6069,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Train3TriggerAudio
+  Unregistered: 0
   Clip: {fileID: 8300000, guid: f638a3baf623f264bbb3568a3ab0323d, type: 3}
   Spatial: 1
   FullVolumeRangeUnits: 3
@@ -6478,9 +6506,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Flower5
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: a1abed8ffec1e7f46b36d6ddef5f0096, type: 3}
   InteractionKind: 0
   InteractionDistance: 5
+  AnimatedObject: {fileID: 0}
 --- !u!114 &3561176997968766034
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6639,6 +6669,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget26
+  Unregistered: 0
 --- !u!1 &917988239286212951
 GameObject:
   m_ObjectHideFlags: 0
@@ -6720,6 +6751,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget61
+  Unregistered: 0
 --- !u!1 &924243896748720752
 GameObject:
   m_ObjectHideFlags: 0
@@ -6797,6 +6829,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget88
+  Unregistered: 0
 --- !u!1 &932561193108191474
 GameObject:
   m_ObjectHideFlags: 0
@@ -6896,9 +6929,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: OperaSinger3
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 5152f141d3d683e42ad3b91dc21cf950, type: 3}
   InteractionKind: 0
   InteractionDistance: 15
+  AnimatedObject: {fileID: 0}
 --- !u!114 &805002216334925083
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7151,6 +7186,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Marcher1_4Audio
+  Unregistered: 0
   Clip: {fileID: 8300000, guid: b2836c7ab9b50474da914c2a274f20b5, type: 3}
   Spatial: 1
   FullVolumeRangeUnits: 3
@@ -7306,6 +7342,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_99bd8564-eded-4ecf-964c-c32dd14e04d9
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &970579439705418578
@@ -8246,9 +8283,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Penguin3_3
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 608b95816ba759b4bb6851796ced8ff2, type: 3}
   InteractionKind: 0
   InteractionDistance: 10
+  AnimatedObject: {fileID: 0}
 --- !u!114 &8844690775534708861
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9992,6 +10031,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_96baf1ff-c96b-4dfb-aecf-4cc9737a68d9
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &1202643828593541253
@@ -11013,6 +11053,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget18
+  Unregistered: 0
 --- !u!1 &1301360821970024856
 GameObject:
   m_ObjectHideFlags: 0
@@ -11058,6 +11099,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget85
+  Unregistered: 0
 --- !u!1 &1305430015490003454
 GameObject:
   m_ObjectHideFlags: 0
@@ -11264,6 +11306,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_116d95ab-f24d-488f-b84d-270dad6aec47
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &1343228415771523508
@@ -11572,6 +11615,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Penguin1_4Audio
+  Unregistered: 0
   Clip: {fileID: 8300000, guid: efcfe9b1ab4a1934e8adcfd5a230d11a, type: 3}
   Spatial: 1
   FullVolumeRangeUnits: 3
@@ -11953,6 +11997,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget47
+  Unregistered: 0
 --- !u!1 &1448391300444258124
 GameObject:
   m_ObjectHideFlags: 0
@@ -12195,6 +12240,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget5
+  Unregistered: 0
 --- !u!1 &1454720839359456158
 GameObject:
   m_ObjectHideFlags: 0
@@ -12745,9 +12791,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Trumpeter3
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: a3821ca9e51a60349a00c1054d36c011, type: 3}
   InteractionKind: 0
   InteractionDistance: 3
+  AnimatedObject: {fileID: 0}
 --- !u!1 &1510729088827190049
 GameObject:
   m_ObjectHideFlags: 0
@@ -12793,6 +12841,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget12
+  Unregistered: 0
 --- !u!1 &1510834162259275636
 GameObject:
   m_ObjectHideFlags: 0
@@ -12935,6 +12984,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Penguin1_1Audio
+  Unregistered: 0
   Clip: {fileID: 8300000, guid: efcfe9b1ab4a1934e8adcfd5a230d11a, type: 3}
   Spatial: 1
   FullVolumeRangeUnits: 3
@@ -13090,6 +13140,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget54
+  Unregistered: 0
 --- !u!1 &1561399000687941411
 GameObject:
   m_ObjectHideFlags: 0
@@ -13252,9 +13303,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Marcher3_2
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: a2cb58f7dabc6f74eb72e3f31befc816, type: 3}
   InteractionKind: 0
   InteractionDistance: 10
+  AnimatedObject: {fileID: 0}
 --- !u!1 &1570074937259922021
 GameObject:
   m_ObjectHideFlags: 0
@@ -14063,9 +14116,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Trumpeter4
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: a3821ca9e51a60349a00c1054d36c011, type: 3}
   InteractionKind: 0
   InteractionDistance: 3
+  AnimatedObject: {fileID: 0}
 --- !u!1 &1646982520739054759
 GameObject:
   m_ObjectHideFlags: 0
@@ -15046,6 +15101,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget29
+  Unregistered: 0
 --- !u!1 &1744873677609098907
 GameObject:
   m_ObjectHideFlags: 0
@@ -15413,6 +15469,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget14
+  Unregistered: 0
 --- !u!1 &1830413591556025810
 GameObject:
   m_ObjectHideFlags: 0
@@ -15544,9 +15601,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Penguin2_1
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 608b95816ba759b4bb6851796ced8ff2, type: 3}
   InteractionKind: 0
   InteractionDistance: 10
+  AnimatedObject: {fileID: 0}
 --- !u!114 &2279888355712783472
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15832,6 +15891,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Penguin2_1Audio
+  Unregistered: 0
   Clip: {fileID: 8300000, guid: efcfe9b1ab4a1934e8adcfd5a230d11a, type: 3}
   Spatial: 1
   FullVolumeRangeUnits: 3
@@ -16341,6 +16401,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: OperaSinger2Audio
+  Unregistered: 0
   Clip: {fileID: 8300000, guid: bc4e0b6d35130034b8680f8a84e9eb90, type: 3}
   Spatial: 1
   FullVolumeRangeUnits: 3
@@ -16587,9 +16648,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Trumpeter2
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: a3821ca9e51a60349a00c1054d36c011, type: 3}
   InteractionKind: 0
   InteractionDistance: 3
+  AnimatedObject: {fileID: 0}
 --- !u!1 &1958860346694163699
 GameObject:
   m_ObjectHideFlags: 0
@@ -17241,9 +17304,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Mushroom_$$
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 159207e6025375949aa66ff428950c41, type: 3}
   InteractionKind: 0
   InteractionDistance: 10
+  AnimatedObject: {fileID: 0}
 --- !u!114 &7313870356312126724
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17302,6 +17367,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget53
+  Unregistered: 0
 --- !u!1 &2061868101216104568
 GameObject:
   m_ObjectHideFlags: 0
@@ -17444,6 +17510,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Penguin1_3Audio
+  Unregistered: 0
   Clip: {fileID: 8300000, guid: efcfe9b1ab4a1934e8adcfd5a230d11a, type: 3}
   Spatial: 1
   FullVolumeRangeUnits: 3
@@ -17587,9 +17654,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Marcher3_3
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: a2cb58f7dabc6f74eb72e3f31befc816, type: 3}
   InteractionKind: 0
   InteractionDistance: 10
+  AnimatedObject: {fileID: 0}
 --- !u!1 &2085180847988303524
 GameObject:
   m_ObjectHideFlags: 0
@@ -17688,9 +17757,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Marcher1_1
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: a2cb58f7dabc6f74eb72e3f31befc816, type: 3}
   InteractionKind: 0
   InteractionDistance: 10
+  AnimatedObject: {fileID: 0}
 --- !u!1 &2085589861287995791
 GameObject:
   m_ObjectHideFlags: 0
@@ -17768,6 +17839,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget77
+  Unregistered: 0
 --- !u!1 &2094434477036653686
 GameObject:
   m_ObjectHideFlags: 0
@@ -17939,9 +18011,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Mushroom_$$
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 159207e6025375949aa66ff428950c41, type: 3}
   InteractionKind: 0
   InteractionDistance: 10
+  AnimatedObject: {fileID: 0}
 --- !u!114 &8154429728002227721
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18521,6 +18595,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget56
+  Unregistered: 0
 --- !u!1 &2229957569212295270
 GameObject:
   m_ObjectHideFlags: 0
@@ -18663,6 +18738,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget2
+  Unregistered: 0
 --- !u!1 &2233139492433134953
 GameObject:
   m_ObjectHideFlags: 0
@@ -18762,9 +18838,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Penguin2_2
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 608b95816ba759b4bb6851796ced8ff2, type: 3}
   InteractionKind: 0
   InteractionDistance: 10
+  AnimatedObject: {fileID: 0}
 --- !u!114 &8202376767501449566
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18859,6 +18937,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget63
+  Unregistered: 0
 --- !u!1 &2243468117118370084
 GameObject:
   m_ObjectHideFlags: 0
@@ -19324,6 +19403,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget91
+  Unregistered: 0
 --- !u!1 &2287072022672496074
 GameObject:
   m_ObjectHideFlags: 0
@@ -19486,9 +19566,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: FerrisWheel
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 54154cf07bf43314daa481fbfa5181aa, type: 3}
   InteractionKind: 0
   InteractionDistance: 1
+  AnimatedObject: {fileID: 0}
 --- !u!1 &2325996983901863656
 GameObject:
   m_ObjectHideFlags: 0
@@ -19653,9 +19735,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Marcher1_2
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: a2cb58f7dabc6f74eb72e3f31befc816, type: 3}
   InteractionKind: 0
   InteractionDistance: 10
+  AnimatedObject: {fileID: 0}
 --- !u!1 &2339857773632072388
 GameObject:
   m_ObjectHideFlags: 0
@@ -19733,6 +19817,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_8e94a54f-5a14-402f-bfb9-141ce26bab68
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &2347590196160336373
@@ -19833,9 +19918,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: RainbowPenguin2
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 715d45d6a971ef04b9e852e27d6f441c, type: 3}
   InteractionKind: 0
   InteractionDistance: 10
+  AnimatedObject: {fileID: 0}
 --- !u!1 &2351884951835837520
 GameObject:
   m_ObjectHideFlags: 0
@@ -19934,9 +20021,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Trumpeter1
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: a3821ca9e51a60349a00c1054d36c011, type: 3}
   InteractionKind: 0
   InteractionDistance: 3
+  AnimatedObject: {fileID: 0}
 --- !u!1 &2359480805736496802
 GameObject:
   m_ObjectHideFlags: 0
@@ -20273,6 +20362,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Marcher2_4Audio
+  Unregistered: 0
   Clip: {fileID: 8300000, guid: b2836c7ab9b50474da914c2a274f20b5, type: 3}
   Spatial: 1
   FullVolumeRangeUnits: 3
@@ -21009,6 +21099,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget10
+  Unregistered: 0
 --- !u!1 &2442116666278195643
 GameObject:
   m_ObjectHideFlags: 0
@@ -21301,9 +21392,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Mushroom_$$
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 159207e6025375949aa66ff428950c41, type: 3}
   InteractionKind: 0
   InteractionDistance: 10
+  AnimatedObject: {fileID: 0}
 --- !u!114 &6076205384514042714
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21737,9 +21830,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: QuestionMark1
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 4093f852898129c489bf6770bec2da00, type: 3}
   InteractionKind: 0
   InteractionDistance: 3
+  AnimatedObject: {fileID: 0}
 --- !u!1 &2511931211031870914
 GameObject:
   m_ObjectHideFlags: 0
@@ -21882,6 +21977,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_90df63f4-9705-4600-9c28-1133d82ac2a4
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &2517653005142433812
@@ -22575,6 +22671,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget34
+  Unregistered: 0
 --- !u!1 &2599996976175685744
 GameObject:
   m_ObjectHideFlags: 0
@@ -22717,6 +22814,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainClockworkAudio
+  Unregistered: 0
   Clip: {fileID: 8300000, guid: e06d25521f558c64393a84a94ea7dac4, type: 3}
   Spatial: 1
   FullVolumeRangeUnits: 1.47
@@ -22936,6 +23034,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Penguin2_2Audio
+  Unregistered: 0
   Clip: {fileID: 8300000, guid: efcfe9b1ab4a1934e8adcfd5a230d11a, type: 3}
   Spatial: 1
   FullVolumeRangeUnits: 3
@@ -22994,6 +23093,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget45
+  Unregistered: 0
 --- !u!1 &2633075737414422201
 GameObject:
   m_ObjectHideFlags: 0
@@ -23611,9 +23711,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Penguin3_1
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 608b95816ba759b4bb6851796ced8ff2, type: 3}
   InteractionKind: 0
   InteractionDistance: 10
+  AnimatedObject: {fileID: 0}
 --- !u!114 &3654365574657774302
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23769,6 +23871,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Penguin3_3Audio
+  Unregistered: 0
   Clip: {fileID: 8300000, guid: efcfe9b1ab4a1934e8adcfd5a230d11a, type: 3}
   Spatial: 1
   FullVolumeRangeUnits: 3
@@ -24118,6 +24221,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_45662371-b4be-47e6-bb27-bfc9b9557d42
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &2765906989406076918
@@ -24359,6 +24463,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_df414002-c4f1-4fb0-b71e-7b9fa7bd929d
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &2830042429064814261
@@ -24438,6 +24543,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget80
+  Unregistered: 0
 --- !u!1 &2838934278661283335
 GameObject:
   m_ObjectHideFlags: 0
@@ -24795,9 +24901,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Mushroom_$$
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 159207e6025375949aa66ff428950c41, type: 3}
   InteractionKind: 0
   InteractionDistance: 10
+  AnimatedObject: {fileID: 0}
 --- !u!114 &349122570458745380
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25245,6 +25353,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_efb78fb9-0c8f-4234-b647-c88f17e8bf80
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &2940507414569850407
@@ -25275,36 +25384,36 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 8169172156517671754}
-  - {fileID: 7241389606872940543}
-  - {fileID: 8461392907906946446}
-  - {fileID: 6722194013795197840}
-  - {fileID: 3288342527417336947}
-  - {fileID: 4130752634741656790}
-  - {fileID: 3564525276439025131}
-  - {fileID: 8242989184697678607}
-  - {fileID: 7104332379955814819}
-  - {fileID: 5095467946289188738}
-  - {fileID: 1721028606216977387}
-  - {fileID: 6420366846716994054}
-  - {fileID: 7213506497763593726}
-  - {fileID: 2602798585590294641}
-  - {fileID: 4030430478118619207}
-  - {fileID: 346338554459829542}
-  - {fileID: 2162929298738954038}
-  - {fileID: 6615855906515332428}
-  - {fileID: 1380058334546794946}
-  - {fileID: 451415146073663944}
-  - {fileID: 8318341840164774690}
-  - {fileID: 3771012701529924367}
-  - {fileID: 6013444819731010298}
-  - {fileID: 4842030412358609328}
-  - {fileID: 3742461252982427864}
-  - {fileID: 2895996462607317850}
-  - {fileID: 1158683582469320357}
-  - {fileID: 2694139798103219139}
-  - {fileID: 6337375136374727330}
-  - {fileID: 8805243573842844157}
+  - {fileID: 7129126352904321750}
+  - {fileID: 8058473602358960200}
+  - {fileID: 4990939239347098922}
+  - {fileID: 3146678294629204995}
+  - {fileID: 5404842195093764940}
+  - {fileID: 7176719331305092748}
+  - {fileID: 485306149498403066}
+  - {fileID: 5821917507853034377}
+  - {fileID: 9200701580282232401}
+  - {fileID: 2929486209222274928}
+  - {fileID: 7477884037151470980}
+  - {fileID: 1826250767361209860}
+  - {fileID: 6029021628986160249}
+  - {fileID: 2574709889874284542}
+  - {fileID: 1205896008671825637}
+  - {fileID: 7359804164048915231}
+  - {fileID: 2379604372849341420}
+  - {fileID: 8978583756490974467}
+  - {fileID: 8572332918581120542}
+  - {fileID: 6884521074409976158}
+  - {fileID: 9035108687663252141}
+  - {fileID: 3763458425197611771}
+  - {fileID: 4991713119975126033}
+  - {fileID: 3443727673355346306}
+  - {fileID: 6555444562646200915}
+  - {fileID: 5358926505575385040}
+  - {fileID: 8550773066450311038}
+  - {fileID: 2907228894734443625}
+  - {fileID: 5052249383583491090}
+  - {fileID: 5887954942130087132}
   m_Father: {fileID: 2940507415088835220}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -25438,6 +25547,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: b10e654b-6df6-45f8-89ba-127fa5af98ba
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &2960729583695556728
@@ -25603,9 +25713,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: OperaSinger4
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 5152f141d3d683e42ad3b91dc21cf950, type: 3}
   InteractionKind: 0
   InteractionDistance: 15
+  AnimatedObject: {fileID: 0}
 --- !u!114 &8879433045446543268
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25953,6 +26065,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget37
+  Unregistered: 0
 --- !u!1 &3067397486409338306
 GameObject:
   m_ObjectHideFlags: 0
@@ -26030,6 +26143,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_ee94f9e2-f26a-4341-bbd5-18f401b7118d
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &3088065988899546961
@@ -26400,6 +26514,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Marcher2_2Audio
+  Unregistered: 0
   Clip: {fileID: 8300000, guid: b2836c7ab9b50474da914c2a274f20b5, type: 3}
   Spatial: 1
   FullVolumeRangeUnits: 3
@@ -26490,6 +26605,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget19
+  Unregistered: 0
 --- !u!1 &3126404661139623454
 GameObject:
   m_ObjectHideFlags: 0
@@ -26717,9 +26833,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Marcher2_4
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: a2cb58f7dabc6f74eb72e3f31befc816, type: 3}
   InteractionKind: 0
   InteractionDistance: 10
+  AnimatedObject: {fileID: 0}
 --- !u!1 &3153969492004047732
 GameObject:
   m_ObjectHideFlags: 0
@@ -26818,9 +26936,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Trumpeter5
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: a3821ca9e51a60349a00c1054d36c011, type: 3}
   InteractionKind: 0
   InteractionDistance: 3
+  AnimatedObject: {fileID: 0}
 --- !u!1 &3155547451751180216
 GameObject:
   m_ObjectHideFlags: 0
@@ -27187,6 +27307,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget22
+  Unregistered: 0
 --- !u!1 &3222673849021702256
 GameObject:
   m_ObjectHideFlags: 0
@@ -27232,6 +27353,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_f80c333f-15f4-41ac-8cba-10659a675ef5
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &3229769454382830991
@@ -27408,6 +27530,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Penguin3_1Audio
+  Unregistered: 0
   Clip: {fileID: 8300000, guid: efcfe9b1ab4a1934e8adcfd5a230d11a, type: 3}
   Spatial: 1
   FullVolumeRangeUnits: 3
@@ -27552,9 +27675,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Mushroom_$$
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 159207e6025375949aa66ff428950c41, type: 3}
   InteractionKind: 0
   InteractionDistance: 10
+  AnimatedObject: {fileID: 0}
 --- !u!114 &6905503784646702431
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -28149,9 +28274,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Marcher1_3
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: a2cb58f7dabc6f74eb72e3f31befc816, type: 3}
   InteractionKind: 0
   InteractionDistance: 10
+  AnimatedObject: {fileID: 0}
 --- !u!1 &3388579484336007895
 GameObject:
   m_ObjectHideFlags: 0
@@ -28777,6 +28904,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_ffb850a5-4f69-4f38-8ea9-77f10b65d35c
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &3480999569181216552
@@ -29200,9 +29328,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: QuestionMark2
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 4093f852898129c489bf6770bec2da00, type: 3}
   InteractionKind: 0
   InteractionDistance: 3
+  AnimatedObject: {fileID: 0}
 --- !u!1 &3518884773798847867
 GameObject:
   m_ObjectHideFlags: 0
@@ -29248,6 +29378,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: RainbowPenguinTarget1
+  Unregistered: 0
 --- !u!1 &3527167664267653323
 GameObject:
   m_ObjectHideFlags: 0
@@ -29390,6 +29521,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Marcher1_2Audio
+  Unregistered: 0
   Clip: {fileID: 8300000, guid: b2836c7ab9b50474da914c2a274f20b5, type: 3}
   Spatial: 1
   FullVolumeRangeUnits: 3
@@ -29448,6 +29580,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_793f5d72-9710-40db-9c1a-aa3d5225b16d
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &3546929174931906313
@@ -29754,6 +29887,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: RainbowPenguinTarget2
+  Unregistered: 0
 --- !u!1 &3570117539691699562
 GameObject:
   m_ObjectHideFlags: 0
@@ -30015,9 +30149,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainClockwork
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: c1458131aabc0af4197cf8cebc6dfd28, type: 3}
   InteractionKind: 0
   InteractionDistance: 20
+  AnimatedObject: {fileID: 0}
 --- !u!114 &6663968237586167297
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30076,6 +30212,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_3f25ee74-9894-40a2-b06e-8538435f5515
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &3648997706756234653
@@ -30220,6 +30357,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Penguin2_4Audio
+  Unregistered: 0
   Clip: {fileID: 8300000, guid: efcfe9b1ab4a1934e8adcfd5a230d11a, type: 3}
   Spatial: 1
   FullVolumeRangeUnits: 3
@@ -30278,6 +30416,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_54335d44-876e-4ac8-9759-4d7f896ae5b7
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &3651773594689073159
@@ -30435,6 +30574,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TriggerLink_FerrisWheel_SFH
+  Unregistered: 0
   OnlyOnce: 0
   Linked: {fileID: 11400000, guid: 7c36b34b783de43dc8788331f4d11b0f, type: 2}
   ForcedLinkColor: {r: 0, g: 0, b: 0, a: 0}
@@ -30670,9 +30810,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Trumpeter6
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: a3821ca9e51a60349a00c1054d36c011, type: 3}
   InteractionKind: 0
   InteractionDistance: 3
+  AnimatedObject: {fileID: 0}
 --- !u!1 &3731777120046943936
 GameObject:
   m_ObjectHideFlags: 0
@@ -30782,6 +30924,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget59
+  Unregistered: 0
 --- !u!1 &3749567630028113435
 GameObject:
   m_ObjectHideFlags: 0
@@ -30827,6 +30970,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_89cc87c2-9c66-4342-9337-9770ed1eb586
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &3766416976579788352
@@ -30971,6 +31115,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_6efa2259-1afd-4381-8e7f-5a9e9c71d244
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &3769962510728653573
@@ -31233,9 +31378,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: RainbowPenguin1
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 9f2d9a6f8628cd643ade4ca8a09b78d2, type: 3}
   InteractionKind: 0
   InteractionDistance: 10
+  AnimatedObject: {fileID: 0}
 --- !u!1 &3795122998108645545
 GameObject:
   m_ObjectHideFlags: 0
@@ -31281,6 +31428,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget27
+  Unregistered: 0
 --- !u!1 &3798821396698515927
 GameObject:
   m_ObjectHideFlags: 0
@@ -31553,6 +31701,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget11
+  Unregistered: 0
 --- !u!1 &3822566018239897517
 GameObject:
   m_ObjectHideFlags: 0
@@ -32276,6 +32425,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_6088d5eb-17b8-4ae7-8729-c48131b16ae5
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &3951645882592600786
@@ -32323,6 +32473,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget52
+  Unregistered: 0
 --- !u!1 &3954078304659798130
 GameObject:
   m_ObjectHideFlags: 0
@@ -32756,6 +32907,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget78
+  Unregistered: 0
 --- !u!1 &4001394535816000092
 GameObject:
   m_ObjectHideFlags: 0
@@ -33098,6 +33250,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget25
+  Unregistered: 0
 --- !u!1 &4060867179224871918
 GameObject:
   m_ObjectHideFlags: 0
@@ -33218,9 +33371,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Trumpeters
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 2dfc0ae87a573554dba878f093596869, type: 3}
   InteractionKind: 0
   InteractionDistance: 9.55
+  AnimatedObject: {fileID: 0}
 --- !u!114 &2874077902889992079
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33441,6 +33596,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Marcher2_1Audio
+  Unregistered: 0
   Clip: {fileID: 8300000, guid: b2836c7ab9b50474da914c2a274f20b5, type: 3}
   Spatial: 1
   FullVolumeRangeUnits: 3
@@ -34626,9 +34782,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Mushroom_$$
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 159207e6025375949aa66ff428950c41, type: 3}
   InteractionKind: 0
   InteractionDistance: 10
+  AnimatedObject: {fileID: 0}
 --- !u!114 &9426397726162010
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -34687,6 +34845,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_3baf41aa-ecb0-48a1-b343-5c64c13d6fe0
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &4195201357952710095
@@ -35532,9 +35691,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Penguin2_3
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 608b95816ba759b4bb6851796ced8ff2, type: 3}
   InteractionKind: 0
   InteractionDistance: 10
+  AnimatedObject: {fileID: 0}
 --- !u!114 &7059360181735378287
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -35884,6 +36045,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget21
+  Unregistered: 0
 --- !u!1 &4333604909172553699
 GameObject:
   m_ObjectHideFlags: 0
@@ -36510,6 +36672,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget7
+  Unregistered: 0
 --- !u!1 &4387647243141346588
 GameObject:
   m_ObjectHideFlags: 0
@@ -36877,6 +37040,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget28
+  Unregistered: 0
 --- !u!1 &4438772815245605475
 GameObject:
   m_ObjectHideFlags: 0
@@ -37955,6 +38119,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_143dafd0-bcc3-4a99-89cf-f109f1e33b38
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &4667629369916864978
@@ -38067,6 +38232,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget35
+  Unregistered: 0
 --- !u!1 &4688102371434881732
 GameObject:
   m_ObjectHideFlags: 0
@@ -38374,6 +38540,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget20
+  Unregistered: 0
 --- !u!1 &4705560798211609221
 GameObject:
   m_ObjectHideFlags: 0
@@ -38419,6 +38586,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget6
+  Unregistered: 0
 --- !u!1 &4715268732987836737
 GameObject:
   m_ObjectHideFlags: 0
@@ -38777,9 +38945,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Marcher2_2
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: a2cb58f7dabc6f74eb72e3f31befc816, type: 3}
   InteractionKind: 0
   InteractionDistance: 10
+  AnimatedObject: {fileID: 0}
 --- !u!1 &4766793847490125217
 GameObject:
   m_ObjectHideFlags: 0
@@ -39050,6 +39220,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget17
+  Unregistered: 0
 --- !u!1 &4793719957038945911
 GameObject:
   m_ObjectHideFlags: 0
@@ -39159,6 +39330,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget3
+  Unregistered: 0
 --- !u!1 &4815033814385547141
 GameObject:
   m_ObjectHideFlags: 0
@@ -39709,9 +39881,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Arrow2
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 4093f852898129c489bf6770bec2da00, type: 3}
   InteractionKind: 0
   InteractionDistance: 3
+  AnimatedObject: {fileID: 0}
 --- !u!1 &4865957967626490522
 GameObject:
   m_ObjectHideFlags: 0
@@ -39918,6 +40092,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: WhaleAudio
+  Unregistered: 0
   Clip: {fileID: 8300000, guid: aaf8298d61e0772499360a1dc9520532, type: 3}
   Spatial: 1
   FullVolumeRangeUnits: 3
@@ -40008,6 +40183,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget48
+  Unregistered: 0
 --- !u!1 &4916882349730582732
 GameObject:
   m_ObjectHideFlags: 0
@@ -40107,9 +40283,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Penguin2_4
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 608b95816ba759b4bb6851796ced8ff2, type: 3}
   InteractionKind: 0
   InteractionDistance: 10
+  AnimatedObject: {fileID: 0}
 --- !u!114 &4964145869650617853
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -40200,6 +40378,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget68
+  Unregistered: 0
 --- !u!1 &4927013035308573379
 GameObject:
   m_ObjectHideFlags: 0
@@ -40689,9 +40868,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Marcher2_3
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: a2cb58f7dabc6f74eb72e3f31befc816, type: 3}
   InteractionKind: 0
   InteractionDistance: 10
+  AnimatedObject: {fileID: 0}
 --- !u!1 &4981211727423103183
 GameObject:
   m_ObjectHideFlags: 0
@@ -41673,6 +41854,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget57
+  Unregistered: 0
 --- !u!1 &5104425193086206511
 GameObject:
   m_ObjectHideFlags: 0
@@ -41718,6 +41900,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget55
+  Unregistered: 0
 --- !u!1 &5105408118732112724
 GameObject:
   m_ObjectHideFlags: 0
@@ -41817,9 +42000,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Penguin1_4
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 608b95816ba759b4bb6851796ced8ff2, type: 3}
   InteractionKind: 0
   InteractionDistance: 10
+  AnimatedObject: {fileID: 0}
 --- !u!114 &3371861251607222540
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -42265,6 +42450,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget73
+  Unregistered: 0
 --- !u!1 &5173199160788027998
 GameObject:
   m_ObjectHideFlags: 0
@@ -42988,6 +43174,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget43
+  Unregistered: 0
 --- !u!1 &5225015068034251002
 GameObject:
   m_ObjectHideFlags: 0
@@ -43033,6 +43220,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget50
+  Unregistered: 0
 --- !u!1 &5226886404460521341
 GameObject:
   m_ObjectHideFlags: 0
@@ -43196,9 +43384,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: OperaSinger1
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 5152f141d3d683e42ad3b91dc21cf950, type: 3}
   InteractionKind: 0
   InteractionDistance: 15
+  AnimatedObject: {fileID: 0}
 --- !u!114 &4369965730775028988
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -43310,9 +43500,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainKyoto
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 0958c58f7f931fd4cb30aef9f3ef2ce8, type: 3}
   InteractionKind: 0
   InteractionDistance: 20
+  AnimatedObject: {fileID: 0}
 --- !u!1 &5241248448910720617
 GameObject:
   m_ObjectHideFlags: 0
@@ -43652,6 +43844,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainNaturalWorldAudio
+  Unregistered: 0
   Clip: {fileID: 8300000, guid: e06d25521f558c64393a84a94ea7dac4, type: 3}
   Spatial: 1
   FullVolumeRangeUnits: 1.47
@@ -44151,9 +44344,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Flower2
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: a1abed8ffec1e7f46b36d6ddef5f0096, type: 3}
   InteractionKind: 0
   InteractionDistance: 5
+  AnimatedObject: {fileID: 0}
 --- !u!114 &9080643792952238555
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -44276,6 +44471,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_3a9045a8-da85-43da-aef1-0aaa805459fb
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &5415625915504882028
@@ -44323,6 +44519,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget16
+  Unregistered: 0
 --- !u!1 &5427867821492028916
 GameObject:
   m_ObjectHideFlags: 0
@@ -45471,6 +45668,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget9
+  Unregistered: 0
 --- !u!1 &5580587532309211399
 GameObject:
   m_ObjectHideFlags: 0
@@ -45613,6 +45811,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget36
+  Unregistered: 0
 --- !u!1 &5606471169588260592
 GameObject:
   m_ObjectHideFlags: 0
@@ -45851,6 +46050,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_983ee5d5-1f07-44fe-b1fb-4105ded7804b
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &5682084757118212173
@@ -46611,6 +46811,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_727a75c0-75a4-4fc4-9237-81c9d31d99ed
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &5730058563320243087
@@ -46712,9 +46913,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Penguin3_2
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 608b95816ba759b4bb6851796ced8ff2, type: 3}
   InteractionKind: 0
   InteractionDistance: 10
+  AnimatedObject: {fileID: 0}
 --- !u!114 &1147928986226925080
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -46954,9 +47157,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: RainbowPenguin3
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 715d45d6a971ef04b9e852e27d6f441c, type: 3}
   InteractionKind: 0
   InteractionDistance: 10
+  AnimatedObject: {fileID: 0}
 --- !u!1 &5753006748354254877
 GameObject:
   m_ObjectHideFlags: 0
@@ -47554,6 +47759,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget62
+  Unregistered: 0
 --- !u!1 &5845692322843790612
 GameObject:
   m_ObjectHideFlags: 0
@@ -47795,6 +48001,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget13
+  Unregistered: 0
 --- !u!1 &5876121126630400777
 GameObject:
   m_ObjectHideFlags: 0
@@ -47872,6 +48079,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget8
+  Unregistered: 0
 --- !u!1 &5910655389331034085
 GameObject:
   m_ObjectHideFlags: 0
@@ -47949,6 +48157,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget67
+  Unregistered: 0
 --- !u!1 &5925236455788345228
 GameObject:
   m_ObjectHideFlags: 0
@@ -48641,6 +48850,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget74
+  Unregistered: 0
 --- !u!1 &6091034142873338786
 GameObject:
   m_ObjectHideFlags: 0
@@ -49331,6 +49541,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget38
+  Unregistered: 0
 --- !u!1 &6215607726548187329
 GameObject:
   m_ObjectHideFlags: 0
@@ -49539,6 +49750,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Marcher1_3Audio
+  Unregistered: 0
   Clip: {fileID: 8300000, guid: b2836c7ab9b50474da914c2a274f20b5, type: 3}
   Spatial: 1
   FullVolumeRangeUnits: 3
@@ -49726,6 +49938,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: OperaSinger4Audio
+  Unregistered: 0
   Clip: {fileID: 8300000, guid: bc4e0b6d35130034b8680f8a84e9eb90, type: 3}
   Spatial: 1
   FullVolumeRangeUnits: 3
@@ -50031,9 +50244,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Flower1
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: a1abed8ffec1e7f46b36d6ddef5f0096, type: 3}
   InteractionKind: 0
   InteractionDistance: 5
+  AnimatedObject: {fileID: 0}
 --- !u!114 &6631307497294769887
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -50092,6 +50307,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget84
+  Unregistered: 0
 --- !u!1 &6301272793164508283
 GameObject:
   m_ObjectHideFlags: 0
@@ -50169,6 +50385,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget30
+  Unregistered: 0
 --- !u!1 &6306889926475571034
 GameObject:
   m_ObjectHideFlags: 0
@@ -50632,6 +50849,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget42
+  Unregistered: 0
 --- !u!1 &6343749173110856167
 GameObject:
   m_ObjectHideFlags: 0
@@ -50730,9 +50948,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Marcher1_4
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: a2cb58f7dabc6f74eb72e3f31befc816, type: 3}
   InteractionKind: 0
   InteractionDistance: 10
+  AnimatedObject: {fileID: 0}
 --- !u!1 &6344692146173552092
 GameObject:
   m_ObjectHideFlags: 0
@@ -51069,6 +51289,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Marcher3_3Audio
+  Unregistered: 0
   Clip: {fileID: 8300000, guid: b2836c7ab9b50474da914c2a274f20b5, type: 3}
   Spatial: 1
   FullVolumeRangeUnits: 3
@@ -51127,6 +51348,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_800d8b68-d4ef-4688-91c5-da3710167139
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &6383168974365523704
@@ -51400,6 +51622,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget49
+  Unregistered: 0
 --- !u!1 &6416320013332491197
 GameObject:
   m_ObjectHideFlags: 0
@@ -51445,6 +51668,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget87
+  Unregistered: 0
 --- !u!1 &6420217213834402267
 GameObject:
   m_ObjectHideFlags: 0
@@ -51619,6 +51843,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Penguin2_3Audio
+  Unregistered: 0
   Clip: {fileID: 8300000, guid: efcfe9b1ab4a1934e8adcfd5a230d11a, type: 3}
   Spatial: 1
   FullVolumeRangeUnits: 3
@@ -51806,6 +52031,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget4
+  Unregistered: 0
 --- !u!1 &6439277090810783819
 GameObject:
   m_ObjectHideFlags: 0
@@ -52141,6 +52367,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Marcher1_1Audio
+  Unregistered: 0
   Clip: {fileID: 8300000, guid: b2836c7ab9b50474da914c2a274f20b5, type: 3}
   Spatial: 1
   FullVolumeRangeUnits: 3
@@ -52715,6 +52942,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget71
+  Unregistered: 0
 --- !u!1 &6514249629366576754
 GameObject:
   m_ObjectHideFlags: 0
@@ -53856,6 +54084,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Penguin1_2Audio
+  Unregistered: 0
   Clip: {fileID: 8300000, guid: efcfe9b1ab4a1934e8adcfd5a230d11a, type: 3}
   Spatial: 1
   FullVolumeRangeUnits: 3
@@ -54399,6 +54628,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget81
+  Unregistered: 0
 --- !u!1 &6664365302373748906
 GameObject:
   m_ObjectHideFlags: 0
@@ -54476,6 +54706,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget83
+  Unregistered: 0
 --- !u!1 &6679842790297989276
 GameObject:
   m_ObjectHideFlags: 0
@@ -54521,6 +54752,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget41
+  Unregistered: 0
 --- !u!1 &6685303788007474764
 GameObject:
   m_ObjectHideFlags: 0
@@ -55767,6 +55999,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget39
+  Unregistered: 0
 --- !u!1 &6804950378966036249
 GameObject:
   m_ObjectHideFlags: 0
@@ -56825,6 +57058,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget60
+  Unregistered: 0
 --- !u!1 &6960215452250662210
 GameObject:
   m_ObjectHideFlags: 0
@@ -57708,6 +57942,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: OperaSinger1Audio
+  Unregistered: 0
   Clip: {fileID: 8300000, guid: bc4e0b6d35130034b8680f8a84e9eb90, type: 3}
   Spatial: 1
   FullVolumeRangeUnits: 3
@@ -57992,6 +58227,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget15
+  Unregistered: 0
 --- !u!1 &7229897917185131448
 GameObject:
   m_ObjectHideFlags: 0
@@ -58188,9 +58424,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Mushroom_$$
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 159207e6025375949aa66ff428950c41, type: 3}
   InteractionKind: 0
   InteractionDistance: 10
+  AnimatedObject: {fileID: 0}
 --- !u!114 &7616622202450066626
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58594,9 +58832,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Bunny
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 7dbca325f7c6dd644834f15928fce12c, type: 3}
   InteractionKind: 0
   InteractionDistance: 7
+  AnimatedObject: {fileID: 0}
 --- !u!114 &637346537811560979
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58741,9 +58981,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: OperaSinger2
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 5152f141d3d683e42ad3b91dc21cf950, type: 3}
   InteractionKind: 0
   InteractionDistance: 15
+  AnimatedObject: {fileID: 0}
 --- !u!114 &6862934022561217191
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58855,9 +59097,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Marcher3_1
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: a2cb58f7dabc6f74eb72e3f31befc816, type: 3}
   InteractionKind: 0
   InteractionDistance: 10
+  AnimatedObject: {fileID: 0}
 --- !u!1 &7301872383578837233
 GameObject:
   m_ObjectHideFlags: 0
@@ -59162,6 +59406,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainKyotoAudio
+  Unregistered: 0
   Clip: {fileID: 8300000, guid: e06d25521f558c64393a84a94ea7dac4, type: 3}
   Spatial: 1
   FullVolumeRangeUnits: 1.47
@@ -59316,6 +59561,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget1
+  Unregistered: 0
 --- !u!1 &7353128520434788904
 GameObject:
   m_ObjectHideFlags: 0
@@ -59425,6 +59671,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget66
+  Unregistered: 0
 --- !u!1 &7406152715395741745
 GameObject:
   m_ObjectHideFlags: 0
@@ -59524,9 +59771,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Bear
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 8d7571f19af7de24194863459916f867, type: 3}
   InteractionKind: 0
   InteractionDistance: 7
+  AnimatedObject: {fileID: 0}
 --- !u!114 &6410439952773821438
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -60036,6 +60285,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_47b6e291-3004-4ddf-895f-2afdccada463
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &7497319201348046666
@@ -60917,9 +61167,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Mushroom_$$
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 159207e6025375949aa66ff428950c41, type: 3}
   InteractionKind: 0
   InteractionDistance: 10
+  AnimatedObject: {fileID: 0}
 --- !u!114 &8139934202176432359
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -61553,9 +61805,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Penguin1_3
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 608b95816ba759b4bb6851796ced8ff2, type: 3}
   InteractionKind: 0
   InteractionDistance: 10
+  AnimatedObject: {fileID: 0}
 --- !u!114 &7325794769610945616
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -61742,6 +61996,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget70
+  Unregistered: 0
 --- !u!1 &7695682590370491170
 GameObject:
   m_ObjectHideFlags: 0
@@ -62207,6 +62462,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: OperaSinger3Audio
+  Unregistered: 0
   Clip: {fileID: 8300000, guid: bc4e0b6d35130034b8680f8a84e9eb90, type: 3}
   Spatial: 1
   FullVolumeRangeUnits: 3
@@ -62416,9 +62672,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainNaturalWorld
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 758605ff0fbdb5446b93880dd6377a39, type: 3}
   InteractionKind: 0
   InteractionDistance: 20
+  AnimatedObject: {fileID: 0}
 --- !u!114 &3200887800562352844
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -62812,6 +63070,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget58
+  Unregistered: 0
 --- !u!1 &7831355795501382393
 GameObject:
   m_ObjectHideFlags: 0
@@ -63362,9 +63621,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: KingAndQueen
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: a043afb2ca9e3ed47896c8379a738a97, type: 3}
   InteractionKind: 0
   InteractionDistance: 7
+  AnimatedObject: {fileID: 0}
 --- !u!1 &7917316439510228046
 GameObject:
   m_ObjectHideFlags: 0
@@ -63690,9 +63951,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Mushroom_$$
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 159207e6025375949aa66ff428950c41, type: 3}
   InteractionKind: 0
   InteractionDistance: 10
+  AnimatedObject: {fileID: 0}
 --- !u!114 &1443764320216101113
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -63944,6 +64207,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_40ab44fe-9fce-41fd-9a77-3cca03ae083a
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &8043870142723045794
@@ -64184,6 +64448,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_f98256ee-782b-4f70-ae21-ba481df0f406
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &8079483056145935088
@@ -64607,9 +64872,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: RainbowPenguin4
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 715d45d6a971ef04b9e852e27d6f441c, type: 3}
   InteractionKind: 0
   InteractionDistance: 10
+  AnimatedObject: {fileID: 0}
 --- !u!1 &8138177098698395377
 GameObject:
   m_ObjectHideFlags: 0
@@ -64903,9 +65170,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Mushroom_$$
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 159207e6025375949aa66ff428950c41, type: 3}
   InteractionKind: 0
   InteractionDistance: 10
+  AnimatedObject: {fileID: 0}
 --- !u!114 &7578492363344062983
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65017,9 +65286,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: RainbowPenguin5
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 715d45d6a971ef04b9e852e27d6f441c, type: 3}
   InteractionKind: 0
   InteractionDistance: 10
+  AnimatedObject: {fileID: 0}
 --- !u!1 &8186715016344797095
 GameObject:
   m_ObjectHideFlags: 0
@@ -65348,9 +65619,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Mushroom_$$
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 159207e6025375949aa66ff428950c41, type: 3}
   InteractionKind: 0
   InteractionDistance: 10
+  AnimatedObject: {fileID: 0}
 --- !u!114 &3481575066619948698
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65409,6 +65682,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: FerrisWheelVideo
+  Unregistered: 0
   Clip: {fileID: 32900000, guid: 97c0c4f390b959742ae339f18a55a2c9, type: 3}
 --- !u!1 &8240096106098146832
 GameObject:
@@ -65509,9 +65783,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Lips
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: ca0ec51a58fef634081a9e4f34d38fda, type: 3}
   InteractionKind: 0
   InteractionDistance: 3
+  AnimatedObject: {fileID: 0}
 --- !u!114 &8839047301995526268
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65635,6 +65911,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: RainbowPenguinTarget3
+  Unregistered: 0
 --- !u!1 &8273145863597262159
 GameObject:
   m_ObjectHideFlags: 0
@@ -65680,6 +65957,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget72
+  Unregistered: 0
 --- !u!1 &8273903623425570985
 GameObject:
   m_ObjectHideFlags: 0
@@ -66080,6 +66358,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget65
+  Unregistered: 0
 --- !u!1 &8428307254734472007
 GameObject:
   m_ObjectHideFlags: 0
@@ -66222,6 +66501,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Marcher2_3Audio
+  Unregistered: 0
   Clip: {fileID: 8300000, guid: b2836c7ab9b50474da914c2a274f20b5, type: 3}
   Spatial: 1
   FullVolumeRangeUnits: 3
@@ -66667,9 +66947,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Mushroom_$$
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 159207e6025375949aa66ff428950c41, type: 3}
   InteractionKind: 0
   InteractionDistance: 10
+  AnimatedObject: {fileID: 0}
 --- !u!114 &900751784839206192
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -66910,9 +67192,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Arrow1
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 4093f852898129c489bf6770bec2da00, type: 3}
   InteractionKind: 0
   InteractionDistance: 3
+  AnimatedObject: {fileID: 0}
 --- !u!1 &8490985469916166850
 GameObject:
   m_ObjectHideFlags: 0
@@ -67189,6 +67473,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget76
+  Unregistered: 0
 --- !u!1 &8555699719413911081
 GameObject:
   m_ObjectHideFlags: 0
@@ -67689,6 +67974,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Marcher3_2Audio
+  Unregistered: 0
   Clip: {fileID: 8300000, guid: b2836c7ab9b50474da914c2a274f20b5, type: 3}
   Spatial: 1
   FullVolumeRangeUnits: 3
@@ -68005,6 +68291,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_37df3016-497d-401d-8e63-e6d978999e0f
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &8615345049947013349
@@ -68471,6 +68758,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_35801e2a-e853-43de-8a4c-21f3dee0d6c6
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &8659343734146924717
@@ -68550,6 +68838,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget32
+  Unregistered: 0
 --- !u!1 &8662808104212553399
 GameObject:
   m_ObjectHideFlags: 0
@@ -69005,9 +69294,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Whale
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: bf1942dbdb3a4624cb7a1eb502be9cbd, type: 3}
   InteractionKind: 0
   InteractionDistance: 7
+  AnimatedObject: {fileID: 0}
 --- !u!1 &8700010948993893248
 GameObject:
   m_ObjectHideFlags: 0
@@ -69053,6 +69344,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget86
+  Unregistered: 0
 --- !u!1 &8726159297458745736
 GameObject:
   m_ObjectHideFlags: 0
@@ -69130,6 +69422,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget75
+  Unregistered: 0
 --- !u!1 &8739598449180484815
 GameObject:
   m_ObjectHideFlags: 0
@@ -69207,6 +69500,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget82
+  Unregistered: 0
 --- !u!1 &8760187501157815861
 GameObject:
   m_ObjectHideFlags: 0
@@ -69349,6 +69643,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_536cd4d4-1dff-4296-ace0-b8c04f3f5fc3
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &8777244582514663003
@@ -69622,6 +69917,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrumpetersAudio
+  Unregistered: 0
   Clip: {fileID: 8300000, guid: 4520357998a474f40b5a0252137efe75, type: 3}
   Spatial: 1
   FullVolumeRangeUnits: 6.12
@@ -70281,9 +70577,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Flower4
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: a1abed8ffec1e7f46b36d6ddef5f0096, type: 3}
   InteractionKind: 0
   InteractionDistance: 5
+  AnimatedObject: {fileID: 0}
 --- !u!114 &234184715249146852
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -70374,6 +70672,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget31
+  Unregistered: 0
 --- !u!1 &8907533017654134701
 GameObject:
   m_ObjectHideFlags: 0
@@ -70473,9 +70772,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Flower6
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: a1abed8ffec1e7f46b36d6ddef5f0096, type: 3}
   InteractionKind: 0
   InteractionDistance: 5
+  AnimatedObject: {fileID: 0}
 --- !u!114 &3523102014151011465
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -70685,9 +70986,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Mushroom1
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 159207e6025375949aa66ff428950c41, type: 3}
   InteractionKind: 0
   InteractionDistance: 10
+  AnimatedObject: {fileID: 0}
 --- !u!114 &6851854387817969492
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -70746,6 +71049,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget89
+  Unregistered: 0
 --- !u!1 &8946660514104395926
 GameObject:
   m_ObjectHideFlags: 0
@@ -70887,6 +71191,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_c608ff32-344f-4a96-bd95-b61252ef4020
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &8982793195613403867
@@ -71473,9 +71778,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Penguin3_4
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 608b95816ba759b4bb6851796ced8ff2, type: 3}
   InteractionKind: 0
   InteractionDistance: 10
+  AnimatedObject: {fileID: 0}
 --- !u!114 &1437943688624683983
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -71598,6 +71905,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_4718763f-f589-4278-aab6-dac829061bf2
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &9087371903015214366
@@ -72420,6 +72728,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Penguin3_4Audio
+  Unregistered: 0
   Clip: {fileID: 8300000, guid: efcfe9b1ab4a1934e8adcfd5a230d11a, type: 3}
   Spatial: 1
   FullVolumeRangeUnits: 3
@@ -72575,6 +72884,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget24
+  Unregistered: 0
 --- !u!1 &9162697366019880762
 GameObject:
   m_ObjectHideFlags: 0
@@ -72781,6 +73091,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Penguin3_2Audio
+  Unregistered: 0
   Clip: {fileID: 8300000, guid: efcfe9b1ab4a1934e8adcfd5a230d11a, type: 3}
   Spatial: 1
   FullVolumeRangeUnits: 3
@@ -72893,9 +73204,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Flower3
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: a1abed8ffec1e7f46b36d6ddef5f0096, type: 3}
   InteractionKind: 0
   InteractionDistance: 5
+  AnimatedObject: {fileID: 0}
 --- !u!114 &2606875797484486931
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -73153,6 +73466,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TrainTarget23
+  Unregistered: 0
 --- !u!1001 &2940507414556607220
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -73209,6 +73523,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 705035974629536024, guid: 492df4e33cc961441800b28c55f9b19d,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 705035974629536024, guid: 492df4e33cc961441800b28c55f9b19d,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 705035974629536024, guid: 492df4e33cc961441800b28c55f9b19d,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 1683581588647111835, guid: 492df4e33cc961441800b28c55f9b19d,
         type: 3}
@@ -73318,9 +73647,9 @@ PrefabInstance:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: -6539706876410791272, guid: 492df4e33cc961441800b28c55f9b19d,
     type: 3}
---- !u!4 &2162929298738954038 stripped
+--- !u!4 &2379604372849341420 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: -5275259604671775294, guid: 492df4e33cc961441800b28c55f9b19d,
+  m_CorrespondingSourceObject: {fileID: 705035974629536024, guid: 492df4e33cc961441800b28c55f9b19d,
     type: 3}
   m_PrefabInstance: {fileID: 2940507414556607220}
   m_PrefabAsset: {fileID: 0}
@@ -73380,6 +73709,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 505621386040378434, guid: 595a1da6dd5d68d4ebae8777f647288e,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 23
+      objectReference: {fileID: 0}
+    - target: {fileID: 505621386040378434, guid: 595a1da6dd5d68d4ebae8777f647288e,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 505621386040378434, guid: 595a1da6dd5d68d4ebae8777f647288e,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 1683581588647111835, guid: 595a1da6dd5d68d4ebae8777f647288e,
         type: 3}
@@ -73489,9 +73833,9 @@ PrefabInstance:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: -6539706876410791272, guid: 595a1da6dd5d68d4ebae8777f647288e,
     type: 3}
---- !u!4 &4842030412358609328 stripped
+--- !u!4 &3443727673355346306 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 7781268990491741296, guid: 595a1da6dd5d68d4ebae8777f647288e,
+  m_CorrespondingSourceObject: {fileID: 505621386040378434, guid: 595a1da6dd5d68d4ebae8777f647288e,
     type: 3}
   m_PrefabInstance: {fileID: 2940507414559991232}
   m_PrefabAsset: {fileID: 0}
@@ -73548,6 +73892,21 @@ PrefabInstance:
       value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 1978471566567317882, guid: f7a9679cbc04f04459a11a84ac9200d1,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 6076641987128757537, guid: f7a9679cbc04f04459a11a84ac9200d1,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 17
+      objectReference: {fileID: 0}
+    - target: {fileID: 6076641987128757537, guid: f7a9679cbc04f04459a11a84ac9200d1,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 6076641987128757537, guid: f7a9679cbc04f04459a11a84ac9200d1,
         type: 3}
       propertyPath: m_LocalPosition.z
       value: 40
@@ -73625,9 +73984,9 @@ PrefabInstance:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: -6539706876410791272, guid: f7a9679cbc04f04459a11a84ac9200d1,
     type: 3}
---- !u!4 &6615855906515332428 stripped
+--- !u!4 &8978583756490974467 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 8295342506140239214, guid: f7a9679cbc04f04459a11a84ac9200d1,
+  m_CorrespondingSourceObject: {fileID: 6076641987128757537, guid: f7a9679cbc04f04459a11a84ac9200d1,
     type: 3}
   m_PrefabInstance: {fileID: 2940507414584371234}
   m_PrefabAsset: {fileID: 0}
@@ -73713,6 +74072,16 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7191998728595028170, guid: 19e8402d088769943b58f0150c67a1be,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191998728595028170, guid: 19e8402d088769943b58f0150c67a1be,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 80
+      objectReference: {fileID: 0}
     - target: {fileID: 7992217725048041023, guid: 19e8402d088769943b58f0150c67a1be,
         type: 3}
       propertyPath: m_RootOrder
@@ -73771,9 +74140,9 @@ PrefabInstance:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: -6539706876410791272, guid: 19e8402d088769943b58f0150c67a1be,
     type: 3}
---- !u!4 &3288342527417336947 stripped
+--- !u!4 &5404842195093764940 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 390772966061361141, guid: 19e8402d088769943b58f0150c67a1be,
+  m_CorrespondingSourceObject: {fileID: 7191998728595028170, guid: 19e8402d088769943b58f0150c67a1be,
     type: 3}
   m_PrefabInstance: {fileID: 2940507414613230470}
   m_PrefabAsset: {fileID: 0}
@@ -73784,6 +74153,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2940507414569850404}
     m_Modifications:
+    - target: {fileID: -8978496681280368596, guid: 93455f751752e4f48bf1fa4a8bc4b311,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: -8978496681280368596, guid: 93455f751752e4f48bf1fa4a8bc4b311,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 60
+      objectReference: {fileID: 0}
     - target: {fileID: -8934166190115208011, guid: 93455f751752e4f48bf1fa4a8bc4b311,
         type: 3}
       propertyPath: m_RootOrder
@@ -73887,9 +74266,9 @@ PrefabInstance:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: -6539706876410791272, guid: 93455f751752e4f48bf1fa4a8bc4b311,
     type: 3}
---- !u!4 &8461392907906946446 stripped
+--- !u!4 &3146678294629204995 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: -2476364141988593247, guid: 93455f751752e4f48bf1fa4a8bc4b311,
+  m_CorrespondingSourceObject: {fileID: -8978496681280368596, guid: 93455f751752e4f48bf1fa4a8bc4b311,
     type: 3}
   m_PrefabInstance: {fileID: 2940507414867006511}
   m_PrefabAsset: {fileID: 0}
@@ -74000,6 +74379,21 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 40
       objectReference: {fileID: 0}
+    - target: {fileID: 5687343804577891058, guid: 0a41c77016e5d194ab899e202b2cdcc0,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 5687343804577891058, guid: 0a41c77016e5d194ab899e202b2cdcc0,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 5687343804577891058, guid: 0a41c77016e5d194ab899e202b2cdcc0,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 40
+      objectReference: {fileID: 0}
     - target: {fileID: 7992217725048041023, guid: 0a41c77016e5d194ab899e202b2cdcc0,
         type: 3}
       propertyPath: m_RootOrder
@@ -74058,9 +74452,9 @@ PrefabInstance:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: -6539706876410791272, guid: 0a41c77016e5d194ab899e202b2cdcc0,
     type: 3}
---- !u!4 &346338554459829542 stripped
+--- !u!4 &7359804164048915231 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 3170735342179876043, guid: 0a41c77016e5d194ab899e202b2cdcc0,
+  m_CorrespondingSourceObject: {fileID: 5687343804577891058, guid: 0a41c77016e5d194ab899e202b2cdcc0,
     type: 3}
   m_PrefabInstance: {fileID: 2940507415058172397}
   m_PrefabAsset: {fileID: 0}
@@ -74112,6 +74506,21 @@ PrefabInstance:
       value: 70
       objectReference: {fileID: 0}
     - target: {fileID: -5637679654075645541, guid: de90e194c6e6b0f468fb6a73ae455e3d,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: -1330559390388948899, guid: de90e194c6e6b0f468fb6a73ae455e3d,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 22
+      objectReference: {fileID: 0}
+    - target: {fileID: -1330559390388948899, guid: de90e194c6e6b0f468fb6a73ae455e3d,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 70
+      objectReference: {fileID: 0}
+    - target: {fileID: -1330559390388948899, guid: de90e194c6e6b0f468fb6a73ae455e3d,
         type: 3}
       propertyPath: m_LocalPosition.z
       value: 60
@@ -74229,9 +74638,9 @@ PrefabInstance:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: -6539706876410791272, guid: de90e194c6e6b0f468fb6a73ae455e3d,
     type: 3}
---- !u!4 &6013444819731010298 stripped
+--- !u!4 &4991713119975126033 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 8915662549160203958, guid: de90e194c6e6b0f468fb6a73ae455e3d,
+  m_CorrespondingSourceObject: {fileID: -1330559390388948899, guid: de90e194c6e6b0f468fb6a73ae455e3d,
     type: 3}
   m_PrefabInstance: {fileID: 2940507415084811340}
   m_PrefabAsset: {fileID: 0}
@@ -74276,6 +74685,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: M020
+      objectReference: {fileID: 0}
+    - target: {fileID: 6173837577996762338, guid: 1143301daa41bca4aa7bbe64f8a498ed,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 6173837577996762338, guid: 1143301daa41bca4aa7bbe64f8a498ed,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 6173837577996762338, guid: 1143301daa41bca4aa7bbe64f8a498ed,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 6610835922366291309, guid: 1143301daa41bca4aa7bbe64f8a498ed,
         type: 3}
@@ -74365,9 +74789,9 @@ PrefabInstance:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: -6539706876410791272, guid: 1143301daa41bca4aa7bbe64f8a498ed,
     type: 3}
---- !u!4 &8318341840164774690 stripped
+--- !u!4 &9035108687663252141 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 6610835922366291309, guid: 1143301daa41bca4aa7bbe64f8a498ed,
+  m_CorrespondingSourceObject: {fileID: 6173837577996762338, guid: 1143301daa41bca4aa7bbe64f8a498ed,
     type: 3}
   m_PrefabInstance: {fileID: 2940507415130586703}
   m_PrefabAsset: {fileID: 0}
@@ -74378,6 +74802,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2940507414569850404}
     m_Modifications:
+    - target: {fileID: -5650079576520286465, guid: 4eb5618d4e9b91e4d816489c8d91a9a5,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: -5650079576520286465, guid: 4eb5618d4e9b91e4d816489c8d91a9a5,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: -5650079576520286465, guid: 4eb5618d4e9b91e4d816489c8d91a9a5,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: -885418272606455534, guid: 4eb5618d4e9b91e4d816489c8d91a9a5,
         type: 3}
       propertyPath: m_RootOrder
@@ -74501,9 +74940,9 @@ PrefabInstance:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: -6539706876410791272, guid: 4eb5618d4e9b91e4d816489c8d91a9a5,
     type: 3}
---- !u!4 &6420366846716994054 stripped
+--- !u!4 &1826250767361209860 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 8203164108104272637, guid: 4eb5618d4e9b91e4d816489c8d91a9a5,
+  m_CorrespondingSourceObject: {fileID: -5650079576520286465, guid: 4eb5618d4e9b91e4d816489c8d91a9a5,
     type: 3}
   m_PrefabInstance: {fileID: 2940507415151962363}
   m_PrefabAsset: {fileID: 0}
@@ -74597,9 +75036,9 @@ PrefabInstance:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: -6539706876410791272, guid: a2c7f77d3f7c7104399305188c1d8419,
     type: 3}
---- !u!4 &6722194013795197840 stripped
+--- !u!4 &7129126352904321750 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 8468104566870582491, guid: a2c7f77d3f7c7104399305188c1d8419,
+  m_CorrespondingSourceObject: {fileID: 5341684014406630813, guid: a2c7f77d3f7c7104399305188c1d8419,
     type: 3}
   m_PrefabInstance: {fileID: 2940507415271573323}
   m_PrefabAsset: {fileID: 0}
@@ -74636,6 +75075,21 @@ PrefabInstance:
       value: -10
       objectReference: {fileID: 0}
     - target: {fileID: -4546441841887450115, guid: 2f12bb7cd1745194e8a245fb4abf4d1a,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: -2433689044972181868, guid: 2f12bb7cd1745194e8a245fb4abf4d1a,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 18
+      objectReference: {fileID: 0}
+    - target: {fileID: -2433689044972181868, guid: 2f12bb7cd1745194e8a245fb4abf4d1a,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -10
+      objectReference: {fileID: 0}
+    - target: {fileID: -2433689044972181868, guid: 2f12bb7cd1745194e8a245fb4abf4d1a,
         type: 3}
       propertyPath: m_LocalPosition.z
       value: 60
@@ -74768,9 +75222,9 @@ PrefabInstance:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: -6539706876410791272, guid: 2f12bb7cd1745194e8a245fb4abf4d1a,
     type: 3}
---- !u!4 &1380058334546794946 stripped
+--- !u!4 &8572332918581120542 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 4316757780216983880, guid: 2f12bb7cd1745194e8a245fb4abf4d1a,
+  m_CorrespondingSourceObject: {fileID: -2433689044972181868, guid: 2f12bb7cd1745194e8a245fb4abf4d1a,
     type: 3}
   m_PrefabInstance: {fileID: 2940507415508297866}
   m_PrefabAsset: {fileID: 0}
@@ -74797,6 +75251,16 @@ PrefabInstance:
       value: 24
       objectReference: {fileID: 0}
     - target: {fileID: -2220626283383868658, guid: 4d5e6d47b8c1a8547b5a5e29326fb328,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: -993226293474248232, guid: 4d5e6d47b8c1a8547b5a5e29326fb328,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 24
+      objectReference: {fileID: 0}
+    - target: {fileID: -993226293474248232, guid: 4d5e6d47b8c1a8547b5a5e29326fb328,
         type: 3}
       propertyPath: m_LocalPosition.z
       value: 80
@@ -74919,9 +75383,9 @@ PrefabInstance:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: -6539706876410791272, guid: 4d5e6d47b8c1a8547b5a5e29326fb328,
     type: 3}
---- !u!4 &3742461252982427864 stripped
+--- !u!4 &6555444562646200915 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 1954882489814555475, guid: 4d5e6d47b8c1a8547b5a5e29326fb328,
+  m_CorrespondingSourceObject: {fileID: -993226293474248232, guid: 4d5e6d47b8c1a8547b5a5e29326fb328,
     type: 3}
   m_PrefabInstance: {fileID: 2940507415607069579}
   m_PrefabAsset: {fileID: 0}
@@ -74996,6 +75460,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 29668970845454813, guid: 358caa1f4d78af8489883a9addeac75b,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 29668970845454813, guid: 358caa1f4d78af8489883a9addeac75b,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 29668970845454813, guid: 358caa1f4d78af8489883a9addeac75b,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 548450439753823170, guid: 358caa1f4d78af8489883a9addeac75b,
         type: 3}
@@ -75090,9 +75569,9 @@ PrefabInstance:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: -6539706876410791272, guid: 358caa1f4d78af8489883a9addeac75b,
     type: 3}
---- !u!4 &5095467946289188738 stripped
+--- !u!4 &2929486209222274928 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: -1263124508798754513, guid: 358caa1f4d78af8489883a9addeac75b,
+  m_CorrespondingSourceObject: {fileID: 29668970845454813, guid: 358caa1f4d78af8489883a9addeac75b,
     type: 3}
   m_PrefabInstance: {fileID: 2940507415612829357}
   m_PrefabAsset: {fileID: 0}
@@ -75203,6 +75682,21 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 80
       objectReference: {fileID: 0}
+    - target: {fileID: 7985996913682725956, guid: 90567837f02104e46827dbba8d28bbd3,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 28
+      objectReference: {fileID: 0}
+    - target: {fileID: 7985996913682725956, guid: 90567837f02104e46827dbba8d28bbd3,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 7985996913682725956, guid: 90567837f02104e46827dbba8d28bbd3,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 80
+      objectReference: {fileID: 0}
     - target: {fileID: 7992217725048041023, guid: 90567837f02104e46827dbba8d28bbd3,
         type: 3}
       propertyPath: m_RootOrder
@@ -75261,9 +75755,9 @@ PrefabInstance:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: -6539706876410791272, guid: 90567837f02104e46827dbba8d28bbd3,
     type: 3}
---- !u!4 &6337375136374727330 stripped
+--- !u!4 &5052249383583491090 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: -55126256017949964, guid: 90567837f02104e46827dbba8d28bbd3,
+  m_CorrespondingSourceObject: {fileID: 7985996913682725956, guid: 90567837f02104e46827dbba8d28bbd3,
     type: 3}
   m_PrefabInstance: {fileID: 2940507415633893462}
   m_PrefabAsset: {fileID: 0}
@@ -75343,6 +75837,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: M025
+      objectReference: {fileID: 0}
+    - target: {fileID: 7102313681225262783, guid: 7b0347c7983e487499fe4a346972095b,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 7102313681225262783, guid: 7b0347c7983e487499fe4a346972095b,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 7102313681225262783, guid: 7b0347c7983e487499fe4a346972095b,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 7787472395474380305, guid: 7b0347c7983e487499fe4a346972095b,
         type: 3}
@@ -75432,9 +75941,9 @@ PrefabInstance:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: -6539706876410791272, guid: 7b0347c7983e487499fe4a346972095b,
     type: 3}
---- !u!4 &2895996462607317850 stripped
+--- !u!4 &5358926505575385040 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: -9151768978491434443, guid: 7b0347c7983e487499fe4a346972095b,
+  m_CorrespondingSourceObject: {fileID: 7102313681225262783, guid: 7b0347c7983e487499fe4a346972095b,
     type: 3}
   m_PrefabInstance: {fileID: 2940507415678493039}
   m_PrefabAsset: {fileID: 0}
@@ -75509,6 +76018,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 825833196294244165, guid: 71e5375c7adab11409efaf47d6c0210e,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 825833196294244165, guid: 71e5375c7adab11409efaf47d6c0210e,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 825833196294244165, guid: 71e5375c7adab11409efaf47d6c0210e,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 1683581588647111835, guid: 71e5375c7adab11409efaf47d6c0210e,
         type: 3}
@@ -75608,9 +76132,9 @@ PrefabInstance:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: -6539706876410791272, guid: 71e5375c7adab11409efaf47d6c0210e,
     type: 3}
---- !u!4 &2602798585590294641 stripped
+--- !u!4 &2574709889874284542 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: -8300072060654985014, guid: 71e5375c7adab11409efaf47d6c0210e,
+  m_CorrespondingSourceObject: {fileID: 825833196294244165, guid: 71e5375c7adab11409efaf47d6c0210e,
     type: 3}
   m_PrefabInstance: {fileID: 2940507415721560251}
   m_PrefabAsset: {fileID: 0}
@@ -75721,6 +76245,21 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 40
       objectReference: {fileID: 0}
+    - target: {fileID: 4067581615487325697, guid: e7ebfca8be700b347b8c5bb3a1e42d08,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 4067581615487325697, guid: e7ebfca8be700b347b8c5bb3a1e42d08,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 4067581615487325697, guid: e7ebfca8be700b347b8c5bb3a1e42d08,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 40
+      objectReference: {fileID: 0}
     - target: {fileID: 7992217725048041023, guid: e7ebfca8be700b347b8c5bb3a1e42d08,
         type: 3}
       propertyPath: m_RootOrder
@@ -75779,9 +76318,9 @@ PrefabInstance:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: -6539706876410791272, guid: e7ebfca8be700b347b8c5bb3a1e42d08,
     type: 3}
---- !u!4 &4030430478118619207 stripped
+--- !u!4 &1205896008671825637 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 2242846216340705443, guid: e7ebfca8be700b347b8c5bb3a1e42d08,
+  m_CorrespondingSourceObject: {fileID: 4067581615487325697, guid: e7ebfca8be700b347b8c5bb3a1e42d08,
     type: 3}
   m_PrefabInstance: {fileID: 2940507415746582756}
   m_PrefabAsset: {fileID: 0}
@@ -75848,6 +76387,21 @@ PrefabInstance:
       value: 30
       objectReference: {fileID: 0}
     - target: {fileID: -3865936473576110804, guid: 79fe5b36a12d95241b273326c2ead776,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: -2926861756773983522, guid: 79fe5b36a12d95241b273326c2ead776,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: -2926861756773983522, guid: 79fe5b36a12d95241b273326c2ead776,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: -2926861756773983522, guid: 79fe5b36a12d95241b273326c2ead776,
         type: 3}
       propertyPath: m_LocalPosition.z
       value: 20
@@ -75950,9 +76504,9 @@ PrefabInstance:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: -6539706876410791272, guid: 79fe5b36a12d95241b273326c2ead776,
     type: 3}
---- !u!4 &7104332379955814819 stripped
+--- !u!4 &9200701580282232401 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: -3865936473576110804, guid: 79fe5b36a12d95241b273326c2ead776,
+  m_CorrespondingSourceObject: {fileID: -2926861756773983522, guid: 79fe5b36a12d95241b273326c2ead776,
     type: 3}
   m_PrefabInstance: {fileID: 2940507415794640015}
   m_PrefabAsset: {fileID: 0}
@@ -75989,6 +76543,16 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -2407540940714022117, guid: 3dc3b4e734899b94f831b129cfa64ef1,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: -1329222551173453899, guid: 3dc3b4e734899b94f831b129cfa64ef1,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -1329222551173453899, guid: 3dc3b4e734899b94f831b129cfa64ef1,
         type: 3}
       propertyPath: m_LocalPosition.x
       value: 40
@@ -76091,9 +76655,9 @@ PrefabInstance:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: -6539706876410791272, guid: 3dc3b4e734899b94f831b129cfa64ef1,
     type: 3}
---- !u!4 &7241389606872940543 stripped
+--- !u!4 &4990939239347098922 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: -3697364510058459808, guid: 3dc3b4e734899b94f831b129cfa64ef1,
+  m_CorrespondingSourceObject: {fileID: -1329222551173453899, guid: 3dc3b4e734899b94f831b129cfa64ef1,
     type: 3}
   m_PrefabInstance: {fileID: 2940507415915377311}
   m_PrefabAsset: {fileID: 0}
@@ -76145,6 +76709,21 @@ PrefabInstance:
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: -2186194202082527113, guid: 54556cc1cf83f464abeb29fce4135552,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: -629241041350729721, guid: 54556cc1cf83f464abeb29fce4135552,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 19
+      objectReference: {fileID: 0}
+    - target: {fileID: -629241041350729721, guid: 54556cc1cf83f464abeb29fce4135552,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: -629241041350729721, guid: 54556cc1cf83f464abeb29fce4135552,
         type: 3}
       propertyPath: m_LocalPosition.z
       value: 60
@@ -76227,9 +76806,9 @@ PrefabInstance:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: -6539706876410791272, guid: 54556cc1cf83f464abeb29fce4135552,
     type: 3}
---- !u!4 &451415146073663944 stripped
+--- !u!4 &6884521074409976158 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: -5868902500183607151, guid: 54556cc1cf83f464abeb29fce4135552,
+  m_CorrespondingSourceObject: {fileID: -629241041350729721, guid: 54556cc1cf83f464abeb29fce4135552,
     type: 3}
   m_PrefabInstance: {fileID: 2940507415979020633}
   m_PrefabAsset: {fileID: 0}
@@ -76240,6 +76819,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2940507414569850404}
     m_Modifications:
+    - target: {fileID: -7136874356802198325, guid: f119a0cbccd6e6a47a803fbb0a39a4ba,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 21
+      objectReference: {fileID: 0}
+    - target: {fileID: -7136874356802198325, guid: f119a0cbccd6e6a47a803fbb0a39a4ba,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: -7136874356802198325, guid: f119a0cbccd6e6a47a803fbb0a39a4ba,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 60
+      objectReference: {fileID: 0}
     - target: {fileID: -6672267307610876053, guid: f119a0cbccd6e6a47a803fbb0a39a4ba,
         type: 3}
       propertyPath: m_RootOrder
@@ -76398,9 +76992,9 @@ PrefabInstance:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: -6539706876410791272, guid: f119a0cbccd6e6a47a803fbb0a39a4ba,
     type: 3}
---- !u!4 &3771012701529924367 stripped
+--- !u!4 &3763458425197611771 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 2061403951349255487, guid: f119a0cbccd6e6a47a803fbb0a39a4ba,
+  m_CorrespondingSourceObject: {fileID: -7136874356802198325, guid: f119a0cbccd6e6a47a803fbb0a39a4ba,
     type: 3}
   m_PrefabInstance: {fileID: 2940507415980748336}
   m_PrefabAsset: {fileID: 0}
@@ -76516,12 +77110,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8891694253372558034, guid: dcd0ff9b087b91246a17aac2fa15b625,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 8891694253372558034, guid: dcd0ff9b087b91246a17aac2fa15b625,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 40
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: -6539706876410791272, guid: dcd0ff9b087b91246a17aac2fa15b625,
     type: 3}
---- !u!4 &7213506497763593726 stripped
+--- !u!4 &6029021628986160249 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: -3686968037454285995, guid: dcd0ff9b087b91246a17aac2fa15b625,
+  m_CorrespondingSourceObject: {fileID: 8891694253372558034, guid: dcd0ff9b087b91246a17aac2fa15b625,
     type: 3}
   m_PrefabInstance: {fileID: 2940507415989894827}
   m_PrefabAsset: {fileID: 0}
@@ -76573,6 +77177,21 @@ PrefabInstance:
       value: -10
       objectReference: {fileID: 0}
     - target: {fileID: -6427460491971045669, guid: 50186b594660d0647ba63b3482b3ebfd,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: -5876387493861512822, guid: 50186b594660d0647ba63b3482b3ebfd,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: -5876387493861512822, guid: 50186b594660d0647ba63b3482b3ebfd,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -10
+      objectReference: {fileID: 0}
+    - target: {fileID: -5876387493861512822, guid: 50186b594660d0647ba63b3482b3ebfd,
         type: 3}
       propertyPath: m_LocalPosition.z
       value: 20
@@ -76690,9 +77309,9 @@ PrefabInstance:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: -6539706876410791272, guid: 50186b594660d0647ba63b3482b3ebfd,
     type: 3}
---- !u!4 &3564525276439025131 stripped
+--- !u!4 &485306149498403066 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 1853648168650048667, guid: 50186b594660d0647ba63b3482b3ebfd,
+  m_CorrespondingSourceObject: {fileID: -5876387493861512822, guid: 50186b594660d0647ba63b3482b3ebfd,
     type: 3}
   m_PrefabInstance: {fileID: 2940507416065479024}
   m_PrefabAsset: {fileID: 0}
@@ -76823,12 +77442,27 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8753010001889589837, guid: e751572a686b5e74cb223b99239c89bd,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 29
+      objectReference: {fileID: 0}
+    - target: {fileID: 8753010001889589837, guid: e751572a686b5e74cb223b99239c89bd,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 8753010001889589837, guid: e751572a686b5e74cb223b99239c89bd,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 80
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: -6539706876410791272, guid: e751572a686b5e74cb223b99239c89bd,
     type: 3}
---- !u!4 &8805243573842844157 stripped
+--- !u!4 &5887954942130087132 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 5979730866640455532, guid: e751572a686b5e74cb223b99239c89bd,
+  m_CorrespondingSourceObject: {fileID: 8753010001889589837, guid: e751572a686b5e74cb223b99239c89bd,
     type: 3}
   m_PrefabInstance: {fileID: 2940507416119910033}
   m_PrefabAsset: {fileID: 0}
@@ -76924,6 +77558,21 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 20
       objectReference: {fileID: 0}
+    - target: {fileID: 5694801745619899979, guid: 971792b98df58a94e8310078aa0710ed,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5694801745619899979, guid: 971792b98df58a94e8310078aa0710ed,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 70
+      objectReference: {fileID: 0}
+    - target: {fileID: 5694801745619899979, guid: 971792b98df58a94e8310078aa0710ed,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 7992217725048041023, guid: 971792b98df58a94e8310078aa0710ed,
         type: 3}
       propertyPath: m_RootOrder
@@ -76997,9 +77646,9 @@ PrefabInstance:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: -6539706876410791272, guid: 971792b98df58a94e8310078aa0710ed,
     type: 3}
---- !u!4 &1721028606216977387 stripped
+--- !u!4 &7477884037151470980 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 4552177752996960292, guid: 971792b98df58a94e8310078aa0710ed,
+  m_CorrespondingSourceObject: {fileID: 5694801745619899979, guid: 971792b98df58a94e8310078aa0710ed,
     type: 3}
   m_PrefabInstance: {fileID: 2940507416166982607}
   m_PrefabAsset: {fileID: 0}
@@ -77071,6 +77720,21 @@ PrefabInstance:
       value: 60
       objectReference: {fileID: 0}
     - target: {fileID: -101135889965777808, guid: 0b8ce559755f37e4db989aa5e4a7231f,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 42303352014023231, guid: 0b8ce559755f37e4db989aa5e4a7231f,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 27
+      objectReference: {fileID: 0}
+    - target: {fileID: 42303352014023231, guid: 0b8ce559755f37e4db989aa5e4a7231f,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 42303352014023231, guid: 0b8ce559755f37e4db989aa5e4a7231f,
         type: 3}
       propertyPath: m_LocalPosition.z
       value: 80
@@ -77168,9 +77832,9 @@ PrefabInstance:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: -6539706876410791272, guid: 0b8ce559755f37e4db989aa5e4a7231f,
     type: 3}
---- !u!4 &2694139798103219139 stripped
+--- !u!4 &2907228894734443625 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: -8237850949208500843, guid: 0b8ce559755f37e4db989aa5e4a7231f,
+  m_CorrespondingSourceObject: {fileID: 42303352014023231, guid: 0b8ce559755f37e4db989aa5e4a7231f,
     type: 3}
   m_PrefabInstance: {fileID: 2940507416216686166}
   m_PrefabAsset: {fileID: 0}
@@ -77197,6 +77861,16 @@ PrefabInstance:
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: -6020808861811732844, guid: a7fd64dae7ad6384b93af2e52480c4cc,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: -3794823786292750177, guid: a7fd64dae7ad6384b93af2e52480c4cc,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: -3794823786292750177, guid: a7fd64dae7ad6384b93af2e52480c4cc,
         type: 3}
       propertyPath: m_LocalPosition.x
       value: 100
@@ -77289,9 +77963,9 @@ PrefabInstance:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: -6539706876410791272, guid: a7fd64dae7ad6384b93af2e52480c4cc,
     type: 3}
---- !u!4 &4130752634741656790 stripped
+--- !u!4 &7176719331305092748 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: -7954018535292394811, guid: a7fd64dae7ad6384b93af2e52480c4cc,
+  m_CorrespondingSourceObject: {fileID: -3794823786292750177, guid: a7fd64dae7ad6384b93af2e52480c4cc,
     type: 3}
   m_PrefabInstance: {fileID: 2940507416498744851}
   m_PrefabAsset: {fileID: 0}
@@ -77387,6 +78061,21 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 80
       objectReference: {fileID: 0}
+    - target: {fileID: 6801760515078223794, guid: 111b71ab988c7a74a9198df717186105,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 26
+      objectReference: {fileID: 0}
+    - target: {fileID: 6801760515078223794, guid: 111b71ab988c7a74a9198df717186105,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 6801760515078223794, guid: 111b71ab988c7a74a9198df717186105,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 80
+      objectReference: {fileID: 0}
     - target: {fileID: 7992217725048041023, guid: 111b71ab988c7a74a9198df717186105,
         type: 3}
       propertyPath: m_RootOrder
@@ -77460,9 +78149,9 @@ PrefabInstance:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: -6539706876410791272, guid: 111b71ab988c7a74a9198df717186105,
     type: 3}
---- !u!4 &1158683582469320357 stripped
+--- !u!4 &8550773066450311038 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 4096797359807483497, guid: 111b71ab988c7a74a9198df717186105,
+  m_CorrespondingSourceObject: {fileID: 6801760515078223794, guid: 111b71ab988c7a74a9198df717186105,
     type: 3}
   m_PrefabInstance: {fileID: 2940507416573010124}
   m_PrefabAsset: {fileID: 0}
@@ -77473,6 +78162,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2940507414569850404}
     m_Modifications:
+    - target: {fileID: -4099484153929245741, guid: b4f1190e3942c0d4aa7cd714526a4488,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -4099484153929245741, guid: b4f1190e3942c0d4aa7cd714526a4488,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: -1534644840344476211, guid: b4f1190e3942c0d4aa7cd714526a4488,
         type: 3}
       propertyPath: m_RootOrder
@@ -77606,9 +78305,9 @@ PrefabInstance:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: -6539706876410791272, guid: b4f1190e3942c0d4aa7cd714526a4488,
     type: 3}
---- !u!4 &8169172156517671754 stripped
+--- !u!4 &8058473602358960200 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 6453795847464081617, guid: b4f1190e3942c0d4aa7cd714526a4488,
+  m_CorrespondingSourceObject: {fileID: -4099484153929245741, guid: b4f1190e3942c0d4aa7cd714526a4488,
     type: 3}
   m_PrefabInstance: {fileID: 2940507416682544027}
   m_PrefabAsset: {fileID: 0}
@@ -77774,12 +78473,27 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8648420685718201709, guid: fb5e3f6b88e617f449246e06925751b8,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8648420685718201709, guid: fb5e3f6b88e617f449246e06925751b8,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8648420685718201709, guid: fb5e3f6b88e617f449246e06925751b8,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 20
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: -6539706876410791272, guid: fb5e3f6b88e617f449246e06925751b8,
     type: 3}
---- !u!4 &8242989184697678607 stripped
+--- !u!4 &5821917507853034377 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 6533101382711393771, guid: fb5e3f6b88e617f449246e06925751b8,
+  m_CorrespondingSourceObject: {fileID: 8648420685718201709, guid: fb5e3f6b88e617f449246e06925751b8,
     type: 3}
   m_PrefabInstance: {fileID: 2940507416693475044}
   m_PrefabAsset: {fileID: 0}

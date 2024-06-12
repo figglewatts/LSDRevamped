@@ -69,6 +69,11 @@ namespace LSDR.SDK.Entities
             return _entities[id];
         }
 
+        public bool HasEntity(string id)
+        {
+            return _entities.ContainsKey(id);
+        }
+
         public T GetComponent<T>(string id) where T : Component
         {
             GameObject obj = Get(id);

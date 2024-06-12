@@ -305,6 +305,7 @@ namespace LSDR.Dream
             _flashbackEventSpawn = new(firstEvent.PlayerPosition, firstEvent.PlayerYRotation);
             yield return Coroutines.Instance.StartCoroutine(LoadDream(dream, transitioning: true, onLoadFinished: () =>
             {
+                if (!EntityIndex.Instance.HasEntity(firstEvent.EntityID)) return;
                 EntityIndex.Instance.Get(firstEvent.EntityID).SetActive(true);
             }));
 
@@ -349,8 +350,9 @@ namespace LSDR.Dream
                         onLoadFinished: () =>
                         {
                             SetCanControlPlayer(true);
-                            EntityIndex.Instance.Get(flashbackEvent.EntityID).SetActive(true);
                             _timeInCurrentFlashback = 0;
+                            if (!EntityIndex.Instance.HasEntity(firstEvent.EntityID)) return;
+                            EntityIndex.Instance.Get(firstEvent.EntityID).SetActive(true);
                         }));
                 });
             }

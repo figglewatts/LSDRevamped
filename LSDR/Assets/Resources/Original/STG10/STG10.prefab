@@ -690,6 +690,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: EndOfHallwayAudio
+  Unregistered: 0
   Clip: {fileID: 8300000, guid: 337cbe296f3964e439451f851f59f282, type: 3}
   Spatial: 1
   FullVolumeRangeUnits: 3
@@ -935,9 +936,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: EndOfHallway
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 09fbbdcdae38e9b4788323bd6841edfa, type: 3}
   InteractionKind: 0
   InteractionDistance: 2
+  AnimatedObject: {fileID: 0}
 --- !u!1 &3372537058326151566
 GameObject:
   m_ObjectHideFlags: 0
@@ -997,6 +1000,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: TriggerLink_BMC_Return
+  Unregistered: 0
   OnlyOnce: 0
   Linked: {fileID: 11400000, guid: 627b485d01c7629478e70522f391e0f0, type: 2}
   ForcedLinkColor: {r: 0, g: 0, b: 0, a: 0}
@@ -1412,6 +1416,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: CloudBackground
+  Unregistered: 0
 --- !u!1 &4500608950713013271
 GameObject:
   m_ObjectHideFlags: 0
@@ -2206,6 +2211,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Spawn2
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &6970516749207826062
@@ -2285,6 +2291,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Spawn4
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &7404996685486631983
@@ -2364,6 +2371,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Spawn3
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &7698590997348549250
@@ -2554,9 +2562,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 8095653731158850139}
-  - {fileID: 2041904314698975248}
-  - {fileID: 6057873720815908480}
+  - {fileID: 4539982557778999036}
+  - {fileID: 2095711311133185102}
+  - {fileID: 5541864150612749105}
   m_Father: {fileID: 8672494929042472927}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2721,6 +2729,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Spawn1
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1001 &8672494927821818997
@@ -2746,6 +2755,16 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -2217490646263403547, guid: fb18d98bb8d9a7d4b8ea0a3be7d769bd,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: -1923157551848957893, guid: fb18d98bb8d9a7d4b8ea0a3be7d769bd,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -1923157551848957893, guid: fb18d98bb8d9a7d4b8ea0a3be7d769bd,
         type: 3}
       propertyPath: m_LocalPosition.x
       value: 20
@@ -2838,9 +2857,9 @@ PrefabInstance:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: -6539706876410791272, guid: fb18d98bb8d9a7d4b8ea0a3be7d769bd,
     type: 3}
---- !u!4 &2041904314698975248 stripped
+--- !u!4 &2095711311133185102 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 7209323024054092901, guid: fb18d98bb8d9a7d4b8ea0a3be7d769bd,
+  m_CorrespondingSourceObject: {fileID: -1923157551848957893, guid: fb18d98bb8d9a7d4b8ea0a3be7d769bd,
     type: 3}
   m_PrefabInstance: {fileID: 8672494927821818997}
   m_PrefabAsset: {fileID: 0}
@@ -2882,6 +2901,16 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -6031727011163096281, guid: 5b37dbc9d2094044382b758ce2630d65,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: -5426190879085304170, guid: 5b37dbc9d2094044382b758ce2630d65,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -5426190879085304170, guid: 5b37dbc9d2094044382b758ce2630d65,
         type: 3}
       propertyPath: m_LocalPosition.x
       value: 40
@@ -2994,9 +3023,9 @@ PrefabInstance:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: -6539706876410791272, guid: 5b37dbc9d2094044382b758ce2630d65,
     type: 3}
---- !u!4 &6057873720815908480 stripped
+--- !u!4 &5541864150612749105 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: -6031727011163096281, guid: 5b37dbc9d2094044382b758ce2630d65,
+  m_CorrespondingSourceObject: {fileID: -5426190879085304170, guid: 5b37dbc9d2094044382b758ce2630d65,
     type: 3}
   m_PrefabInstance: {fileID: 8672494928105393575}
   m_PrefabAsset: {fileID: 0}
@@ -3075,9 +3104,9 @@ PrefabInstance:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: -6539706876410791272, guid: 8a6773c7309efbe46ad0c2bed7812a0f,
     type: 3}
---- !u!4 &8095653731158850139 stripped
+--- !u!4 &4539982557778999036 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: -8645945787596536352, guid: 8a6773c7309efbe46ad0c2bed7812a0f,
+  m_CorrespondingSourceObject: {fileID: 5141886078955620679, guid: 8a6773c7309efbe46ad0c2bed7812a0f,
     type: 3}
   m_PrefabInstance: {fileID: 8672494928360636347}
   m_PrefabAsset: {fileID: 0}

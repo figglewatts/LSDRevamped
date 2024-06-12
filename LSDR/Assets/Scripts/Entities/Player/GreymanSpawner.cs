@@ -11,7 +11,7 @@ namespace LSDR.Entities.Dream
     {
         private const float MIN_WAIT_BETWEEN_SPAWN_CHANCES_SECONDS = 5;
         private const float MAX_WAIT_BETWEEN_SPAWN_CHANCES_SECONDS = 15;
-        private const float CHANCE_FOR_GREYMAN = 7;
+        private const float CHANCE_FOR_GREYMAN = 10;
         public DreamSystem DreamSystem;
         public GameObject GreymanPrefab;
         public float GreymanSpawnDistance = 10;

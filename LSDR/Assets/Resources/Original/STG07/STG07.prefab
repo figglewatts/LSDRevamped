@@ -77,6 +77,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_e6368aea-d7d3-44c1-a21e-6b0461d7dbc1
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &76119049107607910
@@ -381,6 +382,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_b1802d58-4dea-4b09-af83-4835887c1a58
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &243091885791046454
@@ -514,9 +516,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: ChairBalancer
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 625db5669c00c89409b057ef6de56027, type: 3}
   InteractionKind: 0
   InteractionDistance: 6.04
+  AnimatedObject: {fileID: 0}
 --- !u!1 &334451512688384430
 GameObject:
   m_ObjectHideFlags: 0
@@ -626,6 +630,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_a6eedc66-fd0c-47f0-9d92-84d116bbc558
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &454138153808504707
@@ -738,6 +743,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_27d27786-a899-4481-8d7e-b5951ae52a35
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &649316795714097745
@@ -1000,9 +1006,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Geisha
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 492866ada00e2ec45a6a6752ed596faa, type: 3}
   InteractionKind: 0
   InteractionDistance: 3
+  AnimatedObject: {fileID: 0}
 --- !u!114 &2219590595499640357
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1287,6 +1295,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: GeishaTarget2
+  Unregistered: 0
 --- !u!1 &1180404255429880608
 GameObject:
   m_ObjectHideFlags: 0
@@ -1526,6 +1535,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: ChairBalancerAudio
+  Unregistered: 0
   Clip: {fileID: 8300000, guid: c87ec831dba44744ea3eed2483960441, type: 3}
   Spatial: 1
   FullVolumeRangeUnits: 0.9
@@ -1681,6 +1691,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_4675599d-2e16-47ad-b48c-137f31801bc0
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &1416905889561831520
@@ -1728,6 +1739,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_fe6519d2-d8f2-4f05-aaf4-68e166d1f716
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &1463337487286918784
@@ -2298,6 +2310,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_b860de28-f598-4182-a58b-bc3bb828325d
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &1970444841455321823
@@ -2409,6 +2422,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_7b095c44-b54c-4618-8507-510bbbd705df
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &2041260120618175507
@@ -2456,6 +2470,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_8b481086-6675-4409-aa12-be546f39a16f
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &2090223501837984654
@@ -2604,6 +2619,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_6225cfee-b6d4-4190-9148-5f7d12d2e707
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &2230654449545374767
@@ -3133,6 +3149,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_468b73ee-e583-43f5-bf34-b4c44bcd83b8
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &2641674095240193107
@@ -3233,9 +3250,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Starlight
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 879dd2c9633f8144c900a1bdedc2e71b, type: 3}
   InteractionKind: 0
   InteractionDistance: 3
+  AnimatedObject: {fileID: 0}
 --- !u!1 &2661142527427819447
 GameObject:
   m_ObjectHideFlags: 0
@@ -3457,11 +3476,11 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 5557519937623604357}
-  - {fileID: 5744428343960491917}
-  - {fileID: 4459030273690759152}
-  - {fileID: 9173823615884443889}
-  - {fileID: 4730578941676563598}
+  - {fileID: 7154325269313306364}
+  - {fileID: 3756273409711661077}
+  - {fileID: 1809735391547846740}
+  - {fileID: 8344184926182162100}
+  - {fileID: 6328085918737763312}
   m_Father: {fileID: 3077487766303288755}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3510,6 +3529,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: 22905612-bf80-4153-a573-ab70d1b7144c
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &3077487766303288754
@@ -4519,6 +4539,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_3b9949b6-c377-41cd-a67c-763b6a2c7b63
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &3704422678320186873
@@ -5139,9 +5160,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: Dog
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 5915c786bddfe1845a7f69b9e31e92ee, type: 3}
   InteractionKind: 0
   InteractionDistance: 5
+  AnimatedObject: {fileID: 0}
 --- !u!114 &8324517105659174434
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5200,6 +5223,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_bf399e2b-aa04-405b-ba96-3587aa7b72ef
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &4095513955244469855
@@ -5667,6 +5691,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_a398b6dd-431a-4fea-88ff-4df447604fe9
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &4348098684310171722
@@ -6294,6 +6319,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_a506af48-a7b3-4cf6-bedf-60f7f733d327
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &4800128121025246340
@@ -6599,6 +6625,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: DogBarkAudio
+  Unregistered: 0
   Clip: {fileID: 8300000, guid: 563bd03eec910604dbd552ecef509bd3, type: 3}
   Spatial: 1
   FullVolumeRangeUnits: 3
@@ -7480,6 +7507,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: 432b587a-e6cd-4294-a934-3e239e69ba2f
+  Unregistered: 0
   OnlyOnce: 0
   Linked: {fileID: 11400000, guid: 381baaecc63f5459781e6bcadf55e206, type: 2}
   ForcedLinkColor: {r: 0, g: 0, b: 0, a: 0}
@@ -7694,6 +7722,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_62e45f79-c5ee-4731-a7bb-4becd7b52723
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &5896659706150328939
@@ -7934,6 +7963,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_81417b91-2c44-4ddc-b3b0-128d85505987
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &6162990179149616183
@@ -8013,6 +8043,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: GeishaTarget1
+  Unregistered: 0
 --- !u!1 &6239443165496237710
 GameObject:
   m_ObjectHideFlags: 0
@@ -8381,6 +8412,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: EntranceFromKyoto
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 1
 --- !u!1 &6494083336064202663
@@ -8611,9 +8643,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PurplePlayer
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 07ceed221c74fe64188a3033881f0112, type: 3}
   InteractionKind: 0
   InteractionDistance: 3
+  AnimatedObject: {fileID: 0}
 --- !u!1 &6850687762933548452
 GameObject:
   m_ObjectHideFlags: 0
@@ -8691,6 +8725,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_def3ddec-afa5-4857-b67a-7255bcb1495a
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &6972393449677457149
@@ -9692,9 +9727,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: RedPlayer
+  Unregistered: 0
   Script: {fileID: 271950057456261835, guid: 27eff5ee3b6ac984287c58af8e49dfae, type: 3}
   InteractionKind: 0
   InteractionDistance: 3
+  AnimatedObject: {fileID: 0}
 --- !u!1 &7702718206798779962
 GameObject:
   m_ObjectHideFlags: 0
@@ -9740,6 +9777,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_f3c59ba0-ff09-4a46-84d2-11d73a1c0053
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &7704794649994085786
@@ -10696,6 +10734,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_838e858c-db09-4ee1-9a5a-58adb2ce860a
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &8131990144407115991
@@ -11136,6 +11175,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_d824324e-484a-4a61-8633-1618975083da
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &8383012532842752307
@@ -11634,6 +11674,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_317e3f89-67e7-478c-a4dd-356db902324f
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &9020248550878790956
@@ -11681,6 +11722,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: PlayerSpawn_46b27fb2-1da7-456b-8246-224ac3e512d8
+  Unregistered: 0
   DayOneSpawn: 0
   TunnelEntrance: 0
 --- !u!1 &9122531145512412934
@@ -11894,12 +11936,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9035503212268394522, guid: 89091fea5bf7c364a939cdaf75344462,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 9035503212268394522, guid: 89091fea5bf7c364a939cdaf75344462,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 80
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: -6539706876410791272, guid: 89091fea5bf7c364a939cdaf75344462,
     type: 3}
---- !u!4 &4730578941676563598 stripped
+--- !u!4 &6328085918737763312 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 7715522315907219300, guid: 89091fea5bf7c364a939cdaf75344462,
+  m_CorrespondingSourceObject: {fileID: 9035503212268394522, guid: 89091fea5bf7c364a939cdaf75344462,
     type: 3}
   m_PrefabInstance: {fileID: 3077487764987220970}
   m_PrefabAsset: {fileID: 0}
@@ -11995,6 +12047,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: M001
       objectReference: {fileID: 0}
+    - target: {fileID: 2203834798252315246, guid: b25efda8f7942114ea1d079fe178d2dc,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2203834798252315246, guid: b25efda8f7942114ea1d079fe178d2dc,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 7992217725048041023, guid: b25efda8f7942114ea1d079fe178d2dc,
         type: 3}
       propertyPath: m_RootOrder
@@ -12053,9 +12115,9 @@ PrefabInstance:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: -6539706876410791272, guid: b25efda8f7942114ea1d079fe178d2dc,
     type: 3}
---- !u!4 &5744428343960491917 stripped
+--- !u!4 &3756273409711661077 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: -1941858525708687882, guid: b25efda8f7942114ea1d079fe178d2dc,
+  m_CorrespondingSourceObject: {fileID: 2203834798252315246, guid: b25efda8f7942114ea1d079fe178d2dc,
     type: 3}
   m_PrefabInstance: {fileID: 3077487765049487995}
   m_PrefabAsset: {fileID: 0}
@@ -12066,6 +12128,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3077487765188149178}
     m_Modifications:
+    - target: {fileID: -5501122681152966786, guid: f140c49dafdb44c44bac916ee59a6563,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -5501122681152966786, guid: f140c49dafdb44c44bac916ee59a6563,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 40
+      objectReference: {fileID: 0}
     - target: {fileID: -2561100367093489410, guid: f140c49dafdb44c44bac916ee59a6563,
         type: 3}
       propertyPath: m_RootOrder
@@ -12209,9 +12281,9 @@ PrefabInstance:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: -6539706876410791272, guid: f140c49dafdb44c44bac916ee59a6563,
     type: 3}
---- !u!4 &4459030273690759152 stripped
+--- !u!4 &1809735391547846740 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 1681187062691000538, guid: f140c49dafdb44c44bac916ee59a6563,
+  m_CorrespondingSourceObject: {fileID: -5501122681152966786, guid: f140c49dafdb44c44bac916ee59a6563,
     type: 3}
   m_PrefabInstance: {fileID: 3077487765825330986}
   m_PrefabAsset: {fileID: 0}
@@ -12310,9 +12382,9 @@ PrefabInstance:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: -6539706876410791272, guid: dfc79314d81b3184ba70ed62dfc37f36,
     type: 3}
---- !u!4 &5557519937623604357 stripped
+--- !u!4 &7154325269313306364 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: -1759455955406656393, guid: dfc79314d81b3184ba70ed62dfc37f36,
+  m_CorrespondingSourceObject: {fileID: -3892189540714287602, guid: dfc79314d81b3184ba70ed62dfc37f36,
     type: 3}
   m_PrefabInstance: {fileID: 3077487765885997298}
   m_PrefabAsset: {fileID: 0}
@@ -12393,6 +12465,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: M003
       objectReference: {fileID: 0}
+    - target: {fileID: 6447203215045669001, guid: 7fde873e3f524f8418bf221daaa9da76,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6447203215045669001, guid: 7fde873e3f524f8418bf221daaa9da76,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 60
+      objectReference: {fileID: 0}
     - target: {fileID: 6988459978765231539, guid: 7fde873e3f524f8418bf221daaa9da76,
         type: 3}
       propertyPath: m_RootOrder
@@ -12466,9 +12548,9 @@ PrefabInstance:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: -6539706876410791272, guid: 7fde873e3f524f8418bf221daaa9da76,
     type: 3}
---- !u!4 &9173823615884443889 stripped
+--- !u!4 &8344184926182162100 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: -3027939401533632820, guid: 7fde873e3f524f8418bf221daaa9da76,
+  m_CorrespondingSourceObject: {fileID: 6447203215045669001, guid: 7fde873e3f524f8418bf221daaa9da76,
     type: 3}
   m_PrefabInstance: {fileID: 3077487766230797885}
   m_PrefabAsset: {fileID: 0}

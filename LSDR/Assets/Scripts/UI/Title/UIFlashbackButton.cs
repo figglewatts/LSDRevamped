@@ -15,5 +15,10 @@ namespace LSDR.UI.Title
         {
             FlashbackButton.interactable = DreamSystem.CanFlashback;
         }
+
+        public void OnEnable()
+        {
+            FlashbackButton.interactable = DreamSystem.CanFlashback;
+        }
     }
 }
