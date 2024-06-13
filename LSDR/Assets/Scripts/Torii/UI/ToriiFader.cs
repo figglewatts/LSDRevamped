@@ -44,37 +44,40 @@ namespace Torii.UI
             _fadeImage.color = color;
         }
 
-        public void FadeIn(float duration, Action onFinish = null)
+        public void FadeIn(float duration, Action onFinish = null, bool forced = true)
         {
-            beginFade(fadeTo(targetOpacity: 1, duration, onFinish));
+            beginFade(fadeTo(targetOpacity: 1, duration, onFinish), forced);
         }
 
-        public void FadeIn(Color color, float duration, Action onFinish = null, float initialAlpha = -1)
-        {
-            _fadeImage.color = new Color(color.r, color.g, color.b,
-                Math.Abs(initialAlpha - -1) < float.Epsilon ? _fadeImage.color.a : initialAlpha);
-
-            FadeIn(duration, onFinish);
-        }
-
-        public void FadeOut(float duration, Action onFinish = null)
-        {
-            beginFade(fadeTo(targetOpacity: 0, duration, onFinish));
-        }
-
-        public void FadeOut(Color color, float duration, Action onFinish = null, float initialAlpha = -1)
+        public void FadeIn(Color color, float duration, Action onFinish = null, float initialAlpha = -1,
+            bool forced = true)
         {
             _fadeImage.color = new Color(color.r, color.g, color.b,
                 Math.Abs(initialAlpha - -1) < float.Epsilon ? _fadeImage.color.a : initialAlpha);
 
-            FadeOut(duration, onFinish);
+            FadeIn(duration, onFinish, forced);
         }
 
-        private void beginFade(IEnumerator fade)
+        public void FadeOut(float duration, Action onFinish = null, bool forced = true)
+        {
+            beginFade(fadeTo(targetOpacity: 0, duration, onFinish), forced);
+        }
+
+        public void FadeOut(Color color, float duration, Action onFinish = null, float initialAlpha = -1,
+            bool forced = true)
+        {
+            _fadeImage.color = new Color(color.r, color.g, color.b,
+                Math.Abs(initialAlpha - -1) < float.Epsilon ? _fadeImage.color.a : initialAlpha);
+
+            FadeOut(duration, onFinish, forced);
+        }
+
+        private void beginFade(IEnumerator fade, bool forced)
         {
             // if there was an existing fade, stop it and execute its callback if it existed
             if (_currentFade != null)
             {
+                if (!forced) return; // don't force it unless we want to
                 _currentOnFinish?.Invoke();
                 StopCoroutine(_currentFade);
             }

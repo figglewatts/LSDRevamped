@@ -40,7 +40,7 @@ namespace LSDR.Entities.Dream
                 {
                     if (gameObject != null) Destroy(gameObject);
                 });
-            });
+            }, forced: false);
         }
     }
 }

@@ -33,14 +33,16 @@ namespace LSDR.Entities.Dream
 
         [ContextMenu("Spawn")]
         [Console]
-        public void Spawn()
+        public GameObject Spawn()
         {
             Debug.Log("Spawning grey man");
             Vector3 forward = transform.forward;
             Vector3 spawnPos = transform.position + forward * GreymanSpawnDistance;
             Vector3 toPlayer = transform.position - spawnPos;
             Quaternion orientation = Quaternion.LookRotation(toPlayer);
+            var instance = Instantiate(GreymanPrefab, spawnPos, orientation);
             _greyMen.Add(Instantiate(GreymanPrefab, spawnPos, orientation));
+            return instance;
         }
 
         public void RemoveGreyMen()
