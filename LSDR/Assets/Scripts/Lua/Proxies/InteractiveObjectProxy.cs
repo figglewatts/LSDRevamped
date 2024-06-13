@@ -113,8 +113,6 @@ namespace LSDR.Lua.Proxies
                 return true;
             }
 
-            Debug.Log($"rotating towards target: {Quaternion.Dot(current, desired)}");
-
             _target.transform.rotation = Quaternion.RotateTowards(current, desired, speed * Time.deltaTime);
             return false;
         }

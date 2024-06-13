@@ -4,10 +4,6 @@ player = GetEntity("__player")
 distanceToPlayer = 0
 
 function start()
-    if not IsDayEven() or Random.OneIn(2) then
-        this.GameObject.SetActive(false)
-        return
-    end
 end
 
 function intervalUpdate()

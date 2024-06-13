@@ -5183,7 +5183,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4bb01e140774af79251d746e2f52ebe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OneIn: 2
+  OneIn: 3
 --- !u!1 &3302268444598856131
 GameObject:
   m_ObjectHideFlags: 0
@@ -7764,6 +7764,7 @@ GameObject:
   - component: {fileID: 519952179221683360}
   - component: {fileID: 1586420107155959903}
   - component: {fileID: 8179159962234773129}
+  - component: {fileID: 7542686500372488122}
   m_Layer: 0
   m_Name: BirdChirp1
   m_TagString: Untagged
@@ -7909,6 +7910,19 @@ MonoBehaviour:
   Loop: 0
   OneShot: 0
   ControlledWithScript: 0
+--- !u!114 &7542686500372488122
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5390174245549748258}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4bb01e140774af79251d746e2f52ebe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OneIn: 2
 --- !u!1 &5419465791959316201
 GameObject:
   m_ObjectHideFlags: 0

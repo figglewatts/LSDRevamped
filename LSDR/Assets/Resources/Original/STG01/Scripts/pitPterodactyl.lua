@@ -25,7 +25,7 @@ function update()
         this.LookTowards(playerPositionFlat, 5)
         this.MoveInDirection(this.GameObject.ForwardDirection.negated(), moveSpeed)
 
-        if distanceToPlayer > 5 then
+        if distanceToPlayer < 5 then
             state = "flying"
         end
 

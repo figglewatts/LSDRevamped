@@ -1565,9 +1565,7 @@ Transform:
   - {fileID: 3876819283882162655}
   - {fileID: 8701050455310110611}
   - {fileID: 3267024983538717210}
-  - {fileID: 974506822062481929}
-  - {fileID: 4150515694899142507}
-  - {fileID: 1183164796594960875}
+  - {fileID: 7257940427098911865}
   - {fileID: 6892642546550037901}
   m_Father: {fileID: 2391652668002514632}
   m_RootOrder: 1
@@ -1585,6 +1583,7 @@ GameObject:
   - component: {fileID: 6478407244917985844}
   - component: {fileID: 8296873266296433767}
   - component: {fileID: 5250428012130217924}
+  - component: {fileID: 6093364566630708009}
   m_Layer: 0
   m_Name: Pterodactyl
   m_TagString: Untagged
@@ -1677,6 +1676,19 @@ MonoBehaviour:
   InteractionKind: 0
   InteractionDistance: 5
   AnimatedObject: {fileID: 0}
+--- !u!114 &6093364566630708009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1616239201676654316}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4bb01e140774af79251d746e2f52ebe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OneIn: 3
 --- !u!1 &1684364324661684694
 GameObject:
   m_ObjectHideFlags: 0
@@ -1916,7 +1928,6 @@ GameObject:
   - component: {fileID: 5947171478524369678}
   - component: {fileID: 9156681515434697042}
   - component: {fileID: 7928501081723062431}
-  - component: {fileID: 8545952342216997264}
   m_Layer: 0
   m_Name: SmallElephant2
   m_TagString: Untagged
@@ -1931,14 +1942,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1859305486259475301}
-  m_LocalRotation: {x: -0, y: -1, z: -0, w: -0.00000028312203}
-  m_LocalPosition: {x: 28.625, y: 0.1875, z: 6.875}
-  m_LocalScale: {x: 0.75, y: 0.75, z: 0.75}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4406159944102261586}
-  m_Father: {fileID: 4205053653842305892}
-  m_RootOrder: 15
+  m_Father: {fileID: 7257940427098911865}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
 --- !u!95 &5241797226516454855
 Animator:
@@ -2007,19 +2018,6 @@ MonoBehaviour:
   InteractionKind: 0
   InteractionDistance: 3
   AnimatedObject: {fileID: 0}
---- !u!114 &8545952342216997264
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1859305486259475301}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4bb01e140774af79251d746e2f52ebe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  OneIn: 2
 --- !u!1 &1952496959941706004
 GameObject:
   m_ObjectHideFlags: 0
@@ -6341,7 +6339,6 @@ GameObject:
   - component: {fileID: 4303929240508000067}
   - component: {fileID: 817485469166004428}
   - component: {fileID: 6272760096941006029}
-  - component: {fileID: 2136089517449059044}
   m_Layer: 0
   m_Name: SmallElephant1
   m_TagString: Untagged
@@ -6356,14 +6353,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6116597785328771255}
-  m_LocalRotation: {x: -0, y: -1, z: -0, w: -0.00000028312203}
-  m_LocalPosition: {x: 28.625, y: 0.1875, z: 5.5}
-  m_LocalScale: {x: 0.75, y: 0.75, z: 0.75}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 1.8333334}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7123178111358738599}
-  m_Father: {fileID: 4205053653842305892}
-  m_RootOrder: 14
+  m_Father: {fileID: 7257940427098911865}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
 --- !u!95 &6967847026354975885
 Animator:
@@ -6432,19 +6429,6 @@ MonoBehaviour:
   InteractionKind: 0
   InteractionDistance: 3
   AnimatedObject: {fileID: 0}
---- !u!114 &2136089517449059044
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6116597785328771255}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4bb01e140774af79251d746e2f52ebe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  OneIn: 2
 --- !u!1 &6124155414271507891
 GameObject:
   m_ObjectHideFlags: 0
@@ -7344,7 +7328,6 @@ GameObject:
   - component: {fileID: 1923913304020118312}
   - component: {fileID: 2097663379600515125}
   - component: {fileID: 6141171083324128820}
-  - component: {fileID: 6926811065323885391}
   m_Layer: 0
   m_Name: SmallElephant3
   m_TagString: Untagged
@@ -7359,14 +7342,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6880703794168889532}
-  m_LocalRotation: {x: -0, y: -1, z: -0, w: -0.00000028312203}
-  m_LocalPosition: {x: 28.625, y: 0.1875, z: 8.3125}
-  m_LocalScale: {x: 0.75, y: 0.75, z: 0.75}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -1.9166667}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6279460143886308475}
-  m_Father: {fileID: 4205053653842305892}
-  m_RootOrder: 16
+  m_Father: {fileID: 7257940427098911865}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
 --- !u!95 &1539138382708569923
 Animator:
@@ -7435,19 +7418,6 @@ MonoBehaviour:
   InteractionKind: 0
   InteractionDistance: 3
   AnimatedObject: {fileID: 0}
---- !u!114 &6926811065323885391
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6880703794168889532}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4bb01e140774af79251d746e2f52ebe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  OneIn: 2
 --- !u!1 &7026696470100882992
 GameObject:
   m_ObjectHideFlags: 0
@@ -9277,6 +9247,54 @@ Transform:
   m_Father: {fileID: 8149262501520945166}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8818869524408044479
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7257940427098911865}
+  - component: {fileID: 5152625274374928148}
+  m_Layer: 0
+  m_Name: SmallElephants
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7257940427098911865
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8818869524408044479}
+  m_LocalRotation: {x: -0, y: -1, z: -0, w: -0.00000028312203}
+  m_LocalPosition: {x: 28.625, y: 0.1875, z: 6.875}
+  m_LocalScale: {x: 0.75, y: 0.75, z: 0.75}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 974506822062481929}
+  - {fileID: 4150515694899142507}
+  - {fileID: 1183164796594960875}
+  m_Father: {fileID: 4205053653842305892}
+  m_RootOrder: 14
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5152625274374928148
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8818869524408044479}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4bb01e140774af79251d746e2f52ebe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OneIn: 4
 --- !u!1 &8867471554637163314
 GameObject:
   m_ObjectHideFlags: 0
@@ -9504,7 +9522,7 @@ Transform:
   m_Children:
   - {fileID: 5390459926467763509}
   m_Father: {fileID: 4205053653842305892}
-  m_RootOrder: 17
+  m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &6484947527950879411
 Animator:

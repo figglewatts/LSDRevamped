@@ -7,7 +7,14 @@ interacted = false
 moveSpeed = 0.2
 
 function start()
-    this.SetChildVisible(false)
+    print("marcher start")
+    audio.Play()
+    this.PlayAnimation(0)
+    this.Action
+        .Do(|| this.MoveInDirection(this.Forward, moveSpeed))
+        .Until(Condition.WaitForSeconds(50))
+        .Then(|| this.LookInDirection(this.Right))
+        .ThenLoop()
 end
 
 function intervalUpdate()
@@ -25,15 +32,5 @@ end
 
 function interact()
     interacted = true
-    this.SetChildVisible(true)
     this.LogGraphContribution(3, 3)
-    
-    audio.Play()
-
-    this.PlayAnimation(0)
-    this.Action
-        .Do(|| this.MoveInDirection(this.Forward, moveSpeed))
-        .Until(Condition.WaitForSeconds(50))
-        .Then(|| this.LookInDirection(this.Right))
-        .ThenLoop()
 end

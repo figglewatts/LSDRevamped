@@ -23,6 +23,7 @@ namespace LSDR.SDK.Entities
         public InteractionType InteractionKind;
         public float InteractionDistance = 3;
         public AnimatedObject AnimatedObject;
+        public bool CallStartOnEnable = false;
 
         public float UpdateIntervalSeconds => _currentUpdateInterval <= 0 ? Time.deltaTime : _currentUpdateInterval;
 
@@ -48,6 +49,13 @@ namespace LSDR.SDK.Entities
                 _luaScript = new InteractiveObjectLuaScript(LuaManager.Managed, Script, this);
                 _luaScript?.IntervalUpdate();
             }
+        }
+
+        public void OnEnable()
+        {
+            // don't run if the Lua script has not yet run
+            if (_luaScript == null) return;
+            if (CallStartOnEnable) _luaScript?.Start();
         }
 
         public void Update()
