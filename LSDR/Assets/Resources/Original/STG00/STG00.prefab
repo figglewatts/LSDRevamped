@@ -1690,6 +1690,7 @@ Transform:
   - {fileID: 4442916599927886644}
   - {fileID: 6117044995129073981}
   - {fileID: 1335826584023726280}
+  - {fileID: 4962855659594663953}
   m_Father: {fileID: 7132490716962725300}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1930,6 +1931,7 @@ MonoBehaviour:
   InteractionKind: 0
   InteractionDistance: 0.6
   AnimatedObject: {fileID: 0}
+  CallStartOnEnable: 0
 --- !u!1 &873253315264102458
 GameObject:
   m_ObjectHideFlags: 0
@@ -2580,6 +2582,7 @@ MonoBehaviour:
   InteractionKind: 0
   InteractionDistance: 1
   AnimatedObject: {fileID: 0}
+  CallStartOnEnable: 0
 --- !u!1 &1152551631691802564
 GameObject:
   m_ObjectHideFlags: 0
@@ -2969,6 +2972,74 @@ Transform:
   m_Father: {fileID: 6309813186074001439}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1474781457869935656
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4962855659594663953}
+  - component: {fileID: 4638564388002097556}
+  - component: {fileID: 6153131379534910135}
+  m_Layer: 0
+  m_Name: BookTriggerLink
+  m_TagString: Untagged
+  m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4962855659594663953
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1474781457869935656}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 7, y: 2.375, z: 8.125}
+  m_LocalScale: {x: 0.8, y: 0.75, z: 1.2}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1430962265396884040}
+  m_RootOrder: 54
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &4638564388002097556
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1474781457869935656}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &6153131379534910135
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1474781457869935656}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2064ad0257e4cb478058e31e87d2613, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ID: BookTriggerLink
+  Unregistered: 0
+  OnlyOnce: 0
+  Linked: {fileID: 11400000, guid: 381baaecc63f5459781e6bcadf55e206, type: 2}
+  ForcedLinkColor: {r: 0, g: 0, b: 0, a: 0}
+  SpawnPointEntityID: 
+  ForceFadeColor: 0
+  PlayLinkSound: 1
+  LockInput: 0
+  AffectsLinksWithin: 1
 --- !u!1 &1506730241818072298
 GameObject:
   m_ObjectHideFlags: 0
@@ -4206,6 +4277,7 @@ MonoBehaviour:
   InteractionKind: 0
   InteractionDistance: 2
   AnimatedObject: {fileID: 0}
+  CallStartOnEnable: 0
 --- !u!1 &2347822623684947784
 GameObject:
   m_ObjectHideFlags: 0
@@ -6080,6 +6152,7 @@ MonoBehaviour:
   InteractionKind: 0
   InteractionDistance: 5
   AnimatedObject: {fileID: 0}
+  CallStartOnEnable: 0
 --- !u!1 &3854620536341989115
 GameObject:
   m_ObjectHideFlags: 0
@@ -6502,6 +6575,7 @@ MonoBehaviour:
   InteractionKind: 0
   InteractionDistance: 0.6
   AnimatedObject: {fileID: 0}
+  CallStartOnEnable: 0
 --- !u!1 &3977798526785004816
 GameObject:
   m_ObjectHideFlags: 0
@@ -7656,6 +7730,7 @@ MonoBehaviour:
   InteractionKind: 0
   InteractionDistance: 1
   AnimatedObject: {fileID: 0}
+  CallStartOnEnable: 0
 --- !u!1 &5372984157018928986
 GameObject:
   m_ObjectHideFlags: 0
@@ -8747,6 +8822,7 @@ MonoBehaviour:
   InteractionKind: 0
   InteractionDistance: 1.5
   AnimatedObject: {fileID: 0}
+  CallStartOnEnable: 0
 --- !u!1 &5959534717549204612
 GameObject:
   m_ObjectHideFlags: 0
@@ -9900,6 +9976,7 @@ MonoBehaviour:
   InteractionKind: 0
   InteractionDistance: 0.8
   AnimatedObject: {fileID: 0}
+  CallStartOnEnable: 0
 --- !u!1 &7043887789708251057
 GameObject:
   m_ObjectHideFlags: 0
@@ -11815,6 +11892,7 @@ MonoBehaviour:
   InteractionKind: 0
   InteractionDistance: 1
   AnimatedObject: {fileID: 0}
+  CallStartOnEnable: 0
 --- !u!1 &8207017963642602740
 GameObject:
   m_ObjectHideFlags: 0
@@ -12594,6 +12672,7 @@ MonoBehaviour:
   InteractionKind: 0
   InteractionDistance: 3
   AnimatedObject: {fileID: 0}
+  CallStartOnEnable: 0
 --- !u!114 &2705882634710144126
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12624,6 +12703,7 @@ MonoBehaviour:
   InteractionKind: 0
   InteractionDistance: 3
   AnimatedObject: {fileID: 0}
+  CallStartOnEnable: 0
 --- !u!1 &8829270289264758410
 GameObject:
   m_ObjectHideFlags: 0
@@ -13345,6 +13425,7 @@ MonoBehaviour:
   InteractionKind: 0
   InteractionDistance: 1.5
   AnimatedObject: {fileID: 0}
+  CallStartOnEnable: 0
 --- !u!1001 &5664262001610090600
 PrefabInstance:
   m_ObjectHideFlags: 0
