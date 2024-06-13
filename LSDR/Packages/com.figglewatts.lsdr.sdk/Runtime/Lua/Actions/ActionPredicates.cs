@@ -24,7 +24,7 @@ namespace LSDR.SDK.Lua.Actions
                 var d = end - start!.Value;
                 var p = obj.transform.position - start!.Value;
                 var projectedDistance = Vector3.Dot(p, d) / Vector3.Dot(d, d);
-                return projectedDistance > 1;
+                return projectedDistance >= 1;
             }, () => start = obj.transform.position);
         }
 

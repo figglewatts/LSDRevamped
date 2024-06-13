@@ -38,7 +38,6 @@ namespace LSDR.UI.Title
 
         private void SetDayText(int dayNumber)
         {
-            Debug.Log("day number: " + dayNumber);
             DayTextElement.text = $"Day {dayNumber:000}";
 
             int dayNumMod = GameSave.CurrentJournalSave.DayNumber % 41;

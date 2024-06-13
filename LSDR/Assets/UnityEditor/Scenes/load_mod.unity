@@ -197,6 +197,7 @@ GameObject:
   - component: {fileID: 297899064}
   - component: {fileID: 297899063}
   - component: {fileID: 297899065}
+  - component: {fileID: 297899066}
   m_Layer: 0
   m_Name: EnvironmentEffects
   m_TagString: Untagged
@@ -262,6 +263,46 @@ MonoBehaviour:
     type: 3}
   StarsPrefab: {fileID: 3959927865594837859, guid: 0595573f948d00f47b51a21fa3bf7638,
     type: 3}
+--- !u!114 &297899066
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 297899062}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4855a35832945d5865aec599963246c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Event: {fileID: 11400000, guid: 3da0e1d21e753c9418b471d00f38f4e5, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 645252364}
+        m_TargetAssemblyTypeName: LSDR.Bindings.CameraSettingsBinding, Assembly-CSharp
+        m_MethodName: OnSettingsApply
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1601934181}
+        m_TargetAssemblyTypeName: LSDR.Bindings.CameraSettingsBinding, Assembly-CSharp
+        m_MethodName: OnSettingsApply
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &626828118
 GameObject:
   m_ObjectHideFlags: 0
