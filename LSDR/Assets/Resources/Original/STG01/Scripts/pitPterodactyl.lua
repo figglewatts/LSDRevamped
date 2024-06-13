@@ -6,7 +6,6 @@ screechAudio = GetEntity("PterodactylScreech").DreamAudio
 
 state = "hidden"
 moveSpeed = 0.75
-linked = false
 distanceToPlayer = 0
 
 function start()
@@ -18,13 +17,7 @@ function intervalUpdate()
 end
 
 function update()
-    if state == "hidden" or linked then return end
-
-    if distanceToPlayer < 0.5 then
-        linked = true
-        DreamSystem.SetNextTransitionDream(dreams.PitAndTemple)
-        DreamSystem.TransitionToDream()
-    end
+    if state == "hidden" then return end
 
     if state == "chasing" then
         local playerPositionFlat = player.WorldPosition
