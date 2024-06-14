@@ -69,6 +69,9 @@ namespace LSDR.SDK.Data
 
         public DreamEnvironment ChooseEnvironment(int dayNum)
         {
+            // if the dream doesn't have an environment sequence, return a default one
+            if (!Environments) return CreateInstance<DreamEnvironment>();
+            
             // if the dream doesn't have environments, just return a default one
             if (Environments.Environments.Count <= 0) return CreateInstance<DreamEnvironment>();
 
