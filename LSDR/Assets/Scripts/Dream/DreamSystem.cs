@@ -473,7 +473,8 @@ namespace LSDR.Dream
         public void ApplyEnvironment()
         {
             if (_currentEnvironment == null) return;
-            _currentEnvironment.Apply(SettingsSystem.Settings.LongDrawDistance, _environmentEffects);
+            _currentEnvironment.Apply(SettingsSystem.Settings.LongDrawDistance,
+                CurrentDream.HasEnvironmentEffects ? _environmentEffects : null);
         }
 
         public void ApplyEnvironment(DreamEnvironment environment)
