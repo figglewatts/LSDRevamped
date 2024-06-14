@@ -15,7 +15,7 @@ function start()
     this.SetChildVisible(false)
     
     if IsDayEven() then
-        --this.GameObject.SetActive(false)
+        this.GameObject.SetActive(false)
         return
     end
 end

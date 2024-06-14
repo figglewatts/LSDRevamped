@@ -1,3 +1,5 @@
+require "dreams"
+
 player = GetEntity("__player")
 warpPoints = {
     GetEntity("GirlWarp1"),
@@ -38,6 +40,12 @@ function warp()
     this.GameObject.WorldPosition = warpTarget
 end
 
+function playerTransition()
+    DreamSystem.SetNextTransitionDream(dreams.Happytown)
+    DreamSystem.SetNextTransitionColor(Colors.Red)
+    DreamSystem.TransitionToDream()
+end
+
 function scarePlayer()
     interacted = false
     local toPlayer = player.WorldPosition - this.GameObject.WorldPosition
@@ -48,6 +56,6 @@ function scarePlayer()
         .Then(|| SetCanControlPlayer(false))
         .ThenWaitUntil(this.WaitForAnimation(0, -0.2))
         .Then(|| this.StopAnimation())
-        .Then(|| DreamSystem.EndDream())
+        .Then(|| playerTransition())
         .ThenFinish()
 end

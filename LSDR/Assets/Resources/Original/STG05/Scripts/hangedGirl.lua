@@ -12,7 +12,7 @@ following = false
 
 function start()
     local randResult = Random.Float()
-    if randResult < 0.1 then
+    if randResult < 0.05 then
         -- single, drop and follow player
         state = "drop"
         this.InteractionDistance = 5

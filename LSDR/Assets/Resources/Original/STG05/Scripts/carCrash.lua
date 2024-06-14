@@ -17,7 +17,7 @@ function interact()
         .Then(|| hornAudio.Stop())
         .ThenWaitUntil(Condition.WaitForSeconds(1))
         .Then(|| splashAudio.Play())
-        .ThenWaitUntil(Condition.WaitForSeconds(1.9))
+        .ThenWaitUntil(Condition.WaitForSeconds(1.8))
         .Then(|| this.StopAnimation())
         .ThenFinish()
 end

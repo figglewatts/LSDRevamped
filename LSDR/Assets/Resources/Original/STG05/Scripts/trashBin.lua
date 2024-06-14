@@ -6,8 +6,8 @@ interacted = false
 
 function start()
     if Random.OneIn(2) then
-        --this.GameObject.SetActive(false)
-        --return
+        this.GameObject.SetActive(false)
+        return
     end
 end
 
