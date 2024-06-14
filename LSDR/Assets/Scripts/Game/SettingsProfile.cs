@@ -68,7 +68,7 @@ namespace LSDR.Game
                     LimitFramerate = false,
                     FOV = 50,
                     AffineIntensity = 0.4f,
-                    LongDrawDistance = true,
+                    LongDrawDistance = false,
                 }
             };
         }
