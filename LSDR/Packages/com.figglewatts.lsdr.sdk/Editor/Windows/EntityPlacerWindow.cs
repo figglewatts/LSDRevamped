@@ -91,7 +91,17 @@ namespace LSDR.SDK.Editor.Windows
             }
             else
             {
-                _entitiesRoot = prefabStage.prefabContentsRoot.transform.Find("Entities").gameObject;
+                var entitiesTransform = prefabStage.prefabContentsRoot.transform.Find("Entities");
+                if (entitiesTransform == null)
+                {
+                    _entitiesRoot = new GameObject("Entities");
+                    _entitiesRoot.transform.SetParent(prefabStage.prefabContentsRoot.transform);
+                    EditorUtility.SetDirty(prefabStage.prefabContentsRoot);
+                }
+                else
+                {
+                    _entitiesRoot = prefabStage.prefabContentsRoot.transform.Find("Entities").gameObject;
+                }
             }
         }
 
