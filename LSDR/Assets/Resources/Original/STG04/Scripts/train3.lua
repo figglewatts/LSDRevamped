@@ -4,7 +4,7 @@ train = require "train"
 player = GetEntity("__player")
 audio = GetEntity(this.GameObject.Name .. "Audio").DreamAudio
 
-moveSpeed = 3
+moveSpeed = 2
 completedMotion = false
 interacted = false
 
