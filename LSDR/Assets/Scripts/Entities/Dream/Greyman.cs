@@ -6,7 +6,7 @@ namespace LSDR.Entities.Dream
 {
     public class Greyman : MonoBehaviour
     {
-        public float MoveSpeed = 0.5f;
+        public float MoveSpeed = 0.3f;
         public float FlashDistance = 2;
         public DreamSystem DreamSystem;
         public GameObject GreymanObject;
