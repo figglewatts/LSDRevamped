@@ -33,12 +33,19 @@ namespace LSDR.Entities.Dream
         {
             DreamSystem.LogGraphContributionFromArea(-10, -10);
             DreamSystem.DisableFlashbackForDays(10);
+            Debug.Log("encountered player");
             ToriiFader.Instance.FadeIn(Color.white, duration: 0.1F, () =>
             {
+                Debug.Log("Setting grey man to inactive");
                 GreymanObject.SetActive(false);
                 ToriiFader.Instance.FadeOut(Color.white, duration: 3F, () =>
                 {
-                    if (gameObject != null) Destroy(gameObject);
+                    Debug.Log("Finished fading out, destroying if not null");
+                    if (gameObject != null)
+                    {
+                        Debug.Log("destroying");
+                        Destroy(gameObject);
+                    }
                 });
             }, forced: false);
         }

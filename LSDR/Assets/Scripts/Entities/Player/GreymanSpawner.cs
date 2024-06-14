@@ -41,7 +41,7 @@ namespace LSDR.Entities.Dream
             Vector3 toPlayer = transform.position - spawnPos;
             Quaternion orientation = Quaternion.LookRotation(toPlayer);
             var instance = Instantiate(GreymanPrefab, spawnPos, orientation);
-            _greyMen.Add(Instantiate(GreymanPrefab, spawnPos, orientation));
+            _greyMen.Add(instance);
             return instance;
         }
 

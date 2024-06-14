@@ -51,9 +51,15 @@ namespace LSDR.Game
             foreach (var modFolder in modDirectories)
             {
                 var modFolderWithPlatform = Path.Combine(modFolder, getPlatformPathFragment());
+                if (!Directory.Exists(modFolderWithPlatform))
+                {
+                    Debug.LogWarning(
+                        $"Unable to load mod '{Path.GetDirectoryName(modFolder)}', no mod folder for platform {getPlatformPathFragment()}");
+                    continue;
+                }
+
                 string[] modFiles =
                     Directory.GetFiles(modFolderWithPlatform, "*.lsdrmod", SearchOption.AllDirectories);
-
                 if (modFiles.Length <= 0)
                 {
                     Debug.LogWarning(
@@ -117,9 +123,15 @@ namespace LSDR.Game
             foreach (var modFolder in modDirectories)
             {
                 var modFolderWithPlatform = Path.Combine(modFolder, getPlatformPathFragment());
+                if (!Directory.Exists(modFolderWithPlatform))
+                {
+                    Debug.LogWarning(
+                        $"Unable to load mod '{Path.GetDirectoryName(modFolder)}', no mod folder for platform {getPlatformPathFragment()}");
+                    continue;
+                }
+
                 string[] modFiles =
                     Directory.GetFiles(modFolderWithPlatform, "*.lsdrmod", SearchOption.AllDirectories);
-
                 if (modFiles.Length <= 0)
                 {
                     Debug.LogWarning(
