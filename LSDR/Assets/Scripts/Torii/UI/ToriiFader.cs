@@ -74,17 +74,10 @@ namespace Torii.UI
 
         private void beginFade(IEnumerator fade, bool forced)
         {
-            Debug.Log("beginning fade");
-
             // if there was an existing fade, stop it and execute its callback if it existed
             if (_currentFade != null)
             {
-                Debug.Log("fade has _currentFade!=null");
-                if (!forced)
-                {
-                    Debug.Log("this fade isn't forced, so we don't want to stop the current fade, returning");
-                    return;
-                } // don't force it unless we want to
+                if (!forced) return; // don't force it unless we want to
                 _currentOnFinish?.Invoke();
                 StopCoroutine(_currentFade);
             }
