@@ -10,12 +10,12 @@ linked = false
 playerDist = 0
 
 function start()
-    local dayNumber = DreamSystem.DayNumber
-    if dayNumber < 10 then
+    local dayNumber = DreamSystem.DayNumber % 90
+    if dayNumber < 30 then
         state = 0
         bedDead.SetActive(false)
         bedEmpty.SetActive(false)
-    elseif dayNumber < 20 then
+    elseif dayNumber < 60 then
         state = 1
         bedPerson.SetActive(false)
         bedEmpty.SetActive(false)

@@ -158,7 +158,10 @@ namespace LSDR.Entities.Player
             _lockedInput = _inputDir;
         }
 
-        public void ClearInputLock() { _inputLocked = false; }
+        public void ClearInputLock()
+        {
+            _inputLocked = false;
+        }
 
         public void OnNewDream()
         {

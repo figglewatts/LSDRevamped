@@ -7,7 +7,6 @@ interacted = false
 moveSpeed = 0.2
 
 function start()
-    print("marcher start")
     audio.Play()
     this.PlayAnimation(0)
     this.Action

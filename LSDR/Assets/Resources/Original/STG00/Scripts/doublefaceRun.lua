@@ -13,11 +13,25 @@ delay = 0
 linked = false
 distanceToPlayer = 0
 
+function activeOnDay(day)
+    local zeroDay = ((day / 2) - 1) % 3
+    if this.GameObject.Name == "DoublefaceA" then
+        return zeroDay == 0 or zeroDay == 1 or zeroDay == 2
+    else
+        return zeroDay == 1
+    end
+end
+
 function start()
     moveSpeed = Random.FloatMinMax(0.4, 0.75)
     delay = Random.FloatMinMax(0, 0.3)
     
-    if not IsDayEven() or Random.OneIn(2) then
+    if not IsDayEven() then
+        this.GameObject.SetActive(false)
+        return
+    end
+
+    if not activeOnDay(day) then
         this.GameObject.SetActive(false)
         return
     end

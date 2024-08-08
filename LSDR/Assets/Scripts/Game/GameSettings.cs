@@ -360,6 +360,7 @@ namespace LSDR.Game
             get => _currentModIndex;
             set
             {
+                Debug.Log("Setting current mod to: " + value);
                 _currentModIndex = value;
                 _currentJournalIndex = 0;
                 NotifyPropertyChange(nameof(CurrentJournalIndex));
