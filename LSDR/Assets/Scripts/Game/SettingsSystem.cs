@@ -88,7 +88,8 @@ namespace LSDR.Game
             if (Settings != null) SettingsBindBroker.DeregisterData(Settings);
 
             // check to see if the settings file exists
-            if (File.Exists(SettingsPath))
+            var settingsFileInfo = new FileInfo(SettingsPath);
+            if (settingsFileInfo.Exists && settingsFileInfo.Length != 0)
             {
                 Settings = _serializer.Deserialize<GameSettings>(SettingsPath);
             }
