@@ -13,11 +13,13 @@ namespace LSDR.Game
         public List<string> BuiltInMods;
 
         protected readonly List<LSDRevampedMod> _loadedMods = new List<LSDRevampedMod>();
-        public IEnumerable<LSDRevampedMod> Mods => _loadedMods;
+        public List<LSDRevampedMod> Mods => _loadedMods;
 
         protected string _modsDirectory => Path.Combine(Application.streamingAssetsPath, "mods");
 
         public bool ModsAvailable => _loadedMods.Count > 0;
+
+        public int ModsCount => _loadedMods.Count;
 
         public LSDRevampedMod GetMod(int modIdx)
         {

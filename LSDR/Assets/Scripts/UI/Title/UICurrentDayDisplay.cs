@@ -1,5 +1,6 @@
 ﻿using System;
 using LSDR.Game;
+using Torii.Binding;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,6 +10,7 @@ namespace LSDR.UI.Title
     {
         public Text DayTextElement;
         public GameSaveSystem GameSave;
+        public SettingsSystem SettingsSystem;
 
         public Color TextColA = new Color(r: 0.78f, g: 0.553f, b: 0.635f);
         public Color TextColB = new Color(r: 0.533f, g: 0.498f, b: 0.773f);
@@ -23,12 +25,19 @@ namespace LSDR.UI.Title
         public void OnEnable()
         {
             GameSave.CurrentJournalSave.OnDayNumberChanged += onDayNumberChanged;
+            SettingsSystem.Settings.OnPropertyChange += onSettingsPropertyChanged;
             onDayNumberChanged();
         }
 
         public void OnDisable()
         {
             GameSave.CurrentJournalSave.OnDayNumberChanged -= onDayNumberChanged;
+            SettingsSystem.Settings.OnPropertyChange -= onSettingsPropertyChanged;
+        }
+
+        protected void onSettingsPropertyChanged(string propertyName, IPropertyWatcher watcher)
+        {
+            onDayNumberChanged();
         }
 
         private void onDayNumberChanged()
@@ -38,6 +47,8 @@ namespace LSDR.UI.Title
 
         private void SetDayText(int dayNumber)
         {
+            Debug.Log("setting day text " + dayNumber);
+
             DayTextElement.text = $"Day {dayNumber:000}";
 
             int dayNumMod = GameSave.CurrentJournalSave.DayNumber % 41;

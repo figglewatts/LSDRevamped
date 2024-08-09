@@ -18,11 +18,15 @@ namespace LSDR.Game
         public List<SettingsProfile> Profiles;
         public bool SettingsMatchProfile;
 
+        protected ModLoaderSystem _modLoaderSystem;
+
         /// <summary>
         ///     Create a new instance of the settings object with default values.
         /// </summary>
-        public GameSettings()
+        public GameSettings(ModLoaderSystem modLoaderSystem)
         {
+            _modLoaderSystem = modLoaderSystem;
+
             HeadBobEnabled = true;
             CurrentControlSchemeIndex = 0;
             UseClassicShaders = true;
@@ -47,6 +51,11 @@ namespace LSDR.Game
 
             Profiles = new List<SettingsProfile>();
             SettingsMatchProfile = true;
+        }
+
+        public void ProvideModLoader(ModLoaderSystem modLoaderSystem)
+        {
+            _modLoaderSystem = modLoaderSystem;
         }
 
         [JsonIgnore]
@@ -108,6 +117,67 @@ namespace LSDR.Game
                 CurrentProfileIndex--;
             }
             ApplyCurrentProfile();
+        }
+
+        public void DecrementJournal()
+        {
+            // check if we're on the first journal in this mod, if so we'll need to decrement the mod
+            if (_currentJournalIndex == 0)
+            {
+                // check if we're on the first mod, if so we'll need to change to the last mod
+                if (_currentModIndex == 0)
+                {
+                    _currentModIndex = _modLoaderSystem.ModsCount - 1;
+                    NotifyPropertyChange(nameof(CurrentModIndex));
+                }
+                else
+                {
+                    // decrement the mod
+                    _currentModIndex--;
+                    NotifyPropertyChange(nameof(CurrentModIndex));
+                }
+
+                // set the journal index to the last journal in the mod
+                _currentJournalIndex = _modLoaderSystem.Mods[_currentModIndex].Journals.Count - 1;
+                NotifyPropertyChange(nameof(CurrentJournalIndex));
+            }
+            else
+            {
+                // otherwise, we can just decrement as normal as we're in the same mod
+                _currentJournalIndex--;
+                NotifyPropertyChange(nameof(CurrentJournalIndex));
+            }
+
+        }
+
+        public void IncrementJournal()
+        {
+            // check if we're on the last journal in this mod, if so we'll need to increment the mod
+            if (_currentJournalIndex == _modLoaderSystem.Mods[_currentModIndex].Journals.Count - 1)
+            {
+                // check if we're on the last mod, if so we'll need to change to the first mod
+                if (_currentModIndex == _modLoaderSystem.ModsCount - 1)
+                {
+                    _currentModIndex = 0;
+                    NotifyPropertyChange(nameof(CurrentModIndex));
+                }
+                else
+                {
+                    // increment the mod
+                    _currentModIndex++;
+                    NotifyPropertyChange(nameof(CurrentModIndex));
+                }
+
+                // set the journal index to the first in the mod
+                _currentJournalIndex = 0;
+                NotifyPropertyChange(nameof(CurrentJournalIndex));
+            }
+            else
+            {
+                // otherwise we can increment as normal as we've got another journal to go to
+                _currentJournalIndex++;
+                NotifyPropertyChange(nameof(CurrentJournalIndex));
+            }
         }
 
         // find the current resolution index

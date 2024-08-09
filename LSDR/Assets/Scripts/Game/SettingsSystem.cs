@@ -92,12 +92,13 @@ namespace LSDR.Game
             if (settingsFileInfo.Exists && settingsFileInfo.Length != 0)
             {
                 Settings = _serializer.Deserialize<GameSettings>(SettingsPath);
+                Settings.ProvideModLoader(ModLoaderSystem);
             }
             else
             {
                 // create the default settings
                 Debug.Log("Settings.json not found, creating default settings");
-                Settings = new GameSettings();
+                Settings = new GameSettings(ModLoaderSystem);
                 Save();
             }
 

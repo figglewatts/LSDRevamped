@@ -1,5 +1,6 @@
 ﻿using System;
 using LSDR.Game;
+using Torii.Binding;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,6 +15,7 @@ namespace LSDR.UI.Title
         {
             JournalDisplayElement.text = SettingsSystem.CurrentJournal.Name;
             SettingsSystem.ProgrammaticOnSettingsApply += updateText;
+            SettingsSystem.Settings.OnPropertyChange += onSettingsPropertyChanged;
         }
 
         public void OnEnable()
@@ -24,6 +26,12 @@ namespace LSDR.UI.Title
         public void OnDestroy()
         {
             SettingsSystem.ProgrammaticOnSettingsApply -= updateText;
+            SettingsSystem.Settings.OnPropertyChange -= onSettingsPropertyChanged;
+        }
+
+        protected void onSettingsPropertyChanged(string propertyName, IPropertyWatcher watcher)
+        {
+            updateText();
         }
 
         protected void updateText()
