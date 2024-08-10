@@ -18,7 +18,18 @@ namespace LSDR.Game
     {
         public readonly Dictionary<string, JournalSaveData> JournalSaves;
 
-        public GameSaveData() { JournalSaves = new Dictionary<string, JournalSaveData>(); }
+        protected GameSaveSystem _gameSaveSystem;
+
+        public GameSaveData(GameSaveSystem saveSystem)
+        {
+            _gameSaveSystem = saveSystem;
+            JournalSaves = new Dictionary<string, JournalSaveData>();
+        }
+
+        public void ProvideSaveSystem(GameSaveSystem saveSystem)
+        {
+            _gameSaveSystem = saveSystem;
+        }
 
         public void Initialise()
         {
@@ -26,14 +37,17 @@ namespace LSDR.Game
             foreach (var journal in JournalSaves.Values)
             {
                 journal.DeserializeLuaData();
+                journal.ProvideSaveData(this);
             }
         }
+
+        public void Destroy() { }
 
         public JournalSaveData Journal(DreamJournal journal)
         {
             if (!JournalSaves.ContainsKey(journal.Name))
             {
-                JournalSaves[journal.Name] = new JournalSaveData();
+                JournalSaves[journal.Name] = new JournalSaveData(this);
                 JournalSaves[journal.Name].SetDayNumber(1);
             }
 
@@ -77,8 +91,17 @@ namespace LSDR.Game
             [JsonIgnore]
             public int NumberOfSequences => _sequenceData.Count;
 
-            [JsonIgnore]
-            public Action OnDayNumberChanged;
+            protected GameSaveData _data;
+
+            public JournalSaveData(GameSaveData saveData)
+            {
+                _data = saveData;
+            }
+
+            public void ProvideSaveData(GameSaveData saveData)
+            {
+                _data = saveData;
+            }
 
             public bool HasEnoughDataForFlashback()
             {
@@ -106,7 +129,7 @@ namespace LSDR.Game
                     DayNumber = 1;
                     YearNumber++;
                 }
-                OnDayNumberChanged?.Invoke();
+                _data._gameSaveSystem.OnSaveDataChanged?.Invoke();
             }
 
             public void SetDayNumber(int newDayNumber)
@@ -119,7 +142,7 @@ namespace LSDR.Game
 
                 DayNumber = (newDayNumber - 1) % 365 + 1;
                 YearNumber = (newDayNumber - 1) / 365;
-                OnDayNumberChanged?.Invoke();
+                _data._gameSaveSystem.OnSaveDataChanged?.Invoke();
             }
 
             public DreamSequence GetSequence(int index)
@@ -134,6 +157,7 @@ namespace LSDR.Game
                 LuaPersisted.Clear();
                 DayNumber = 1;
                 YearNumber = 0;
+                _data._gameSaveSystem.OnSaveDataChanged?.Invoke();
             }
         }
     }

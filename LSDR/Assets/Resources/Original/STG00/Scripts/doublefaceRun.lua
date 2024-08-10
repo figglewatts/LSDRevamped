@@ -31,7 +31,7 @@ function start()
         return
     end
 
-    if not activeOnDay(day) then
+    if not activeOnDay(DreamSystem.DayNumber) then
         this.GameObject.SetActive(false)
         return
     end

@@ -19,20 +19,23 @@ namespace LSDR.UI.Title
 
         public void Start()
         {
-            SetDayText(GameSave.CurrentJournalSave.DayNumber);
+            onDayNumberChanged();
         }
 
         public void OnEnable()
         {
-            GameSave.CurrentJournalSave.OnDayNumberChanged += onDayNumberChanged;
+            GameSave.OnGameLoaded += onDayNumberChanged;
+            GameSave.OnSaveDataChanged += onDayNumberChanged;
             SettingsSystem.Settings.OnPropertyChange += onSettingsPropertyChanged;
             onDayNumberChanged();
         }
 
         public void OnDisable()
         {
-            GameSave.CurrentJournalSave.OnDayNumberChanged -= onDayNumberChanged;
+            GameSave.OnGameLoaded -= onDayNumberChanged;
+            GameSave.OnSaveDataChanged -= onDayNumberChanged;
             SettingsSystem.Settings.OnPropertyChange -= onSettingsPropertyChanged;
+            Debug.Log("UICurrentDayDisplay: OnDisable");
         }
 
         protected void onSettingsPropertyChanged(string propertyName, IPropertyWatcher watcher)

@@ -19,13 +19,17 @@ namespace LSDR.Game
         public bool SettingsMatchProfile;
 
         protected ModLoaderSystem _modLoaderSystem;
+        protected GameSaveSystem _gameSaveSystem;
+        protected SettingsSystem _settingsSystem;
 
         /// <summary>
         ///     Create a new instance of the settings object with default values.
         /// </summary>
-        public GameSettings(ModLoaderSystem modLoaderSystem)
+        public GameSettings(ModLoaderSystem modLoaderSystem, GameSaveSystem saveSystem, SettingsSystem settingsSystem)
         {
             _modLoaderSystem = modLoaderSystem;
+            _gameSaveSystem = saveSystem;
+            _settingsSystem = settingsSystem;
 
             HeadBobEnabled = true;
             CurrentControlSchemeIndex = 0;
@@ -56,6 +60,16 @@ namespace LSDR.Game
         public void ProvideModLoader(ModLoaderSystem modLoaderSystem)
         {
             _modLoaderSystem = modLoaderSystem;
+        }
+
+        public void ProvideSaveSystem(GameSaveSystem saveSystem)
+        {
+            _gameSaveSystem = saveSystem;
+        }
+
+        public void ProvideSettingsSystem(SettingsSystem settingsSystem)
+        {
+            _settingsSystem = settingsSystem;
         }
 
         [JsonIgnore]
@@ -136,6 +150,7 @@ namespace LSDR.Game
                     _currentModIndex--;
                     NotifyPropertyChange(nameof(CurrentModIndex));
                 }
+                _gameSaveSystem.Load(); // load the save of this mod
 
                 // set the journal index to the last journal in the mod
                 _currentJournalIndex = _modLoaderSystem.Mods[_currentModIndex].Journals.Count - 1;
@@ -147,7 +162,7 @@ namespace LSDR.Game
                 _currentJournalIndex--;
                 NotifyPropertyChange(nameof(CurrentJournalIndex));
             }
-
+            _settingsSystem.Save(); // save the current setting of journal/mod
         }
 
         public void IncrementJournal()
@@ -167,6 +182,7 @@ namespace LSDR.Game
                     _currentModIndex++;
                     NotifyPropertyChange(nameof(CurrentModIndex));
                 }
+                _gameSaveSystem.Load(); // load the save of this mod
 
                 // set the journal index to the first in the mod
                 _currentJournalIndex = 0;
@@ -178,6 +194,7 @@ namespace LSDR.Game
                 _currentJournalIndex++;
                 NotifyPropertyChange(nameof(CurrentJournalIndex));
             }
+            _settingsSystem.Save(); // save the current setting of journal/mod
         }
 
         // find the current resolution index

@@ -48,6 +48,7 @@ namespace LSDR.Entities.Player
         protected TimeSince _timeSinceStartedMoving;
         protected bool _playedWalkStep;
         protected bool _movingIntoWall;
+        protected AbstractFootstepIndex _footstepIndex;
 
         protected Vector3 _capsuleBottom => new Vector3(
             transform.position.x,
@@ -65,6 +66,8 @@ namespace LSDR.Entities.Player
             var center = _controller.center;
             center.y = _controller.height / 2;
             _controller.center = center;
+
+            _footstepIndex = Settings.CurrentJournal.FootstepIndex;
 
             EntityIndex.Instance.Register("__player", gameObject, force: true);
 
@@ -337,9 +340,9 @@ namespace LSDR.Entities.Player
             (bool hitSomething, RaycastHit hit) = castController(_capsuleBottom, _capsuleTop, _controller.radius,
                 -transform.up,
                 _controller.skinWidth * 16);
-            if (!hitSomething || Settings.CurrentJournal.FootstepIndex == null) return null;
+            if (!hitSomething || _footstepIndex == null) return null;
 
-            return Settings.CurrentJournal.FootstepIndex.GetFootstep(hit);
+            return _footstepIndex.GetFootstep(hit);
         }
 
         protected bool hitNormalWasWall(Vector3 hitNormal)

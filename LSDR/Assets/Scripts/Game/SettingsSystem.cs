@@ -32,6 +32,7 @@ namespace LSDR.Game
         public ControlSchemeLoaderSystem ControlSchemeLoader;
         public MusicSystem MusicSystem;
         public DreamSystem DreamSystem;
+        public GameSaveSystem GameSaveSystem;
 
         public ToriiEvent OnSettingsApply;
         public Action ProgrammaticOnSettingsApply;
@@ -93,13 +94,14 @@ namespace LSDR.Game
             {
                 Settings = _serializer.Deserialize<GameSettings>(SettingsPath);
                 Settings.ProvideModLoader(ModLoaderSystem);
+                Settings.ProvideSaveSystem(GameSaveSystem);
+                Settings.ProvideSettingsSystem(this);
             }
             else
             {
                 // create the default settings
                 Debug.Log("Settings.json not found, creating default settings");
-                Settings = new GameSettings(ModLoaderSystem);
-                Save();
+                Settings = new GameSettings(ModLoaderSystem, GameSaveSystem, this);
             }
 
             if (Settings.Profiles.Count == 0) Settings.Profiles = SettingsProfile.CreateDefaultProfiles();

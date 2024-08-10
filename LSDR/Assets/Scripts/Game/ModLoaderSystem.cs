@@ -27,7 +27,8 @@ namespace LSDR.Game
                 modIdx = _loadedMods.Count - 1;
             else if (modIdx < 0) modIdx = 0;
 
-            return _loadedMods[modIdx];
+            var mod = _loadedMods[modIdx];
+            return mod;
         }
 
         public IEnumerator LoadModsAsync()

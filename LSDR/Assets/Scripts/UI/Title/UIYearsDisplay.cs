@@ -1,5 +1,6 @@
 ﻿using System;
 using LSDR.Game;
+using Torii.Binding;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,6 +11,7 @@ namespace LSDR.UI.Title
         public GameObject SingleYearIconPrefab;
         public GameObject MultiYearIconPrefab;
         public GameSaveSystem GameSave;
+        public SettingsSystem SettingsSystem;
 
         public void Start()
         {
@@ -18,13 +20,22 @@ namespace LSDR.UI.Title
 
         public void OnEnable()
         {
-            GameSave.CurrentJournalSave.OnDayNumberChanged += onDayNumberChanged;
+            GameSave.OnGameLoaded += onDayNumberChanged;
+            GameSave.OnSaveDataChanged += onDayNumberChanged;
+            SettingsSystem.Settings.OnPropertyChange += onSettingsPropertyChanged;
             updateView();
         }
 
         public void OnDisable()
         {
-            GameSave.CurrentJournalSave.OnDayNumberChanged -= onDayNumberChanged;
+            GameSave.OnGameLoaded -= onDayNumberChanged;
+            GameSave.OnSaveDataChanged -= onDayNumberChanged;
+            SettingsSystem.Settings.OnPropertyChange -= onSettingsPropertyChanged;
+        }
+
+        protected void onSettingsPropertyChanged(string propertyName, IPropertyWatcher watcher)
+        {
+            onDayNumberChanged();
         }
 
         private void onDayNumberChanged()

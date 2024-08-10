@@ -1,4 +1,6 @@
+using System;
 using System.IO;
+using JetBrains.Annotations;
 using LSDR.SDK.Data;
 using Torii.Serialization;
 using Torii.Util;
@@ -10,6 +12,12 @@ namespace LSDR.Game
     public class GameSaveSystem : ScriptableObject
     {
         public SettingsSystem SettingsSystem;
+
+        [CanBeNull]
+        public Action OnGameLoaded;
+
+        [CanBeNull]
+        public Action OnSaveDataChanged;
 
         private readonly ToriiSerializer _serializer = new ToriiSerializer();
 
@@ -32,10 +40,12 @@ namespace LSDR.Game
 
         public void Load()
         {
+            if (Data != null) Data.Destroy();
+
             if (!File.Exists(_savedGamePath))
             {
                 Debug.Log("Unable to find game save -- creating new one at " + _savedGamePath);
-                Data = new GameSaveData();
+                Data = new GameSaveData(this);
                 foreach (DreamJournal journal in SettingsSystem.CurrentMod.Journals) Data.Journal(journal);
 
                 Save();
@@ -44,7 +54,11 @@ namespace LSDR.Game
             {
                 Debug.Log("loading game from " + _savedGamePath);
                 Data = _serializer.Deserialize<GameSaveData>(_savedGamePath);
+                Data.ProvideSaveSystem(this);
             }
+
+            OnGameLoaded?.Invoke();
+
             Data.Initialise();
         }
 

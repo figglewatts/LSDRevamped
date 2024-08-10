@@ -864,6 +864,7 @@ namespace LSDR.Dream
         {
             Debug.Log($"Setting day number to: {dayNumber}");
             GameSave.CurrentJournalSave.SetDayNumber(dayNumber);
+            GameSave.Save();
         }
 
         [Console]

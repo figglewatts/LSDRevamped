@@ -24,7 +24,6 @@ namespace LSDR.SDK.Assets
             {
                 var message = $"Lua Script ({this}) Syntax Error: {e.DecoratedMessage}";
                 Debug.LogError(message);
-                throw new LuaException(message, e);
             }
         }
 
@@ -38,7 +37,6 @@ namespace LSDR.SDK.Assets
             {
                 var message = $"Lua Script ({this}) Runtime Error: {e.DecoratedMessage}";
                 Debug.LogError(message);
-                throw new LuaException(message, e);
             }
         }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using LSDR.Dream;
 using LSDR.Game;
+using LSDR.SDK.Data;
 using UnityEngine;
 
 namespace LSDR.Lua
@@ -10,14 +11,17 @@ namespace LSDR.Lua
         public SettingsSystem SettingsSystem;
         public DreamSystem DreamSystem;
 
+        protected DreamJournal _currentJournal;
+
         public void Start()
         {
-            SettingsSystem.CurrentJournal.CreateScript();
+            _currentJournal = SettingsSystem.CurrentJournal;
+            _currentJournal.CreateScript();
         }
 
         public void Update()
         {
-            SettingsSystem.CurrentJournal.UpdateScript();
+            _currentJournal.UpdateScript();
             if (DreamSystem.CurrentDream != null) DreamSystem.CurrentDream.UpdateScript();
         }
     }
