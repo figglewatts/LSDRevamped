@@ -1,4 +1,5 @@
-﻿using LSDR.Game;
+﻿using System;
+using LSDR.Game;
 using LSDR.UI.Modal;
 using Torii.Binding;
 using UnityEngine;
@@ -34,7 +35,7 @@ namespace LSDR.UI.Settings
             Settings.SettingsBindBroker.RegisterData(EnableHeadBobToggle);
             Settings.SettingsBindBroker.RegisterData(EnableFootstepSoundsToggle);
             Settings.SettingsBindBroker.RegisterData(CurrentJournalDropdown);
-            Settings.SettingsBindBroker.RegisterData(CurrentModDropdown);
+            //Settings.SettingsBindBroker.RegisterData(CurrentModDropdown);
             Settings.SettingsBindBroker.RegisterData(HeadbobIntensitySlider);
             Settings.SettingsBindBroker.RegisterData(SmoothHeadBobToggle);
             Settings.SettingsBindBroker.RegisterData(SpecialDaysEnabledToggle);
@@ -47,8 +48,9 @@ namespace LSDR.UI.Settings
             SmoothHeadBobToggle.isOn = Settings.Settings.SmoothHeadBob;
             SpecialDaysEnabledToggle.isOn = Settings.Settings.SpecialDaysEnabled;
 
-            CurrentModDropdown.onValueChanged.AddListener(_ =>
+            CurrentModDropdown.onValueChanged.AddListener(val =>
             {
+                Settings.Settings.CurrentModIndex = val;
                 updateMod();
                 updateJournal();
             });
@@ -82,14 +84,19 @@ namespace LSDR.UI.Settings
                 () => Settings.Settings.EnableFootstepSounds, BindingType.TwoWay);
             Settings.SettingsBindBroker.Bind(() => CurrentJournalDropdown.value,
                 () => Settings.Settings.CurrentJournalIndex, BindingType.TwoWay);
-            Settings.SettingsBindBroker.Bind(() => CurrentModDropdown.value, () => Settings.Settings.CurrentModIndex,
-                BindingType.TwoWay);
+            // Settings.SettingsBindBroker.Bind(() => CurrentModDropdown.value, () => Settings.Settings.CurrentModIndex,
+            //     BindingType.TwoWay);
             Settings.SettingsBindBroker.Bind(() => HeadbobIntensitySlider.value,
                 () => Settings.Settings.HeadBobIntensity, BindingType.TwoWay);
             Settings.SettingsBindBroker.Bind(() => SmoothHeadBobToggle.isOn, () => Settings.Settings.SmoothHeadBob,
                 BindingType.TwoWay);
             Settings.SettingsBindBroker.Bind(() => SpecialDaysEnabledToggle.isOn,
                 () => Settings.Settings.SpecialDaysEnabled, BindingType.TwoWay);
+        }
+
+        public void OnEnable()
+        {
+            CurrentModDropdown.value = Settings.Settings.CurrentModIndex;
         }
 
         protected void updateMod()
