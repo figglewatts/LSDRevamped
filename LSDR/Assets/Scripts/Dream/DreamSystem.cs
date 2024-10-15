@@ -443,8 +443,8 @@ namespace LSDR.Dream
                 {
                     VideoSpecialDayControl control = FindObjectOfType<VideoSpecialDayControl>();
                     control.BeginVideoClip(videoClip);
-                }, 1);
-            });
+                }, 1, forced: false);
+            }, forced: false);
         }
 
         public void VideoFinished()
