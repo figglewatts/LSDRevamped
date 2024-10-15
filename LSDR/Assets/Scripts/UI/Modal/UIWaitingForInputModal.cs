@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Torii.Event;
+using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
@@ -16,6 +17,11 @@ namespace LSDR.UI.Modal
         public void Update()
         {
             if (_cancelAction != null && _cancelAction.WasReleasedThisFrame()) UIModalController.Instance.HideModal();
+        }
+
+        public void HideSelf()
+        {
+            UIModalController.Instance.HideModal();
         }
 
         public void ProvideTitleText(string titleText)

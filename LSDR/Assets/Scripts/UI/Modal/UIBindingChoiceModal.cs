@@ -37,6 +37,11 @@ namespace LSDR.UI.Modal
 
         }
 
+        public void HideSelf()
+        {
+            UIModalController.Instance.HideModal();
+        }
+
         public void ProvideCancelAction(InputAction cancelAction)
         {
             _cancelAction = cancelAction;
