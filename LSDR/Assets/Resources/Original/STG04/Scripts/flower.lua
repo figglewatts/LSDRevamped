@@ -5,8 +5,9 @@ player = GetEntity("__player")
 interacted = false
 
 function start()
-    if Random.OneIn(4) then
-        this.GameObject.Scale = Unity.Vector3(8, 8, 8)
+    local big = IsDayLinear(3, 1) or (IsDayLinear(3, 0) and Random.OneIn(3))
+    if big then
+        this.GameObject.Scale = Unity.Vector3(6, 6, 6)
     end
 
     this.PlayAnimation(0)

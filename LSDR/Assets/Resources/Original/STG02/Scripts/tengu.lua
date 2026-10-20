@@ -6,15 +6,10 @@ player = GetEntity("__player")
 active = false
 linked = false
 direction = nil
-moveSpeed = 1
+moveSpeed = 1.25
 distanceToPlayer = 0
 
 function start()
-    if Random.OneIn(2) then
-        -- set us tall
-        this.StretchShrink(2)
-    end
-
     -- choose walking direction
     local choice = Random.IntMax(4)
     if choice == 0 then
@@ -31,7 +26,8 @@ function start()
 
     this.SetChildVisible(false)
     
-    if not IsDayEven() or Random.OneIn(2) then
+    local extra = this.GameObject.Name ~= "Tengu1"
+    if not IsDayEven() or (extra and ChartZone() ~= "white" and not IsDayLinear(3, 0)) then
         this.GameObject.SetActive(false)
         return
     end
@@ -44,9 +40,9 @@ end
 function update()
     if not active or linked then return end
 
-    if distanceToPlayer < 0.3 and not linked then
+    if distanceToPlayer < 0.75 and not linked then
         linked = true
-        DreamSystem.SetNextTransitionDream(dreams.PitAndTemple)
+        DreamSystem.SetNextTransitionDream(dreams.LongHallway)
         DreamSystem.TransitionToDream()
     end
 
@@ -62,6 +58,20 @@ function interact()
         .Do(|| this.PlayAnimation(0))
         .ThenWaitUntil(this.WaitForAnimation(0))
         .Then(|| this.PlayAnimation(1))
+        .Then(transform)
         .Then(function() active = true end)
         .ThenFinish()
+end
+
+function transform()
+    -- away from the white part of the chart some of them grow huge and sink
+    if ChartZone() ~= "white" and Random.OneIn(2) then
+        this.GameObject.Scale = Unity.Vector3(6, 6, 6)
+        this.GameObject.WorldPosition = this.GameObject.WorldPosition - Unity.Vector3(0, 1, 0)
+    end
+
+    if Random.OneIn(3) then
+        direction = direction.negated()
+        this.LookAt(this.GameObject.WorldPosition - direction)
+    end
 end

@@ -7,6 +7,11 @@ distanceToPlayer = 0
 player = GetEntity("__player")
 
 function start()
+    if ChartZone() ~= "yellow" then
+        this.GameObject.SetActive(false)
+        return
+    end
+
     this.PlayAnimation(0)
 end
 

@@ -1,4 +1,6 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using LSDR.InputManagement;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -14,25 +16,25 @@ namespace LSDR.UI
         public bool SelectEvenWithMouse;
         public ControlSchemeLoaderSystem ControlScheme;
 
+        // most recently enabled wins
+        private static readonly List<UISelectMe> _active = new List<UISelectMe>();
+
+        public static UISelectMe CurrentDefault => _active.LastOrDefault(s => s.GetComponent<Selectable>().IsInteractable());
+
         private void Start() { StartCoroutine(waitFrameThenSelect()); }
 
         private void OnEnable()
         {
+            _active.Add(this);
             StartCoroutine(waitFrameThenSelect());
-            ControlScheme.OnLastUsedDeviceChanged += onDeviceChanged;
         }
 
-        private void OnDisable() { ControlScheme.OnLastUsedDeviceChanged -= onDeviceChanged; }
-
-        private void onDeviceChanged(InputDevice device)
-        {
-            if (device is Gamepad) StartCoroutine(waitFrameThenSelect());
-        }
+        private void OnDisable() { _active.Remove(this); }
 
         private IEnumerator waitFrameThenSelect()
         {
             yield return null;
-            if (ControlScheme.LastUsedGamepad || SelectEvenWithMouse) GetComponent<Selectable>().Select();
+            if (!(ControlScheme.LastUsedDevice is Mouse) || SelectEvenWithMouse) GetComponent<Selectable>().Select();
         }
     }
 }

@@ -9,6 +9,11 @@ completedMotion = false
 interacted = false
 
 function start()
+    if IsDayEven() then
+        this.GameObject.SetActive(false)
+        return
+    end
+
     train.generateTargetsFrom(4)
     this.SetChildVisible(false)
 end

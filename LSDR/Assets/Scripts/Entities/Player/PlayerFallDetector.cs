@@ -11,8 +11,9 @@ namespace LSDR.Entities.Player
     [RequireComponent(typeof(CharacterController))]
     public class PlayerFallDetector : MonoBehaviour
     {
-        private const float ROTATION_SPEED = 45F;
-        private const float MAX_X_ROTATION = 80F;
+        private const float FALL_SPEED = 5f;
+        private const float LOOK_DROP_SPEED = 6f;
+        private const float LOOK_DISTANCE = 5f;
         public SettingsSystem Settings;
         public DreamSystem DreamSystem;
 
@@ -41,15 +42,19 @@ namespace LSDR.Entities.Player
         private IEnumerator fall()
         {
             DreamSystem.EndDream(fromFall: true);
+            Settings.PlayerGravity = false;
 
-            Quaternion lookUpRot = Quaternion.AngleAxis(MAX_X_ROTATION, -_targetCamera.transform.right) *
-                                   _targetCamera.transform.rotation;
-
+            Quaternion startRotation = _targetCamera.transform.rotation;
+            Vector3 tiltAxis = -_targetCamera.transform.right;
+            float t = 0;
             while (true)
             {
-                _targetCamera.transform.rotation = Quaternion.RotateTowards(_targetCamera.transform.rotation,
-                    lookUpRot,
-                    ROTATION_SPEED * Time.deltaTime);
+                t += Time.deltaTime;
+                _playerController.Move(Vector3.down * (FALL_SPEED * Time.deltaTime));
+
+                // the view tilts up as the point it's looking at drops below it
+                float tilt = Mathf.Atan2(LOOK_DROP_SPEED * t, LOOK_DISTANCE) * Mathf.Rad2Deg;
+                _targetCamera.transform.rotation = Quaternion.AngleAxis(tilt, tiltAxis) * startRotation;
                 yield return null;
             }
         }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using libLSD.Formats;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -50,7 +50,7 @@ namespace LSDR.SDK.Entities
 
             public LBDTileData(LBDTile tile)
             {
-                UnknownFlag = tile.UnknownFlag;
+                UnknownFlag = (byte)(tile.SolidTile ? 1 : 0);
                 FootstepSoundAndCollision = tile.FootstepSoundAndCollision;
                 Height = tile.TileHeight;
             }

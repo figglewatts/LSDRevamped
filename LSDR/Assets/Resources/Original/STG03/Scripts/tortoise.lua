@@ -4,7 +4,14 @@ player = GetEntity("__player")
 
 interacted = false
 small = false
-moveSpeed = 0.2
+moveSpeed = 0.3
+
+function start()
+    -- a couple of little ones turn up in the red part of the chart
+    if this.GameObject.Name ~= "Tortoise1" and ChartZone() ~= "red" then
+        this.GameObject.SetActive(false)
+    end
+end
 
 function intervalUpdate()
     if not interacted then return end
@@ -13,12 +20,10 @@ function intervalUpdate()
         linked = true
         DreamSystem.SetNextTransitionDream(dreams.TempleDojo)
         DreamSystem.TransitionToDream()
-    elseif distanceToPlayer < 4 and not small then
+    elseif distanceToPlayer < 2 and not small then
+        -- once you've met it, it stays small
         small = true
         this.GameObject.Scale = Unity.Vector3(0.25, 0.25, 0.25)
-    elseif distanceToPlayer >= 4 and small then
-        small = false
-        this.GameObject.Scale = Unity.Vector3(1, 1, 1)
     end
     this.SnapToFloor()
 end

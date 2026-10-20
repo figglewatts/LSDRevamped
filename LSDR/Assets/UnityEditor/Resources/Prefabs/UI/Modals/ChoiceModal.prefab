@@ -445,6 +445,7 @@ GameObject:
   - component: {fileID: 7659171654504963940}
   - component: {fileID: 7658631308768095386}
   - component: {fileID: 7658730511986966744}
+  - component: {fileID: 1827542230874588678}
   m_Layer: 5
   m_Name: CancelButton
   m_TagString: Untagged
@@ -602,6 +603,18 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.441}
   m_EffectDistance: {x: 0, y: -2}
   m_UseGraphicAlpha: 1
+--- !u!114 &1827542230874588678
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7771703501318978842}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5dbf83ad8ece3092ca1dc87b587c08ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8812796223741399629
 GameObject:
   m_ObjectHideFlags: 0

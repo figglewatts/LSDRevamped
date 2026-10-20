@@ -97,9 +97,18 @@ namespace LSDR.SDK.Entities
 
         #if UNITY_EDITOR
         [ContextMenu("Arrange tiles")]
-        protected void arrangeTiles()
+        public void ArrangeTiles()
         {
+            if (LayoutType != LBDLayoutType.Horizontal) return;
+
             var lbds = gameObject.transform.Find("LBDs");
+            if (lbds == null)
+            {
+                Debug.LogWarning($"Unable to arrange tiles of '{name}', it has no 'LBDs' child");
+                return;
+            }
+
+            Undo.RegisterFullObjectHierarchyUndo(lbds.gameObject, "Arrange tiles");
 
             // order the LBDs
             var children = new List<Transform>();
@@ -108,11 +117,9 @@ namespace LSDR.SDK.Entities
                 children.Add((Transform)child);
             }
 
-            var orderedChildren = children.OrderBy(t =>
-            {
-                Debug.Log(t.name);
-                return int.Parse(t.name.Substring(1));
-            }).ToArray();
+            var orderedChildren = children.OrderBy(t => int.Parse(t.name.Substring(1)))
+                                          .Select(wrapLBD)
+                                          .ToArray();
 
             for (int i = 0; i < orderedChildren.Length; i++)
             {
@@ -122,21 +129,31 @@ namespace LSDR.SDK.Entities
             for (int i = 0; i < orderedChildren.Length; i++)
             {
                 Transform lbdTransform = orderedChildren[i];
-                Vector3 lbdPos = Vector3.zero;
-                if (LayoutType == LBDLayoutType.Horizontal)
-                {
-                    int xPos = i % TileWidth;
-                    int yPos = i / TileWidth;
-                    int xMod = 0;
-                    if (yPos % 2 == 1) xMod = 10;
+                int xPos = i % TileWidth;
+                int yPos = i / TileWidth;
+                int xMod = 0;
+                if (yPos % 2 == 1) xMod = 10;
 
-                    lbdPos = new Vector3(xPos * 20 - xMod, y: 0, yPos * 20);
-                }
-
-                lbdTransform.position = lbdPos;
+                Vector3 lbdPos = new Vector3(xPos * 20 - xMod, y: 0, yPos * 20);
+                lbdTransform.position = transform.TransformPoint(lbdPos);
 
                 EditorUtility.SetDirty(lbdTransform.gameObject);
             }
+        }
+
+        protected Transform wrapLBD(Transform lbd)
+        {
+            if (lbd.GetComponent<LBDChunk>() == null) return lbd;
+
+            var holder = new GameObject(lbd.name);
+            Undo.RegisterCreatedObjectUndo(holder, "Arrange tiles");
+            holder.transform.SetParent(lbd.parent, worldPositionStays: false);
+
+            Undo.SetTransformParent(lbd, holder.transform, "Arrange tiles");
+            lbd.localPosition = Vector3.zero;
+            PrefabUtility.RecordPrefabInstancePropertyModifications(lbd);
+
+            return holder.transform;
         }
         #endif
     }

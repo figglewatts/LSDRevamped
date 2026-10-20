@@ -1,8 +1,10 @@
 player = GetEntity("__player")
 
-moveSpeed = 0.7
+glideSpeed = 0.9
+runSpeed = 3.5
 interacted = false
-turned = false
+running = false
+racing = false
 
 function start()
     this.SetChildVisible(false)
@@ -16,24 +18,48 @@ end
 function update()
     if not interacted then return end
 
-    local speed = moveSpeed
-    if turned then speed = speed * 5 end
+    if racing then
+        -- races round in circles, flickering in and out of sight
+        this.Rotate(Unity.Vector3(0, 360, 0))
+        this.MoveInDirection(this.Forward, 20)
+        this.SetRenderersActive(Random.OneIn(7))
+        return
+    end
+
+    local speed = glideSpeed
+    if running then speed = runSpeed end
     this.MoveInDirection(this.Forward, speed)
 end
 
 function interact()
+    if interacted then return end
     interacted = true
     this.SetChildVisible(true)
-
-    direction = Unity.Vector3(1, 0, 0)
-    if Random.OneIn(2) then direction = direction.negated() end
+    this.PlayAnimation(0)
 
     this.LogGraphContribution(-3, 2)
 
+    racing = Random.OneIn(2)
+    if racing then
+        this.Action
+            .WaitUntil(Condition.WaitForSeconds(18))
+            .Then(|| this.GameObject.SetActive(false))
+            .ThenFinish()
+        return
+    end
+
+    local turn = 90
+    if Random.OneIn(2) then turn = -turn end
+
     this.Action
-        .Do(|| this.PlayAnimation(0))
-        .ThenWaitUntil(Condition.WaitForSeconds(5))
-        .Then(|| this.LookInDirection(direction))
-        .Then(function() turned = true end)
+        .WaitUntil(Condition.WaitForSeconds(3))
+        .Then(function()
+            local rotation = this.GameObject.LocalRotation
+            rotation.y = rotation.y + turn
+            this.GameObject.LocalRotation = rotation
+            running = true
+        end)
+        .ThenWaitUntil(Condition.WaitForSeconds(15))
+        .Then(|| this.GameObject.SetActive(false))
         .ThenFinish()
 end

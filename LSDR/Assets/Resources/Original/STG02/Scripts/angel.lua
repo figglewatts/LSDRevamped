@@ -1,13 +1,12 @@
-require "dreams"
-
 player = GetEntity("__player")
 flying = this.GameObject.Name != "HouseAngel"
 interacted = false
+drifting = false
+flightTime = 0
 distanceToPlayer = 0
-moveSpeed = 0.5
 
 function start()
-    if IsDayEven() or Random.OneIn(2) then
+    if IsDayEven() or (this.GameObject.Name == "HouseAngel" and not IsDayLinear(3, 1)) then
         this.GameObject.SetActive(false)
         return
     end
@@ -24,17 +23,24 @@ function intervalUpdate()
 end
 
 function update()
-    if not interacted then return end
+    if not interacted or not flying then return end
 
-    if distanceToPlayer < 0.3 and not linked then
-        linked = true
-        DreamSystem.SetNextTransitionDream(dreams.Happytown)
-        DreamSystem.TransitionToDream()
+    if distanceToPlayer < 1 then drifting = true end
+
+    if drifting then
+        -- once you've met it, it flutters up and off to the side
+        this.MoveInDirection(Unity.Vector3(0, 1, 0), 0.6)
+        this.MoveInDirection(this.Right.negated(), 0.3)
+        return
     end
 
-    if not flying then return end
-
-    this.MoveTowards(player.WorldPosition, moveSpeed)
+    -- swoops in, getting faster, then gives up and flies off
+    flightTime = flightTime + Unity.DeltaTime()
+    if flightTime < 13 then
+        this.MoveInDirection(this.Forward, 0.6 + flightTime * 0.2)
+    else
+        this.MoveInDirection(this.Forward.negated(), 2.5)
+    end
 end
 
 function interact()

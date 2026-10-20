@@ -66,6 +66,8 @@ namespace LSDR.Game
 
             public int YearNumber { get; set; }
 
+            public bool SeenChartFace { get; set; }
+
             [JsonIgnore] public IEnumerable<DreamSequence> SequenceData => _sequenceData;
 
             [JsonIgnore]

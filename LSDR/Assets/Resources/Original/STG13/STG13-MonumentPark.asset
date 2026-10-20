@@ -18,8 +18,15 @@ MonoBehaviour:
   Linkable: 0
   LinkWeighting: 1
   FirstDay: 0
+  DreamLengthSeconds: 360
+  WalkSpeed: 1.25
   EnvironmentOffset: 13
   Environments: {fileID: 11400000, guid: ccb0220f0a8794444a1597eef4104732, type: 2}
+  EnvironmentGroups:
+  - {fileID: 11400000, guid: ce0eea898ecf4424883268fbea193888, type: 2}
+  - {fileID: 11400000, guid: 333bca37d8184f39a0edade2b0b7c6e1, type: 2}
+  - {fileID: 11400000, guid: 727a1dc2e8284874b979e7bcad38c621, type: 2}
+  - {fileID: 11400000, guid: 2e7091dcb4684424a19c0bf35701150f, type: 2}
   HasEnvironmentEffects: 1
   DreamPrefabPath: Original/STG13/STG13
   SongLibrary: {fileID: 0}

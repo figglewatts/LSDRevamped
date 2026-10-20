@@ -10,10 +10,12 @@ namespace LSDR.SDK.Visual
         public void Start()
         {
             _renderer = GetComponent<Renderer>();
-            foreach (var mat in _renderer.sharedMaterials)
+            Material[] materials = _renderer.sharedMaterials;
+            for (int i = 0; i < materials.Length; i++)
             {
-                TextureSetter.Instance.RegisterMaterial(mat);
+                materials[i] = TextureSetter.Instance.RegisterMaterial(materials[i]);
             }
+            _renderer.sharedMaterials = materials;
         }
     }
 }

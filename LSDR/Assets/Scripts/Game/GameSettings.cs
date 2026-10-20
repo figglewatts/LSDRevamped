@@ -35,11 +35,13 @@ namespace LSDR.Game
             CurrentControlSchemeIndex = 0;
             UseClassicShaders = true;
             UsePixelationShader = true;
-            CurrentResolutionIndex = FindResolutionIndex();
+            ResolutionWidth = 0;
+            ResolutionHeight = 0;
             CurrentQualityIndex = QualitySettings.GetQualityLevel();
             Fullscreen = Screen.fullScreen;
+            VSync = true;
             FOV = 60;
-            LimitFramerate = false;
+            FramerateLimit = 0;
             AffineIntensity = 0.5F;
             CurrentJournalIndex = 0;
             EnableFootstepSounds = true;
@@ -49,9 +51,8 @@ namespace LSDR.Game
             GUID = Guid.NewGuid();
             HeadBobIntensity = 1;
             SmoothHeadBob = false;
+            LookSensitivity = 15;
             SpecialDaysEnabled = true;
-
-            Debug.Log($"HeadBobIntensity: {HeadBobIntensity}");
 
             Profiles = new List<SettingsProfile>();
             SettingsMatchProfile = true;
@@ -197,19 +198,6 @@ namespace LSDR.Game
             _settingsSystem.Save(); // save the current setting of journal/mod
         }
 
-        // find the current resolution index
-        private static int FindResolutionIndex()
-        {
-            Resolution[] resolutions = Screen.resolutions;
-            for (int i = 0; i < resolutions.Length; i++)
-            {
-                if (resolutions[i].Equals(Screen.currentResolution)) return i;
-            }
-
-            Debug.LogWarning("Could not find screen resolution!");
-            return 0;
-        }
-
 #region Player Control Settings
 
         // private member of HeadBobEnabled
@@ -257,6 +245,20 @@ namespace LSDR.Game
             {
                 _smoothHeadBob = value;
                 NotifyPropertyChange(nameof(SmoothHeadBob));
+            }
+        }
+
+        // private member of LookSensitivity
+        private float _lookSensitivity;
+
+        // used for both mouse and stick look
+        public float LookSensitivity
+        {
+            get => _lookSensitivity;
+            set
+            {
+                _lookSensitivity = value;
+                NotifyPropertyChange(nameof(LookSensitivity));
             }
         }
 
@@ -329,19 +331,34 @@ namespace LSDR.Game
             }
         }
 
-        // private member of CurrentResolutionIndex
-        private int _currentResolutionIndex;
+        // 0x0 is native
+        public int ResolutionWidth;
+        public int ResolutionHeight;
 
-        /// <summary>
-        ///     The index into Screen.resolutions that the current resolution is.
-        /// </summary>
-        public int CurrentResolutionIndex
+        // old settings stored an index into Screen.resolutions, treat 0 as native
+        [JsonProperty("CurrentResolutionIndex")]
+        private int LegacyResolutionIndex
         {
-            get => _currentResolutionIndex;
             set
             {
-                _currentResolutionIndex = value;
-                NotifyPropertyChange(nameof(CurrentResolutionIndex));
+                Resolution[] modes = Screen.resolutions;
+                if (value <= 0 || value >= modes.Length) return;
+                ResolutionWidth = modes[value].width;
+                ResolutionHeight = modes[value].height;
+            }
+        }
+
+        // index into the resolution dropdown
+        [JsonIgnore]
+        public int ResolutionOption
+        {
+            get => Mathf.Max(0, DisplayOptions.Resolutions.IndexOf(new Vector2Int(ResolutionWidth, ResolutionHeight)));
+            set
+            {
+                Vector2Int size = DisplayOptions.Resolutions[Mathf.Clamp(value, 0, DisplayOptions.Resolutions.Count - 1)];
+                ResolutionWidth = size.x;
+                ResolutionHeight = size.y;
+                NotifyPropertyChange(nameof(ResolutionOption));
             }
         }
 
@@ -377,6 +394,20 @@ namespace LSDR.Game
             }
         }
 
+        // private member of VSync
+        private bool _vSync;
+
+        // waits for the display between frames, so there's no tearing
+        public bool VSync
+        {
+            get => _vSync;
+            set
+            {
+                _vSync = value;
+                NotifyPropertyChange(nameof(VSync));
+            }
+        }
+
         // private member of FOV
         private float _fov;
 
@@ -393,19 +424,28 @@ namespace LSDR.Game
             }
         }
 
-        // private member of LimitFramerate
-        private bool _limitFramerate;
+        // 0 is uncapped
+        public int FramerateLimit;
 
-        /// <summary>
-        ///     Whether or not to limit the framerate to that of the PS1.
-        /// </summary>
-        public bool LimitFramerate
+        // old settings only had an on/off limit
+        [JsonProperty("LimitFramerate")]
+        private bool LegacyLimitFramerate
         {
-            get => _limitFramerate;
             set
             {
-                _limitFramerate = value;
-                NotifyPropertyChange(nameof(LimitFramerate));
+                if (value) FramerateLimit = DisplayOptions.ORIGINAL_FRAMERATE;
+            }
+        }
+
+        // index into the framerate dropdown
+        [JsonIgnore]
+        public int FramerateOption
+        {
+            get => Mathf.Max(0, Array.IndexOf(DisplayOptions.FramerateLimits, FramerateLimit));
+            set
+            {
+                FramerateLimit = DisplayOptions.FramerateLimits[Mathf.Clamp(value, 0, DisplayOptions.FramerateLimits.Length - 1)];
+                NotifyPropertyChange(nameof(FramerateOption));
             }
         }
 

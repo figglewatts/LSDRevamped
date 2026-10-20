@@ -40,12 +40,17 @@ namespace LSDR.Dream
         protected const float CHANCE_TO_SWITCH_TEXTURES_WHEN_LINKING = 2;
         protected const float MIN_SECONDS_IN_DREAM = 60;
         protected const float MAX_SECONDS_IN_DREAM = 360;
-        protected const int FALLING_UPPER_PENALTY = -9;
         protected const float FADE_OUT_SECS_REGULAR = 3;
-        protected const float FADE_OUT_SECS_FALL = 2.5f;
+        protected const float FADE_OUT_SECS_FALL = 2f;
         protected const float FADE_OUT_SECS_FORCE = 1;
+        protected const float FADE_OUT_SECS_TIMEOUT = 1.25f;
+        protected const float FADE_SECS_BETWEEN_VIDEOS = 0.5f;
+        protected const float FADE_SECS_CUTSCENE = 1;
+        protected const float FADE_IN_SECS_DEFAULT = 1;
+        protected const float FADE_IN_SECS_DAY_START = 1.25f;
         protected const float MIN_SECONDS_IN_FLASHBACK = 8f;
         protected const float MAX_SECONDS_IN_FLASHBACK = 16f;
+        protected const int SONGS_PER_DREAM = 5;
 
         public ScenePicker TitleScene;
         public GameSaveSystem GameSave;
@@ -71,6 +76,7 @@ namespace LSDR.Dream
         [NonSerialized] protected bool _dreamIsEnding;
         [NonSerialized] protected Coroutine _endDreamTimer;
         [NonSerialized] protected Coroutine _flashbackCoroutine;
+        [NonSerialized] protected SongStyle _songStyleThisDream;
 
         [NonSerialized] protected string _forcedSpawnID;
         [NonSerialized] protected float _lastPlayerYRotation;
@@ -81,13 +87,19 @@ namespace LSDR.Dream
         [NonSerialized] protected TimeSince _timeInCurrentFlashback;
         [NonSerialized] protected (Vector3, float)? _flashbackEventSpawn = null;
         [NonSerialized] protected int _flashbackDisabledForDays = 0;
-        [NonSerialized] protected bool _dreamStretching = false;
+        [NonSerialized] protected Coroutine _stretchCoroutine;
+        [NonSerialized] protected float _stretchScale = 1;
+        protected static readonly int _stretchAmountId = Shader.PropertyToID("_StretchAmount");
         [NonSerialized] protected bool _playingVideo = false;
         [NonSerialized] protected DreamEnvironmentEffects _environmentEffects;
+        [NonSerialized] protected float _fadeInSeconds = FADE_IN_SECS_DEFAULT;
 
         [field: NonSerialized] public SDK.Data.Dream CurrentDream { get; protected set; }
         [field: NonSerialized] public GameObject CurrentDreamInstance { get; protected set; }
         [field: NonSerialized] public DreamSequence CurrentSequence { get; protected set; }
+        [field: NonSerialized] public bool TeleportsArmed { get; protected set; }
+
+        public int EnvironmentGroup => CurrentDream != null ? CurrentDream.EnvironmentGroup : -1;
 
         public DreamEnvironment CurrentEnvironment => Instantiate(_currentEnvironment);
 
@@ -99,37 +111,134 @@ namespace LSDR.Dream
         public bool CanFlashback =>
             _flashbackDisabledForDays <= 0 && GameSave.CurrentJournalSave.HasEnoughDataForFlashback();
 
-        public void EndDream(bool fromFall = false)
+        public void EndDream(bool fromFall = false) { endDream(fromFall, timedOut: false); }
+
+        protected void endDream(bool fromFall, bool timedOut)
         {
             if (_dreamIsEnding || _playingVideo) return;
 
-            // penalise upper score if ending dream from falling
             if (fromFall)
             {
                 var pitch = RandUtil.RandomArrayElement(new[] { 0.25f, 0.5f });
                 AudioPlayer.Instance.PlayClip(LinkSound, loop: false, pitch: pitch, mixerGroup: "SFX");
-                CurrentSequence?.LogGraphContributionFromArea(dynamicness: 0, FALLING_UPPER_PENALTY);
                 SettingsSystem.CanControlPlayer = false;
             }
             else
                 SettingsSystem.PlayerGravity = false;
 
+            VideoClip ending = null;
             if (!InFlashback)
             {
+                if (GameSave.CurrentJournalSave.DayNumber == 365) ending = SettingsSystem.CurrentJournal.EndingVideo;
                 GameSave.CurrentJournalSave.IncrementDayNumberWithSequence(CurrentSequence);
                 GameSave.Save();
                 if (_flashbackDisabledForDays > 0) _flashbackDisabledForDays--;
             }
 
-            ToriiFader.Instance.FadeIn(InFlashback ? Color.white : fadeColorFromCurrentSequence(),
-                fromFall ? FADE_OUT_SECS_FALL : FADE_OUT_SECS_REGULAR, () =>
-                {
-                    CurrentDream = null;
-                    _dreamIsEnding = false;
-                    Coroutines.Instance.StartCoroutine(ReturnToTitle());
-                });
+            Color fadeColor = InFlashback ? Color.white : fromFall ? Color.black : fadeColorFromCurrentSequence();
+            bool randomEnding = timedOut && !InFlashback;
 
             commonEndDream();
+
+            void onFaded()
+            {
+                CurrentDream = null;
+                _dreamIsEnding = false;
+                if (ending != null) playEnding(ending);
+                else Coroutines.Instance.StartCoroutine(ReturnToTitle());
+            }
+
+            if (randomEnding)
+            {
+                endWithRandomEnding(onFaded);
+                return;
+            }
+
+            float fadeSeconds = inCutscene() ? FADE_SECS_CUTSCENE
+                : fromFall ? FADE_OUT_SECS_FALL : FADE_OUT_SECS_REGULAR;
+            ToriiFader.Instance.SetBlend(fromFall ? ToriiFader.FadeBlend.Subtract : ToriiFader.FadeBlend.Alpha);
+            ToriiFader.Instance.FadeIn(fadeColor, fadeSeconds, onFaded);
+        }
+
+        protected static bool inCutscene()
+        {
+            string scene = SceneManager.GetActiveScene().name;
+            return scene == "video_dream" || scene == "text_dream";
+        }
+
+        // the ending plays after the last day of the year, then it's back to the title
+        protected void playEnding(VideoClip ending)
+        {
+            _playingVideo = true;
+            ToriiFader.Instance.SetBlend(ToriiFader.FadeBlend.Alpha);
+            SceneManager.LoadScene("video_dream");
+            FadeManager.Managed.FadeOut(Color.black, FADE_SECS_BETWEEN_VIDEOS, () =>
+            {
+                VideoSpecialDayControl control = FindObjectOfType<VideoSpecialDayControl>();
+                control.BeginVideoClip(ending, () =>
+                {
+                    _playingVideo = false;
+                    ToriiFader.Instance.FadeIn(Color.black, FADE_OUT_SECS_FORCE,
+                        () => Coroutines.Instance.StartCoroutine(ReturnToTitle()));
+                });
+            }, 1, forced: false);
+        }
+
+        // play videos one after another, each can be skipped, then it's back to the title
+        public void PlayVideos(IList<VideoClip> videos)
+        {
+            _playingVideo = true;
+            MusicSystem.StopSong();
+            ToriiFader.Instance.SetBlend(ToriiFader.FadeBlend.Alpha);
+            ToriiFader.Instance.FadeIn(Color.black, FADE_SECS_BETWEEN_VIDEOS, () =>
+            {
+                SceneManager.LoadScene("video_dream");
+                FadeManager.Managed.FadeOut(Color.black, FADE_SECS_BETWEEN_VIDEOS, () => playVideo(videos, 0), 1,
+                    forced: false);
+            });
+        }
+
+        protected void playVideo(IList<VideoClip> videos, int index)
+        {
+            if (index >= videos.Count)
+            {
+                _playingVideo = false;
+                Coroutines.Instance.StartCoroutine(ReturnToTitle());
+                return;
+            }
+
+            VideoSpecialDayControl control = FindObjectOfType<VideoSpecialDayControl>();
+            control.BeginVideoClip(videos[index], () =>
+                ToriiFader.Instance.FadeIn(Color.black, FADE_SECS_BETWEEN_VIDEOS, () =>
+                {
+                    if (index + 1 < videos.Count) ToriiFader.Instance.FadeOut(FADE_SECS_BETWEEN_VIDEOS);
+                    playVideo(videos, index + 1);
+                }));
+        }
+
+        // when time runs out the dream either cuts straight to the morning, fades to black, or flashes red or white
+        protected void endWithRandomEnding(Action onFaded)
+        {
+            switch (RandUtil.Int(4))
+            {
+                case 0:
+                    ToriiFader.Instance.SetBlend(ToriiFader.FadeBlend.Alpha);
+                    ToriiFader.Instance.SetFade(Color.black);
+                    onFaded();
+                    break;
+                case 1:
+                    ToriiFader.Instance.SetBlend(ToriiFader.FadeBlend.Subtract);
+                    ToriiFader.Instance.FadeIn(Color.black, FADE_OUT_SECS_TIMEOUT, onFaded);
+                    break;
+                case 2:
+                    ToriiFader.Instance.SetBlend(ToriiFader.FadeBlend.Alpha);
+                    ToriiFader.Instance.FadeIn(Color.red, FADE_OUT_SECS_TIMEOUT, onFaded);
+                    break;
+                default:
+                    ToriiFader.Instance.SetBlend(ToriiFader.FadeBlend.Add);
+                    ToriiFader.Instance.FadeIn(Color.white, FADE_OUT_SECS_TIMEOUT * 2, onFaded);
+                    break;
+            }
         }
 
         public void SetCanControlPlayer(bool state)
@@ -188,7 +297,8 @@ namespace LSDR.Dream
             SDK.Data.Dream dream = null,
             bool playSound = true,
             bool lockControls = true,
-            string spawnPointID = null)
+            string spawnPointID = null,
+            LinkKind kind = LinkKind.RandomWall)
         {
             if (!_canTransition) return;
             _canTransition = false;
@@ -201,6 +311,7 @@ namespace LSDR.Dream
             if (dream == null && _nextDream != null)
             {
                 dream = _nextDream;
+                kind = LinkKind.ListedWall;
 
                 // set _nextDream to null as we'll be transitioning out of the TriggerLink that caused this
                 _nextDream = null;
@@ -225,7 +336,7 @@ namespace LSDR.Dream
             // disable pausing to prevent throwing off timers etc
             PauseSystem.CanPause = false;
 
-            if (dream != CurrentDream) MusicSystem.StopSong();
+            MusicSystem.StopSong();
 
             if (playSound)
             {
@@ -235,7 +346,12 @@ namespace LSDR.Dream
 
             CurrentSequence?.Visited.Add(dream);
 
-            ToriiFader.Instance.FadeIn(fadeCol, duration: 1F, () =>
+            // flashes add their colour and black fades subtract, the fade in after loading mirrors the fade out
+            bool black = kind == LinkKind.Doorway || fadeCol == Color.black;
+            if (black) fadeCol = Color.black;
+            ToriiFader.Instance.SetBlend(black ? ToriiFader.FadeBlend.Subtract : ToriiFader.FadeBlend.Add);
+            _fadeInSeconds = linkFadeSeconds(kind) * (InFlashback ? 2f / 3f : 1f);
+            ToriiFader.Instance.FadeIn(fadeCol, _fadeInSeconds, () =>
             {
                 // see if we should switch texture sets
                 if (RandUtil.OneIn(CHANCE_TO_SWITCH_TEXTURES_WHEN_LINKING))
@@ -256,12 +372,28 @@ namespace LSDR.Dream
         /// <param name="lockControls">Whether to lock controls while linking. Default false.</param>
         /// <param name="spawnPointID">If non-null then should be the ID of a spawn point to spawn at in the dream.</param>
         public void Transition(SDK.Data.Dream dream = null, bool playSound = true, bool lockControls = false,
-            string spawnPointID = null)
+            string spawnPointID = null, LinkKind kind = LinkKind.RandomWall)
         {
-            Transition(fadeColorFromCurrentSequence(), dream, playSound, lockControls, spawnPointID);
+            Transition(fadeColorFromCurrentSequence(), dream, playSound, lockControls, spawnPointID, kind);
+        }
+
+        protected static float linkFadeSeconds(LinkKind kind)
+        {
+            switch (kind)
+            {
+                case LinkKind.ListedWall:
+                case LinkKind.Character:
+                    return 0.4f;
+                case LinkKind.Doorway:
+                    return 2.0f;
+                default:
+                    return 1.25f;
+            }
         }
 
         public void Initialise() { DevConsole.Register(this); }
+
+        public void ArmTeleports() { TeleportsArmed = true; }
 
         public void BeginFlashback()
         {
@@ -270,6 +402,7 @@ namespace LSDR.Dream
             OnBeginDream.Raise(); // controls UI buttons
 
             TextureSetter.Instance.SetRandomTextureSetFromDayNumber(GameSave.CurrentJournalSave.DayNumber);
+            rollSongStyle();
             var randomEventStream = GameSave.CurrentJournalSave.SequenceData
                                             .SelectMany(sd => sd.EntityGraphContributions);
             ToriiFader.Instance.FadeIn(Color.black, duration: 3,
@@ -373,7 +506,7 @@ namespace LSDR.Dream
             {
                 if (SettingsSystem.Settings.SpecialDaysEnabled || specialDay.Always)
                 {
-                    ToriiFader.Instance.FadeIn(Color.black, duration: 3, () =>
+                    ToriiFader.Instance.FadeIn(Color.black, FADE_SECS_CUTSCENE, () =>
                     {
                         specialDay.HandleDay(GameSave.CurrentJournalSave.DayNumber);
                         LogGraphContributionFromArea(specialDay.Contribution.Dynamic, specialDay.Contribution.Upper);
@@ -388,16 +521,29 @@ namespace LSDR.Dream
         public void BeginPlayableDream(SDK.Data.Dream dream)
         {
             SetNextSpawn(null); // don't force a spawn point
+            rollSongStyle();
             _canTransition = true;
 
-            // start a timer to end the dream
-            float secondsInDream = RandUtil.Float(MIN_SECONDS_IN_DREAM, MAX_SECONDS_IN_DREAM);
-            _endDreamTimer = Coroutines.Instance.StartCoroutine(EndDreamAfterSeconds(secondsInDream));
+            ToriiFader.Instance.SetBlend(ToriiFader.FadeBlend.Subtract);
+            _fadeInSeconds = FADE_IN_SECS_DAY_START;
 
+            // after the first dream, each day starts facing the way the last dream ended
             ToriiFader.Instance.FadeIn(Color.black, duration: 3, () => Coroutines.Instance.StartCoroutine(
-                LoadDream(dream, transitioning: false)));
+                LoadDream(dream, transitioning: _spawnedInAtLeastOnce, onLoadFinished: () => startDreamTimer(dream))));
             CurrentSequence?.Visited.Add(dream);
         }
+
+        protected void startDreamTimer(SDK.Data.Dream dream)
+        {
+            float secondsInDream = dream.DreamLengthSeconds > 0
+                ? dream.DreamLengthSeconds
+                : RandUtil.Float(MIN_SECONDS_IN_DREAM, MAX_SECONDS_IN_DREAM);
+            if (_endDreamTimer != null) Coroutines.Instance.StopCoroutine(_endDreamTimer);
+            _endDreamTimer = Coroutines.Instance.StartCoroutine(EndDreamAfterSeconds(secondsInDream));
+        }
+
+        // one style of music for the whole night
+        protected void rollSongStyle() { _songStyleThisDream = (SongStyle)RandUtil.Int((int)SongStyle.COUNT); }
 
         /// <summary>
         /// Set the next spawn point ID. Doesn't check for null etc.
@@ -436,10 +582,10 @@ namespace LSDR.Dream
                 _endDreamTimer = null;
             }
 
-            FadeManager.Managed.FadeIn(fadeInColor, 3f, () =>
+            FadeManager.Managed.FadeIn(fadeInColor, FADE_SECS_CUTSCENE, () =>
             {
                 SceneManager.LoadScene("video_dream");
-                FadeManager.Managed.FadeOut(Color.black, 1f, () =>
+                FadeManager.Managed.FadeOut(Color.black, FADE_SECS_BETWEEN_VIDEOS, () =>
                 {
                     VideoSpecialDayControl control = FindObjectOfType<VideoSpecialDayControl>();
                     control.BeginVideoClip(videoClip);
@@ -473,8 +619,9 @@ namespace LSDR.Dream
         public void ApplyEnvironment()
         {
             if (_currentEnvironment == null) return;
+            if (_environmentEffects != null) _environmentEffects.Follow = Player != null ? Player.transform : null;
             _currentEnvironment.Apply(SettingsSystem.Settings.LongDrawDistance,
-                CurrentDream.HasEnvironmentEffects ? _environmentEffects : null);
+                CurrentDream.HasEnvironmentEffects ? _environmentEffects : null, EnvironmentGroup);
         }
 
         public void ApplyEnvironment(DreamEnvironment environment)
@@ -483,36 +630,45 @@ namespace LSDR.Dream
             ApplyEnvironment();
         }
 
+        // stretch the height of the dream's tiles to the given scale (1 is normal), leaving characters and
+        // collision alone. a new stretch carries on from wherever the last one got to
         public void StretchDream(float amount, float timeSeconds)
         {
             if (CurrentDreamInstance == null)
             {
                 Debug.LogWarning("Cannot stretch dream when not instantiated");
+                return;
             }
 
-            if (_dreamStretching) return;
-
-            Coroutines.Instance.StartCoroutine(stretchDreamCoroutine(amount, timeSeconds));
+            if (_stretchCoroutine != null) Coroutines.Instance.StopCoroutine(_stretchCoroutine);
+            _stretchCoroutine = Coroutines.Instance.StartCoroutine(stretchDreamCoroutine(amount, timeSeconds));
         }
 
         protected IEnumerator stretchDreamCoroutine(float amount, float timeSeconds)
         {
-            _dreamStretching = true;
-            float t = 0;
-            float startYScale = CurrentDreamInstance.transform.localScale.y;
-            float targetYScale = startYScale * amount;
-            while (t < timeSeconds)
+            var renderers = new List<Renderer>();
+            foreach (var chunk in CurrentDreamInstance.GetComponentsInChildren<LBDChunk>())
             {
-                CurrentDreamInstance.transform.localScale = new Vector3(CurrentDreamInstance.transform.localScale.x,
-                    Mathf.Lerp(startYScale, targetYScale, t / timeSeconds),
-                    CurrentDreamInstance.transform.localScale.z);
-                t += Time.deltaTime;
+                renderers.AddRange(chunk.GetComponentsInChildren<Renderer>());
+            }
+
+            var block = new MaterialPropertyBlock();
+            float perSecond = timeSeconds > 0 ? Mathf.Abs(amount - _stretchScale) / timeSeconds : float.MaxValue;
+            while (true)
+            {
+                _stretchScale = Mathf.MoveTowards(_stretchScale, amount, perSecond * Time.deltaTime);
+                foreach (var r in renderers)
+                {
+                    if (r == null) continue;
+                    r.GetPropertyBlock(block);
+                    block.SetFloat(_stretchAmountId, _stretchScale - 1);
+                    r.SetPropertyBlock(block);
+                }
+
+                if (Mathf.Approximately(_stretchScale, amount)) break;
                 yield return null;
             }
-            CurrentDreamInstance.transform.localScale = new Vector3(CurrentDreamInstance.transform.localScale.x,
-                targetYScale,
-                CurrentDreamInstance.transform.localScale.z);
-            _dreamStretching = false;
+            _stretchCoroutine = null;
         }
 
         public IEnumerator EndDreamAfterSeconds(float seconds)
@@ -527,12 +683,15 @@ namespace LSDR.Dream
 
             OnDreamTimeout?.Invoke();
 
-            EndDream();
+            endDream(fromFall: false, timedOut: true);
         }
 
         public IEnumerator ReturnToTitle()
         {
             Debug.Log("Loading title screen");
+
+            ToriiFader.Instance.SetBlend(ToriiFader.FadeBlend.Alpha);
+            _fadeInSeconds = FADE_IN_SECS_DEFAULT;
 
             TextureSetter.Instance.DeregisterAllMaterials();
             EntityIndex.Instance.DeregisterAllEntities();
@@ -559,6 +718,9 @@ namespace LSDR.Dream
             // disable falling so we don't go through level geometry
             SettingsSystem.PlayerGravity = false;
 
+            // teleports are only armed by characters that appear in this dream
+            TeleportsArmed = false;
+
             // unload the last scene (if it existed)
             if (CurrentDream != null)
             {
@@ -575,7 +737,6 @@ namespace LSDR.Dream
             EntityIndex.Instance.DeregisterAllEntities();
             ((LuaEngine)LuaManager.Managed).Persistence.Clear(Lifetime.Dream);
 
-            bool loadingSameDream = CurrentDream == dream;
             CurrentDream = dream;
 
             if (!SceneManager.GetActiveScene().name.Equals("load_mod", StringComparison.InvariantCulture))
@@ -587,19 +748,12 @@ namespace LSDR.Dream
 
             yield return Resources.UnloadUnusedAssets();
 
-            // reroll song style, update song library, switch to next song based on graph position
+            // update song library, then pick one of the dream's songs every time we enter it, in tonight's style
             MusicSystem.OriginalSongLibrary.DreamNumber = SettingsSystem.CurrentJournal.GetDreamIndex(CurrentDream);
             MusicSystem.CurrentSongLibrary = CurrentDream.SongLibrary;
-            int songNumber = GameSave.CurrentJournalSave.DayNumber == 1
-                ? 2
-                : (GameSave.CurrentJournalSave.LastGraphY + 9) * GraphSpawnMap.GRAPH_SIZE +
-                  (GameSave.CurrentJournalSave.LastGraphX + 9);
-            if (!loadingSameDream)
-            {
-                MusicSystem.SetSongStyle(
-                    (SongStyle)((GameSave.CurrentJournalSave.DayNumber - 1) % (int)SongStyle.COUNT));
-                MusicSystem.NextSong(songNumber);
-            }
+            int songNumber = GameSave.CurrentJournalSave.DayNumber == 1 ? 2 : RandUtil.Int(SONGS_PER_DREAM);
+            MusicSystem.SetSongStyle(_songStyleThisDream);
+            MusicSystem.NextSong(songNumber);
 
             Debug.Log("Registering entities...");
             Player = GameObject.FindWithTag("Player");
@@ -619,6 +773,11 @@ namespace LSDR.Dream
 
             CurrentDreamInstance = Instantiate((GameObject)prefabRequest.asset);
 
+            // a new dream starts unstretched
+            if (_stretchCoroutine != null) Coroutines.Instance.StopCoroutine(_stretchCoroutine);
+            _stretchCoroutine = null;
+            _stretchScale = 1;
+
             ResourceManager.ClearLifespan("scene");
 
             EntityIndex.Instance.AllRegistered();
@@ -632,7 +791,8 @@ namespace LSDR.Dream
             Debug.Log("Choosing environment...");
             if (!InFlashback)
             {
-                _currentEnvironment = dream.ChooseEnvironment(GameSave.CurrentJournalSave.DayNumber);
+                _currentEnvironment = dream.ChooseEnvironment(GameSave.CurrentJournalSave.DayNumber,
+                    SettingsSystem.CurrentJournal.GetDreamIndex(dream));
                 ApplyEnvironment();
             }
             else
@@ -652,6 +812,7 @@ namespace LSDR.Dream
             PlayerMovement playerMovement = Player.GetComponent<PlayerMovement>();
             playerMovement.ClearInputLock();
             playerMovement.OnNewDream();
+            playerMovement.WalkMoveSpeed = dream.WalkSpeed;
             PlayerCameraRotation playerCameraRotation = Player.GetComponent<PlayerCameraRotation>();
             playerCameraRotation.SetUsingExternalInput(false);
             PlayerRotation playerRotation = Player.GetComponent<PlayerRotation>();
@@ -674,10 +835,12 @@ namespace LSDR.Dream
 
             onLoadFinished?.Invoke();
 
-            ToriiFader.Instance.FadeOut(duration: 1F, () =>
+            ToriiFader.Instance.FadeOut(_fadeInSeconds, () =>
             {
                 playerMovement.CanLink = true;
                 _currentlyTransitioning = false;
+                ToriiFader.Instance.SetBlend(ToriiFader.FadeBlend.Alpha);
+                _fadeInSeconds = FADE_IN_SECS_DEFAULT;
             });
         }
 
@@ -691,23 +854,53 @@ namespace LSDR.Dream
                 return RandUtil.RandColor();
             }
 
-            Vector2Int graphPos = CurrentSequence.EvaluateGraphPosition();
-            switch (graphPos)
+            switch (ChartZone)
             {
-                case var p when p.x <= -4 && p.y >= 1:
+                case "green":
                     return Color.green;
-                case var p when p.x <= 3 && p.y >= 4:
+                case "blue":
                     return Color.blue;
-                case var p when p.x >= 4 && p.y >= 4:
+                case "magenta":
                     return Color.magenta;
-                case var p when p.x >= 4 && p.y >= -3:
+                case "black":
                     return Color.black;
-                case var p when p.x <= -4 && p.y <= -4:
+                case "cyan":
+                    return Color.cyan;
+                case "yellow":
                     return Color.yellow;
-                case var p when p.x <= 3 && p.y <= -4:
+                case "red":
                     return Color.red;
                 default:
                     return Color.white;
+            }
+        }
+
+        // the colour of the zone of the graph today's dreams are in so far
+        public string ChartZone
+        {
+            get
+            {
+                if (CurrentSequence == null) return "white";
+
+                switch (CurrentSequence.EvaluateGraphPosition())
+                {
+                    case var p when p.x <= -4 && p.y >= 4:
+                        return "green";
+                    case var p when p.x <= 3 && p.y >= 4:
+                        return "blue";
+                    case var p when p.x >= 4 && p.y >= 4:
+                        return "magenta";
+                    case var p when p.x >= 4 && p.y >= -3:
+                        return "black";
+                    case var p when p.x >= 4 && p.y <= -4:
+                        return "cyan";
+                    case var p when p.x <= -4 && p.y <= -4:
+                        return "yellow";
+                    case var p when p.x <= 3 && p.y <= -4:
+                        return "red";
+                    default:
+                        return "white";
+                }
             }
         }
 

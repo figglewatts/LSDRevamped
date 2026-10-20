@@ -16,12 +16,13 @@ namespace LSDR.UI.Settings
         public Toggle UsePixelationShaderToggle;
         public Toggle UseDitheringToggle;
         public Toggle FullscreenToggle;
-        public Toggle LimitFramerateToggle;
+        public Toggle VSyncToggle;
         public Toggle DrawDistanceToggle;
         public Slider FOVSlider;
         public Slider AffineSlider;
         public Dropdown ResolutionDropdown;
         public Dropdown QualityDropdown;
+        public Dropdown FramerateDropdown;
 
         public void Start()
         {
@@ -29,10 +30,11 @@ namespace LSDR.UI.Settings
             Settings.SettingsBindBroker.RegisterData(UsePixelationShaderToggle);
             Settings.SettingsBindBroker.RegisterData(UseDitheringToggle);
             Settings.SettingsBindBroker.RegisterData(FullscreenToggle);
-            Settings.SettingsBindBroker.RegisterData(LimitFramerateToggle);
+            Settings.SettingsBindBroker.RegisterData(VSyncToggle);
             Settings.SettingsBindBroker.RegisterData(FOVSlider);
             Settings.SettingsBindBroker.RegisterData(ResolutionDropdown);
             Settings.SettingsBindBroker.RegisterData(QualityDropdown);
+            Settings.SettingsBindBroker.RegisterData(FramerateDropdown);
             Settings.SettingsBindBroker.RegisterData(AffineSlider);
             Settings.SettingsBindBroker.RegisterData(DrawDistanceToggle);
 
@@ -45,10 +47,11 @@ namespace LSDR.UI.Settings
             UsePixelationShaderToggle.isOn = Settings.Settings.UsePixelationShader;
             UseDitheringToggle.isOn = Settings.Settings.UseDithering;
             FullscreenToggle.isOn = Settings.Settings.Fullscreen;
-            LimitFramerateToggle.isOn = Settings.Settings.LimitFramerate;
+            VSyncToggle.isOn = Settings.Settings.VSync;
             FOVSlider.value = Settings.Settings.FOV;
-            ResolutionDropdown.value = Settings.Settings.CurrentResolutionIndex;
+            ResolutionDropdown.value = Settings.Settings.ResolutionOption;
             QualityDropdown.value = Settings.Settings.CurrentQualityIndex;
+            FramerateDropdown.value = Settings.Settings.FramerateOption;
             AffineSlider.value = Settings.Settings.AffineIntensity;
             DrawDistanceToggle.isOn = Settings.Settings.LongDrawDistance;
 
@@ -60,15 +63,17 @@ namespace LSDR.UI.Settings
                 BindingType.TwoWay);
             Settings.SettingsBindBroker.Bind(() => FullscreenToggle.isOn,
                 () => Settings.Settings.Fullscreen, BindingType.TwoWay);
+            Settings.SettingsBindBroker.Bind(() => VSyncToggle.isOn,
+                () => Settings.Settings.VSync, BindingType.TwoWay);
             Settings.SettingsBindBroker.Bind(() => FOVSlider.value,
                 () => Settings.Settings.FOV,
                 BindingType.TwoWay);
             Settings.SettingsBindBroker.Bind(() => ResolutionDropdown.value,
-                () => Settings.Settings.CurrentResolutionIndex, BindingType.TwoWay);
+                () => Settings.Settings.ResolutionOption, BindingType.TwoWay);
             Settings.SettingsBindBroker.Bind(() => QualityDropdown.value,
                 () => Settings.Settings.CurrentQualityIndex, BindingType.TwoWay);
-            Settings.SettingsBindBroker.Bind(() => LimitFramerateToggle.isOn,
-                () => Settings.Settings.LimitFramerate, BindingType.TwoWay);
+            Settings.SettingsBindBroker.Bind(() => FramerateDropdown.value,
+                () => Settings.Settings.FramerateOption, BindingType.TwoWay);
             Settings.SettingsBindBroker.Bind(() => AffineSlider.value,
                 () => Settings.Settings.AffineIntensity,
                 BindingType.TwoWay);

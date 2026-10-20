@@ -191,12 +191,8 @@ namespace LSDR.SDK.Editor.AssetImporters
                 }
             }
 
-            float frameTime = tod.Header.Resolution / 60f;
-            if (frameTime == 0)
-            {
-                // some animations have zero resolution, weirdly - hardcode the frametime to an ok-ish value
-                frameTime = 4 / 60f;
-            }
+            // animations step one frame each game tick, whatever resolution the TOD claims
+            const float frameTime = 1f / 20f;
             AnimationClip clip = new AnimationClip { frameRate = 1f / frameTime };
             foreach (AnimationObject animObj in _objectTable.Values)
             {

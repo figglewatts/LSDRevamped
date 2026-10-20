@@ -82,6 +82,15 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
+                    ""name"": ""LookBehind"",
+                    ""type"": ""Button"",
+                    ""id"": ""dd88a243-aa0a-4438-a3fd-15648f4cb781"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
                     ""name"": ""Pause"",
                     ""type"": ""Button"",
                     ""id"": ""51f03154-7a46-41fa-afcf-637c7bf67f30"",
@@ -146,7 +155,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""59610c23-beb0-4927-bbb5-e9df0fe1140d"",
-                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""path"": ""<Gamepad>/leftStickPress"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
@@ -195,6 +204,39 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""LookDown"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""48c23c97-9185-4040-b1b6-997fc2424f9e"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and mouse"",
+                    ""action"": ""LookBehind"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""dbc123d3-29d8-4c2e-8fa5-2dbed6f9f2f1"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""LookBehind"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""436ad63f-5569-4ff8-bd14-8c50bc1af4d5"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""LookBehind"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -415,12 +457,12 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             ""actions"": [
                 {
                     ""name"": ""Navigate"",
-                    ""type"": ""PassThrough"",
+                    ""type"": ""Value"",
                     ""id"": ""54028df1-d8d1-4c33-881b-2db0e650dd64"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": true
                 },
                 {
                     ""name"": ""Submit"",
@@ -697,6 +739,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         m_Game_Run = m_Game.FindAction("Run", throwIfNotFound: true);
         m_Game_LookUp = m_Game.FindAction("LookUp", throwIfNotFound: true);
         m_Game_LookDown = m_Game.FindAction("LookDown", throwIfNotFound: true);
+        m_Game_LookBehind = m_Game.FindAction("LookBehind", throwIfNotFound: true);
         m_Game_Pause = m_Game.FindAction("Pause", throwIfNotFound: true);
         m_Game_NextProfile = m_Game.FindAction("NextProfile", throwIfNotFound: true);
         m_Game_Strafe = m_Game.FindAction("Strafe", throwIfNotFound: true);
@@ -775,6 +818,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Game_Run;
     private readonly InputAction m_Game_LookUp;
     private readonly InputAction m_Game_LookDown;
+    private readonly InputAction m_Game_LookBehind;
     private readonly InputAction m_Game_Pause;
     private readonly InputAction m_Game_NextProfile;
     private readonly InputAction m_Game_Strafe;
@@ -788,6 +832,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         public InputAction @Run => m_Wrapper.m_Game_Run;
         public InputAction @LookUp => m_Wrapper.m_Game_LookUp;
         public InputAction @LookDown => m_Wrapper.m_Game_LookDown;
+        public InputAction @LookBehind => m_Wrapper.m_Game_LookBehind;
         public InputAction @Pause => m_Wrapper.m_Game_Pause;
         public InputAction @NextProfile => m_Wrapper.m_Game_NextProfile;
         public InputAction @Strafe => m_Wrapper.m_Game_Strafe;
@@ -818,6 +863,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @LookDown.started += instance.OnLookDown;
             @LookDown.performed += instance.OnLookDown;
             @LookDown.canceled += instance.OnLookDown;
+            @LookBehind.started += instance.OnLookBehind;
+            @LookBehind.performed += instance.OnLookBehind;
+            @LookBehind.canceled += instance.OnLookBehind;
             @Pause.started += instance.OnPause;
             @Pause.performed += instance.OnPause;
             @Pause.canceled += instance.OnPause;
@@ -849,6 +897,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @LookDown.started -= instance.OnLookDown;
             @LookDown.performed -= instance.OnLookDown;
             @LookDown.canceled -= instance.OnLookDown;
+            @LookBehind.started -= instance.OnLookBehind;
+            @LookBehind.performed -= instance.OnLookBehind;
+            @LookBehind.canceled -= instance.OnLookBehind;
             @Pause.started -= instance.OnPause;
             @Pause.performed -= instance.OnPause;
             @Pause.canceled -= instance.OnPause;
@@ -987,6 +1038,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         void OnRun(InputAction.CallbackContext context);
         void OnLookUp(InputAction.CallbackContext context);
         void OnLookDown(InputAction.CallbackContext context);
+        void OnLookBehind(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
         void OnNextProfile(InputAction.CallbackContext context);
         void OnStrafe(InputAction.CallbackContext context);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Torii.Util;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace LSDR.UI.Modal
 {
@@ -13,6 +14,11 @@ namespace LSDR.UI.Modal
 
         protected readonly Stack<(OnModalCloseAction, GameObject)> _modals = new();
 
+        // selection to restore when each modal closes
+        protected readonly Stack<GameObject> _selectedBefore = new();
+
+        public static GameObject Open { get; private set; }
+
         protected bool modalShowing
         {
             get => Background.activeSelf;
@@ -23,8 +29,11 @@ namespace LSDR.UI.Modal
         {
             GameObject modalObj = createModalFunc();
             modalObj.transform.SetParent(transform, worldPositionStays: false);
+            if (!modalObj.TryGetComponent(out UIAutoNavigation _)) modalObj.AddComponent<UIAutoNavigation>();
             modalObj.SetActive(value: true);
             _modals.Push((onModalClose, modalObj));
+            _selectedBefore.Push(EventSystem.current != null ? EventSystem.current.currentSelectedGameObject : null);
+            Open = modalObj;
             modalShowing = true;
         }
 
@@ -37,6 +46,13 @@ namespace LSDR.UI.Modal
             }
 
             (OnModalCloseAction onModalClose, GameObject modalObj) = _modals.Pop();
+            Open = _modals.Count > 0 ? _modals.Peek().Item2 : null;
+            GameObject selectedBefore = _selectedBefore.Pop();
+            if (selectedBefore != null && selectedBefore.activeInHierarchy && EventSystem.current != null)
+            {
+                EventSystem.current.SetSelectedGameObject(selectedBefore);
+            }
+
             onModalClose?.Invoke(result);
             Destroy(modalObj);
 

@@ -6,10 +6,17 @@ targetA = GetEntity(this.GameObject.Name .. "TargetA").WorldPosition
 targetB = GetEntity(this.GameObject.Name .. "TargetB").WorldPosition
 
 interacted = false
-moveSpeed = 0.25
+moveSpeed = 0.3
+walkTime = 0
 
 function start()
-    if Random.OneIn(3) then
+    local huge = this.GameObject.Name ~= "HoopKid"
+    if huge ~= (ChartZone() == "yellow") then
+        this.GameObject.SetActive(false)
+        return
+    end
+
+    if not huge and Random.OneIn(3) then
         this.GameObject.Scale = Unity.Vector3(2, 2, 2)
     end
 
@@ -27,8 +34,18 @@ function intervalUpdate()
     end
 end
 
+function update()
+    if not interacted then return end
+
+    walkTime = walkTime + Unity.DeltaTime()
+    if walkTime > 120 then
+        this.LookAtPlane(player.WorldPosition)
+    end
+end
+
 function interact()
     this.LogGraphContribution(9, 0)
+    if interacted then return end
     interacted = true
     this.SetChildVisible(true)
     audio.Play()

@@ -13,6 +13,8 @@ function start()
         this.GameObject.SetActive(false)
         return
     end
+
+    DreamSystem.ArmTeleports()
 end
 
 function intervalUpdate()

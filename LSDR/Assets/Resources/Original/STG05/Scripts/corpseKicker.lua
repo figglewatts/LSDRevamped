@@ -16,7 +16,7 @@ function intervalUpdate()
     if not interacted then return end
 
     local playerDistance = (player.WorldPosition - this.GameObject.WorldPosition).length()
-    if playerDistance < 0.3 then
+    if playerDistance < 0.75 then
         interacted = false
         DreamSystem.SetNextTransitionDream(dreams.ViolenceDistrict)
         DreamSystem.TransitionToDream()

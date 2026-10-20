@@ -10,24 +10,14 @@ using UnityEngine;
 
 namespace LSDR.SDK.Editor.AssetImporters
 {
-    [UnityEditor.AssetImporters.ScriptedImporter(version: 1, "vh")]
+    [UnityEditor.AssetImporters.ScriptedImporter(version: 2, "vh")]
     public class VABImporter : UnityEditor.AssetImporters.ScriptedImporter
     {
         public int SampleRate = 11025;
 
         public override void OnImportAsset(UnityEditor.AssetImporters.AssetImportContext ctx)
         {
-            var vhFilePath = ctx.assetPath;
-            var vbFilePath = Path.ChangeExtension(vhFilePath, ".vb");
-
-            VAB vab;
-            using (BinaryReader vhBr = new BinaryReader(File.OpenRead(vhFilePath)))
-            {
-                using (BinaryReader vbBr = new BinaryReader(File.OpenRead(vbFilePath)))
-                {
-                    vab = new VAB(vhBr, vbBr);
-                }
-            }
+            VAB vab = LoadVAB(ctx.assetPath);
 
             VABAsset vabAsset = ScriptableObject.CreateInstance<VABAsset>();
             string assetName = Path.GetFileNameWithoutExtension(ctx.assetPath);
@@ -36,6 +26,20 @@ namespace LSDR.SDK.Editor.AssetImporters
             vabAsset.name = assetName;
             vabAsset.Vab = vab;
             loadSamples(vabAsset, ctx.assetPath);
+        }
+
+        public static VAB LoadVAB(string vhFilePath)
+        {
+            // match the case of the extension, as the VH and VB are usually both uppercase
+            var vbFilePath = Path.ChangeExtension(vhFilePath, Path.GetExtension(vhFilePath) == ".VH" ? ".VB" : ".vb");
+
+            using (BinaryReader vhBr = new BinaryReader(File.OpenRead(vhFilePath)))
+            {
+                using (BinaryReader vbBr = new BinaryReader(File.OpenRead(vbFilePath)))
+                {
+                    return new VAB(vhBr, vbBr);
+                }
+            }
         }
 
         protected void loadSamples(VABAsset vabAsset, string assetPath)

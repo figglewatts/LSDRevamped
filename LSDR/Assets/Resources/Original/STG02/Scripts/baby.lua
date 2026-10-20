@@ -7,7 +7,7 @@ distanceToPlayer = 0
 interacted = false
 
 function start()
-    if not IsDayEven() then
+    if not IsDayEven() or (this.GameObject.Name == "SecretBaby" and not IsDayLinear(3, 1)) then
         this.GameObject.SetActive(false)
         return
     end
@@ -21,6 +21,8 @@ end
 function update()
     if not interacted then return end
 
+    this.LookAtPlane(player.WorldPosition)
+
     if distanceToPlayer < 0.4 and not linked then
         linked = true
         DreamSystem.SetNextTransitionDream(dreams.Kyoto)
@@ -31,18 +33,14 @@ end
 function interact()
     interacted = true
 
-    local target = player.WorldPosition
-    target.y = this.GameObject.WorldPosition.y
-    this.LookAt(target)
-
     this.Action
         .Do(|| this.PlayAnimation(0))
-        .ThenWaitUntil(Condition.WaitForSeconds(1.5))
+        .ThenWaitUntil(Condition.WaitForSeconds(1))
         .Then(|| audio.Play())
-        .ThenWaitUntil(Condition.WaitForSeconds(2.5))
+        .ThenWaitUntil(this.WaitForAnimation(0, -1))
         .Then(|| this.StopAnimation())
-        .Then(|| this.MoveInDirection(this.Up, 1))
-        .Until(Condition.WaitForSeconds(10))
+        .Then(|| this.MoveInDirection(this.Up, 5))
+        .Until(Condition.WaitForSeconds(3))
         .Then(|| this.GameObject.SetActive(false))
         .ThenFinish()
 end

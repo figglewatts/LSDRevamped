@@ -1,6 +1,7 @@
 sunbeamTarget = GetEntity("SunbeamTarget").WorldPosition
 
-moveSpeed = 3
+moveSpeed = 2.5
+moving = false
 startPosition = this.GameObject.WorldPosition
 
 function start()
@@ -13,12 +14,19 @@ end
 function interact()
     this.LogGraphContribution(2, 2)
 
+    if moving then return end
+    moving = true
+
+    local first, second = sunbeamTarget, startPosition
     if Random.OneIn(2) then
-        this.Action
-            .Do(|| this.MoveTowards(sunbeamTarget, moveSpeed))
-            .Until(Condition.WaitForLinearMove(this.GameObject, sunbeamTarget))
-            .Then(|| this.MoveTowards(startPosition, moveSpeed))
-            .Until(Condition.WaitForLinearMove(this.GameObject, startPosition))
-            .ThenLoop()
+        -- half of them go the other way first
+        first, second = startPosition, sunbeamTarget
     end
+
+    this.Action
+        .Do(|| this.MoveTowards(first, moveSpeed))
+        .Until(Condition.WaitForSeconds(15))
+        .Then(|| this.MoveTowards(second, moveSpeed))
+        .Until(Condition.WaitForSeconds(15))
+        .ThenFinish()
 end

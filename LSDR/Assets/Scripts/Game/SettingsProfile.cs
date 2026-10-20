@@ -8,12 +8,22 @@ namespace LSDR.Game
     {
         public float AffineIntensity;
         public float FOV;
-        public bool LimitFramerate;
+        public int FramerateLimit;
         public string Name;
         public bool UseClassicShaders;
         public bool UsePixelationShader;
         public bool UseDithering;
         public bool LongDrawDistance;
+
+        // old profiles only had an on/off limit
+        [JsonProperty("LimitFramerate")]
+        private bool LegacyLimitFramerate
+        {
+            set
+            {
+                if (value) FramerateLimit = DisplayOptions.ORIGINAL_FRAMERATE;
+            }
+        }
 
         public SettingsProfile() { }
 
@@ -27,7 +37,7 @@ namespace LSDR.Game
             UseClassicShaders = settings.UseClassicShaders;
             UsePixelationShader = settings.UsePixelationShader;
             UseDithering = settings.UseDithering;
-            LimitFramerate = settings.LimitFramerate;
+            FramerateLimit = settings.FramerateLimit;
             FOV = settings.FOV;
             AffineIntensity = settings.AffineIntensity;
             LongDrawDistance = settings.LongDrawDistance;
@@ -38,7 +48,7 @@ namespace LSDR.Game
             settings.UseClassicShaders = UseClassicShaders;
             settings.UsePixelationShader = UsePixelationShader;
             settings.UseDithering = UseDithering;
-            settings.LimitFramerate = LimitFramerate;
+            settings.FramerateLimit = FramerateLimit;
             settings.FOV = FOV;
             settings.AffineIntensity = AffineIntensity;
             settings.LongDrawDistance = LongDrawDistance;
@@ -54,7 +64,7 @@ namespace LSDR.Game
                     UseClassicShaders = true,
                     UsePixelationShader = true,
                     UseDithering = true,
-                    LimitFramerate = false,
+                    FramerateLimit = 0,
                     FOV = 50,
                     AffineIntensity = 0.4f,
                     LongDrawDistance = false,
@@ -65,7 +75,7 @@ namespace LSDR.Game
                     UseClassicShaders = false,
                     UsePixelationShader = false,
                     UseDithering = false,
-                    LimitFramerate = false,
+                    FramerateLimit = 0,
                     FOV = 50,
                     AffineIntensity = 0.4f,
                     LongDrawDistance = false,

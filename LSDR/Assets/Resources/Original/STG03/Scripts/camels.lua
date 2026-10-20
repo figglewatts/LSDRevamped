@@ -6,6 +6,10 @@ totalDistance = 0
 
 function start()
     this.SetChildVisible(false)
+
+    local size = 2
+    if Random.OneIn(2) then size = 6 end
+    this.GameObject.Scale = Unity.Vector3(size, size, size)
 end
 
 function intervalUpdate()

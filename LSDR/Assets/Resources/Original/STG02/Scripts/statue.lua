@@ -6,11 +6,13 @@ player = GetEntity("__player")
 active = false
 linked = false
 direction = nil
-moveSpeed = 0.4
+moveSpeed = 1
 distanceToPlayer = 0
 
+greenLine = { Statue6 = true, Statue7 = true, Statue8 = true, Statue9 = true }
+
 function start()
-    if Random.OneIn(2) then
+    if Random.OneIn(6) then
         -- set us tall
         this.StretchShrink(2)
     end
@@ -31,7 +33,14 @@ function start()
 
     this.SetChildVisible(false)
     
-    if Random.OneIn(2) then
+    -- a line of them stands behind the first in the green part of the chart
+    local inLine = greenLine[this.GameObject.Name]
+    if inLine and ChartZone() ~= "green" then
+        this.GameObject.SetActive(false)
+        return
+    end
+
+    if not inLine and this.GameObject.Name ~= "Statue1" and IsDayEven() and ChartZone() ~= "green" then
         this.GameObject.SetActive(false)
         return
     end

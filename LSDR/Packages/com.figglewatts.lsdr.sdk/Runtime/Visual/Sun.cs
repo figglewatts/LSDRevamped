@@ -9,7 +9,7 @@ namespace LSDR.SDK.Visual
         public Texture2D SunTexture;
         public GameObject SunburstRayPrefab;
 
-        protected const float SUNBURST_UPDATE_TIME_SECONDS = 0.1f;
+        protected const float SUNBURST_UPDATE_TIME_SECONDS = 0.05f;
         protected const int NUMBER_OF_SUNBURST_RAYS = 4;
 
         protected float _t = 0;

@@ -43,8 +43,11 @@ namespace LSDR.Dream
 
         public Vector2Int EvaluateGraphPosition()
         {
-            Vector2Int areaContribution = evaluateContributionList(_areaGraphContributions);
-            Vector2Int entityContribution = evaluateContributionList(_entityGraphContributions);
+            Vector2Int areaContribution = correctOutOfGraphBounds(evaluateContributionList(_areaGraphContributions));
+            Vector2Int entityContribution = _entityGraphContributions.Count == 0
+                ? areaContribution
+                : correctOutOfGraphBounds(evaluateContributionList(_entityGraphContributions));
+
             Vector2Int unclampedContribution = (areaContribution + entityContribution) / 2;
             return correctOutOfGraphBounds(unclampedContribution);
         }
@@ -68,26 +71,11 @@ namespace LSDR.Dream
                 return Vector2Int.zero;
             }
 
-            Vector2Int averageContribution = new Vector2Int(
-                (int)contributions.Average(c => c.Dynamic),
-                (int)contributions.Average(c => c.Upper));
-            Vector2Int lastContributionEvaluation = evaluateContribution(contributions.Last());
-            return averageContribution + lastContributionEvaluation;
-        }
-
-        protected Vector2Int evaluateContribution(GraphContribution contribution)
-        {
-            return new Vector2Int(evaluateContributionComponent(contribution.Dynamic),
-                evaluateContributionComponent(contribution.Upper));
-        }
-
-        protected int evaluateContributionComponent(int contributionValue)
-        {
-            if (contributionValue <= -6) return -2;
-            if (contributionValue <= -3) return -1;
-            if (contributionValue <= 2) return 0;
-            if (contributionValue <= 5) return 1;
-            return 2;
+            // the average, plus a third of the last contribution
+            GraphContribution last = contributions.Last();
+            return new Vector2Int(
+                contributions.Sum(c => c.Dynamic) / contributions.Count + last.Dynamic / 3,
+                contributions.Sum(c => c.Upper) / contributions.Count + last.Upper / 3);
         }
     }
 }

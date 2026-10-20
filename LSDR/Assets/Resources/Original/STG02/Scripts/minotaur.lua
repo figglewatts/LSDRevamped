@@ -26,7 +26,7 @@ function start()
     audio.Play()
     this.PlayAnimation(0)
     
-    if IsDayEven() or Random.OneIn(2) then
+    if IsDayEven() then
         this.GameObject.SetActive(false)
         return
     end

@@ -1,10 +1,12 @@
-﻿using System;
+using System;
 using LSDR.Dream;
 using LSDR.SDK;
 using LSDR.SDK.Data;
+using LSDR.SDK.DreamControl;
 using LSDR.SDK.Entities;
 using LSDR.SDK.Visual;
 using MoonSharp.Interpreter;
+using Torii.UI;
 using UnityEngine;
 
 namespace LSDR.Lua.Proxies
@@ -21,6 +23,7 @@ namespace LSDR.Lua.Proxies
         public int YearNumber => _target.GameSave.CurrentJournalSave.YearNumber;
 
         public DreamEnvironment CurrentEnvironment => _target.CurrentEnvironment;
+        public int EnvironmentGroup => _target.EnvironmentGroup;
 
         protected static Color? _transitionColor;
         protected static bool _transitionSound = true;
@@ -67,18 +70,24 @@ namespace LSDR.Lua.Proxies
         {
             if (_transitionColor == null)
             {
-                _target.Transition(_transitionDream, _transitionSound, _lockControls, _transitionSpawnID);
+                _target.Transition(_transitionDream, _transitionSound, _lockControls, _transitionSpawnID,
+                    LinkKind.Character);
             }
             else
             {
                 _target.Transition(_transitionColor.Value, _transitionDream, _transitionSound, _lockControls,
-                    _transitionSpawnID);
+                    _transitionSpawnID, LinkKind.Character);
             }
             _transitionColor = null;
             _transitionSpawnID = null;
             _transitionDream = null;
             _lockControls = false;
             _transitionSound = true;
+        }
+
+        public void ArmTeleports()
+        {
+            _target.ArmTeleports();
         }
 
         public void EndDream()
@@ -97,6 +106,27 @@ namespace LSDR.Lua.Proxies
         public void StretchDream(float amount, float durationSeconds)
         {
             _target.StretchDream(amount, durationSeconds);
+        }
+
+        public void FadeFromBlack(float durationSeconds)
+        {
+            ToriiFader.Instance.FadeOut(Color.black, durationSeconds, initialAlpha: 1);
+        }
+
+        public void FadeToBlack(float durationSeconds)
+        {
+            ToriiFader.Instance.FadeIn(Color.black, durationSeconds, initialAlpha: 0);
+        }
+
+        public void Flash(Color color, float durationSeconds)
+        {
+            ToriiFader.Instance.FadeIn(color, durationSeconds / 2, () => ToriiFader.Instance.FadeOut(durationSeconds / 2),
+                initialAlpha: 0);
+        }
+
+        public void SetPlayerGravity(bool gravity)
+        {
+            _target.SettingsSystem.PlayerGravity = gravity;
         }
 
         public void ApplyEnvironment(DreamEnvironment environment)

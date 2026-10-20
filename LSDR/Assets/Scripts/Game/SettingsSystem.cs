@@ -20,11 +20,6 @@ namespace LSDR.Game
     [CreateAssetMenu(menuName = "System/SettingsSystem")]
     public class SettingsSystem : ScriptableObject
     {
-        /// <summary>
-        ///     The framerate of the PS1. Used when framerate limiting is enabled.
-        /// </summary>
-        public const int FRAMERATE_LIMIT = 20;
-
         // reference to master audio mixer used for volume controls
         public AudioMixer MasterMixer;
 
@@ -130,20 +125,10 @@ namespace LSDR.Game
             // set the control scheme
             ControlSchemeLoader.SelectScheme(Settings.CurrentControlSchemeIndex);
 
-            // set the resolution
-            if (Settings.CurrentResolutionIndex >= Screen.resolutions.Length || Settings.CurrentResolutionIndex < 0)
-            {
-                // if the resolution is invalid, set it to the native resolution
-                Screen.SetResolution(Display.main.systemWidth, Display.main.systemHeight, Settings.Fullscreen);
-            }
-            else
-            {
-                Screen.SetResolution(Screen.resolutions[Settings.CurrentResolutionIndex].width,
-                    Screen.resolutions[Settings.CurrentResolutionIndex].height, Settings.Fullscreen);
-            }
-
-            // set framerate to limit or not
-            Application.targetFrameRate = Settings.LimitFramerate ? FRAMERATE_LIMIT : -1;
+            // set the resolution, falling back to native
+            var size = new Vector2Int(Settings.ResolutionWidth, Settings.ResolutionHeight);
+            if (size == Vector2Int.zero || !DisplayOptions.Resolutions.Contains(size)) size = DisplayOptions.NativeResolution;
+            Screen.SetResolution(size.x, size.y, Settings.Fullscreen);
 
             // set retro shader affine intensity
             Shader.SetGlobalFloat("_AffineIntensity", Settings.AffineIntensity);
@@ -158,6 +143,9 @@ namespace LSDR.Game
             // set the graphics quality
             QualitySettings.SetQualityLevel(Settings.CurrentQualityIndex, applyExpensiveChanges: true);
 
+            // after the quality level, as that sets its own v-sync
+            applyFramerate();
+
             // update any shaders
             TextureSetter.Instance.SetAllShaders(Settings.UseClassicShaders);
 
@@ -168,6 +156,19 @@ namespace LSDR.Game
 
             OnSettingsApply.Raise();
             ProgrammaticOnSettingsApply?.Invoke();
+        }
+
+        // v-sync ignores the framerate limit, so with both on the limit becomes waiting for every few refreshes,
+        // and if the display can't get near the limit that way it's limited without v-sync
+        protected void applyFramerate()
+        {
+            int limit = Settings.FramerateLimit;
+            int refreshRate = Screen.currentResolution.refreshRate;
+            int refreshesPerFrame = limit > 0 && refreshRate > 0 ? Mathf.Max(1, Mathf.RoundToInt((float)refreshRate / limit)) : 1;
+            bool vSync = Settings.VSync && refreshesPerFrame <= 4;
+
+            QualitySettings.vSyncCount = vSync ? refreshesPerFrame : 0;
+            Application.targetFrameRate = !vSync && limit > 0 ? limit : -1;
         }
 
         public void SwitchToNextProfile()

@@ -6,6 +6,7 @@ using LSDR.SDK.Audio;
 using LSDR.SDK.Lua;
 using LSDR.SDK.Util;
 using UnityEngine;
+using UnityEngine.Video;
 
 namespace LSDR.SDK.Data
 {
@@ -34,6 +35,12 @@ namespace LSDR.SDK.Data
 
         [Tooltip("Mapping of day numbers to special days (video/text dreams).")]
         public SerializableDictionary<int, AbstractSpecialDay> SpecialDays;
+
+        [Tooltip("Video to play after the last day of the year has been dreamed, if any.")]
+        public VideoClip EndingVideo;
+
+        [Tooltip("Videos to play once the dream graph shows a face, if any.")]
+        public List<VideoClip> ChartFaceVideos;
 
         public IEnumerable<Dream> LinkableDreams => Dreams.Where(d => d.Linkable);
 

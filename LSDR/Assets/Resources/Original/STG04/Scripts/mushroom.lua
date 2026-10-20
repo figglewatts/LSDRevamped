@@ -5,8 +5,9 @@ player = GetEntity("__player")
 interacted = false
 
 function start()
-    if Random.OneIn(3) then
-        this.GameObject.Scale = Unity.Vector3(1, 2, 1)
+    local tall = IsDayLinear(3, 2) or (IsDayLinear(3, 0) and Random.OneIn(3))
+    if tall then
+        this.GameObject.Scale = Unity.Vector3(1, 4, 1)
     end
     
     if not IsDayEven() then
@@ -17,6 +18,12 @@ end
 
 function intervalUpdate()
     if not interacted then return end
+
+    if Random.OneIn(12) then
+        this.StopAnimation()
+    elseif Random.OneIn(6) then
+        this.ResumeAnimation()
+    end
 
     local playerDistance = (player.WorldPosition - this.GameObject.WorldPosition).length()
     if playerDistance < 0.3 then

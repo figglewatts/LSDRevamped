@@ -13,6 +13,9 @@ namespace LSDR.InputManagement
     /// </summary>
     public struct IndexedActionBinding
     {
+        // stop waiting for input after a while
+        private const float REBIND_TIMEOUT_SECONDS = 5;
+
         public int Index;
         public InputBinding Binding;
         public List<InputBinding> CompositeBindings;
@@ -65,6 +68,7 @@ namespace LSDR.InputManagement
                 InputActionRebindingExtensions.RebindingOperation rebindOp =
                     action.PerformInteractiveRebinding(bindingIndexes.Current)
                           .WithCancelingThrough(cancelControl)
+                          .WithTimeout(REBIND_TIMEOUT_SECONDS)
                           .OnCancel(op =>
                            {
                                cleanup(op);

@@ -8,7 +8,7 @@ moveSpeed = 0.3
 function start()
     this.SetChildVisible(false)
     
-    if IsDayEven() then
+    if IsDayEven() or ChartZone() ~= "red" then
         this.GameObject.SetActive(false)
         return
     end

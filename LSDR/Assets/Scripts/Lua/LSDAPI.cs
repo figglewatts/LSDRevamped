@@ -66,6 +66,8 @@ namespace LSDR.Lua
             return DreamControlManager.Managed.CurrentDay % 2 == 0;
         }
 
+        public static string ChartZone() => DreamControlManager.Managed.ChartZone;
+
         public static bool IsWeekDay(int number) => (DreamControlManager.Managed.CurrentDay - 1) % 7 == number - 1;
 
         public static bool IsDayLinear(int slope, int constant) =>

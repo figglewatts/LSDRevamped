@@ -1,17 +1,16 @@
 audio = GetEntity(this.GameObject.Name .. "Audio").DreamAudio
 
-moveSpeed = 2.4
+moveSpeed = 3.75
+leapDistance = 5.5
 interacted = false
 
 function start()
-    this.SetChildVisible(false)
-    
-    if DreamSystem.DayNumber != 1 then
-        if Random.OneIn(2) then
-            this.GameObject.SetActive(false)
-            return
-        end
+    if this.GameObject.Name ~= "Horse1" and IsDayLinear(3, 0) then
+        this.GameObject.SetActive(false)
+        return
     end
+
+    this.SetChildVisible(false)
 end
 
 function intervalUpdate()
@@ -32,4 +31,13 @@ function interact()
     audio.Play()
     this.PlayAnimation(0)
     interacted = true
+
+    this.Action
+        .WaitUntil(Condition.WaitForSeconds(5.5))
+        .Then(function()
+            this.GameObject.WorldPosition = this.GameObject.WorldPosition + this.Forward * leapDistance
+        end)
+        .ThenWaitUntil(Condition.WaitForSeconds(40))
+        .Then(|| this.GameObject.SetActive(false))
+        .ThenFinish()
 end

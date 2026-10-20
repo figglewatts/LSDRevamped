@@ -1,6 +1,6 @@
 require "dreams"
 
-moveSpeed = 0.25
+moveSpeed = 0.5
 
 player = GetEntity("__player")
 targetA = GetEntity("BearTargetA")
@@ -19,7 +19,7 @@ distanceToPlayer = 0
 
 function start()
     isTvBear = this.GameObject.Name == "TVBear"
-    if IsDayEven() or (not isTvBear and Random.OneIn(2)) then
+    if IsDayEven() then
         this.GameObject.SetActive(false)
         return
     end

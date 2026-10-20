@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace LSDR.SDK.Editor.AssetImporters
 {
-    [UnityEditor.AssetImporters.ScriptedImporter(version: 1, "lbd")]
+    [UnityEditor.AssetImporters.ScriptedImporter(version: 2, "lbd")]
     public class LBDImporter : UnityEditor.AssetImporters.ScriptedImporter
     {
         public Material OpaqueMaterial;

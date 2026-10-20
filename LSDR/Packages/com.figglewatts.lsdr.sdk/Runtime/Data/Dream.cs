@@ -27,11 +27,28 @@ namespace LSDR.SDK.Data
         [Tooltip("Whether this dream should be spawned into on the first day of the journal.")]
         public bool FirstDay;
 
+        [Tooltip("How long a dream that starts here lasts in seconds. 0 for a random length.")]
+        public float DreamLengthSeconds = 0;
+
+        [Tooltip("Walking speed in this dream, in units per second.")]
+        public float WalkSpeed = 1.25f;
+
         [Tooltip("The offset into the environments this dream starts at.")]
         public int EnvironmentOffset = 0;
 
         [Tooltip("The list of environments this dream can potentially have.")]
         public DreamEnvironmentSequence Environments;
+
+        [Tooltip("4 groups of environments to pick from by day instead of the list. Leave empty to use the list.")]
+        public List<DreamEnvironmentSequence> EnvironmentGroups;
+
+        [NonSerialized] public int EnvironmentGroup = -1;
+
+        // the four kinds of sky a dream's environment groups hold, in this order
+        public const int DAY_SKIES = 0;
+        public const int PALE_SKIES = 1;
+        public const int NIGHT_SKIES = 2;
+        public const int DARK_SKIES = 3;
 
         [Tooltip("Whether or not this dream has environment effects enabled.")]
         public bool HasEnvironmentEffects = true;
@@ -62,9 +79,23 @@ namespace LSDR.SDK.Data
 
         public DreamEnvironment RandomEnvironment()
         {
+            EnvironmentGroup = -1;
+
             // if the dream doesn't have environments, just return a default one
             if (Environments.Environments.Count <= 0) return CreateInstance<DreamEnvironment>();
             return RandUtil.RandomListElement(Environments.Environments);
+        }
+
+        // each day moves on to the next kind of sky, and each dream is offset from the day so they don't all match
+        public DreamEnvironment ChooseEnvironment(int dayNum, int dreamIndex)
+        {
+            EnvironmentGroup = -1;
+            if (EnvironmentGroups == null || EnvironmentGroups.Count != 4) return ChooseEnvironment(dayNum);
+
+            int n = dayNum + dreamIndex;
+            EnvironmentGroup = n % EnvironmentGroups.Count;
+            List<DreamEnvironment> environments = EnvironmentGroups[EnvironmentGroup].Environments;
+            return environments[n % environments.Count];
         }
 
         public DreamEnvironment ChooseEnvironment(int dayNum)

@@ -14,6 +14,8 @@ namespace LSDR.InputManagement
     [CreateAssetMenu(menuName = "System/ControlSchemeLoaderSystem")]
     public class ControlSchemeLoaderSystem : ScriptableObject
     {
+        protected const float GAMEPAD_DEAD_ZONE = 0.2f;
+
         private readonly ToriiSerializer _serializer = new ToriiSerializer();
         private string _controlSchemesPath;
 
@@ -50,22 +52,31 @@ namespace LSDR.InputManagement
 
         public void OnInputSystemEvent(InputEventPtr eventPtr, InputDevice device)
         {
-            if (LastUsedDevice == device) return;
+            if (LastUsedDevice == device || !isPlayerDevice(device)) return;
+            if (!eventPtr.IsA<StateEvent>() && !eventPtr.IsA<DeltaStateEvent>()) return;
 
-            if (eventPtr.type == StateEvent.Type)
-            {
-                // some devices spam events when they shouldn't - so lets check the controls
-                // in the changed event and find if any changed above zero
-                if (!eventPtr.EnumerateChangedControls(device, magnitudeThreshold: 0.0001f).Any()) return;
-            }
+            // some devices spam events when they shouldn't - so lets check the controls in the changed
+            // event and only count it if one really moved, past a dead zone for gamepads
+            float threshold = device is Gamepad ? GAMEPAD_DEAD_ZONE : 0.0001f;
+            if (!eventPtr.EnumerateChangedControls(device, magnitudeThreshold: threshold).Any()) return;
 
-            LastUsedDevice = device;
-            OnLastUsedDeviceChanged?.Invoke(device);
+            setLastUsedDevice(device);
         }
 
         public void OnInputSystemDeviceChange(InputDevice device, InputDeviceChange change)
         {
-            if (LastUsedDevice == device) return;
+            if (LastUsedDevice == device || !isPlayerDevice(device)) return;
+            if (change != InputDeviceChange.Added && change != InputDeviceChange.Reconnected) return;
+            setLastUsedDevice(device);
+        }
+
+        // only the devices people play with count, not things like a controller's motion sensors
+        protected static bool isPlayerDevice(InputDevice device) =>
+            device is Mouse || device is Keyboard || device is Gamepad;
+
+        protected void setLastUsedDevice(InputDevice device)
+        {
+            Debug.Log($"Input switched to {device.displayName}");
             LastUsedDevice = device;
             OnLastUsedDeviceChanged?.Invoke(device);
         }
@@ -104,32 +115,35 @@ namespace LSDR.InputManagement
 
         public void EnsureDefaultSchemes()
         {
-            bool schemeCreated = false;
-            if (!File.Exists(PathUtil.Combine(_controlSchemesPath, "Classic.dat")))
-            {
-                Debug.Log("Unable to find 'Classic' control scheme - creating...");
-                Schemes.Add(new ControlScheme("Classic", InputActions, fpsControls: false, mouseSensitivity: 15F,
-                    invertLookY: false, editable: false));
-                schemeCreated = true;
-            }
+            // built in schemes can't be edited, so rebuild them in case their bindings changed.
+            // classic uses the d-pad and south to run, revamped uses the sticks and L3
+            Schemes.Add(createDefaultScheme("Classic", fpsControls: false, disabledMove: "<Gamepad>/leftStick",
+                gamepadRun: "<Gamepad>/buttonSouth"));
+            Schemes.Add(createDefaultScheme("Revamped", fpsControls: true, disabledMove: "<Gamepad>/dpad"));
+            SaveSchemes();
 
-            if (!File.Exists(PathUtil.Combine(_controlSchemesPath, "Revamped.dat")))
-            {
-                Debug.Log("Unable to find 'Revamped' control scheme - creating...");
-                Schemes.Add(new ControlScheme("Revamped", InputActions, fpsControls: true, mouseSensitivity: 15F,
-                    invertLookY: false, editable: false));
-                schemeCreated = true;
-            }
+            // sort the list to match the alphabetical order the schemes would load in
+            Schemes.Sort((x, y) => string.Compare(x.Name, y.Name, StringComparison.Ordinal));
+        }
 
-            if (schemeCreated)
-            {
-                SaveSchemes();
+        protected ControlScheme createDefaultScheme(string name, bool fpsControls, string disabledMove,
+            string gamepadRun = null)
+        {
+            ControlScheme saved = Schemes.Find(s => s.Name == name && !s.Editable);
+            if (saved != null) Schemes.Remove(saved);
 
-                // we now need to sort the list, as any schemes that might have already been there before the default ones
-                // will now be before them in the list -- this is not preferable as loading them as normal will simply
-                // load them in alphabetical order, so this is to emulate that
-                Schemes.Sort((x, y) => string.Compare(x.Name, y.Name, StringComparison.Ordinal));
+            InputActions.RemoveAllBindingOverrides();
+            InputActions.Game.Move.ApplyBindingOverride(new InputBinding { path = disabledMove, overridePath = "" });
+            if (gamepadRun != null)
+            {
+                InputActions.Game.Run.ApplyBindingOverride(
+                    new InputBinding { path = "<Gamepad>/leftStickPress", overridePath = gamepadRun });
             }
+            var scheme = new ControlScheme(name, InputActions, fpsControls,
+                mouseSensitivity: saved?.MouseSensitivity ?? 15F, invertLookY: saved?.InvertLookY ?? false,
+                editable: false);
+            InputActions.RemoveAllBindingOverrides();
+            return scheme;
         }
 
         public void SelectScheme(int idx)

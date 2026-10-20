@@ -11,16 +11,24 @@ namespace LSDR.SDK.DreamControl
         public bool InDream { get; }
         public int CurrentDay { get; }
 
+        public bool TeleportsArmed { get; }
+
+        public int EnvironmentGroup { get; }
+
+        public string ChartZone { get; }
+
         void Transition(Color fadeCol,
             Dream dream = null,
             bool playSound = true,
             bool lockInput = false,
-            string spawnPointID = null);
+            string spawnPointID = null,
+            LinkKind kind = LinkKind.RandomWall);
 
         void Transition(Dream dream = null,
             bool playSound = true,
             bool lockInput = false,
-            string spawnPointID = null);
+            string spawnPointID = null,
+            LinkKind kind = LinkKind.RandomWall);
 
         void EndDream(bool fromFall = false);
 

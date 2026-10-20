@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace LSDR.SDK.Editor.AssetImporters
 {
-    [UnityEditor.AssetImporters.ScriptedImporter(version: 1, "mom")]
+    [UnityEditor.AssetImporters.ScriptedImporter(version: 2, "mom")]
     public class MOMImporter : UnityEditor.AssetImporters.ScriptedImporter
     {
         public Material OpaqueMaterial;

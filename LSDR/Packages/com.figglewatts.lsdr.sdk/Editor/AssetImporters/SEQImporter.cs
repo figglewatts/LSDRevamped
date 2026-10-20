@@ -1,10 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using EZSynth.Sequencer;
-using EZSynth.Synthesizer;
-using libLSD.Audio.Sequence;
-using libLSD.Audio.Soundbank;
+using libLSD.Audio.Playback;
 using libLSD.Formats;
 using LSDR.SDK.Assets;
 using LSDR.SDK.Editor.Assets;
@@ -16,7 +13,8 @@ using UnityEngine;
 
 namespace LSDR.SDK.Editor.AssetImporters
 {
-    [ScriptedImporter(1, "SEQ")]
+    // imported after VABs, as rendering the tracks needs them
+    [ScriptedImporter(3, "SEQ", importQueueOffset: 100)]
     public class SEQImporter : ScriptedImporter
     {
         public TrackVariantGroupAsset VariantGroup;
@@ -44,9 +42,6 @@ namespace LSDR.SDK.Editor.AssetImporters
             Directory.CreateDirectory(fullOutputPath);
             List<string> loadedTrackAssetPaths = new List<string>(VariantGroup.SoundfontVariants.Count);
 
-            // create the sequence for the synthesizer
-            SEQSequence seqSequence = new SEQSequence(seq);
-
             // write each track variation to a WAV file
             foreach (var soundfontVariant in VariantGroup.SoundfontVariants)
             {
@@ -58,16 +53,17 @@ namespace LSDR.SDK.Editor.AssetImporters
 
                 if (!File.Exists(trackPath))
                 {
-                    // create the synth stuff to render the track
-                    VABSoundbank vabSoundbank = new VABSoundbank(soundfontVariant.Vab);
-                    if (soundfontVariant.name.Equals("AMBIENT", StringComparison.InvariantCulture))
-                        vabSoundbank.LongRelease = true;
-                    Synth synth = new Synth(vabSoundbank);
-                    Sequencer sequencer = new Sequencer(seqSequence, synth);
+                    // the imported VAB asset doesn't keep everything needed to play it, so read it from disk
+                    VAB vab = VABImporter.LoadVAB(AssetDatabase.GetAssetPath(soundfontVariant));
+                    int[] loop = SEQPlayer.RenderLoop(seq, vab);
 
-                    // render and save the track
-                    short[] trackSamples = sequencer.Render();
-                    WaveUtil.WriteWave(trackPath, trackSamples, 2, 44100);
+                    // stacked voices can reach twice full scale, so halve it
+                    short[] trackSamples = new short[loop.Length];
+                    for (int i = 0; i < loop.Length; i++)
+                    {
+                        trackSamples[i] = (short)Math.Clamp(loop[i] / 2, short.MinValue, short.MaxValue);
+                    }
+                    WaveUtil.WriteWave(trackPath, trackSamples, 2, SPU.SAMPLE_RATE);
 
                     AssetDatabase.ImportAsset(trackAssetPath);
                 }

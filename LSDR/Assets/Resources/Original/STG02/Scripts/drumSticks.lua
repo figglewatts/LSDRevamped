@@ -1,7 +1,7 @@
 audio = GetEntity("DrumStickAudio").DreamAudio
 
 function start()
-    if IsDayEven() or Random.OneIn(2) then
+    if IsDayEven() then
         this.GameObject.SetActive(false)
         return
     end

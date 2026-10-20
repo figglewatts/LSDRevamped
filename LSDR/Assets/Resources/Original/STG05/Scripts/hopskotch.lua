@@ -6,7 +6,7 @@ audio = GetEntity(this.GameObject.Name .. "Audio").DreamAudio
 function start()
     this.PlayAnimation(0)
     
-    if Random.OneIn(4) then
+    if Random.OneIn(3) then
         this.GameObject.Scale = Unity.Vector3(1, 2, 1)
     end
     

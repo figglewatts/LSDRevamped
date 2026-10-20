@@ -14,6 +14,7 @@ namespace LSDR.UI.Graph
         [Range(min: 1, max: 5)] public int ColourModifier;
         public Vector2 Position;
         public bool MostRecent;
+        public bool Highlighted;
 
         private Image _graphSquareImage;
 
@@ -35,6 +36,12 @@ namespace LSDR.UI.Graph
 
         public void Update()
         {
+            if (Highlighted)
+            {
+                _graphSquareImage.color = Color.green;
+                return;
+            }
+
             // if it's the most recent square then flash, otherwise don't
             if (MostRecent)
             {

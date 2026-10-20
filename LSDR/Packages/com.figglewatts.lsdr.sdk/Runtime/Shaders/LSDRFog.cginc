@@ -10,10 +10,26 @@ float GetFogEnd()
     return unity_FogParams.w * der;
 }
 
+float GetFogStart()
+{
+    return GetFogEnd() + 1 / unity_FogParams.z;
+}
+
+// how clear something is at a distance, 1 is no fog and 0 is fully fogged. fog goes with 1/distance so it
+// thickens quickly past the start, and classic fogs in a few coarse steps
 float GetFogDepth(float distance)
 {
-    UNITY_CALC_FOG_FACTOR_RAW(distance);
-    return saturate(unityFogFactor);
+    const float fogStart = max(GetFogStart(), 0.001);
+    const float fogEnd = max(GetFogEnd(), fogStart + 0.001);
+    const float fog = (1 - fogStart / max(distance, fogStart)) / (1 - fogStart / fogEnd);
+
+    float clear = (1 - saturate(fog)) * (1 - saturate(fog));
+
+    #if defined(LSDR_CLASSIC)
+    clear = 1 - floor((1 - clear) * 8) / 8;
+    #endif
+
+    return clear;
 }
 
 float3 Complement(float3 color)

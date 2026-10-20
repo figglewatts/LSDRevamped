@@ -4,16 +4,25 @@ using LSDR.SDK.Visual;
 using Torii.Util;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 namespace Torii.UI
 {
     public class ToriiFader : MonoSingleton<ToriiFader>, IFadeManager
     {
+        public enum FadeBlend
+        {
+            Alpha,
+            Add,
+            Subtract
+        }
+
         private UnityEngine.Coroutine _currentFade;
         private Action _currentOnFinish;
         private Canvas _fadeCanvas;
         private RawImage _fadeImage;
+        private Material _blendMaterial;
 
         public override void Init()
         {
@@ -38,6 +47,21 @@ namespace Torii.UI
         }
 
         public void SetSortOrder(int idx) { _fadeCanvas.sortingOrder = idx; }
+
+        public void SetBlend(FadeBlend blend)
+        {
+            if (blend == FadeBlend.Alpha)
+            {
+                _fadeImage.material = null;
+                return;
+            }
+
+            if (_blendMaterial == null) _blendMaterial = new Material(Shader.Find("Hidden/FadeBlend"));
+            bool subtract = blend == FadeBlend.Subtract;
+            _blendMaterial.SetFloat("_BlendOp", (float)(subtract ? BlendOp.ReverseSubtract : BlendOp.Add));
+            _blendMaterial.SetFloat("_Subtract", subtract ? 1 : 0);
+            _fadeImage.material = _blendMaterial;
+        }
 
         public void SetFade(Color color)
         {

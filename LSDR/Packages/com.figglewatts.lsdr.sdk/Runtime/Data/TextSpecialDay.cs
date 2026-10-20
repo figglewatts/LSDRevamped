@@ -28,7 +28,7 @@ namespace LSDR.SDK.Data
                 TextSpecialDayControl control = FindObjectOfType<TextSpecialDayControl>();
                 control.BeginTextDay(this);
             });
-            FadeManager.Managed.FadeOut(Color.black, 3f, () => { }, 1);
+            FadeManager.Managed.FadeOut(Color.black, 1f, () => { }, 1);
         }
     }
 }

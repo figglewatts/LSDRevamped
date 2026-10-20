@@ -6,12 +6,16 @@ namespace LSDR.Entities.Dream
 {
     public class Greyman : MonoBehaviour
     {
+        protected const float LIFETIME_SECONDS = 135;
+
         public float MoveSpeed = 0.3f;
         public float FlashDistance = 2;
         public DreamSystem DreamSystem;
         public GameObject GreymanObject;
 
         protected bool _playerEncountered;
+
+        public void Start() { Destroy(gameObject, LIFETIME_SECONDS); }
 
         public void Update()
         {

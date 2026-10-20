@@ -1,61 +1,68 @@
 require "dreams"
 
 player = GetEntity("__player")
-warpPoints = {
-    GetEntity("GirlWarp1"),
-    GetEntity("GirlWarp2"),
-    GetEntity("GirlWarp3"),
-    GetEntity("GirlWarp4"),
-    GetEntity("GirlWarp5")
-}
+
+interacted = false
+mood = "vanish"
+approachSpeed = 0.4
 
 function start()
     if not IsDayEven() then
         this.GameObject.SetActive(false)
         return
     end
+
+    if Random.OneIn(3) then
+        mood = "leap"
+    elseif Random.OneIn(2) then
+        mood = "approach"
+    end
 end
 
 function intervalUpdate()
-    if not interacted then return end
+    if not interacted or mood ~= "vanish" then return end
 
     local playerDistance = (player.WorldPosition - this.GameObject.WorldPosition).length()
-    if playerDistance < 0.5 then
-        if Random.OneIn(4) then
-            scarePlayer()
-        else
-            warp()
+    if playerDistance < 0.25 then
+        interacted = false
+        if not Random.OneIn(3) then
+            this.GameObject.SetActive(false)
         end
     end
 end
 
-function interact()
-    interacted = true
-    this.LogGraphContribution(4, -5)
+function update()
+    if not interacted or mood ~= "approach" then return end
+
+    this.LookAtPlane(player.WorldPosition)
 end
 
-function warp()
-    -- warp to a new location on the map
-    local warpTarget = warpPoints[Random.IntMinMax(1, #warpPoints)].WorldPosition
-    this.GameObject.WorldPosition = warpTarget
+function interact()
+    if interacted then return end
+    interacted = true
+    this.LogGraphContribution(4, -5)
+
+    if mood == "leap" then
+        this.GameObject.WorldPosition = this.GameObject.WorldPosition + this.Forward * 10
+        return
+    end
+
+    if mood == "vanish" then
+        this.StopAnimation()
+        return
+    end
+
+    this.Action
+        .WaitUntil(Condition.WaitForSeconds(1))
+        .Then(|| SetCanControlPlayer(false))
+        .Then(|| this.MoveInDirection(this.Forward, approachSpeed))
+        .Until(Condition.WaitForSeconds(1))
+        .Then(playerTransition)
+        .ThenFinish()
 end
 
 function playerTransition()
     DreamSystem.SetNextTransitionDream(dreams.Happytown)
     DreamSystem.SetNextTransitionColor(Colors.Red)
     DreamSystem.TransitionToDream()
-end
-
-function scarePlayer()
-    interacted = false
-    local toPlayer = player.WorldPosition - this.GameObject.WorldPosition
-    this.GameObject.WorldPosition = player.WorldPosition - (toPlayer * 2.5)
-    this.LookAtPlane(player.WorldPosition)
-    this.Action
-        .Do(|| this.PlayAnimation(0))
-        .Then(|| SetCanControlPlayer(false))
-        .ThenWaitUntil(this.WaitForAnimation(0, -0.2))
-        .Then(|| this.StopAnimation())
-        .Then(|| playerTransition())
-        .ThenFinish()
 end

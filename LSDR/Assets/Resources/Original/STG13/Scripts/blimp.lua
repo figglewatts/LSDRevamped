@@ -1,8 +1,9 @@
 require "dreams"
 
-player = GetEntity("__player")
-target = GetEntity("BlimpTarget").WorldPosition
-
+interacted = false
+liftsOff = false
+linked = false
+flightTime = 0
 moveSpeed = 0.3
 
 function start()
@@ -14,34 +15,47 @@ function start()
     end
 end
 
-function interact()
-    this.LogGraphContribution(-6, 7)
-    this.SetChildVisible(true)
+function update()
+    if not interacted then return end
 
-    if Random.OneIn(4) then
-        DreamSystem.StretchDream(2, 1)
+    local before = flightTime
+    flightTime = flightTime + Unity.DeltaTime()
+
+    -- now and then it stretches the world a long way
+    if crossed(before, 5) or crossed(before, 40) then
+        if Random.OneIn(5) then
+            DreamSystem.StretchDream(5, 12)
+        end
     end
 
-    if Random.OneIn(2) then
-        this.Action
-            .Do(|| this.MoveTowards(target, moveSpeed))
-            .Until(Condition.WaitForLinearMove(this.GameObject, target))
-            .Then(|| moveDown())
-            .Until(Condition.WaitForSeconds(15))
-            .Then(|| link())
-            .ThenFinish()
-    else
-        this.Action
-            .Do(|| this.MoveInDirection(this.Forward, moveSpeed))
-            .Until(Condition.WaitForSeconds(60))
-            .Then(|| this.GameObject.SetActive(false))
-            .ThenFinish()
+    if crossed(before, 35) then
+        liftsOff = Random.OneIn(3)
+    end
+
+    this.MoveInDirection(this.Forward, moveSpeed)
+
+    if liftsOff then
+        this.MoveInDirection(this.Up, moveSpeed)
+        this.Rotate(Unity.Vector3(0, -5, 0))
+        if flightTime > 46 and not linked then
+            linked = true
+            link()
+        end
+    elseif flightTime > 135 then
+        this.GameObject.SetActive(false)
     end
 end
 
-function moveDown()
-    this.MoveInDirection(this.Up.negated(), moveSpeed)
-    this.LookTowards(this.GameObject.WorldPosition - this.GameObject.RightDirection, 5)
+function crossed(before, seconds)
+    return before < seconds and flightTime >= seconds
+end
+
+function interact()
+    this.LogGraphContribution(-6, 7)
+
+    if interacted then return end
+    this.SetChildVisible(true)
+    interacted = true
 end
 
 function link()

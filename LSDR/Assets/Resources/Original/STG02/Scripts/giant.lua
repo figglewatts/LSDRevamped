@@ -1,9 +1,9 @@
-moveSpeed = 0.4
+moveSpeed = 0.3
 
 function start()
     this.PlayAnimation(0)
     
-    if not IsDayEven() or Random.OneIn(2) then
+    if not IsDayEven() then
         this.GameObject.SetActive(false)
         return
     end

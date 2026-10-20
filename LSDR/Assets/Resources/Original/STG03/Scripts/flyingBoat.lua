@@ -3,7 +3,7 @@ interacted = false
 function update()
     if not interacted then return end
 
-    this.MoveInDirection(this.Forward, 0.7)
+    this.MoveInDirection(this.Forward, 0.3)
 end
 
 function interact()

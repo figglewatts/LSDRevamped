@@ -86,13 +86,18 @@ namespace LSDR.SDK.Data
 
 #region Applying
 
+        // nothing further than a chunk away is drawn, however clear the fog
+        protected const float DRAW_DISTANCE = 20;
+
+        protected static readonly int _drawDistancePropertyId = Shader.PropertyToID("_DrawDistance");
         protected static readonly int _subtractiveFogPropertyId = Shader.PropertyToID("_SubtractiveFog");
         protected static readonly int _fogHeightPropertyId = Shader.PropertyToID("_FogHeight");
         protected static readonly int _fogGradientPropertyId = Shader.PropertyToID("_FogGradient");
         protected static readonly int _skyColorPropertyId = Shader.PropertyToID("_SkyColor");
         protected static readonly int _fogColorPropertyId = Shader.PropertyToID("_FogColor");
 
-        public void Apply(bool longDrawDistance, DreamEnvironmentEffects environmentEffects)
+        public void Apply(bool longDrawDistance, DreamEnvironmentEffects environmentEffects,
+            int environmentGroup = -1)
         {
             Material skyMaterial = new Material(Shader.Find("LSDR/GradientSky"));
             skyMaterial.SetFloat(_fogHeightPropertyId, FogHeight);
@@ -106,15 +111,22 @@ namespace LSDR.SDK.Data
             RenderSettings.fogStartDistance = FogStartDistance;
             RenderSettings.fogEndDistance = longDrawDistance ? FogEndDistance * 3 : FogEndDistance;
             RenderSettings.fogMode = FogMode.Linear;
+            Shader.SetGlobalFloat(_drawDistancePropertyId, longDrawDistance ? DRAW_DISTANCE * 3 : DRAW_DISTANCE);
             Shader.SetGlobalInt(_subtractiveFogPropertyId, SubtractiveFog ? 1 : 0);
 
             if (environmentEffects == null || environmentEffects.Created) return;
+
+            // with environment groups the sun only shows by day, or as the moon by night, and stars only by night
+            bool sunAllowed = environmentGroup < 0 || environmentGroup == Dream.DAY_SKIES ||
+                              environmentGroup == Dream.NIGHT_SKIES;
+            bool starsAllowed = environmentGroup < 0 || environmentGroup == Dream.NIGHT_SKIES;
+
             if (CloudsChance > 0 && RandUtil.Float() < CloudsChance)
             {
                 environmentEffects.CreateClouds(NumberOfClouds, CloudsColor);
             }
 
-            if (SunChance > 0 && RandUtil.Float() > SunChance)
+            if (sunAllowed && SunChance > 0 && RandUtil.Float() < SunChance)
             {
                 if (SunBurstChance > 0 && RandUtil.Float() < SunBurstChance)
                 {
@@ -136,7 +148,7 @@ namespace LSDR.SDK.Data
                 }
             }
 
-            if (StarsChance > 0 && RandUtil.Float() < StarsChance)
+            if (starsAllowed && StarsChance > 0 && RandUtil.Float() < StarsChance)
             {
                 environmentEffects.CreateStars(NumberOfStars, StarsColor);
             }

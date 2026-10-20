@@ -13,6 +13,8 @@ namespace LSDR.SDK.Visual
         protected static readonly int _textureSetPropertyID = Shader.PropertyToID("_TextureSet");
 
         [NonSerialized] protected readonly List<Material> _textureSetMaterials = new List<Material>();
+        [NonSerialized] protected readonly Dictionary<Material, Material> _runtimeMaterials = new();
+        [NonSerialized] protected readonly Dictionary<Material, Material> _sourceMaterials = new();
         protected Shader _classicAlphaShader;
         protected Shader _classicAlphaSetShader;
         protected Shader _classicShader;
@@ -107,19 +109,36 @@ namespace LSDR.SDK.Visual
             foreach (Material registeredMat in _textureSetMaterials) SetShader(registeredMat, classic);
         }
 
-        public void RegisterMaterial(Material mat)
+        // returns a copy of the material for renderers to use, so setting its shader doesn't change the asset
+        public Material RegisterMaterial(Material mat)
         {
             if (!isMaterialValid(mat))
             {
-                return;
+                return mat;
             }
-            _textureSetMaterials.Add(mat);
-            SetShader(mat);
+            if (_runtimeMaterials.TryGetValue(mat, out Material runtimeMat)) return runtimeMat;
+
+            runtimeMat = new Material(mat) { name = mat.name };
+            _runtimeMaterials[mat] = runtimeMat;
+            _sourceMaterials[runtimeMat] = mat;
+            _textureSetMaterials.Add(runtimeMat);
+            SetShader(runtimeMat);
+            return runtimeMat;
+        }
+
+        public Material GetSourceMaterial(Material mat)
+        {
+            return _sourceMaterials.TryGetValue(mat, out Material source) ? source : mat;
         }
 
         public void DeregisterMaterial(Material mat) { _textureSetMaterials.Remove(mat); }
 
-        public void DeregisterAllMaterials() { _textureSetMaterials.Clear(); }
+        public void DeregisterAllMaterials()
+        {
+            _textureSetMaterials.Clear();
+            _runtimeMaterials.Clear();
+            _sourceMaterials.Clear();
+        }
 
         public void SetRandomTextureSetFromDayNumber(int dayNumber)
         {

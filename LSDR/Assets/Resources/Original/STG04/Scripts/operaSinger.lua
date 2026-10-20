@@ -5,6 +5,11 @@ updateCount = 0
 direction = 1
 
 function start()
+    if this.GameObject.Name ~= "OperaSinger2" and ChartZone() ~= "magenta" then
+        this.GameObject.SetActive(false)
+        return
+    end
+
     this.SetUpdateIntervalSeconds(0.25)
     this.SetChildVisible(false)
 end

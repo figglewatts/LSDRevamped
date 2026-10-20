@@ -3,6 +3,11 @@ trainEntity = GetEntity("TrainKyoto")
 
 function start()
     trainEntity.SetActive(false)
+
+    if not IsDayEven() then
+        this.GameObject.SetActive(false)
+        return
+    end
 end
 
 function interact()

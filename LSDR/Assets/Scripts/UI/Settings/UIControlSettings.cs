@@ -15,15 +15,20 @@ namespace LSDR.UI.Settings
         public ControlSchemeLoaderSystem ControlSchemeLoader;
 
         public Dropdown CurrentSchemeDropdown;
+        public Slider LookSensitivitySlider;
 
         public void Start()
         {
             Settings.SettingsBindBroker.RegisterData(CurrentSchemeDropdown);
+            Settings.SettingsBindBroker.RegisterData(LookSensitivitySlider);
 
             CurrentSchemeDropdown.value = Settings.Settings.CurrentControlSchemeIndex;
+            LookSensitivitySlider.value = Settings.Settings.LookSensitivity;
 
             Settings.SettingsBindBroker.Bind(() => CurrentSchemeDropdown.value,
                 () => Settings.Settings.CurrentControlSchemeIndex, BindingType.TwoWay);
+            Settings.SettingsBindBroker.Bind(() => LookSensitivitySlider.value,
+                () => Settings.Settings.LookSensitivity, BindingType.TwoWay);
         }
     }
 }

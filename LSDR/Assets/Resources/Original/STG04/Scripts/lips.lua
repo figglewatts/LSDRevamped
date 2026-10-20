@@ -4,11 +4,18 @@ player = GetEntity("__player")
 
 interacted = false
 moveSpeed = 0.3
+bobTime = 0
 
 function start()
     this.PlayAnimation(0)
 
-    if not Random.OneIn(4) then
+    local tiny = this.GameObject.Name ~= "Lips"
+    if tiny and not IsDayEven() then
+        this.GameObject.SetActive(false)
+        return
+    end
+
+    if tiny or not Random.OneIn(4) then
         this.GameObject.Scale = Unity.Vector3(0.2, 0.2, 0.2)
     end
 
@@ -28,6 +35,10 @@ end
 
 function update()
     if not interacted then return end
+
+    bobTime = bobTime + Unity.DeltaTime()
+    local bob = (bobTime % 0.5 < 0.25 and this.Up) or this.Up.negated()
+    this.MoveInDirection(bob, moveSpeed)
 
     this.LookAtPlane(player.WorldPosition)
     this.MoveTowards(player.WorldPosition, moveSpeed)

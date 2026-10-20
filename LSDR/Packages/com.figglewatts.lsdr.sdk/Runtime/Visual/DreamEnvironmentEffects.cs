@@ -11,6 +11,7 @@ namespace LSDR.SDK.Visual
         public GameObject CloudsPrefab;
         public GameObject StarsPrefab;
         public bool Created { get; protected set; }
+        public Transform Follow;
 
         protected List<GameObject> _managedEffectObjects = new();
         protected int _numberOfSuns = 0;
@@ -24,6 +25,13 @@ namespace LSDR.SDK.Visual
         public void Start()
         {
             randomiseRotation();
+        }
+
+        // the sky follows the player so it never gets any closer
+        public void LateUpdate()
+        {
+            if (Follow == null) return;
+            transform.position = new Vector3(Follow.position.x, transform.position.y, Follow.position.z);
         }
 
         public void ClearEffects()

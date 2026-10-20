@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using LSDR.Game;
 using LSDR.InputManagement;
-using Torii.Util;
 using UnityEngine;
 
 namespace LSDR.Entities.Player
@@ -12,7 +11,8 @@ namespace LSDR.Entities.Player
     /// </summary>
     public class PlayerCameraRotation : MonoBehaviour
     {
-        protected const float INTERACT_LOOK_BEHIND_TIME = 0.5f;
+        protected const float LOOK_BEHIND_DEGREES_PER_SECOND = 900f;
+        protected const float GAMEPAD_LOOK_SPEED = 300f;
 
         // mouse look constants (per: https://eliteownage.com/mousesensitivity.html)
         protected const float DEGREES_PER_DOT = 0.02199f;
@@ -53,12 +53,12 @@ namespace LSDR.Entities.Player
         public ControlSchemeLoaderSystem ControlScheme;
 
         protected float _lookBehindRotation;
+        public bool LookingBehind => _lookBehindRotation >= 180f;
 
         protected float _lookUpDownRotation;
 
         // used to store how much we need to rotate on X axis (for lerping)
         protected float _rotationX;
-        protected TimeSince _timeSinceInteract;
 
         protected bool _externalInput = false;
 
@@ -126,12 +126,11 @@ namespace LSDR.Entities.Player
 
             Vector2 lookVec = ControlScheme.InputActions.Game.Look.ReadValue<Vector2>();
 
-            // if the framerate is limited and we're using a controller, scale the look vector a bit as otherwise
-            // it'll be pretty slow
-            if (Settings.Settings.LimitFramerate && ControlScheme.LastUsedGamepad) lookVec *= 4;
+            // sticks are a rate not a distance, so scale by frame time. curved for finer aim
+            if (ControlScheme.LastUsedGamepad) lookVec *= lookVec.magnitude * Time.deltaTime * GAMEPAD_LOOK_SPEED;
 
             // sensitivity calculation
-            Vector2 adjustedLookVec = lookVec * DEGREES_PER_DOT * ControlScheme.Current.MouseSensitivity;
+            Vector2 adjustedLookVec = lookVec * DEGREES_PER_DOT * Settings.Settings.LookSensitivity;
 
             // rotate the camera around the Y axis based on mouse horizontal movement
             transform.Rotate(xAngle: 0,
@@ -184,24 +183,12 @@ namespace LSDR.Entities.Player
                 _lookUpDownRotation = Mathf.Clamp(_lookUpDownRotation, MinY, MaxY);
             }
 
-            if (ControlScheme.InputActions.Game.Interact.WasPressedThisFrame()) _timeSinceInteract = 0;
-            if (ControlScheme.InputActions.Game.Interact.IsPressed())
-            {
-                if (_timeSinceInteract > INTERACT_LOOK_BEHIND_TIME && _lookBehindRotation < 180f)
-                {
-                    // rotate towards look behind position
-                    _lookBehindRotation += RotationSpeed * 4 * Time.deltaTime;
-                }
-            }
-            else if (_lookBehindRotation > 0)
-            {
-                _lookBehindRotation -= RotationSpeed * 4 * Time.deltaTime;
-                if (Mathf.Abs(_lookBehindRotation) < 2) _lookBehindRotation = 0;
-            }
+            float lookBehindTarget = ControlScheme.InputActions.Game.LookBehind.IsPressed() ? 180f : 0f;
+            _lookBehindRotation = Mathf.MoveTowards(_lookBehindRotation, lookBehindTarget,
+                LOOK_BEHIND_DEGREES_PER_SECOND * Time.deltaTime);
 
             if (!ControlScheme.InputActions.Game.LookUp.IsPressed() &&
-                !ControlScheme.InputActions.Game.LookDown.IsPressed() &&
-                !ControlScheme.InputActions.Game.Interact.IsPressed())
+                !ControlScheme.InputActions.Game.LookDown.IsPressed())
             {
                 // rotate towards the neutral rotation orientation if we neither looking up nor down
                 if (_lookUpDownRotation < 0) _lookUpDownRotation += RotationSpeed * Time.deltaTime;

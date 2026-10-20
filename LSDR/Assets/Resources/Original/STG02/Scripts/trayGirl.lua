@@ -4,12 +4,12 @@ player = GetEntity("__player")
 
 interacted = false
 distanceToPlayer = 0
-moveSpeed = 1.4
+moveSpeed = 2.5
 
 function start()
     this.SetChildVisible(false)
     
-    if IsDayEven() or Random.OneIn(2) then
+    if IsDayEven() then
         this.GameObject.SetActive(false)
         return
     end
@@ -37,4 +37,9 @@ function interact()
     this.PlayAnimation(0)
     interacted = true
     this.LogGraphContribution(2, 3)
+
+    this.Action
+        .WaitUntil(Condition.WaitForSeconds(20))
+        .Then(|| this.GameObject.SetActive(false))
+        .ThenFinish()
 end

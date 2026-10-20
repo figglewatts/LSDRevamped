@@ -31,5 +31,6 @@ namespace LSDR.Lua.Proxies
         public InputAction Run => _target.InputActions.Game.Run;
         public InputAction LookUp => _target.InputActions.Game.LookUp;
         public InputAction LookDown => _target.InputActions.Game.LookDown;
+        public InputAction LookBehind => _target.InputActions.Game.LookBehind;
     }
 }

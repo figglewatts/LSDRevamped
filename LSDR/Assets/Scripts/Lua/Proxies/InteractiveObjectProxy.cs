@@ -134,6 +134,11 @@ namespace LSDR.Lua.Proxies
             _target.transform.localScale = new Vector3(1, factor, 1);
         }
 
+        public void Rotate(Vector3 degreesPerSecond)
+        {
+            _target.transform.Rotate(degreesPerSecond * Time.deltaTime, Space.Self);
+        }
+
         public void SetChildVisible(bool visible)
         {
             _target.transform.GetChild(0).gameObject.SetActive(visible);

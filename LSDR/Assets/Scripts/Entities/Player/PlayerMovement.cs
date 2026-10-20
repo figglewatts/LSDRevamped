@@ -25,10 +25,10 @@ namespace LSDR.Entities.Player
 
         [Console] public float GravityMultiplier = 1f;
         [Console] public float LinkDelay = 1.7F;
-        [Console] public float WalkMoveSpeed = 0.6f;
-        [Console] public float RunMoveSpeed = 2.4f;
-        [Console] public float StepTimeSeconds = 0.25f;
-        [Console] public float HeadBobAmount = 0.1f;
+        [Console] public float WalkMoveSpeed = 1.25f;
+        [Console] public float RunMoveSpeed = 3.75f;
+        [Console] public float StepTimeSeconds = 0.2f;
+        [Console] public float HeadBobAmount = 0.05f;
         [Console] public bool DebugLog;
         public bool CanLink = true;
 
@@ -46,7 +46,7 @@ namespace LSDR.Entities.Player
 
         protected TimeSince _timeColliding;
         protected TimeSince _timeSinceStartedMoving;
-        protected bool _playedWalkStep;
+        protected bool _playedHalfStep;
         protected bool _movingIntoWall;
         protected AbstractFootstepIndex _footstepIndex;
 
@@ -100,23 +100,19 @@ namespace LSDR.Entities.Player
             }
             else if (ControlScheme.Current.FpsControls && _inputDir.sqrMagnitude > 0)
             {
-                if (!_currentlyStepping)
+                if (!_currentlyStepping || _timeSinceStartedMoving > StepTimeSeconds)
                 {
                     _currentlyStepping = true;
                     _timeSinceStartedMoving = 0;
-                }
-
-                if (!_playedWalkStep && _timeSinceStartedMoving > StepTimeSeconds / 2)
-                {
+                    _playedHalfStep = false;
                     playFootstepSound();
-                    _playedWalkStep = true;
                 }
 
-                if (_timeSinceStartedMoving > StepTimeSeconds)
+                // running plays another footstep half way through the step
+                if (_currentlySprinting && !_playedHalfStep && _timeSinceStartedMoving > StepTimeSeconds / 2)
                 {
-                    if (_currentlySprinting) playFootstepSound();
-                    _playedWalkStep = false;
-                    _timeSinceStartedMoving = 0;
+                    _playedHalfStep = true;
+                    playFootstepSound();
                 }
 
                 headBob(_timeSinceStartedMoving / StepTimeSeconds);
@@ -131,9 +127,8 @@ namespace LSDR.Entities.Player
             if (!_controller.isGrounded && Settings.PlayerGravity)
                 _controller.Move(Physics.gravity * (GravityMultiplier * Time.deltaTime));
 
-            // if run is not pressed and no movement keys are pressed, we should no longer sprint
-            if ((!ControlScheme.InputActions.Game.Run.IsPressed()
-                 && !ControlScheme.InputActions.Game.Move.IsPressed()) || _externalInput)
+            // if we're no longer moving forwards, we should no longer sprint
+            if (ControlScheme.InputActions.Game.Move.ReadValue<Vector2>().y <= 0 || _externalInput)
             {
                 _currentlySprinting = false;
             }
@@ -172,12 +167,14 @@ namespace LSDR.Entities.Player
             _movingIntoWall = false;
             _lockedInput = Vector2.zero;
             _inputLocked = false;
+            resetHeadbob();
         }
 
         private IEnumerator takeStep(Vector2 input, float speedUnitsPerSecond)
         {
             _currentlyStepping = true;
-            bool playedFootstep = false;
+            bool playedHalfStep = false;
+            playFootstepSound();
 
             float t = 0;
             while (t < StepTimeSeconds)
@@ -188,10 +185,10 @@ namespace LSDR.Entities.Player
                 // make sure we don't do this for too many frames or it'll look jerky
                 if (StepTimeSeconds - t < 0) break;
 
-                // we play the footstep when we reach the top (which is half way through, hence 0.5f)
-                if (!playedFootstep && progress > 0.5f)
+                // running plays another footstep half way through the step
+                if (_currentlySprinting && !playedHalfStep && progress > 0.5f)
                 {
-                    playedFootstep = true;
+                    playedHalfStep = true;
                     playFootstepSound();
                 }
 
@@ -203,9 +200,6 @@ namespace LSDR.Entities.Player
 
             // move again after finishing, so there's not a one frame gap between the next step
             moveController(input, speedUnitsPerSecond);
-
-            // if we're sprinting we want to play the footstep sound on the downstep too
-            if (_currentlySprinting) playFootstepSound();
 
             _currentlyStepping = false;
         }
@@ -426,20 +420,26 @@ namespace LSDR.Entities.Player
                 else if (move.x < 0) move.x = -1;
                 if (move.y > 0) move.y = 1;
                 else if (move.y < 0) move.y = -1;
+
+                // can't strafe while walking forwards or backwards
+                if (!_externalInput && move.y != 0) move.x = 0;
+
+                // forwards and backwards swap while looking behind
+                if (!_externalInput && Rotation.CameraRotation.LookingBehind) move.y = -move.y;
             }
 
             return move;
         }
 
         /// <summary>
-        ///     We can start sprinting if we're moving on the X axis (strafing) or if we're moving forwards.
+        ///     We can start sprinting if we're moving forwards.
         ///     We can only sprint if input is not being overridden.
         /// </summary>
         /// <returns>True if we can start sprinting, false otherwise.</returns>
         private bool canStartSprinting()
         {
             Vector2 move = ControlScheme.InputActions.Game.Move.ReadValue<Vector2>();
-            return !_externalInput && (move.x != 0 || move.y > 0);
+            return !_externalInput && move.y > 0;
         }
     }
 }

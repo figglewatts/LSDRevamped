@@ -3,6 +3,11 @@ require "dreams"
 audio = GetEntity(this.GameObject.Name .. "Audio").DreamAudio
 
 function start()
+    if this.GameObject.Name == "BridgeDemon" and not IsDayLinear(3, 2) then
+        this.GameObject.SetActive(false)
+        return
+    end
+
     this.SetChildVisible(false)
 end
 

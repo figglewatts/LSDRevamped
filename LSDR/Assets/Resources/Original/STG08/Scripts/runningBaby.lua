@@ -7,10 +7,23 @@ target3 = GetEntity("RunningBabyTarget3").WorldPosition
 audio = GetEntity(this.GameObject.Name .. "Audio").DreamAudio
 
 interacted = false
-moveSpeed = 0.5
+moveSpeed = 1.25
+runTime = 0
 
 function start()
+    -- more of them run about in the blue part of the chart
+    if this.GameObject.Name ~= "RunningBaby" and ChartZone() ~= "blue" then
+        this.GameObject.SetActive(false)
+    end
+end
 
+function update()
+    if not interacted then return end
+
+    runTime = runTime + Unity.DeltaTime()
+    if runTime > 15 then
+        this.GameObject.SetActive(false)
+    end
 end
 
 function intervalUpdate()
@@ -26,6 +39,7 @@ end
 
 function interact()
     this.LogGraphContribution(4, 2)
+    if interacted then return end
     interacted = true
 
     this.PlayAnimation(1)

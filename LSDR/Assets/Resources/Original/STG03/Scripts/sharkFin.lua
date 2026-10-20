@@ -6,7 +6,8 @@ startPoint = this.GameObject.WorldPosition
 interacted = false
 distanceToPlayer = 0
 linked = false
-moveSpeed = 0.3
+moveSpeed = 0.6
+swimTime = 0
 
 function intervalUpdate()
     if not interacted then return end
@@ -18,7 +19,19 @@ function intervalUpdate()
     end
 end
 
+function update()
+    if not interacted then return end
+
+    swimTime = swimTime + Unity.DeltaTime()
+    if swimTime > 45 then
+        this.GameObject.SetActive(false)
+    elseif swimTime > 40 then
+        moveSpeed = 5
+    end
+end
+
 function interact()
+    if interacted then return end
     interacted = true
     this.LogGraphContribution(-8, 4)
     this.Action

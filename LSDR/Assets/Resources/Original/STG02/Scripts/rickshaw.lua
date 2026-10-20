@@ -6,12 +6,12 @@ creakingAudio = GetEntity(this.GameObject.Name .. "Creaking").DreamAudio
 
 interacted = false
 distanceToPlayer = 0
-moveSpeed = 0.2
+moveSpeed = 0.3
 
 function start()
     this.SetChildVisible(false)
     
-    if IsDayEven() or Random.OneIn(2) then
+    if IsDayEven() or (this.GameObject.Name ~= "Rickshaw1" and ChartZone() ~= "yellow") then
         this.GameObject.SetActive(false)
         return
     end
@@ -27,7 +27,7 @@ function update()
 
     if distanceToPlayer < 0.8 and not linked then
         linked = true
-        DreamSystem.SetNextTransitionDream(dreams.PitAndTemple)
+        DreamSystem.SetNextTransitionDream(dreams.NaturalWorld)
         DreamSystem.TransitionToDream()
     end
 

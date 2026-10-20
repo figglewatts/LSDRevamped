@@ -4,7 +4,7 @@ player = GetEntity("__player")
 distanceToPlayer = 0
 
 function start()
-    if not Random.OneIn(3) then
+    if ChartZone() ~= "red" then
         this.GameObject.SetActive(false)
         return
     end

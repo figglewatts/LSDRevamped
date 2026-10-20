@@ -5,7 +5,7 @@ function start()
     a.Play(0)
     b.Play(0)
     
-    if IsDayEven() or not Random.OneIn(4) then
+    if IsDayEven() or not IsDayLinear(3, 0) then
         this.GameObject.SetActive(false)
         return
     end

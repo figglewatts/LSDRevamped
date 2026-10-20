@@ -3,9 +3,12 @@
 
 uniform float _AffineIntensity;
 uniform float _RenderCutoffAdjustment;
+uniform float _DrawDistance;
 uniform int _TextureSet;
-uniform float _VertexColorIntensity;
-uniform float _Brightness;
+uniform float _StretchAmount;
+
+// vertex colours are half strength, so 128 leaves a texture as it is and 255 doubles it
+#define VERTEX_COLOR_SCALE 2
 
 // incoming vertices
 struct appdata
@@ -43,6 +46,9 @@ fragdata vert(appdata v)
 
     UNITY_SETUP_INSTANCE_ID(v);
 
+    // stretching the dream's height (0 when not stretched)
+    v.position.y *= 1 + _StretchAmount;
+
     // color and UVs
     output.data.uv_MainTex = v.uv;
     output.data.color = v.color;
@@ -69,25 +75,20 @@ fragdata vert(appdata v)
     output.data.clipPos = 1;
     #endif
 
-    if (output.distance > GetFogEnd() + _RenderCutoffAdjustment)
+    // not drawn once fully fogged or past the draw distance, if there is one
+    const float cutoff = _DrawDistance > 0 ? min(GetFogEnd(), _DrawDistance) : GetFogEnd();
+    if (output.distance > cutoff + _RenderCutoffAdjustment)
     {
-        output.data.pos.z = -1000;
+        // push it past the far plane so it's clipped away, which is the other way round when depth isn't reversed
+        // (OpenGL), otherwise it lands in front of the near plane and gets stretched across the screen
+        #if defined(UNITY_REVERSED_Z)
+        output.data.pos.z = -output.data.pos.w;
+        #else
+        output.data.pos.z = output.data.pos.w * 2;
+        #endif
     }
 
     return output;
-}
-
-float applyIntensity(float v, float p)
-{
-    float adj = tanh((v - 0.5) * p);
-    return (adj + 1) / 2;
-}
-
-half3 applyVertexColorIntensity(half3 color)
-{
-    return half3(applyIntensity(color.r, _VertexColorIntensity),
-                 applyIntensity(color.g, _VertexColorIntensity),
-                 applyIntensity(color.b, _VertexColorIntensity));
 }
 
 #if defined(LSDR_TEXTURE_SET)
@@ -121,7 +122,7 @@ fragOut lsdrFrag(fragdata input, sampler2D mainTex, fixed4 tint)
     #endif
 
     // apply vertex color and alpha
-    output_col.rgb *= applyVertexColorIntensity(input.data.color);
+    output_col.rgb = saturate(output_col.rgb * input.data.color.rgb * VERTEX_COLOR_SCALE);
     output_col.a *= input.data.color.a;
 
     // apply tint
@@ -137,7 +138,6 @@ fragOut lsdrFrag(fragdata input, sampler2D mainTex, fixed4 tint)
     output_col = ApplyRevampedFog(output_col, fogColor);
     #endif
 
-    output_col.rgb *= _Brightness;
     output.color = output_col;
 
     return output;
@@ -182,7 +182,7 @@ fragOut frag(fragdata input)
     else output_col = tex2D(_WaterPaletteA, float2(paletteIdx, 0.5));
 
     // apply vertex color
-    output_col *= (input.data.color * 1.3);
+    output_col.rgb = saturate(output_col.rgb * input.data.color.rgb * VERTEX_COLOR_SCALE);
 
     // apply tint
     output_col *= _Tint;
@@ -197,7 +197,7 @@ fragOut frag(fragdata input)
     output_col = ApplyRevampedFog(output_col, fogColor);
 #endif
 
-    output.color = output_col * _Brightness;
+    output.color = output_col;
     output.color.a = min(_Alpha, waterMap.a);
 
     return output;

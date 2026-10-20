@@ -1,5 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace LSDR.UI
@@ -13,6 +17,13 @@ namespace LSDR.UI
         public List<RectTransform> TabViews = new List<RectTransform>();
 
         public int StartOnTab;
+
+        private int _currentTab;
+        private ColorBlock[] _tabColours;
+
+        public Button CurrentTabButton => TabButtons[_currentTab];
+
+        public Selectable FirstUsableInCurrentTab() { return firstUsable(TabViews[_currentTab]); }
 
         public void Start()
         {
@@ -50,12 +61,29 @@ namespace LSDR.UI
                 int iCopy = i;
                 TabButtons[i].onClick.AddListener(() => onTabButtonClick(iCopy));
             }
+
+            _tabColours = TabButtons.Select(b => b.colors).ToArray();
+            highlightCurrentTab();
         }
 
         public void OnEnable()
         {
             TabViews[StartOnTab].gameObject.SetActive(value: true);
             disableAllExcept(StartOnTab);
+            _currentTab = StartOnTab;
+            highlightCurrentTab();
+        }
+
+        public void Update()
+        {
+            GameObject selected = EventSystem.current != null ? EventSystem.current.currentSelectedGameObject : null;
+            if (selected == null || !isInTabView(selected.transform)) return;
+
+            // the shoulder buttons switch tabs
+            Gamepad gamepad = Gamepad.current;
+            if (gamepad == null) return;
+            if (gamepad.leftShoulder.wasPressedThisFrame) switchTab(-1);
+            else if (gamepad.rightShoulder.wasPressedThisFrame) switchTab(1);
         }
 
         /// <summary>
@@ -71,6 +99,55 @@ namespace LSDR.UI
         {
             TabViews[i].gameObject.SetActive(value: true);
             disableAllExcept(i);
+            _currentTab = i;
+            highlightCurrentTab();
+        }
+
+        // keep the current tab lit
+        private void highlightCurrentTab()
+        {
+            if (_tabColours == null) return;
+
+            for (int i = 0; i < TabButtons.Count; i++)
+            {
+                ColorBlock colours = _tabColours[i];
+                if (i == _currentTab) colours.normalColor = colours.selectedColor;
+                TabButtons[i].colors = colours;
+            }
+        }
+
+        private void switchTab(int direction)
+        {
+            for (int step = 1; step < TabButtons.Count; step++)
+            {
+                int i = (_currentTab + direction * step + TabButtons.Count) % TabButtons.Count;
+                if (!TabButtons[i].IsInteractable()) continue;
+
+                TabButtons[i].onClick.Invoke();
+                StartCoroutine(selectFirstNextFrame(i));
+                return;
+            }
+        }
+
+        private IEnumerator selectFirstNextFrame(int tab)
+        {
+            yield return null;
+            Selectable first = firstUsable(TabViews[tab]);
+            if (first != null) first.Select();
+        }
+
+        // not while a modal is up
+        private bool isInTabView(Transform selected)
+        {
+            return TabButtons.Exists(b => b.transform == selected) ||
+                   TabViews.Exists(v => v.gameObject.activeInHierarchy && selected.IsChildOf(v));
+        }
+
+        private static Selectable firstUsable(RectTransform view)
+        {
+            return view.GetComponentsInChildren<Selectable>()
+                       .FirstOrDefault(s => s.IsInteractable() && s.navigation.mode != Navigation.Mode.None &&
+                                            !(s is Scrollbar));
         }
 
         private void disableAllExcept(int thisOne)

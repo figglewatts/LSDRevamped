@@ -1,5 +1,5 @@
 function start()
-    if IsDayEven() then
+    if IsDayEven() or (this.GameObject.Name ~= "BlinkingLight" and not IsDayLinear(3, 1)) then
         this.GameObject.SetActive(false)
         return
     end

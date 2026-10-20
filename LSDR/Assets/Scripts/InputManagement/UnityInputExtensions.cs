@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
 using UnityEngine.InputSystem;
 
 namespace LSDR.InputManagement
@@ -11,7 +12,9 @@ namespace LSDR.InputManagement
             string displayString =
                 inputAction.GetBindingDisplayString(binding,
                     InputBinding.DisplayStringOptions.DontUseShortDisplayNames);
-            if (string.IsNullOrEmpty(displayString.Trim()) && !string.IsNullOrEmpty(binding.effectivePath))
+            // some keyboard layouts give keys like space and tab a display name of only invisible characters
+            bool visible = displayString.Any(c => !char.IsWhiteSpace(c) && !char.IsControl(c));
+            if (!visible && !string.IsNullOrEmpty(binding.effectivePath))
             {
                 displayString =
                     binding.effectivePath.Split(new[] { '/' }, count: 2, StringSplitOptions.RemoveEmptyEntries)[1];

@@ -3,14 +3,12 @@ videoClip = GetEntity("PlaneVideoClip").VideoClip
 
 state = "none"
 moveSpeed = 5
-flyOver = false
 
 function start()
-    local randResult = Random.Float()
-    if randResult < 0.2 then
-        state = "crash"
-    else
+    if Random.OneIn(3) then
         state = "flyover"
+    else
+        state = "crash"
     end
     
     this.SetChildVisible(false)
@@ -19,12 +17,6 @@ function start()
         this.GameObject.SetActive(false)
         return
     end
-end
-
-function update()
-    if not flyOver then return end
-
-    
 end
 
 function interact()
@@ -36,8 +28,7 @@ function interact()
         this.Action
             .Do(|| this.PlayAnimation(0))
             .ThenWaitUntil(this.WaitForAnimation(0))
-            .Then(|| this.GameObject.SetActive(false))
-            .Then(|| videoClip.Play(Unity.ColorRGB(1, 0, 0)))
+            .Then(crashed)
             .ThenFinish()
     else
 
@@ -59,4 +50,11 @@ end
 function flyArcUp()
     this.MoveInDirection(this.Forward, moveSpeed)
     this.MoveInDirection(this.Up, 1)
+end
+
+function crashed()
+    this.GameObject.SetActive(false)
+    if Random.OneIn(2) then
+        videoClip.Play(Unity.ColorRGB(1, 0, 0))
+    end
 end

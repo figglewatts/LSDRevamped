@@ -4,6 +4,7 @@ using LSDR.InputManagement;
 using LSDR.UI.Modal;
 using Torii.UI;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using Text = UnityEngine.UI.Text;
@@ -79,6 +80,19 @@ namespace LSDR.UI.Settings
 
             refreshInternalRepresentation();
 
+            // keep the same button selected after rebuilding the rows
+            int selectedRow = -1, selectedButton = 0;
+            GameObject selected = EventSystem.current != null ? EventSystem.current.currentSelectedGameObject : null;
+            RebindRow[] rows = GetComponentsInChildren<RebindRow>();
+            for (int i = 0; i < rows.Length && selected != null; i++)
+            {
+                Button[] buttons = rows[i].Buttons;
+                int found = System.Array.FindIndex(buttons, b => b.gameObject == selected);
+                if (found < 0) continue;
+                selectedRow = i;
+                selectedButton = found;
+            }
+
             var population = new List<GameObject>();
             foreach (RebindableActions.ActionBindings bindingList in _internalRepresentation)
             {
@@ -86,6 +100,11 @@ namespace LSDR.UI.Settings
             }
 
             Populate(population);
+
+            if (selectedRow >= 0 && selectedRow < population.Count)
+            {
+                population[selectedRow].GetComponent<RebindRow>().Buttons[selectedButton].Select();
+            }
         }
 
 
@@ -207,6 +226,8 @@ namespace LSDR.UI.Settings
             public List<IndexedActionBinding> Bindings;
 
             public bool HasMultiple => Bindings?.Count > 0;
+
+            public Button[] Buttons => new[] { RebindButton, ResetButton, DeleteButton };
         }
     }
 }

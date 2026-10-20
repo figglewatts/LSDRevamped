@@ -14,7 +14,7 @@ namespace LSDR.SDK.Data
         public override void HandleDay(int dayNumber)
         {
             SceneManager.LoadScene("video_dream");
-            FadeManager.Managed.FadeOut(Color.black, 1f, () =>
+            FadeManager.Managed.FadeOut(Color.black, 0.5f, () =>
             {
                 VideoSpecialDayControl control = FindObjectOfType<VideoSpecialDayControl>();
                 control.BeginVideoDay(this);

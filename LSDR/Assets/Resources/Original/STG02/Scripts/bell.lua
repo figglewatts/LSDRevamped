@@ -2,13 +2,10 @@ audio = GetEntity("BellAudio").DreamAudio
 videoClip = GetEntity("PetalsVideoClip").VideoClip
 player = GetEntity("__player")
 
+rings = 0
+
 function start()
     DreamSystem.OnDreamTimeout(specialEvent)
-
-    if Random.OneIn(2) then
-        this.GameObject.SetActive(false)
-        return
-    end
 end
 
 function interact()
@@ -18,7 +15,15 @@ function interact()
         .Do(|| audio.Play())
         .Then(|| this.PlayAnimation(0))
         .ThenWaitUntil(this.WaitForAnimation(0))
+        .Then(ring)
         .ThenLoop()
+end
+
+function ring()
+    rings = rings + 1
+    if rings == 35 and Random.OneIn(3) then
+        DreamSystem.EndDream()
+    end
 end
 
 function specialEvent()

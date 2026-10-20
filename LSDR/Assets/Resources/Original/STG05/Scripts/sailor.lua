@@ -13,7 +13,7 @@ function intervalUpdate()
     if not interacted then return end
 
     local playerDistance = (player.WorldPosition - this.GameObject.WorldPosition).length()
-    if playerDistance < 2 then
+    if playerDistance < 1 then
         this.SetChildVisible(false)
     else
         this.SetChildVisible(true)

@@ -23,7 +23,7 @@ function activeOnDay(day)
 end
 
 function start()
-    moveSpeed = Random.FloatMinMax(0.4, 0.75)
+    moveSpeed = Random.FloatMinMax(1, 1.5)
     delay = Random.FloatMinMax(0, 0.3)
     
     if not IsDayEven() then
@@ -42,7 +42,8 @@ function intervalUpdate()
 end
 
 function update()
-    if linked then return end
+    -- only one of them takes you anywhere
+    if linked or this.GameObject.Name == "DoublefaceA" then return end
 
     if distanceToPlayer < 0.3 and not linked then
         linked = true

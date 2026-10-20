@@ -31,14 +31,16 @@ namespace LSDR.SDK.Entities
                 return;
             }
 
+            // links that lock input are the doorways you walk into
+            LinkKind kind = LockInput ? LinkKind.Doorway : LinkKind.ListedWall;
             if (!ForceFadeColor)
             {
-                DreamControlManager.Managed.Transition(Linked, PlayLinkSound, LockInput, forcedSpawnPoint);
+                DreamControlManager.Managed.Transition(Linked, PlayLinkSound, LockInput, forcedSpawnPoint, kind);
             }
             else
             {
                 DreamControlManager.Managed.Transition(ForcedLinkColor, Linked, PlayLinkSound, LockInput,
-                    forcedSpawnPoint);
+                    forcedSpawnPoint, kind);
             }
         }
 

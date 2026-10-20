@@ -4,13 +4,6 @@ playerCamera = player.PlayerMovement.Camera
 
 interacted = false
 
-function start()
-    if Random.OneIn(2) then
-        this.GameObject.SetActive(false)
-        return
-    end
-end
-
 function intervalUpdate()
     local playerDistance = (player.WorldPosition - this.GameObject.WorldPosition).length()
     if playerDistance > 2 then
